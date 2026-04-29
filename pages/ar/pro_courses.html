@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>قسم الدورات الاحترافية | أكاديمية نبراس</title>
+  <meta name="description" content="أكاديمية نبراس - منصة تدريب وتأهيل مهني معتمدة، تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
+</head>
+<body>
+
+        <!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>الإجمالي:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+        
+    <!-- Floating Cart Button -->
+    <div class="floating-cart" onclick="toggleCart(event)">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="floating-cart-badge cart-badge">0</span>
+    </div>
+            
+<!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>الإجمالي:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+  
+  </div>
+
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar scrolled">
+    <div class="nav-container">
+      <a href="../../index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../en/pro_courses.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+        <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
+        <li><a href="about.html" class="nav-link">عن الأكاديمية</a></li>
+        <li><a href="programs.html" class="nav-link">البرامج والخدمات</a></li>
+        <li><a href="articles.html" class="nav-link">المقالات</a></li>
+        
+        <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
+        <li><a href="verify.html" class="nav-link">التحقق من الشهادات</a></li>
+        
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="القائمة">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../en/pro_courses.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+      <li><a href="../../index.html">الرئيسية</a></li>
+      <li><a href="about.html">عن الأكاديمية</a></li>
+      <li><a href="programs.html">البرامج والخدمات</a></li>
+      <li><a href="articles.html">المقالات</a></li>
+      
+      <li><a href="contact.html">تواصل معنا</a></li>
+      <li><a href="verify.html">التحقق من الشهادات</a></li>
+      
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
+    </ul>
+  </div>
+
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>قسم الدورات الاحترافية</h1>
+      <p>دورات مركزة وعملية لتطوير مهارات محددة بسرعة وكفاءة عالية.</p>
+    </div>
+  </section>
+
+  <!-- Items Section -->
+  <section class="programs-section" style="padding: 80px 0; background: var(--bg-surface);">
+    <div class="container">
+      <div class="programs-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:30px;">
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة خدمة العملاء</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">تركّز هذه الدورة على تطوير مهارات التعامل مع العملاء وبناء تجربة إيجابية تعكس صورة احترافية عن المؤسسة.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_0')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_0', 'دورة خدمة العملاء', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة القيادة الإدارية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دورة تهدف إلى تطوير المهارات القيادية وتعزيز القدرة على إدارة الفرق وتحفيزها لتحقيق الأهداف المؤسسية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_1')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_1', 'دورة القيادة الإدارية', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة إدارة المشاريع</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">تهدف هذه الدورة إلى إكساب المتدرب أساسيات إدارة المشاريع من التخطيط وحتى التنفيذ والمتابعة، بأسلوب عملي يركّز على تحقيق النتائج.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_2')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_2', 'دورة إدارة المشاريع', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة نظام العمل السعودي</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دورة متخصصة تهدف إلى التعريف بنظام العمل السعودي، وحقوق وواجبات كل من العامل وصاحب العمل، بما يعزز الالتزام النظامي داخل المنشآت.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_3')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_3', 'دورة نظام العمل السعودي', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة إدارة الموارد البشرية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">تركّز هذه الدورة على تزويد المتدربين بفهم عملي لوظائف إدارة الموارد البشرية ودورها في دعم الأداء المؤسسي، من التخطيط والتوظيف إلى إدارة الأداء وتطوير الكفاءات.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_4')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_4', 'دورة إدارة الموارد البشرية', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة CAPM – أساسيات إدارة المشاريع</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دورة تمهيدية لبناء قاعدة معرفية قوية في إدارة المشاريع، وتعد مدخلًا عمليًا للراغبين في العمل في هذا المجال.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_5')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_5', 'دورة CAPM – أساسيات إدارة المشاريع', 535)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة SHRM – إدارة الموارد البشرية الاحترافية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">تركّز هذه الدورة على تطوير المعرفة والمهارات المهنية في إدارة الموارد البشرية، وربط إدارة الأفراد بالأهداف الاستراتيجية للمؤسسات.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_6')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_6', 'دورة SHRM – إدارة الموارد البشرية الاحترافية', 535)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة PMP – إدارة المشاريع الاحترافية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دورة احترافية متخصصة تهدف إلى تأهيل المتدربين لفهم منهجيات إدارة المشاريع وفق أفضل الممارسات العالمية، والتعامل مع جميع مراحل المشروع باحترافية عالية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_7')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_7', 'دورة PMP – إدارة المشاريع الاحترافية', 535)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة إعداد التقارير الإدارية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">تهدف هذه الدورة إلى تطوير مهارات إعداد التقارير الإدارية بشكل واضح واحترافي يدعم اتخاذ القرار.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_8')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_8', 'دورة إعداد التقارير الإدارية', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة مهارات البيع</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">تركّز هذه الدورة على تطوير مهارات البيع وبناء علاقات ناجحة مع العملاء لتحقيق نتائج أفضل.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_9')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_9', 'دورة مهارات البيع', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة إدارة الوقت وضغوط العمل</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">تهدف هذه الدورة إلى مساعدة المتدربين على تنظيم الوقت والتعامل مع ضغوط العمل بكفاءة لتحقيق التوازن والإنتاجية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_10')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_10', 'دورة إدارة الوقت وضغوط العمل', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة إدارة الأداء الوظيفي (KPIs)</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">تركّز هذه الدورة على فهم مؤشرات الأداء الرئيسية وكيفية استخدامها لقياس وتحسين أداء الأفراد والمؤسسات.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_11')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_11', 'دورة إدارة الأداء الوظيفي (KPIs)', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة المحاسبة لغير المحاسبين</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دورة مبسطة تهدف إلى تمكين غير المتخصصين من فهم أساسيات المحاسبة وقراءة القوائم المالية لدعم اتخاذ القرار.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_12')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_12', 'دورة المحاسبة لغير المحاسبين', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة Power BI – تحليل البيانات وعرضها</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دورة عملية تركّز على تحليل البيانات وبناء تقارير ولوحات معلومات تفاعلية تدعم اتخاذ القرار.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_13')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_13', 'دورة Power BI – تحليل البيانات وعرضها', 535)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة Six Sigma – إدارة الجودة والتحسين المستمر</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دورة احترافية متخصصة تهدف إلى تمكين المتدربين من فهم منهجية Six Sigma وتطبيقها في تحسين العمليات، تقليل الأخطاء، ورفع كفاءة الأداء المؤسسي باستخدام أدوات تحليل معتمدة عالميًا. تركّز الدورة على الجانب التطبيقي وربط التحسين المستمر بالنتائج القابلة للقياس داخل بيئات العمل المختلفة.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_14')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_14', 'دورة Six Sigma – إدارة الجودة والتحسين المستمر', 535)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة MOS – مهارات Microsoft Office الاحترافية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دورة عملية تهدف إلى رفع كفاءة استخدام برامج Microsoft Office في بيئة العمل الاحترافية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_15')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_15', 'دورة MOS – مهارات Microsoft Office الاحترافية', 535)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة FMAA – التحليل المالي والتقييم</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دورة احترافية تركّز على التحليل المالي وتقييم الشركات، وفهم القوائم المالية بصورة عملية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_16')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_16', 'دورة FMAA – التحليل المالي والتقييم', 535)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة CMA – المحاسبة الإدارية الاحترافية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دورة متخصصة تهدف إلى تطوير فهم المحاسبة الإدارية ودورها في دعم القرار المالي والتخطيط الاستراتيجي.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_17')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_17', 'دورة CMA – المحاسبة الإدارية الاحترافية', 535)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دورة CCXP – تجربة وخدمة العملاء الاحترافية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دورة احترافية تهدف إلى بناء تجربة عميل متميزة، وتحسين جودة التفاعل مع العملاء بما يعزّز الولاء والرضا.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_18')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_18', 'دورة CCXP – تجربة وخدمة العملاء الاحترافية', 535)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+</div>
+        
+      </div>
+    </div>
+  
+    <div class="container" style="margin-top: 40px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <h3 style="color: var(--primary-color); margin-bottom: 15px;"><i class="fas fa-check-double"></i> نظام الدراسة والتقييم</h3>
+        <p style="color: var(--text-muted); line-height: 1.8;">تم تصميم نظام الدراسة ليكون مرنًا وسهل المتابعة، مع:</p>
+        <ul style="list-style: none; padding: 0; line-height: 1.8; color: var(--text-muted);">
+            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> محتوى تدريبي منظم</li>
+            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> تقييمات مرحلية لقياس مستوى الاستيعاب</li>
+            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> متابعة تهدف إلى دعم المتدرب وتحسين مستواه</li>
+            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> لا يعتمد البرنامج على مبدأ الرسوب، بل على التطوير التدريجي ورفع كفاءة المتدرب.</li>
+        </ul>
+    </div>
+    
+  </section>
+
+
+
+<!-- Modals Start -->
+
+        <div id="crs_modal_0" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_0')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة خدمة العملاء</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 215.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>تركّز هذه الدورة على تطوير مهارات التعامل مع العملاء وبناء تجربة إيجابية تعكس صورة احترافية عن المؤسسة.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مفهوم خدمة العملاء</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات التواصل</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التعامل مع الشكاوى</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> فهم احتياجات العملاء</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المواقف الصعبة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين تجربة العميل</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في خدمة العملاء</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> موظفي الاستقبال والمبيعات</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بتحسين تجربة العملاء</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات تواصل احترافية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> التعامل الإيجابي مع العملاء</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> رفع مستوى رضا العملاء</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_0', 'دورة خدمة العملاء', 215); closeModal('crs_modal_0')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_1" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_1')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة القيادة الإدارية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 215.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دورة تهدف إلى تطوير المهارات القيادية وتعزيز القدرة على إدارة الفرق وتحفيزها لتحقيق الأهداف المؤسسية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مفاهيم القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أنماط القيادة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> اتخاذ القرار</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الفرق</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحفيز وبناء الثقة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة في بيئة العمل</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المشرفين ومديري الفرق</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير مهاراتهم القيادية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في مناصب إشرافية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أساليب قيادة فعّالة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين التواصل مع الفريق</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تعزيز القدرة على التأثير</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_1', 'دورة القيادة الإدارية', 215); closeModal('crs_modal_1')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_2" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_2')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة إدارة المشاريع</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 215.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>تهدف هذه الدورة إلى إكساب المتدرب أساسيات إدارة المشاريع من التخطيط وحتى التنفيذ والمتابعة، بأسلوب عملي يركّز على تحقيق النتائج.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مفهوم إدارة المشاريع</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تخطيط المشروع</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الوقت والموارد</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> متابعة التنفيذ</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إغلاق المشروع</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بإدارة المشاريع</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في فرق التنفيذ</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير مهاراتهم التنظيمية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات تخطيط وتنفيذ المشاريع</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تنظيم الوقت والموارد</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> التعامل مع التحديات أثناء التنفيذ</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_2', 'دورة إدارة المشاريع', 215); closeModal('crs_modal_2')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_3" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_3')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة نظام العمل السعودي</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 215.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دورة متخصصة تهدف إلى التعريف بنظام العمل السعودي، وحقوق وواجبات كل من العامل وصاحب العمل، بما يعزز الالتزام النظامي داخل المنشآت.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مقدمة في نظام العمل السعودي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> عقود العمل وأنواعها</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حقوق وواجبات العامل</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> واجبات صاحب العمل</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إنهاء علاقة العمل</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> المخالفات والعقوبات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في الموارد البشرية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> أصحاب الأعمال والمنشآت</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالأنظمة واللوائح</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم واضح لنظام العمل</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تقليل المخاطر النظامية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تطبيق صحيح للأنظمة داخل المنشأة</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_3', 'دورة نظام العمل السعودي', 215); closeModal('crs_modal_3')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_4" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_4')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة إدارة الموارد البشرية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 215.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>تركّز هذه الدورة على تزويد المتدربين بفهم عملي لوظائف إدارة الموارد البشرية ودورها في دعم الأداء المؤسسي، من التخطيط والتوظيف إلى إدارة الأداء وتطوير الكفاءات.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أساسيات إدارة الموارد البشرية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تخطيط القوى العاملة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التوظيف والاختيار</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التدريب والتطوير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأداء الوظيفي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> العلاقات الوظيفية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالعمل في الموارد البشرية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في الشؤون الإدارية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير مهارات إدارة الأفراد</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم عملي لإدارة الموارد البشرية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تنظيم وتطوير الموظفين</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين القدرة على التعامل مع بيئة العمل</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_4', 'دورة إدارة الموارد البشرية', 215); closeModal('crs_modal_4')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_5" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_5')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة CAPM – أساسيات إدارة المشاريع</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 535.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دورة تمهيدية لبناء قاعدة معرفية قوية في إدارة المشاريع، وتعد مدخلًا عمليًا للراغبين في العمل في هذا المجال.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مدخل إلى إدارة المشاريع</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> دورة حياة المشروع</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الوقت والمهام</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التواصل داخل فرق المشروع</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أساسيات الجودة والمخاطر</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المبتدئين في إدارة المشاريع</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الخريجين الجدد</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في فرق الدعم والتنفيذ</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أساس قوي في إدارة المشاريع</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تنظيم العمل والمهام</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> جاهزية للعمل ضمن فرق المشاريع</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-certificate"></i> الشهادة</h4>
+                    <p>يحصل المتدرب على شهادة تدريب بعدد (23) ساعة تدريبية معتمدة،<br>وهي الساعات المطلوبة للتقدّم لاختبار CAPM.<br></p>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_5', 'دورة CAPM – أساسيات إدارة المشاريع', 535); closeModal('crs_modal_5')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_6" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_6')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة SHRM – إدارة الموارد البشرية الاحترافية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 535.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>تركّز هذه الدورة على تطوير المعرفة والمهارات المهنية في إدارة الموارد البشرية، وربط إدارة الأفراد بالأهداف الاستراتيجية للمؤسسات.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أساسيات الموارد البشرية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تخطيط القوى العاملة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأداء والتطوير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> علاقات العمل والامتثال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة في الموارد البشرية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في الموارد البشرية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين ببناء مسار مهني في HR</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> مديري الفرق والكوادر الإدارية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم عملي لإدارة الموارد البشرية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تنظيم وتطوير الموظفين</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين الأداء المؤسسي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-certificate"></i> الشهادة</h4>
+                    <p>يحصل المتدرب على شهادة تدريب بعدد (40) ساعة تدريبية معتمدة في إدارة الموارد البشرية،<br>تغطي مجالات الممارسة المهنية المطلوبة للتأهيل لشهادات SHRM-CP / SHRM-SCP.<br></p>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_6', 'دورة SHRM – إدارة الموارد البشرية الاحترافية', 535); closeModal('crs_modal_6')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_7" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_7')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة PMP – إدارة المشاريع الاحترافية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 535.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دورة احترافية متخصصة تهدف إلى تأهيل المتدربين لفهم منهجيات إدارة المشاريع وفق أفضل الممارسات العالمية، والتعامل مع جميع مراحل المشروع باحترافية عالية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أساسيات إدارة المشاريع</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة نطاق المشروع والوقت</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة التكلفة والجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر والاتصال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة وإدارة فرق المشاريع</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بإدارة المشاريع</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في فرق التنفيذ</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير مسارهم المهني في المشاريع</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم شامل لإدارة المشاريع</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تخطيط ومتابعة عملية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> جاهزية مهنية للعمل في بيئات المشاريع</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-certificate"></i> الشهادة</h4>
+                    <p>يحصل المتدرب بعد إتمام الدورة على شهادة تدريب بعدد (35) ساعة تدريبية معتمدة،<br>وهي الساعات المطلوبة للتأهل للتقدّم لاختبار PMP.<br></p>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_7', 'دورة PMP – إدارة المشاريع الاحترافية', 535); closeModal('crs_modal_7')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_8" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_8')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة إعداد التقارير الإدارية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 215.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>تهدف هذه الدورة إلى تطوير مهارات إعداد التقارير الإدارية بشكل واضح واحترافي يدعم اتخاذ القرار.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أنواع التقارير الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> جمع وتحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> هيكلة التقرير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> العرض والتقديم</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> كتابة التوصيات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> استخدام التقارير في القرار</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في الإدارة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المشرفين ومديري الأقسام</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بصناعة القرار</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إعداد تقارير احترافية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> عرض المعلومات بوضوح</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرار الإداري</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_8', 'دورة إعداد التقارير الإدارية', 215); closeModal('crs_modal_8')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_9" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_9')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة مهارات البيع</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 215.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>تركّز هذه الدورة على تطوير مهارات البيع وبناء علاقات ناجحة مع العملاء لتحقيق نتائج أفضل.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أساسيات البيع</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> فهم احتياجات العميل</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات الإقناع</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التفاوض</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إغلاق الصفقات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> متابعة العملاء</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في المبيعات</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بتطوير مهارات البيع</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> أصحاب المشاريع</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات بيع احترافية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين التعامل مع العملاء</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> زيادة فرص النجاح البيعي</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_9', 'دورة مهارات البيع', 215); closeModal('crs_modal_9')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_10" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_10')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة إدارة الوقت وضغوط العمل</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 215.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>تهدف هذه الدورة إلى مساعدة المتدربين على تنظيم الوقت والتعامل مع ضغوط العمل بكفاءة لتحقيق التوازن والإنتاجية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مفهوم إدارة الوقت</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحديد الأولويات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط اليومي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التعامل مع ضغوط العمل</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المهام</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين الإنتاجية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في بيئات عمل سريعة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تحسين تنظيم وقتهم</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> من يعانون من ضغوط العمل</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تنظيم الوقت بفعالية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تقليل الضغوط</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين الأداء اليومي</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_10', 'دورة إدارة الوقت وضغوط العمل', 215); closeModal('crs_modal_10')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_11" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_11')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة إدارة الأداء الوظيفي (KPIs)</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 215.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>تركّز هذه الدورة على فهم مؤشرات الأداء الرئيسية وكيفية استخدامها لقياس وتحسين أداء الأفراد والمؤسسات.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مفهوم الأداء الوظيفي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مؤشرات الأداء الرئيسية KPIs</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تصميم مؤشرات الأداء</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> قياس وتحليل النتائج</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين الأداء</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> ربط الأداء بالأهداف</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المدراء والمشرفين</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في التخطيط والمتابعة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بتطوير الأداء</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تصميم مؤشرات أداء فعّالة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> متابعة وتحسين الأداء</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرار الإداري</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_11', 'دورة إدارة الأداء الوظيفي (KPIs)', 215); closeModal('crs_modal_11')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_12" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_12')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة المحاسبة لغير المحاسبين</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 215.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دورة مبسطة تهدف إلى تمكين غير المتخصصين من فهم أساسيات المحاسبة وقراءة القوائم المالية لدعم اتخاذ القرار.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مبادئ المحاسبة الأساسية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القوائم المالية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الإيرادات والمصروفات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الميزانية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحليل المالي المبسط</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرار الإداري</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> غير المتخصصين في المحاسبة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المدراء وأصحاب الأعمال</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بفهم الجوانب المالية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم القوائم المالية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قراءة الأرقام بشكل صحيح</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قرارات إدارية أفضل</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_12', 'دورة المحاسبة لغير المحاسبين', 215); closeModal('crs_modal_12')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_13" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_13')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة Power BI – تحليل البيانات وعرضها</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 535.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دورة عملية تركّز على تحليل البيانات وبناء تقارير ولوحات معلومات تفاعلية تدعم اتخاذ القرار.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مدخل إلى Power BI</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> ربط مصادر البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> نمذجة البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إنشاء التقارير التفاعلية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> لوحات المعلومات Dashboards</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بتحليل البيانات</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في التخطيط والتقارير</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المدراء وصنّاع القرار</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات بصريًا</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إعداد تقارير احترافية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرار بالبيانات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-certificate"></i> الشهادة</h4>
+                    <p>يحصل المتدرب على شهادة تدريب بعدد (25) ساعة تدريبية معتمدة في تحليل البيانات باستخدام Power BI.<br></p>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_13', 'دورة Power BI – تحليل البيانات وعرضها', 535); closeModal('crs_modal_13')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_14" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_14')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة Six Sigma – إدارة الجودة والتحسين المستمر</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 535.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دورة احترافية متخصصة تهدف إلى تمكين المتدربين من فهم منهجية Six Sigma وتطبيقها في تحسين العمليات، تقليل الأخطاء، ورفع كفاءة الأداء المؤسسي باستخدام أدوات تحليل معتمدة عالميًا. تركّز الدورة على الجانب التطبيقي وربط التحسين المستمر بالنتائج القابلة للقياس داخل بيئات العمل المختلفة.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مدخل إلى منهجية Six Sigma</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مفهوم الجودة والتحسين المستمر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> دورة التحسين DMAIC</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحديد وتحليل المشكلات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> قياس الأداء وتحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين العمليات وتقليل الهدر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> ضبط الجودة والاستدامة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تطبيق Six Sigma في بيئة العمل</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بإدارة الجودة والتحسين المستمر</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في العمليات والتشغيل</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> مديري الأقسام والمشرفين</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تحسين الأداء المؤسسي</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثين عن أدوات عملية لخفض التكاليف ورفع الكفاءة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم عملي لمنهجية Six Sigma</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تحليل المشكلات وتحسين العمليات</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تقليل الأخطاء والهدر في العمل</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> رفع كفاءة الأداء والجودة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> القدرة على تطبيق التحسين المستمر داخل المؤسسة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-certificate"></i> الشهادة</h4>
+                    <p>يحصل المتدرب بعد إتمام الدورة على شهادة تدريب بعدد الساعات المناسبة للمستوى التدريبي وفق Six Sigma، على النحو التالي:<br>Six Sigma Yellow Belt<br>شهادة تدريب بعدد (16) ساعة تدريبية معتمدة<br>Six Sigma Green Belt<br>شهادة تدريب بعدد (40) ساعة تدريبية معتمدة<br>Six Sigma Black Belt<br>شهادة تدريب بعدد (80) ساعة تدريبية معتمدة<br>يتم تحديد المستوى المناسب للمتدرب وفق خبرته واحتياجه المهني.<br></p>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى تدريبي تطبيقي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> أمثلة وحالات عملية من بيئة العمل</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> ربط التحسين بالنتائج القابلة للقياس</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم تدريبي خلال فترة الدورة</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_14', 'دورة Six Sigma – إدارة الجودة والتحسين المستمر', 535); closeModal('crs_modal_14')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_15" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_15')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة MOS – مهارات Microsoft Office الاحترافية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 535.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دورة عملية تهدف إلى رفع كفاءة استخدام برامج Microsoft Office في بيئة العمل الاحترافية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> Microsoft Word</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> Microsoft Excel</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> Microsoft PowerPoint</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة البيانات والجداول</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الأتمتة المكتبية الأساسية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الموظفين الإداريين</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الخريجين الجدد</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير مهاراتهم المكتبية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> استخدام احترافي لأدوات Office</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تنظيم العمل المكتبي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> زيادة الإنتاجية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-certificate"></i> الشهادة</h4>
+                    <p>يحصل المتدرب على شهادة تدريب بعدد (20) ساعة تدريبية معتمدة في مهارات Microsoft Office.<br></p>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_15', 'دورة MOS – مهارات Microsoft Office الاحترافية', 535); closeModal('crs_modal_15')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_16" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_16')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة FMAA – التحليل المالي والتقييم</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 535.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دورة احترافية تركّز على التحليل المالي وتقييم الشركات، وفهم القوائم المالية بصورة عملية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القوائم المالية وتحليلها</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> النسب والمؤشرات المالية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التقييم المالي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط المالي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> قراءة التقارير المالية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالتحليل المالي</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> رواد الأعمال</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في المجالات المالية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات تحليل مالي عملية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم التقييم المالي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرار الاستثماري</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-certificate"></i> الشهادة</h4>
+                    <p>يحصل المتدرب على شهادة تدريب بعدد (30) ساعة تدريبية معتمدة في التحليل المالي والتقييم.<br></p>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_16', 'دورة FMAA – التحليل المالي والتقييم', 535); closeModal('crs_modal_16')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_17" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_17')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة CMA – المحاسبة الإدارية الاحترافية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 535.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دورة متخصصة تهدف إلى تطوير فهم المحاسبة الإدارية ودورها في دعم القرار المالي والتخطيط الاستراتيجي.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أساسيات المحاسبة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل التكاليف</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط والميزانيات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأداء المالي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> اتخاذ القرار المالي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالمجال المالي</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المدراء غير المتخصصين في المحاسبة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في الشؤون المالية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قراءة وتحليل البيانات المالية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرار الإداري</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم أعمق للأداء المالي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-certificate"></i> الشهادة</h4>
+                    <p>يحصل المتدرب على شهادة تدريب بعدد (40) ساعة تدريبية معتمدة في المحاسبة الإدارية،<br>وتُعد هذه الساعات جزءًا من التأهيل المهني لاختبارات CMA.<br></p>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_17', 'دورة CMA – المحاسبة الإدارية الاحترافية', 535); closeModal('crs_modal_17')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="crs_modal_18" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('crs_modal_18')">&times;</span>
+            <div class="modal-header">
+                <h2>دورة CCXP – تجربة وخدمة العملاء الاحترافية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 535.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دورة احترافية تهدف إلى بناء تجربة عميل متميزة، وتحسين جودة التفاعل مع العملاء بما يعزّز الولاء والرضا.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مفهوم تجربة العميل</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة نقاط التواصل</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> قياس رضا العملاء</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين تجربة العميل</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الشكاوى والولاء</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في خدمة العملاء</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> مديري تجربة العميل</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين ببناء علاقات طويلة الأمد مع العملاء</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين مهارات التواصل</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> بناء تجربة عميل احترافية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> رفع مستوى رضا العملاء</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-certificate"></i> الشهادة</h4>
+                    <p>يحصل المتدرب على شهادة تدريب بعدد (30) ساعة تدريبية معتمدة في تجربة وخدمة العملاء،<br>تدعم متطلبات التطوير المهني في مجال Customer Experience.<br></p>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('crs_18', 'دورة CCXP – تجربة وخدمة العملاء الاحترافية', 535); closeModal('crs_modal_18')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+<!-- Modals End -->
+<!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            
+            <p>منصة تدريب وتأهيل مهني معتمدة تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث.</p>
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>روابط سريعة</h5>
+            <ul>
+              <li><a href="../../index.html">الرئيسية</a></li>
+              <li><a href="about.html">عن الأكاديمية</a></li>
+              <li><a href="programs.html">برامجنا</a></li>
+              
+              <li><a href="verify.html">التحقق من الشهادات</a></li>
+              <li><a href="contact.html">تواصل معنا</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>البرامج</h5>
+            <ul>
+              <li><a href="#programs">الدكتوراة المهنية</a></li>
+              <li><a href="#programs">الماجستير المهني</a></li>
+              <li><a href="#programs">الدبلوم المهني</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>قانوني</h5>
+            <ul>
+              <li><a href="privacy.html">سياسة الخصوصية</a></li>
+              <li><a href="terms.html">الشروط والأحكام</a></li>
+              <li><a href="refund.html">سياسة الاسترداد</a></li>
+              <li><a href="accessibility.html">إمكانية الوصول</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 أكاديمية نبراس. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="../../assets/js/script.js"></script>
+
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+  </body>
+</html>

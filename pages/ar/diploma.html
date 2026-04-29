@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>قسم الدبلوم المهني | أكاديمية نبراس</title>
+  <meta name="description" content="أكاديمية نبراس - منصة تدريب وتأهيل مهني معتمدة، تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
+</head>
+<body>
+
+        <!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>الإجمالي:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+        
+    <!-- Floating Cart Button -->
+    <div class="floating-cart" onclick="toggleCart(event)">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="floating-cart-badge cart-badge">0</span>
+    </div>
+            
+<!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>الإجمالي:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+  
+  </div>
+
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar scrolled">
+    <div class="nav-container">
+      <a href="../../index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../en/diploma.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+        <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
+        <li><a href="about.html" class="nav-link">عن الأكاديمية</a></li>
+        <li><a href="programs.html" class="nav-link">البرامج والخدمات</a></li>
+        <li><a href="articles.html" class="nav-link">المقالات</a></li>
+        
+        <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
+        <li><a href="verify.html" class="nav-link">التحقق من الشهادات</a></li>
+        
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="القائمة">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../en/diploma.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+      <li><a href="../../index.html">الرئيسية</a></li>
+      <li><a href="about.html">عن الأكاديمية</a></li>
+      <li><a href="programs.html">البرامج والخدمات</a></li>
+      <li><a href="articles.html">المقالات</a></li>
+      
+      <li><a href="contact.html">تواصل معنا</a></li>
+      <li><a href="verify.html">التحقق من الشهادات</a></li>
+      
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
+    </ul>
+  </div>
+
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>قسم الدبلوم المهني</h1>
+      <p>برامج عملية متخصصة تؤهلك لاكتساب مهارات تطبيقية تعزز فرصك في سوق العمل.</p>
+    </div>
+  </section>
+
+  <!-- Items Section -->
+  <section class="programs-section" style="padding: 80px 0; background: var(--bg-surface);">
+    <div class="container">
+      <div class="programs-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:30px;">
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم التخطيط الاستراتيجي التطبيقي</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم يقدّم مهارات وخبرات في صياغة وتنفيذ الخطط الاستراتيجية داخل المؤسسات، مع أدوات قياس التقدم وصناعة القرار.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_0')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_0', 'دبلوم التخطيط الاستراتيجي التطبيقي', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم إدارة الموارد البشرية المتقدم</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم يركّز على تطوير مهارات إدارة الأفراد ويقدّم إطارًا عمليًا يساعد في فهم سياسات وإجراءات الموارد البشرية بوضوح. -- -- ----</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_1')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_1', 'دبلوم إدارة الموارد البشرية المتقدم', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم إدارة الأعمال الاحترافي</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم عملي يهدف إلى تأهيل المتدربين لفهم شامل لعمليات إدارة الأعمال، وتنمية المهارات الأساسية المطلوبة للعمل في بيئات تجارية وإدارية متعددة.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_2')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_2', 'دبلوم إدارة الأعمال الاحترافي', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم السلامة والصحة المهنية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم يركّز على بناء بيئات عمل آمنة من خلال فهم أنظمة السلامة وتقييم المخاطر المهنية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_3')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_3', 'دبلوم السلامة والصحة المهنية', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم الأمن السيبراني الاحترافي</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم مهني يركّز على حماية المعلومات والأنظمة الرقمية، وإدارة المخاطر السيبرانية في بيئات العمل.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_4')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_4', 'دبلوم الأمن السيبراني الاحترافي', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم الذكاء الاصطناعي للأعمال</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم يركّز على فهم تطبيقات الذكاء الاصطناعي في بيئات الأعمال، وكيفية توظيفها لتحسين الأداء وصناعة القرار.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_5')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_5', 'دبلوم الذكاء الاصطناعي للأعمال', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم تحليل البيانات لدعم القرار</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم مهني يركّز على تحليل البيانات وتحويلها إلى معلومات تدعم القرارات الإدارية والاستراتيجية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_6')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_6', 'دبلوم تحليل البيانات لدعم القرار', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم التحول الرقمي وإدارة التكنولوجيا</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم مهني يركّز على تمكين المتدرب من فهم التحول الرقمي من منظور إداري، وإدارة التكنولوجيا كأداة داعمة للأداء المؤسسي وصناعة القرار.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_7')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_7', 'دبلوم التحول الرقمي وإدارة التكنولوجيا', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم إدارة المشروعات والتطوير المؤسسي</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم عملي يركّز على كيفية تخطيط، تنفيذ، ومتابعة المشروعات داخل المؤسسات، وربط ذلك بالإجراءات التطويرية المؤسسية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_8')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_8', 'دبلوم إدارة المشروعات والتطوير المؤسسي', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم العلاقات العامة والإعلام المؤسسي</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم يركّز على تطوير المهارات الخاصة بالتواصل وإدارة الصورة الذهنية باسم المؤسسة في بيئات الأعمال.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_9')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_9', 'دبلوم العلاقات العامة والإعلام المؤسسي', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدبلوم المهني في المحاسبة والإدارة المالية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم يركّز على فهم أساسيات المحاسبة والمالية، وكيفية إدارة الموارد المالية للشركات بكفاءة.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_10')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_10', 'الدبلوم المهني في المحاسبة والإدارة المالية', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدبلوم المهني في التسويق والمبيعات</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم عملي يركّز على فهم السوق، سلوك العملاء، واستراتيجيات التسويق والمبيعات لزيادة التفاعل وتحقيق النتائج.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_11')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_11', 'الدبلوم المهني في التسويق والمبيعات', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم إدارة المخاطر المؤسسية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم مهني يركّز على تحديد وتحليل وإدارة المخاطر داخل المؤسسات لدعم الاستقرار والاستدامة.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_12')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_12', 'دبلوم إدارة المخاطر المؤسسية', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم القيادة الإدارية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم يركّز على تطوير المهارات القيادية وبناء القدرة على التأثير وإدارة الفرق.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_13')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_13', 'دبلوم القيادة الإدارية', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">دبلوم إدارة الجودة المتقدمة</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم مهني يركّز على نظم الجودة والتحسين المستمر ورفع كفاءة العمليات داخل المؤسسات.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_14')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_14', 'دبلوم إدارة الجودة المتقدمة', 505)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+</div>
+        
+      </div>
+    </div>
+  
+    <div class="container" style="margin-top: 40px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <h3 style="color: var(--primary-color); margin-bottom: 15px;"><i class="fas fa-check-double"></i> نظام الدراسة والتقييم</h3>
+        <p style="color: var(--text-muted); line-height: 1.8;">تم تصميم نظام الدراسة ليكون مرنًا وسهل المتابعة، مع:</p>
+        <ul style="list-style: none; padding: 0; line-height: 1.8; color: var(--text-muted);">
+            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> محتوى تدريبي منظم</li>
+            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> تقييمات مرحلية لقياس مستوى الاستيعاب</li>
+            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> متابعة تهدف إلى دعم المتدرب وتحسين مستواه</li>
+            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> لا يعتمد البرنامج على مبدأ الرسوب، بل على التطوير التدريجي ورفع كفاءة المتدرب.</li>
+        </ul>
+    </div>
+    
+  </section>
+
+
+
+<!-- Modals Start -->
+
+        <div id="dip_modal_0" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_0')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم التخطيط الاستراتيجي التطبيقي</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم يقدّم مهارات وخبرات في صياغة وتنفيذ الخطط الاستراتيجية داخل المؤسسات، مع أدوات قياس التقدم وصناعة القرار.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم آليات التخطيط الاستراتيجي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير القدرة على قراءة بيئة الأعمال</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تمكين المتدرب من تنفيذ خطط قابلة للقياس</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مدخل إلى التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيئة الداخلية والخارجية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> صياغة الرؤية والرسالة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحديد الأهداف الاستراتيجية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التنفيذ والمتابعة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مؤشرات الأداء الرئيسية KPI</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التقييم والتحسين</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> اتخاذ القرار الاستراتيجي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملون في التخطيط المؤسسي</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبون في تطوير مهارات قيادية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> من يسعون لفهم أفضل لصياغة الخطط</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تحليل استراتيجي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قدرة على تنفيذ الخطط بنجاح</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم متعمق لآليات التحسين المؤسسي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> حالات دراسية تطبيقية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> نماذج عمل جاهزة</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_0', 'دبلوم التخطيط الاستراتيجي التطبيقي', 505); closeModal('dip_modal_0')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_1" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_1')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم إدارة الموارد البشرية المتقدم</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم يركّز على تطوير مهارات إدارة الأفراد ويقدّم إطارًا عمليًا يساعد في فهم سياسات وإجراءات الموارد البشرية بوضوح. -- -- ----</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم وظائف إدارة الموارد البشرية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير مهارات التخطيط والتوظيف</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة الأداء وتحفيز الموظفين</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أساسيات الموارد البشرية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي للكوادر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> توظيف واختيار الكفاءات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تطوير الأداء والتدريب</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التعويضات والحوافز</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> العلاقات المؤسسية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة التغيير والتحفيز</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التقييم والتطوير الوظيفي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبون بالعمل في إدارة الموارد البشرية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملون في أقسام التوظيف والتطوير</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثون عن ترقية مهاراتهم في إدارة الأفراد</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم شامل للموارد البشرية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات لإدارة وتطوير الكوادر</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قدرة على تصميم نظم تقييم أداء</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> نماذج جاهزة للتطبيق</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى حديث مدعوم بأمثلة عملية</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_1', 'دبلوم إدارة الموارد البشرية المتقدم', 505); closeModal('dip_modal_1')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_2" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_2')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم إدارة الأعمال الاحترافي</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم عملي يهدف إلى تأهيل المتدربين لفهم شامل لعمليات إدارة الأعمال، وتنمية المهارات الأساسية المطلوبة للعمل في بيئات تجارية وإدارية متعددة.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء أساس قوي في مفاهيم إدارة الأعمال</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير مهارات التخطيط والتنظيم</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تمكين المتدرب من اتخاذ قرارات إدارية فعّالة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعزيز الجاهزية لسوق العمل الإداري</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أساسيات إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التسويق والمبيعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الموارد البشرية الأساسية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> المحاسبة والإدارة المالية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات الأساسية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> العلاقات العامة والإعلام المؤسسي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية المبدئية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> من يرغب في دخول مجال الإدارة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الخريجون الجدد الباحثون عن إعداد عملي</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبون في تطوير مهاراتهم الإدارية الأساسية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم متكامل لمفاهيم الإدارة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قدرة على المشاركة في فرق العمل الإدارية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات عملية للتخطيط والتنظيم</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى تطبيقي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> حالات واقعية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم فني تدريبي</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_2', 'دبلوم إدارة الأعمال الاحترافي', 505); closeModal('dip_modal_2')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_3" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_3')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم السلامة والصحة المهنية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم يركّز على بناء بيئات عمل آمنة من خلال فهم أنظمة السلامة وتقييم المخاطر المهنية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعزيز ثقافة السلامة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تقليل المخاطر المهنية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> الالتزام بالمعايير المهنية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أساسيات السلامة والصحة المهنية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحديد المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تقييم المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أنظمة السلامة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الحوادث</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> السلامة في بيئات العمل</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التوعية والتدريب</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحسين المستمر للسلامة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بمجال السلامة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في المواقع التشغيلية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في فهم نظم السلامة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم أنظمة السلامة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر المهنية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> بيئات عمل أكثر أمانًا</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى عملي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> حالات تطبيقية</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_3', 'دبلوم السلامة والصحة المهنية', 505); closeModal('dip_modal_3')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_4" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_4')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم الأمن السيبراني الاحترافي</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم مهني يركّز على حماية المعلومات والأنظمة الرقمية، وإدارة المخاطر السيبرانية في بيئات العمل.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم أساسيات الأمن السيبراني</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة المخاطر الرقمية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> حماية البيانات المؤسسية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مدخل إلى الأمن السيبراني</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التهديدات الرقمية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر السيبرانية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أمن المعلومات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> سياسات الحماية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الاستجابة للحوادث</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التوعية الأمنية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> استمرارية الأعمال الرقمية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بأمن المعلومات</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في الأنظمة الرقمية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في فهم الحماية السيبرانية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم شامل للأمن السيبراني</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات حماية أساسية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تقليل المخاطر الرقمية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى تطبيقي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> سيناريوهات واقعية</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_4', 'دبلوم الأمن السيبراني الاحترافي', 505); closeModal('dip_modal_4')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_5" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_5')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم الذكاء الاصطناعي للأعمال</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم يركّز على فهم تطبيقات الذكاء الاصطناعي في بيئات الأعمال، وكيفية توظيفها لتحسين الأداء وصناعة القرار.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم مفاهيم الذكاء الاصطناعي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> توظيف AI في الأعمال</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم الابتكار المؤسسي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مدخل إلى الذكاء الاصطناعي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تطبيقات AI في الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات الذكي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الأتمتة الذكية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> اتخاذ القرار المدعوم بالذكاء الاصطناعي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أخلاقيات الذكاء الاصطناعي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة مشاريع AI</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مستقبل الذكاء الاصطناعي في المؤسسات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالتقنيات الذكية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في فهم AI من منظور عملي</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في التطوير والابتكار</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم تطبيقي للذكاء الاصطناعي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات ذكية لدعم القرار</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> جاهزية للتعامل مع التقنيات الحديثة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى مبسط وعملي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> أمثلة تطبيقية</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_5', 'دبلوم الذكاء الاصطناعي للأعمال', 505); closeModal('dip_modal_5')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_6" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_6')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم تحليل البيانات لدعم القرار</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم مهني يركّز على تحليل البيانات وتحويلها إلى معلومات تدعم القرارات الإدارية والاستراتيجية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم أساسيات تحليل البيانات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم القرار باستخدام البيانات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين جودة المخرجات الإدارية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مدخل إلى تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> جمع وتنظيف البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحليل الوصفي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحليل التفسيري</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تصور البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مؤشرات الأداء</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> استخدام البيانات في القرار</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إعداد التقارير التحليلية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالبيانات والتحليل</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في التخطيط والمتابعة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير مهارات تحليلية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تحليل بيانات عملية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرار بالأرقام</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تقارير واضحة قابلة للاستخدام</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات عملية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> أمثلة واقعية</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_6', 'دبلوم تحليل البيانات لدعم القرار', 505); closeModal('dip_modal_6')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_7" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_7')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم التحول الرقمي وإدارة التكنولوجيا</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم مهني يركّز على تمكين المتدرب من فهم التحول الرقمي من منظور إداري، وإدارة التكنولوجيا كأداة داعمة للأداء المؤسسي وصناعة القرار.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم مفاهيم التحول الرقمي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة الأنظمة التقنية داخل المؤسسات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم الابتكار باستخدام التكنولوجيا</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مدخل إلى التحول الرقمي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة التكنولوجيا المؤسسية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الأنظمة الرقمية وإدارة العمليات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> البيانات ودورها في التحول</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الابتكار التقني</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة التغيير الرقمي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة التقنية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> قياس أثر التحول الرقمي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالتحول الرقمي</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار إدارية تقنية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في تطوير الأنظمة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم عملي للالتحول الرقمي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات إدارة تقنية فعّالة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> ربط التقنية بالأهداف المؤسسية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى تطبيقي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> نماذج عمل رقمية</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_7', 'دبلوم التحول الرقمي وإدارة التكنولوجيا', 505); closeModal('dip_modal_7')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_8" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_8')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم إدارة المشروعات والتطوير المؤسسي</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم عملي يركّز على كيفية تخطيط، تنفيذ، ومتابعة المشروعات داخل المؤسسات، وربط ذلك بالإجراءات التطويرية المؤسسية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير مهارات إدارة المشروعات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> الارتباط بالتطوير التنظيمي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين تنفيذ النتائج</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مدخل إلى إدارة المشروعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط والمتابعة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حل المشكلات العملية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الوقت</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين الأداء المؤسسي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات التطوير المؤسسي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التقييم والمتابعة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة التغيير</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثون عن مهارات إدارة المشروعات</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملون في فرق التنفيذ المؤسسي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تخطيط وتشغيل</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> طرق تحسين مؤسسي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم علاقة المشروعات بالتطوير</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات عملية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم تدريبي</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_8', 'دبلوم إدارة المشروعات والتطوير المؤسسي', 505); closeModal('dip_modal_8')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_9" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_9')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم العلاقات العامة والإعلام المؤسسي</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم يركّز على تطوير المهارات الخاصة بالتواصل وإدارة الصورة الذهنية باسم المؤسسة في بيئات الأعمال.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم الاتصال المؤسسي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين مهارات التواصل</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة العلاقات مع الجمهور</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> العلاقات العامة الأساسية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الإعلام المؤسسي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> استراتيجيات التواصل</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأزمات الإعلامية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> بناء السمعة المؤسسية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> العروض والتقديم الاحترافي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الفعاليات والأنشطة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التواصل الرقمي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمون بالتواصل المؤسسي</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملون في العلاقات العامة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> من يسعون لتحسين السرد الذهني للمؤسسة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قدرة على صياغة رسائل إعلامية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأحداث والاتصال الفعال</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم المنصات الرقمية للتواصل</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى عملي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> حالات تطبيق فوري</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_9', 'دبلوم العلاقات العامة والإعلام المؤسسي', 505); closeModal('dip_modal_9')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_10" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_10')">&times;</span>
+            <div class="modal-header">
+                <h2>الدبلوم المهني في المحاسبة والإدارة المالية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم يركّز على فهم أساسيات المحاسبة والمالية، وكيفية إدارة الموارد المالية للشركات بكفاءة.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم القوائم المالية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> ربط البيانات المالية بالقرار الإداري</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء قدرات في التخطيط المالي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أساسيات المحاسبة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القوائم المالية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات المالية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الميزانيات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط المالي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التكاليف وإدارة الربحية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الرقابة المالية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> اتخاذ القرار المالي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمون بالمالية والمحاسبة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملون في الأقسام المالية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثون عن تطوير مهارات مالية عملية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم القوائم المالية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تحليل وربحية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قدرة على التخطيط المالي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> نماذج تحليل جاهزة</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات عملية</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_10', 'الدبلوم المهني في المحاسبة والإدارة المالية', 505); closeModal('dip_modal_10')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_11" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_11')">&times;</span>
+            <div class="modal-header">
+                <h2>الدبلوم المهني في التسويق والمبيعات</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم عملي يركّز على فهم السوق، سلوك العملاء، واستراتيجيات التسويق والمبيعات لزيادة التفاعل وتحقيق النتائج.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء مهارات تحليل السوق</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير خطط تسويق ومبيعات فعّالة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> ربط التسويق بالنتائج التجارية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أساسيات التسويق</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المبيعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل سلوك العملاء</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التسويق الرقمي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> العلامة التجارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> العلاقات العامة في التسويق</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> قياس الفعالية التسويقية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> خدمة العملاء الاحترافية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمون بالتسويق الرقمي والمبيعات</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثون عن فهم عملي للسوق</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> من يعملون في فرق المبيعات والتسويق</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تحليل السوق</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> خطط تسويق قابلة للتطبيق</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم متكامل لسلوك العملاء</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات على الحملات الحقيقية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى مواكب للسوق</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_11', 'الدبلوم المهني في التسويق والمبيعات', 505); closeModal('dip_modal_11')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_12" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_12')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم إدارة المخاطر المؤسسية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم مهني يركّز على تحديد وتحليل وإدارة المخاطر داخل المؤسسات لدعم الاستقرار والاستدامة.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم أنواع المخاطر</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم القرار المؤسسي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعزيز الاستعداد للمخاطر</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مدخل إلى إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحديد المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل وتقييم المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> خطط المعالجة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> المخاطر التشغيلية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> المخاطر الاستراتيجية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> استمرارية الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> المراجعة والتحسين</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بإدارة المخاطر</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في التخطيط والحوكمة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار تنظيمية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تحليل مخاطر</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرار الاستراتيجي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين الاستقرار المؤسسي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> حالات عملية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> نماذج جاهزة</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_12', 'دبلوم إدارة المخاطر المؤسسية', 505); closeModal('dip_modal_12')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_13" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_13')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم القيادة الإدارية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم يركّز على تطوير المهارات القيادية وبناء القدرة على التأثير وإدارة الفرق.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير المهارات القيادية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين أساليب التأثير</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة الفرق بفعالية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مفاهيم القيادة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> أنماط القيادة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> اتخاذ القرار</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الفرق</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التواصل القيادي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة التغيير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحفيز وبناء الثقافة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التقييم والتطوير القيادي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير مهاراتهم القيادية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في مناصب إشرافية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الطامحين لأدوار قيادية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات قيادة عملية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة فعالة للفرق</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قدرة على التأثير المؤسسي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات واقعية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم تدريبي</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_13', 'دبلوم القيادة الإدارية', 505); closeModal('dip_modal_13')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dip_modal_14" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('dip_modal_14')">&times;</span>
+            <div class="modal-header">
+                <h2>دبلوم إدارة الجودة المتقدمة</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 505.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>دبلوم مهني يركّز على نظم الجودة والتحسين المستمر ورفع كفاءة العمليات داخل المؤسسات.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطبيق معايير الجودة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين العمليات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> رفع مستوى الأداء المؤسسي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مدخل إلى إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> نظم الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين العمليات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> مؤشرات الأداء</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الجودة والابتكار</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التدقيق الداخلي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحسين المستمر</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالجودة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> العاملين في التطوير والتحسين</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في رفع كفاءة الأداء</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تحسين الجودة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تطبيق معايير فعالة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> نتائج قابلة للقياس</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
+                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> نماذج تطبيقية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى عملي</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('dip_14', 'دبلوم إدارة الجودة المتقدمة', 505); closeModal('dip_modal_14')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+<!-- Modals End -->
+<!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            
+            <p>منصة تدريب وتأهيل مهني معتمدة تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث.</p>
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>روابط سريعة</h5>
+            <ul>
+              <li><a href="../../index.html">الرئيسية</a></li>
+              <li><a href="about.html">عن الأكاديمية</a></li>
+              <li><a href="programs.html">برامجنا</a></li>
+              
+              <li><a href="verify.html">التحقق من الشهادات</a></li>
+              <li><a href="contact.html">تواصل معنا</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>البرامج</h5>
+            <ul>
+              <li><a href="#programs">الدكتوراة المهنية</a></li>
+              <li><a href="#programs">الماجستير المهني</a></li>
+              <li><a href="#programs">الدبلوم المهني</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>قانوني</h5>
+            <ul>
+              <li><a href="privacy.html">سياسة الخصوصية</a></li>
+              <li><a href="terms.html">الشروط والأحكام</a></li>
+              <li><a href="refund.html">سياسة الاسترداد</a></li>
+              <li><a href="accessibility.html">إمكانية الوصول</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 أكاديمية نبراس. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="../../assets/js/script.js"></script>
+
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+  </body>
+</html>

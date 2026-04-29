@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>قسم الدكتوراه المهنية | أكاديمية نبراس</title>
+  <meta name="description" content="أكاديمية نبراس - منصة تدريب وتأهيل مهني معتمدة، تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
+</head>
+<body>
+
+        <!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>الإجمالي:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+        
+    <!-- Floating Cart Button -->
+    <div class="floating-cart" onclick="toggleCart(event)">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="floating-cart-badge cart-badge">0</span>
+    </div>
+            
+<!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>الإجمالي:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+  
+  </div>
+
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar scrolled">
+    <div class="nav-container">
+      <a href="../../index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../en/phd.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+        <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
+        <li><a href="about.html" class="nav-link">عن الأكاديمية</a></li>
+        <li><a href="programs.html" class="nav-link">البرامج والخدمات</a></li>
+        <li><a href="articles.html" class="nav-link">المقالات</a></li>
+        
+        <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
+        <li><a href="verify.html" class="nav-link">التحقق من الشهادات</a></li>
+        
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="القائمة">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../en/phd.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+      <li><a href="../../index.html">الرئيسية</a></li>
+      <li><a href="about.html">عن الأكاديمية</a></li>
+      <li><a href="programs.html">البرامج والخدمات</a></li>
+      <li><a href="articles.html">المقالات</a></li>
+      
+      <li><a href="contact.html">تواصل معنا</a></li>
+      <li><a href="verify.html">التحقق من الشهادات</a></li>
+      
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
+    </ul>
+  </div>
+
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>قسم الدكتوراه المهنية</h1>
+      <p>برنامج احترافي رفيع المستوى لإعداد خبراء وقادة مؤثرين في مجالاتهم.</p>
+    </div>
+  </section>
+
+  <!-- Items Section -->
+  <section class="programs-section" style="padding: 80px 0; background: var(--bg-surface);">
+    <div class="container">
+      <div class="programs-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:30px;">
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في إدارة الأعمال</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج دكتوراه مهني مصمم لتأهيل كوادر ذات تفكير متقدم وقدرة تطبيقية عالية في مجالات الإدارة، وتعميق المعرفة في فهم بيئات الأعمال المعقدة، وصياغة حلول استراتيجية قابلة للتطبيق في المؤسسات.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_0')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_0', 'الدكتوراه المهنية في إدارة الأعمال', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في سلاسل الإمداد</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على إدارة سلاسل الإمداد المعقدة، وتحسين الكفاءة والمرونة التشغيلية عبر التحليل المتقدم واتخاذ القرار.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_1')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_1', 'الدكتوراه المهنية في سلاسل الإمداد', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في إدارة المستشفيات</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج متخصص يركّز على الإدارة المتقدمة للمستشفيات، وتحسين جودة الخدمات والحوكمة التشغيلية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_2')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_2', 'الدكتوراه المهنية في إدارة المستشفيات', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في الإدارة الصحية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على السياسات الصحية وإدارة النظم الصحية المعقدة وربط التخطيط بالتنفيذ.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_3')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_3', 'الدكتوراه المهنية في الإدارة الصحية', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في التسويق والمبيعات</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج مهني متقدم يركّز على بناء استراتيجيات تسويق ومبيعات قائمة على التحليل العميق للسوق، وربط القرارات التسويقية بالأداء التجاري المستدام.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_4')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_4', 'الدكتوراه المهنية في التسويق والمبيعات', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في الموارد البشرية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على النظم المتقدمة لإدارة الكفاءات البشرية، وتطوير استراتيجيات الموارد البشرية مقترنة بالنتائج المؤسسية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_5')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_5', 'الدكتوراه المهنية في الموارد البشرية', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في حوكمة الشركات</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على البناء المتقدم لإطارات الحوكمة والترابط المؤسسي بين الإدارة والامتثال والتنظيم الداخلي والخارجي.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_6')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_6', 'الدكتوراه المهنية في حوكمة الشركات', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في إدارة الابتكار والتطوير</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على بناء خبرة تطبيقية عالية في مجال الابتكار المؤسسي وربط التطوير بالنتائج، وتصميم حلول جديدة لتحسين الأداء المؤسسي.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_7')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_7', 'الدكتوراه المهنية في إدارة الابتكار والتطوير', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في إدارة المشروعات</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج مهني متقدم يركّز على الارتقاء بقدرات المتدربين في إدارة المشروعات الكبرى والمعقدة، وتطبيق منهجيات متطورة لحل مشكلات التنفيذ وتحقيق أهداف العمل بفعالية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_8')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_8', 'الدكتوراه المهنية في إدارة المشروعات', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في التخطيط الاستراتيجي</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على صياغة وتنفيذ الاستراتيجيات في بيئات معقدة.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_9')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_9', 'الدكتوراه المهنية في التخطيط الاستراتيجي', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في العلاقات العامة والإعلام</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على الاتصال المؤسسي وإدارة السمعة وصناعة التأثير الإعلامي.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_10')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_10', 'الدكتوراه المهنية في العلاقات العامة والإعلام', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في القيادة الإدارية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على بناء قيادات قادرة على التأثير وصناعة القرار في البيئات المعقدة.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_11')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_11', 'الدكتوراه المهنية في القيادة الإدارية', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في المحاسبة والإدارة المالية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على التحليل المالي المتقدم ودعم القرار الاستراتيجي.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_12')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_12', 'الدكتوراه المهنية في المحاسبة والإدارة المالية', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في إدارة المخاطر</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على بناء أطر متقدمة لتحديد وتحليل وإدارة المخاطر المؤسسية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_13')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_13', 'الدكتوراه المهنية في إدارة المخاطر', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في إدارة الجودة</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على التحسين المستمر وبناء نظم جودة عالية الأداء.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_14')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_14', 'الدكتوراه المهنية في إدارة الجودة', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في السلامة والصحة المهنية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على إدارة المخاطر المهنية وبناء نظم سلامة متقدمة ومستدامة.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_15')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_15', 'الدكتوراه المهنية في السلامة والصحة المهنية', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في إدارة الفنادق</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على الإدارة المتقدمة لمنشآت الضيافة، وتحسين التجربة التشغيلية والربحية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_16')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_16', 'الدكتوراه المهنية في إدارة الفنادق', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في تحليل البيانات</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على التحليل المتقدم للبيانات لدعم القرار الاستراتيجي.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_17')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_17', 'الدكتوراه المهنية في تحليل البيانات', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في الأمن السيبراني</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على حماية الأنظمة والمعلومات وإدارة المخاطر الرقمية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_18')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_18', 'الدكتوراه المهنية في الأمن السيبراني', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في الذكاء الاصطناعي</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على توظيف الذكاء الاصطناعي في اتخاذ القرار وتحسين الأداء.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_19')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_19', 'الدكتوراه المهنية في الذكاء الاصطناعي', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في التحول الرقمي وإدارة التكنولوجيا</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على قيادة التحول الرقمي وإدارة التكنولوجيا بفعالية.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_20')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_20', 'الدكتوراه المهنية في التحول الرقمي وإدارة التكنولوجيا', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-book"></i></div>
+          <h3 style="font-size:1.2rem;">الدكتوراه المهنية في الإدارة التنفيذية</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج شامل يركّز على القيادة التنفيذية وإدارة المؤسسات من منظور كلي.</p>
+          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
+          <div style="display:flex; gap:10px; margin-top:auto;">
+              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_21')">التفاصيل <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_21', 'الدكتوراه المهنية في الإدارة التنفيذية', 1600)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+          </div>
+        </div>
+        
+</div>
+        
+      </div>
+    </div>
+  
+    <div class="container" style="margin-top: 40px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <h3 style="color: var(--primary-color); margin-bottom: 15px;"><i class="fas fa-check-double"></i> نظام الدراسة والتقييم</h3>
+        <p style="color: var(--text-muted); line-height: 1.8;">تم تصميم نظام الدراسة ليكون مرنًا وسهل المتابعة، مع:</p>
+        <ul style="list-style: none; padding: 0; line-height: 1.8; color: var(--text-muted);">
+            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> محتوى تدريبي منظم</li>
+            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> تقييمات مرحلية لقياس مستوى الاستيعاب</li>
+            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> متابعة تهدف إلى دعم المتدرب وتحسين مستواه</li>
+            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> لا يعتمد البرنامج على مبدأ الرسوب، بل على التطوير التدريجي ورفع كفاءة المتدرب.</li>
+        </ul>
+    </div>
+    
+  </section>
+
+
+
+<!-- Modals Start -->
+
+        <div id="phd_modal_0" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_0')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في إدارة الأعمال</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج دكتوراه مهني مصمم لتأهيل كوادر ذات تفكير متقدم وقدرة تطبيقية عالية في مجالات الإدارة، وتعميق المعرفة في فهم بيئات الأعمال المعقدة، وصياغة حلول استراتيجية قابلة للتطبيق في المؤسسات.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير مهارات البحث التطبيقي في إدارة الأعمال</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء تصور استراتيجي متقدم لحل القضايا المؤسسية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تمكين المتدرب من قيادة التغيير المؤسسي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم التميّز المهني وصناعة القرار</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحويل المعرفة إلى أثر مهني ملموس</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الابتكار والتطوير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحول الرقمي وإدارة التكنولوجيا</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> القادة الطموحين لبناء خبرات تنفيذية عليا</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهنيين الراغبين في امتلاك بديل عملي للدراسات العليا التقليدية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تعزيز تأثيرهم داخل مؤسساتهم</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> أولئك الذين يسعون لإحداث تغيير مهني حقيقي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم متقدم للأنظمة الإدارية المتكاملة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قدرة على تصميم وتطبيق حلول عملية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تطوير مهارات بحث تطبيقي في بيئة الأعمال</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحفيز التفكير الاستراتيجي والإبداعي</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_0', 'الدكتوراه المهنية في إدارة الأعمال', 1600); closeModal('phd_modal_0')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_1" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_1')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في سلاسل الإمداد</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على إدارة سلاسل الإمداد المعقدة، وتحسين الكفاءة والمرونة التشغيلية عبر التحليل المتقدم واتخاذ القرار.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> رفع كفاءة التخطيط والتوريد</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة المخاطر التشغيلية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين استدامة السلاسل</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> سلاسل الإمداد</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> القائمين على العمليات واللوجستيات</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في قيادة سلاسل الإمداد</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> نماذج تخطيط وتشغيل متقدمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قرارات مبنية على بيانات</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين الأداء التشغيلي</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_1', 'الدكتوراه المهنية في سلاسل الإمداد', 1600); closeModal('phd_modal_1')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_2" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_2')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في إدارة المستشفيات</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج متخصص يركّز على الإدارة المتقدمة للمستشفيات، وتحسين جودة الخدمات والحوكمة التشغيلية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير كفاءة التشغيل الصحي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين جودة الرعاية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة الموارد الصحية بفاعلية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة مستشفيات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة صحية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بقيادة المنشآت الصحية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير الأداء الصحي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة متقدمة للخدمات الصحية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين مؤشرات الجودة والسلامة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> حلول تشغيلية قابلة للتطبيق</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_2', 'الدكتوراه المهنية في إدارة المستشفيات', 1600); closeModal('phd_modal_2')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_3" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_3')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في الإدارة الصحية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على السياسات الصحية وإدارة النظم الصحية المعقدة وربط التخطيط بالتنفيذ.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين كفاءة النظم الصحية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم القرارات الصحية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعزيز الاستدامة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة صحية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة مستشفيات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بإدارة النظم الصحية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار قيادية صحية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> نماذج إدارة صحية متقدمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين التخطيط والتنفيذ</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أثر مؤسسي ملموس</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_3', 'الدكتوراه المهنية في الإدارة الصحية', 1600); closeModal('phd_modal_3')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_4" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_4')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في التسويق والمبيعات</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج مهني متقدم يركّز على بناء استراتيجيات تسويق ومبيعات قائمة على التحليل العميق للسوق، وربط القرارات التسويقية بالأداء التجاري المستدام.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير التفكير التسويقي الاستراتيجي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعظيم القيمة التجارية للعلامات والخدمات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين قرارات التسعير والتوسع والنمو</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تسويق ومبيعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الابتكار والتطوير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> العلاقات العامة والإعلام</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بقيادة الوظائف التسويقية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار عليا في التسويق والمبيعات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تحليل سوق متقدمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تصميم استراتيجيات نمو قابلة للتطبيق</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> ربط التسويق بالعائد التجاري</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_4', 'الدكتوراه المهنية في التسويق والمبيعات', 1600); closeModal('phd_modal_4')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_5" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_5')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في الموارد البشرية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على النظم المتقدمة لإدارة الكفاءات البشرية، وتطوير استراتيجيات الموارد البشرية مقترنة بالنتائج المؤسسية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تصميم استراتيجيات موارد بشرية متكاملة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء منظومات جذب وتطوير الموظفين</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم ثقافة الأداء والتحفيز</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> الدمج بين التخطيط والتطوير المؤسسي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> موارد بشرية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المختصين بسلاسل الموارد البشرية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> من يسعى للبناء المتقدم للنظم الإدارية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثين عن قيادة إثراء الكفاءات داخل المؤسسات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تصور استراتيجي لإدارة الموارد البشرية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات قياس الأداء والتحسين</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم العلاقة بين الموارد البشرية واستراتيجيات النمو</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_5', 'الدكتوراه المهنية في الموارد البشرية', 1600); closeModal('phd_modal_5')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_6" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_6')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في حوكمة الشركات</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على البناء المتقدم لإطارات الحوكمة والترابط المؤسسي بين الإدارة والامتثال والتنظيم الداخلي والخارجي.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير منهجيات إدارة الحوكمة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم سياسات الامتثال المؤسسية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحليل وتقييم الأطر التنظيمية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعزيز الشفافية والاستدامة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحقيق الممارسات الفضلى في الإدارة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> المحاسبة والإدارة المالية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> موارد بشرية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> القائمين على تطوير نظم الحوكمة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالامتثال والرقابة الداخلية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> من يعملون على رفع مستوى الأداء التنظيمي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم متقدم لأطر الحوكمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تحليل تنظيمية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قدرة على قيادة التقييم المؤسسي</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_6', 'الدكتوراه المهنية في حوكمة الشركات', 1600); closeModal('phd_modal_6')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_7" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_7')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في إدارة الابتكار والتطوير</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على بناء خبرة تطبيقية عالية في مجال الابتكار المؤسسي وربط التطوير بالنتائج، وتصميم حلول جديدة لتحسين الأداء المؤسسي.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تكوين رؤية متقدمة للابتكار التطبيقي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تمكين المتدرب من قيادة التغيير المؤسسي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم تطوير منتجات وخدمات جديدة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إقامة جسور بين التحليل والاستراتيجية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعزيز ثقافة التحسين المستمر</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الابتكار والتطوير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الالتحول الرقمي وإدارة التكنولوجيا</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> من يسعى للتميز في قيادة التغيير</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> من يرغب في تطبيق الابتكار كمحرك رئيسي للنمو</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> القادة والمبتكرون في المؤسسات الحديثة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات متقدمة للابتكار المؤسسي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أساس قوي في التقييم التطبيقي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قدرة على تصميم حلول إبداعية قابلة للتنفيذ</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_7', 'الدكتوراه المهنية في إدارة الابتكار والتطوير', 1600); closeModal('phd_modal_7')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_8" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_8')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في إدارة المشروعات</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج مهني متقدم يركّز على الارتقاء بقدرات المتدربين في إدارة المشروعات الكبرى والمعقدة، وتطبيق منهجيات متطورة لحل مشكلات التنفيذ وتحقيق أهداف العمل بفعالية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير مهارات التحليل والتخطيط للمشروعات الكبرى</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء القدرة على قيادة مشاريع متعددة المتغيرات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم التفاعل بين التخطيط والتنفيذ والرقابة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> زيادة قدرة المتدرب على التنبؤ بالإخفاقات وإدارتها</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعزيز فهم التأثير المؤسسي للمشروعات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحول الرقمي وإدارة التكنولوجيا</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> سلاسل الإمداد</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> القائمين على المشاريع متعددة الأطراف</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تولّي أدوار تنفيذية عليا في البيئات المهنية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> من يعملون على تطوير نظم إدارة المشروعات داخل المؤسسة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قدرة على معالجة مشكلات إدارة المشروعات</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تخطيط عالي المستوى</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات تطبيق الاستراتيجيات في بيئات فعلية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إتقان نماذج ربط النتائج بالأهداف المؤسسية</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_8', 'الدكتوراه المهنية في إدارة المشروعات', 1600); closeModal('phd_modal_8')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_9" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_9')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في التخطيط الاستراتيجي</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على صياغة وتنفيذ الاستراتيجيات في بيئات معقدة.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحليل البيئات المتغيرة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء خطط قابلة للتنفيذ</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> ربط الرؤية بالأداء</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الابتكار والتطوير</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بصناعة القرار</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار استراتيجية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> نماذج تخطيط متقدمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قرارات استراتيجية دقيقة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أثر مؤسسي مستدام</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_9', 'الدكتوراه المهنية في التخطيط الاستراتيجي', 1600); closeModal('phd_modal_9')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_10" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_10')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في العلاقات العامة والإعلام</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على الاتصال المؤسسي وإدارة السمعة وصناعة التأثير الإعلامي.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء استراتيجيات اتصال</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة الصورة الذهنية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> التعامل مع الأزمات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> علاقات عامة والإعلام</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تسويق ومبيعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالإعلام المؤسسي</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في قيادة الاتصال</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> استراتيجيات اتصال متقدمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة فعالة للسمعة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تأثير إعلامي ملموس</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_10', 'الدكتوراه المهنية في العلاقات العامة والإعلام', 1600); closeModal('phd_modal_10')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_11" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_11')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في القيادة الإدارية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على بناء قيادات قادرة على التأثير وصناعة القرار في البيئات المعقدة.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير القيادة المتقدمة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة التغيير</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء فرق عالية الأداء</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> القادة الطموحين</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار قيادية عليا</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات قيادة متقدمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة فرق فعالة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قرارات استراتيجية</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_11', 'الدكتوراه المهنية في القيادة الإدارية', 1600); closeModal('phd_modal_11')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_12" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_12')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في المحاسبة والإدارة المالية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على التحليل المالي المتقدم ودعم القرار الاستراتيجي.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعميق التحليل المالي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم القرارات الاستثمارية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين التخطيط المالي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> المحاسبة والإدارة المالية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالقيادة المالية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار مالية عليا</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> نماذج تحليل مالي متقدم</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قرارات مالية دقيقة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> ربط المال بالاستراتيجية</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_12', 'الدكتوراه المهنية في المحاسبة والإدارة المالية', 1600); closeModal('phd_modal_12')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_13" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_13')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في إدارة المخاطر</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على بناء أطر متقدمة لتحديد وتحليل وإدارة المخاطر المؤسسية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين الاستقرار المؤسسي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم القرار الاستراتيجي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة عدم اليقين</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحول الرقمي وإدارة التكنولوجيا</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بإدارة المخاطر</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار تنظيمية عليا</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> نماذج متقدمة لإدارة المخاطر</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قرارات مبنية على تحليل</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تعزيز الاستدامة</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_13', 'الدكتوراه المهنية في إدارة المخاطر', 1600); closeModal('phd_modal_13')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_14" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_14')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في إدارة الجودة</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على التحسين المستمر وبناء نظم جودة عالية الأداء.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> رفع كفاءة العمليات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطبيق معايير الجودة المتقدمة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين النتائج المؤسسية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الابتكار والتطوير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بقيادة الجودة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير العمليات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> نظم جودة متقدمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين الأداء المؤسسي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> نتائج قابلة للقياس</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_14', 'الدكتوراه المهنية في إدارة الجودة', 1600); closeModal('phd_modal_14')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_15" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_15')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في السلامة والصحة المهنية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على إدارة المخاطر المهنية وبناء نظم سلامة متقدمة ومستدامة.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعزيز ثقافة السلامة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تقليل الحوادث والمخاطر</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين الامتثال</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> السلامة والصحة المهنية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المختصين بالسلامة المهنية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في قيادة نظم HSE</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> نظم سلامة متقدمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل مخاطر احترافي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين الامتثال والأداء</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_15', 'الدكتوراه المهنية في السلامة والصحة المهنية', 1600); closeModal('phd_modal_15')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_16" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_16')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في إدارة الفنادق</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على الإدارة المتقدمة لمنشآت الضيافة، وتحسين التجربة التشغيلية والربحية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> رفع كفاءة التشغيل الفندقي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين تجربة الضيوف</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعظيم العائد</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة فنادق</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تسويق ومبيعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> موارد بشرية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بقيادة منشآت الضيافة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير الأداء الفندقي</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> نماذج تشغيل متقدمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين الجودة والربحية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قرارات مبنية على تحليل</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_16', 'الدكتوراه المهنية في إدارة الفنادق', 1600); closeModal('phd_modal_16')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_17" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_17')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في تحليل البيانات</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على التحليل المتقدم للبيانات لدعم القرار الاستراتيجي.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحويل البيانات إلى قيمة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم القرار المؤسسي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء نماذج تحليلية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الذكاء الاصطناعي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحول الرقمي وإدارة التكنولوجيا</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بتحليل البيانات</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار تحليلية متقدمة</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل بيانات متقدم</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرار بالبيانات</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أثر مؤسسي قابل للقياس</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_17', 'الدكتوراه المهنية في تحليل البيانات', 1600); closeModal('phd_modal_17')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_18" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_18')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في الأمن السيبراني</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على حماية الأنظمة والمعلومات وإدارة المخاطر الرقمية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعزيز الأمن الرقمي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة المخاطر السيبرانية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> حماية البيانات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الأمن السيبراني</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحول الرقمي وإدارة التكنولوجيا</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بأمن المعلومات</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار سيبرانية عليا</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> نظم أمن سيبراني متقدمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> حماية فعالة للبيانات</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قرارات أمنية دقيقة</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_18', 'الدكتوراه المهنية في الأمن السيبراني', 1600); closeModal('phd_modal_18')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_19" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_19')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في الذكاء الاصطناعي</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على توظيف الذكاء الاصطناعي في اتخاذ القرار وتحسين الأداء.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم التقنيات الذكية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطبيقات عملية للأعمال</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم الابتكار</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الذكاء الاصطناعي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الالتحول الرقمي وإدارة التكنولوجيا</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الابتكار والتطوير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالتقنيات الذكية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في مسار تقني متقدم</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تطبيقات AI عملية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قرارات مدعومة بالبيانات</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> حلول مبتكرة</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_19', 'الدكتوراه المهنية في الذكاء الاصطناعي', 1600); closeModal('phd_modal_19')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_20" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_20')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في التحول الرقمي وإدارة التكنولوجيا</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج يركّز على قيادة التحول الرقمي وإدارة التكنولوجيا بفعالية.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة التغيير الرقمي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> توظيف التكنولوجيا للأعمال</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم الابتكار</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحول الرقمي وإدارة التكنولوجيا</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الذكاء الاصطناعي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الأمن السيبراني</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الابتكار والتطوير</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالالتحول الرقمي</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في قيادة التقنية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة تقنية متقدمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> حلول رقمية قابلة للتطبيق</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أثر رقمي ملموس</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_20', 'الدكتوراه المهنية في التحول الرقمي وإدارة التكنولوجيا', 1600); closeModal('phd_modal_20')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="phd_modal_21" class="nibras-modal">
+          <div class="nibras-modal-content">
+            <span class="nibras-modal-close" onclick="closeModal('phd_modal_21')">&times;</span>
+            <div class="modal-header">
+                <h2>الدكتوراه المهنية في الإدارة التنفيذية</h2>
+                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1600.00 US$</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
+                    <p>برنامج شامل يركّز على القيادة التنفيذية وإدارة المؤسسات من منظور كلي.</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
+                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير الرؤية التنفيذية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين اتخاذ القرار</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة الموارد بفعالية</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
+                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة تنفيذية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
+                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار تنفيذية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> القادة في المؤسسات</li></ul>
+                </div>
+            
+                <div class="modal-section">
+                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
+                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> رؤية تنفيذية متكاملة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> قرارات مؤثرة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> نتائج عملية</li></ul>
+                </div>
+            
+                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
+                    <button class="btn-primary" onclick="addToCart('phd_21', 'الدكتوراه المهنية في الإدارة التنفيذية', 1600); closeModal('phd_modal_21')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
+                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+<!-- Modals End -->
+<!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            
+            <p>منصة تدريب وتأهيل مهني معتمدة تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث.</p>
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>روابط سريعة</h5>
+            <ul>
+              <li><a href="../../index.html">الرئيسية</a></li>
+              <li><a href="about.html">عن الأكاديمية</a></li>
+              <li><a href="programs.html">برامجنا</a></li>
+              
+              <li><a href="verify.html">التحقق من الشهادات</a></li>
+              <li><a href="contact.html">تواصل معنا</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>البرامج</h5>
+            <ul>
+              <li><a href="#programs">الدكتوراة المهنية</a></li>
+              <li><a href="#programs">الماجستير المهني</a></li>
+              <li><a href="#programs">الدبلوم المهني</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>قانوني</h5>
+            <ul>
+              <li><a href="privacy.html">سياسة الخصوصية</a></li>
+              <li><a href="terms.html">الشروط والأحكام</a></li>
+              <li><a href="refund.html">سياسة الاسترداد</a></li>
+              <li><a href="accessibility.html">إمكانية الوصول</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 أكاديمية نبراس. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="../../assets/js/script.js"></script>
+
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+        
+        </div>
+        
+  </body>
+</html>

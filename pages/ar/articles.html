@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المقالات والإعلام | أكاديمية نبراس</title>
+  <meta name="description"
+    content="ماذا يقال عن نبراس في الصحف والإعلام. نستعرض أبرز ما كُتب وقيل عن نبراس في وسائل الإعلام المختلفة." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
+</head>
+
+<body>
+
+        <!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>الإجمالي:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+        
+    <!-- Floating Cart Button -->
+    <div class="floating-cart" onclick="toggleCart(event)">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="floating-cart-badge cart-badge">0</span>
+    </div>
+            
+<!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>الإجمالي:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar">
+    <div class="nav-container">
+      <a href="../../index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../en/articles.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+        <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
+        <li><a href="about.html" class="nav-link">عن الأكاديمية</a></li>
+        <li><a href="programs.html" class="nav-link">البرامج والخدمات</a></li>
+        <li><a href="articles.html" class="nav-link active">المقالات</a></li>
+        
+        <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
+        <li><a href="verify.html" class="nav-link">التحقق من الشهادات</a></li>
+        
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="القائمة">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../en/articles.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+      <li><a href="../../index.html">الرئيسية</a></li>
+      <li><a href="about.html">عن الأكاديمية</a></li>
+      <li><a href="programs.html">البرامج والخدمات</a></li>
+      <li><a href="articles.html">المقالات</a></li>
+      
+      <li><a href="contact.html">تواصل معنا</a></li>
+      <li><a href="verify.html">التحقق من الشهادات</a></li>
+      
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
+    </ul>
+  </div>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>المقالات والإعلام</h1>
+      <p>ماذا يقال عن نبراس في الصحف والإعلام</p>
+    </div>
+  </section>
+
+  <!-- Articles Section -->
+  <section class="articles-section" style="padding-top: 60px;">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">ماذا قالوا عن <span class="highlight">نبراس</span></h2>
+        <p class="section-subtitle">منذ انطلاق أكاديمية نبراس، كان هدفنا واضحًا: تقديم تجربة تعليمية احترافية تُحدث أثرًا حقيقيًا في حياة المتدربين. وقد حظيت الأكاديمية بتغطيات إعلامية مميزة من صحف وقنوات مصرية وسعودية، أشادت برؤيتها، وبرامجها المهنية، وأثرها في تطوير المهارات وبناء الكفاءات. في هذا القسم نستعرض أبرز ما كُتب وقيل عن نبراس في وسائل الإعلام المختلفة.</p>
+      </div>
+      
+      <div class="articles-grid">
+        <div class="article-card">
+          <div class="article-body" style="text-align: center; padding: 40px 20px;">
+            <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-newspaper"></i></div>
+            <h4>تغطية جدة 24</h4>
+            <p>مقال يسلط الضوء على نجاحات أكاديمية نبراس ودورها في التطوير المهني.</p>
+            <a href="https://jeddah24.net/mix/0702/46636/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> قراءة المقال</a>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-body" style="text-align: center; padding: 40px 20px;">
+            <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-newspaper"></i></div>
+            <h4>صحيفة أخبار السعودية</h4>
+            <p>إشادة بالبرامج التقنية والمهنية التي تقدمها أكاديمية نبراس لرواد الأعمال والمحترفين.</p>
+            <a href="https://alsaudi.news/technology/0702/53533/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> قراءة المقال</a>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-body" style="text-align: center; padding: 40px 20px;">
+            <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-newspaper"></i></div>
+            <h4>أخبار الرياض</h4>
+            <p>تغطية مميزة لبرامج وتأثير الأكاديمية على المتدربين في مختلف المجالات.</p>
+            <a href="https://alriyadhnews.net/mix/0702/47160/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> قراءة المقال</a>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-body" style="text-align: center; padding: 40px 20px;">
+            <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-newspaper"></i></div>
+            <h4>أخبار عكاظ</h4>
+            <p>نظرة متعمقة حول مسارات التعليم والتأهيل المتميزة في أكاديمية نبراس.</p>
+            <a href="https://okaznews.net/mix/0702/44015/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> قراءة المقال</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <p>منصة تدريب وتأهيل مهني معتمدة تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث.</p>
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>روابط سريعة</h5>
+            <ul>
+              <li><a href="../../index.html">الرئيسية</a></li>
+              <li><a href="about.html">عن الأكاديمية</a></li>
+              <li><a href="programs.html">البرامج والخدمات</a></li>
+              <li><a href="articles.html">المقالات</a></li>
+              
+              <li><a href="verify.html">التحقق من الشهادات</a></li>
+              <li><a href="contact.html">تواصل معنا</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>قانوني</h5>
+            <ul>
+              <li><a href="privacy.html">سياسة الخصوصية</a></li>
+              <li><a href="terms.html">الشروط والأحكام</a></li>
+              <li><a href="refund.html">سياسة الاسترداد</a></li>
+              <li><a href="accessibility.html">إمكانية الوصول</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 أكاديمية نبراس. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <script src="../../assets/js/script.js"></script>
+</body>
+</html>

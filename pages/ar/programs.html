@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>خدماتنا | أكاديمية نبراس</title>
+  <meta name="description"
+    content="أكاديمية نبراس - منصة تدريب وتأهيل مهني معتمدة، تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
+</head>
+
+<body>
+
+        <!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>الإجمالي:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+        
+    <!-- Floating Cart Button -->
+    <div class="floating-cart" onclick="toggleCart(event)">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="floating-cart-badge cart-badge">0</span>
+    </div>
+            
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar">
+    <div class="nav-container">
+      <a href="../../index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../en/programs.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+        <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
+        <li><a href="about.html" class="nav-link">عن الأكاديمية</a></li>
+        <li><a href="programs.html" class="nav-link active">البرامج والخدمات</a></li>
+        <li><a href="articles.html" class="nav-link">المقالات</a></li>
+        
+        <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
+        <li><a href="verify.html" class="nav-link">التحقق من الشهادات</a></li>
+        
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="القائمة">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../en/programs.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+      <li><a href="../../index.html">الرئيسية</a></li>
+      <li><a href="about.html">عن الأكاديمية</a></li>
+      <li><a href="programs.html">البرامج والخدمات</a></li>
+      <li><a href="articles.html">المقالات</a></li>
+      
+      <li><a href="contact.html">تواصل معنا</a></li>
+      <li><a href="verify.html">التحقق من الشهادات</a></li>
+      
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
+    </ul>
+  </div>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>البرامج والخدمات</h1>
+      <p>اكتشف البرامج المهنية المعتمدة التي نقدمها لتطوير مسارك المهني</p>
+    </div>
+  </section>
+<!-- Start Learning Sections -->
+  <section class="programs-section" style="padding: 80px 0; background: white;">
+    <div class="container">
+      <div class="programs-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+        
+        <div class="program-card featured">
+          <div class="program-icon"><i class="fas fa-graduation-cap"></i></div>
+          <h3>قسم الدكتوراه المهنية</h3>
+          <p>برنامج احترافي رفيع المستوى لإعداد خبراء وقادة مؤثرين في مجالاتهم.</p>
+          <a href="phd.html" class="btn-primary">الذهاب إلي البرنامج <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-user-tie"></i></div>
+          <h3>قسم الماجستير المهني</h3>
+          <p>مسار متقدم يجمع بين الدراسة الأكاديمية والخبرة العملية لتطوير قدراتك القيادية.</p>
+          <a href="masters.html" class="btn-outline">الذهاب إلي البرنامج <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-award"></i></div>
+          <h3>قسم الدبلوم المهني</h3>
+          <p>برامج عملية متخصصة تؤهلك لاكتساب مهارات تطبيقية تعزز فرصك في سوق العمل.</p>
+          <a href="diploma.html" class="btn-outline">الذهاب إلي البرنامج <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-briefcase"></i></div>
+          <h3>قسم الدورات المهنية</h3>
+          <p>برامج تدريبية تطبيقية مصممة لتأهيلك مباشرة لمتطلبات سوق العمل.</p>
+          <a href="vocational.html" class="btn-outline">الذهاب إلي البرنامج <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-certificate"></i></div>
+          <h3>قسم الدورات الإحترافية</h3>
+          <p>دورات مركزة وعملية لتطوير مهارات محددة بسرعة وكفاءة عالية.</p>
+          <a href="pro_courses.html" class="btn-outline">الذهاب إلي البرنامج <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  
+  <!-- Services Header -->
+  <section style="padding-top: 80px; text-align: center; background: var(--bg-surface);">
+    <div class="container">
+        <h2 class="section-title">خدماتنا <span class="highlight">المهنية</span></h2>
+        <p class="section-subtitle">حلول متكاملة ومصممة خصيصاً لتناسب احتياجات الأفراد والشركات ومراكز التدريب</p>
+    </div>
+  </section>
+
+  <!-- Detailed Services Section -->
+  <section class="services-detailed-section" style="padding: 60px 0 80px 0; background: var(--bg-surface);">
+    <div class="container">
+      
+      <!-- Service 1: Individuals -->
+      <div class="service-row" style="display:flex; flex-wrap:wrap; align-items:center; gap:40px; margin-bottom:60px; background:white; padding:40px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.05);">
+        <div class="service-content" style="flex:1; min-width:300px;">
+            <div style="width:60px; height:60px; background:rgba(201,162,39,0.1); color:var(--primary-color); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.8rem; margin-bottom:20px;">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <h3 style="color:var(--primary-dark); font-size:1.6rem; margin-bottom:15px;">خدمات التدريب للأفراد</h3>
+            <p style="color:var(--text-muted); line-height:1.8; margin-bottom:20px; font-size:1.05rem;">نقدم برامج تدريبية مهنية مصممة خصيصاً لتلبية تطلعاتك المهنية، من خلال مسارات تعليمية تجمع بين المعرفة الأكاديمية والتطبيق العملي.</p>
+            <h4 style="color:var(--text-color); margin-bottom:10px;">المميزات:</h4>
+            <ul style="list-style:none; padding:0; line-height:1.8; color:var(--text-muted);">
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> شهادات مهنية واعتمادات من جهات دولية.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> دراسة حالات واقعية ومشاريع تطبيقية.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> مرونة في التعلم تناسب أوقات المتدرب.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> دعم مستمر وتوجيه مهني خلال وبعد التدريب.</li>
+            </ul>
+        </div>
+      </div>
+
+      <!-- Service 2: Companies -->
+      <div class="service-row" style="display:flex; flex-wrap:wrap; align-items:center; gap:40px; margin-bottom:60px; background:white; padding:40px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.05);">
+        <div class="service-content" style="flex:1; min-width:300px;">
+            <div style="width:60px; height:60px; background:rgba(201,162,39,0.1); color:var(--primary-color); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.8rem; margin-bottom:20px;">
+                <i class="fas fa-building"></i>
+            </div>
+            <h3 style="color:var(--primary-dark); font-size:1.6rem; margin-bottom:15px;">خدمات التدريب للشركات والمؤسسات</h3>
+            <p style="color:var(--text-muted); line-height:1.8; margin-bottom:20px; font-size:1.05rem;">نصمم برامج تدريبية مخصصة تواكب أهداف مؤسستك وتساهم في رفع كفاءة كوادرها، لضمان أعلى مستوى من الأداء المهني.</p>
+            <h4 style="color:var(--text-color); margin-bottom:10px;">المميزات:</h4>
+            <ul style="list-style:none; padding:0; line-height:1.8; color:var(--text-muted);">
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> برامج مصممة وفقاً لتحليل الاحتياجات التدريبية (TNA) للمؤسسة.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> تدريب في مقر الشركة أو عبر الإنترنت بمرونة تامة.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> تقارير أداء دورية لمتابعة تقدم الموظفين.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> اعتمادات وتوثيق للبرامج المنفذة لتعزيز السيرة الذاتية للمؤسسة.</li>
+            </ul>
+        </div>
+      </div>
+
+      <!-- Service 3: Training Centers -->
+      <div class="service-row" style="display:flex; flex-wrap:wrap; align-items:center; gap:40px; background:white; padding:40px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.05);">
+        <div class="service-content" style="flex:1; min-width:300px;">
+            <div style="width:60px; height:60px; background:rgba(201,162,39,0.1); color:var(--primary-color); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.8rem; margin-bottom:20px;">
+                <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <h3 style="color:var(--primary-dark); font-size:1.6rem; margin-bottom:15px;">خدمات التدريب لمراكز التدريب والمعاهد</h3>
+            <p style="color:var(--text-muted); line-height:1.8; margin-bottom:20px; font-size:1.05rem;">نقدم حقائب تدريبية جاهزة للاستخدام، ومصممة وفق أفضل المعايير المهنية لتلبية احتياجات عملائك ورفع مستوى البرامج المقدمة لديهم.</p>
+            <h4 style="color:var(--text-color); margin-bottom:10px;">المميزات:</h4>
+            <ul style="list-style:none; padding:0; line-height:1.8; color:var(--text-muted);">
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> حقائب تدريبية شاملة (دليل المدرب، دليل المتدرب، العرض التقديمي، أدوات التقييم).</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> تحديث مستمر للمحتوى ليواكب التغيرات في سوق العمل.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> توفير اعتمادات وتوثيق للحقائب لتسهيل تقديمها من قبل المراكز.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> إمكانية تصميم حقائب تدريبية مخصصة بناءً على طلب المركز.</li>
+            </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+<!-- Why Section -->
+
+
+  <!-- Newsletter / CTA Section -->
+
+
+  <!-- Articles Section -->
+
+
+  <!-- Contact Section -->
+
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            
+            <p>منصة تدريب وتأهيل مهني معتمدة تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث.
+            </p>
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>روابط سريعة</h5>
+            <ul>
+              <li><a href="../../index.html">الرئيسية</a></li>
+              <li><a href="about.html">عن الأكاديمية</a></li>
+              <li><a href="programs.html">برامجنا</a></li>
+              
+              <li><a href="verify.html">التحقق من الشهادات</a></li>
+              <li><a href="contact.html">تواصل معنا</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>البرامج</h5>
+            <ul>
+              <li><a href="#programs">الدكتوراة المهنية</a></li>
+              <li><a href="#programs">الماجستير المهني</a></li>
+              <li><a href="#programs">الدبلوم المهني</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>قانوني</h5>
+            <ul>
+              <li><a href="privacy.html">سياسة الخصوصية</a></li>
+              <li><a href="terms.html">الشروط والأحكام</a></li>
+              <li><a href="refund.html">سياسة الاسترداد</a></li>
+              <li><a href="accessibility.html">إمكانية الوصول</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 أكاديمية نبراس. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="../../assets/js/script.js"></script>
+</body>
+
+</html>

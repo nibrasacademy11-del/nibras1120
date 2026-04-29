@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Articles & Media | Nibras</title>
+  <meta name="description"
+    content="What is said about Nibras in the press and media. We review the most prominent of what was written and said about Nibras in various media." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
+</head>
+
+<body>
+
+        <!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="../ar/checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+        
+    <!-- Floating Cart Button -->
+    <div class="floating-cart" onclick="toggleCart(event)">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="floating-cart-badge cart-badge">0</span>
+    </div>
+            
+<!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="../ar/checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar">
+    <div class="nav-container">
+      <a href="../../en/index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="Nibras" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../ar/articles.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
+        <li><a href="../../en/index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="programs.html" class="nav-link">Services</a></li>
+        <li><a href="articles.html" class="nav-link active">Articles</a></li>
+        
+        <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+        <li><a href="verify.html" class="nav-link">Verify Certificates</a></li>
+        
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="nav-btn">Login</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../ar/articles.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
+      <li><a href="../../en/index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="programs.html">Services</a></li>
+      <li><a href="articles.html">Articles</a></li>
+      
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="verify.html">Verify Certificates</a></li>
+      
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="mobile-btn">Login</a></li>
+    </ul>
+  </div>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Articles & Media</h1>
+      <p>What is said about Nibras in the press and media</p>
+    </div>
+  </section>
+
+  <!-- Articles Section -->
+  <section class="articles-section" style="padding-top: 60px;">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">What they said about <span class="highlight">Nibras</span></h2>
+        <p class="section-subtitle">Since the launch of Nibras, our goal has been clear: to provide a professional educational experience that makes a real impact on the lives of trainees. The Academy has received distinguished media coverage from Egyptian and Saudi newspapers and channels, praising its vision, professional programs, and its impact on developing skills and building competencies. In this section, we review the most prominent of what was written and said about Nibras in various media.</p>
+      </div>
+      
+      <div class="articles-grid">
+        <div class="article-card">
+          <div class="article-body" style="text-align: center; padding: 40px 20px;">
+            <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-newspaper"></i></div>
+            <h4>Jeddah 24 Coverage</h4>
+            <p>An article highlighting the successes of Nibras and its role in professional development.</p>
+            <a href="https://jeddah24.net/mix/0702/46636/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> Read Article</a>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-body" style="text-align: center; padding: 40px 20px;">
+            <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-newspaper"></i></div>
+            <h4>Saudi News Newspaper</h4>
+            <p>Praise for the technical and professional programs provided by Nibras for entrepreneurs and professionals.</p>
+            <a href="https://alsaudi.news/technology/0702/53533/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> Read Article</a>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-body" style="text-align: center; padding: 40px 20px;">
+            <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-newspaper"></i></div>
+            <h4>Riyadh News</h4>
+            <p>Distinguished coverage of the Academy's programs and impact on trainees in various fields.</p>
+            <a href="https://alriyadhnews.net/mix/0702/47160/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> Read Article</a>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-body" style="text-align: center; padding: 40px 20px;">
+            <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-newspaper"></i></div>
+            <h4>Okaz News</h4>
+            <p>An in-depth look at the distinguished education and qualification paths at Nibras.</p>
+            <a href="https://okaznews.net/mix/0702/44015/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> Read Article</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <p>A certified professional training platform aiming to prepare professional cadres capable of dealing with the modern labor market.</p>
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>Quick Links</h5>
+            <ul>
+              <li><a href="../../en/index.html">Home</a></li>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="programs.html">Services</a></li>
+              <li><a href="articles.html">Articles</a></li>
+              
+              <li><a href="verify.html">Verify Certificates</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Legal</h5>
+            <ul>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="terms.html">Terms & Conditions</a></li>
+              <li><a href="refund.html">Refund Policy</a></li>
+              <li><a href="accessibility.html">Accessibility</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 Nibras. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to Top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <script src="../../assets/js/script.js"></script>
+</body>
+</html>

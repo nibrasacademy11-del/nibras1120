@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الرئيسية | أكاديمية نبراس</title>
+  <meta name="description" content="أكاديمية نبراس - منصة تدريب وتأهيل مهني معتمدة، تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/img/logo.png" alt="أكاديمية نبراس" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="en/index.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+        <li><a href="index.html" class="nav-link active">الرئيسية</a></li>
+        <li><a href="pages/ar/about.html" class="nav-link">عن الأكاديمية</a></li>
+        <li><a href="pages/ar/programs.html" class="nav-link">البرامج والخدمات</a></li>
+        <li><a href="pages/ar/articles.html" class="nav-link">المقالات</a></li>
+        
+        <li><a href="pages/ar/contact.html" class="nav-link">تواصل معنا</a></li>
+        <li><a href="pages/ar/verify.html" class="nav-link">التحقق من الشهادات</a></li>
+        
+        <li><a href="pages/ar/login.html" class="nav-btn">تسجيل الدخول</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="القائمة">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="en/index.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+      <li><a href="index.html">الرئيسية</a></li>
+      <li><a href="pages/ar/about.html">عن الأكاديمية</a></li>
+      <li><a href="pages/ar/programs.html">البرامج والخدمات</a></li>
+      <li><a href="pages/ar/articles.html">المقالات</a></li>
+      
+      <li><a href="pages/ar/contact.html">تواصل معنا</a></li>
+      <li><a href="pages/ar/verify.html">التحقق من الشهادات</a></li>
+      
+        <li><a href="pages/ar/login.html" class="mobile-btn">تسجيل الدخول</a></li>
+    </ul>
+  </div>
+
+  
+  
+  
+  
+  <!-- Hero Section -->
+  <section id="home" class="hero" style="overflow:hidden; position:relative; padding: 250px 0 150px; background: white; text-align: center;">
+    
+    <!-- Minimalist Light Background -->
+    <div style="position:absolute; inset:0; background-image: radial-gradient(rgba(108,3,17,0.03) 2px, transparent 2px); background-size: 30px 30px; pointer-events: none;"></div>
+
+    <div class="container" style="position: relative; z-index: 2; max-width: 900px; margin: 0 auto;">
+      
+      <h1 class="hero-title" style="font-size: clamp(2.8rem, 6vw, 4.5rem); line-height: 1.4; font-weight: 800; margin-bottom: 30px; color: var(--text-main);">
+        انطلق نحو القمة مع<br/>
+        <span style="color: var(--primary-dark); font-weight: 900;">نبراس</span>
+      </h1>
+      
+      <p class="hero-desc" style="font-size: 1.4rem; color: var(--text-muted); margin: 0 auto 20px; line-height: 1.9; max-width: 800px; font-weight: 500;">
+        اكتشف إمكانياتك الحقيقية وحوّل طموحك إلى واقع ملموس! نحن نضع بين يديك أقوى البرامج المهنية والدرجات الأكاديمية المعتمدة دولياً لتكون دائماً في صدارة المنافسة.
+      </p>
+
+      <p class="hero-desc" style="font-size: 1.2rem; color: var(--primary-color); margin: 0 auto 50px; line-height: 1.8; max-width: 700px; font-weight: 600;">
+        "النجاح يبدأ بخطوة.. اتخذ خطوتك الأولى اليوم لتُدير المستقبل غداً!"
+      </p>
+      
+      <div class="hero-actions" style="display:flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+        <a href="pages/ar/programs.html" class="btn-primary" style="padding: 16px 40px; border-radius: 50px; font-weight:700; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(108,3,17,0.15);"><i class="fas fa-graduation-cap"></i> ابدأ رحلة التغيير الآن</a>
+      </div>
+
+    </div>
+  </section>
+
+
+
+
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item" data-target="26">
+          <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+          <div class="stat-number"><span class="counter">0</span>+</div>
+          <div class="stat-label">مدرب معتمد</div>
+        </div>
+        <div class="stat-item" data-target="66">
+          <div class="stat-icon"><i class="fas fa-certificate"></i></div>
+          <div class="stat-number"><span class="counter">0</span>+</div>
+          <div class="stat-label">اعتماد مهني</div>
+        </div>
+        <div class="stat-item" data-target="500">
+          <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+          <div class="stat-number"><span class="counter">0</span>+</div>
+          <div class="stat-label">طالب وخريج</div>
+        </div>
+        <div class="stat-item" data-target="5">
+          <div class="stat-icon"><i class="fas fa-star"></i></div>
+          <div class="stat-number"><span class="counter">0</span></div>
+          <div class="stat-label">تقييم الطلاب</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Programs Section -->
+  <section id="programs" class="programs-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">برامجنا</div>
+        <h2 class="section-title">مسارات <span class="highlight">التعلم والتأهيل</span></h2>
+        <p class="section-subtitle">برامج تدريبية احترافية في مجالات متعددة تهدف إلى إعداد الكوادر وتطوير المهارات</p>
+      </div>
+      <div class="programs-grid">
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-graduation-cap"></i></div>
+          <h3>الدكتوراة المهنية</h3>
+          <p>برنامج متقدم يركز على التطبيق العملي والقيادة الاستراتيجية، لتمكين القيادات من حل التحديات المعقدة وصناعة القرار بثقة.</p>
+          <ul class="program-features">
+            <li><i class="fas fa-check"></i> قيادة استراتيجية متقدمة</li>
+            <li><i class="fas fa-check"></i> بحث وتطبيق عملي</li>
+            <li><i class="fas fa-check"></i> شهادة دولية معتمدة</li>
+          </ul>
+          <a href="pages/ar/phd.html" class="btn-outline">عرض التفاصيل <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <div class="program-card featured">
+          <div class="program-badge">الأكثر تميزًا</div>
+          <div class="program-icon"><i class="fas fa-user-tie"></i></div>
+          <h3>الماجستير المهني</h3>
+          <p>تأهيل احترافي يربط بين المعرفة الأكاديمية والتطبيق العملي، لبناء مهارات قيادية وتنفيذية تناسب متطلبات سوق العمل.</p>
+          <ul class="program-features">
+            <li><i class="fas fa-check"></i> مهارات قيادية وتنفيذية</li>
+            <li><i class="fas fa-check"></i> ربط نظري بتطبيق عملي</li>
+            <li><i class="fas fa-check"></i> شبكة علاقات مهنية</li>
+          </ul>
+          <a href="pages/ar/masters.html" class="btn-primary">عرض التفاصيل <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-award"></i></div>
+          <h3>الدبلوم المهني</h3>
+          <p>برنامج تطبيقي يركز على المهارات الأساسية والتخصصية، للانطلاق السريع في المجال المهني أو تطوير المسار الوظيفي.</p>
+          <ul class="program-features">
+            <li><i class="fas fa-check"></i> انطلاق سريع في المجال</li>
+            <li><i class="fas fa-check"></i> مهارات تخصصية عملية</li>
+            <li><i class="fas fa-check"></i> شهادة معتمدة</li>
+          </ul>
+          <a href="pages/ar/diploma.html" class="btn-outline">عرض التفاصيل <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            
+            <p>منصة تدريب وتأهيل مهني معتمدة تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث.</p>
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>روابط سريعة</h5>
+            <ul>
+              <li><a href="index.html">الرئيسية</a></li>
+              <li><a href="pages/ar/about.html">عن الأكاديمية</a></li>
+              <li><a href="pages/ar/programs.html">برامجنا</a></li>
+              
+              <li><a href="pages/ar/verify.html">التحقق من الشهادات</a></li>
+              <li><a href="pages/ar/contact.html">تواصل معنا</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>البرامج</h5>
+            <ul>
+              <li><a href="#programs">الدكتوراة المهنية</a></li>
+              <li><a href="#programs">الماجستير المهني</a></li>
+              <li><a href="#programs">الدبلوم المهني</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>قانوني</h5>
+            <ul>
+              <li><a href="pages/ar/privacy.html">سياسة الخصوصية</a></li>
+              <li><a href="pages/ar/terms.html">الشروط والأحكام</a></li>
+              <li><a href="pages/ar/refund.html">سياسة الاسترداد</a></li>
+              <li><a href="pages/ar/accessibility.html">إمكانية الوصول</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 أكاديمية نبراس. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="assets/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Accessibility | Nibras</title>
+<meta content="Nibras - an accredited vocational training and qualification platform, which aims to prepare professional cadres capable of dealing with the requirements of the modern labor market." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<link href="../../assets/css/style.css" rel="stylesheet"/>
+</head>
+<body>
+
+        <!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="../ar/checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+        
+    <!-- Floating Cart Button -->
+    <div class="floating-cart" onclick="toggleCart(event)">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="floating-cart-badge cart-badge">0</span>
+    </div>
+            
+<!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="../ar/checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+<!-- Navbar -->
+<nav class="navbar scrolled" id="navbar">
+<div class="nav-container">
+<a class="nav-logo" href="../../en/index.html">
+<img alt="Nibras" src="../../assets/img/logo.png"/>
+</a>
+<ul class="nav-links" id="navLinks">
+<li><a class="nav-btn" href="../ar/accessibility.html" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
+<li><a class="nav-link" href="../../en/index.html">Home</a></li>
+<li><a class="nav-link" href="about.html">About Us</a></li>
+<li><a class="nav-link" href="programs.html">Services</a></li>
+
+<li><a class="nav-link" href="contact.html">Contact Us</a></li>
+<li><a class="nav-link" href="verify.html">Verify Certificates</a></li>
+<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a class="nav-btn" href="login.html">Login</a></li>
+</ul>
+<button aria-label="القائمة" class="hamburger" id="hamburger">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+<ul>
+<li><a class="nav-btn" href="../ar/accessibility.html" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
+<li><a href="../../en/index.html">Home</a></li>
+<li><a href="about.html">About Us</a></li>
+<li><a href="programs.html">Services</a></li>
+      <li><a href="articles.html">Articles</a></li>
+
+<li><a href="contact.html">Contact Us</a></li>
+<li><a href="verify.html">Verify Certificates</a></li>
+<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a class="mobile-btn" href="login.html">Login</a></li>
+</ul>
+</div>
+<!-- Page Header -->
+<section class="page-header">
+<div class="container">
+<h1>Accessibility</h1>
+<p>Our commitment to providing a smooth and accessible educational experience for everyone</p>
+</div>
+</section>
+<section class="programs-section" style="padding: 60px 0;">
+<div class="container" style="max-width: 800px;">
+<div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border); line-height: 1.8;">
+<h3 style="color: var(--primary-color); margin-bottom: 15px;">1. Our commitment to Accessibility</h3>
+<p style="margin-bottom: 25px; color: var(--text-muted);">At Nibras, we believe that education is a right for everyone. We are committed to making our digital platform accessible and usable to as many people as possible, regardless of ability or technology used.</p>
+<h3 style="color: var(--primary-color); margin-bottom: 15px;">2. Standards followed</h3>
+<p style="margin-bottom: 25px; color: var(--text-muted);">We are constantly working to improve the site's compliance with the Web Content Accessibility Guidelines (WCAG). This includes providing alternative text for images, ensuring appropriate color contrast, and structuring pages in a way that supports screen readers.</p>
+<h3 style="color: var(--primary-color); margin-bottom: 15px;">3. Support and assistance</h3>
+<p style="margin-bottom: 25px; color: var(--text-muted);">If you experience any difficulty using our website, or need assistance accessing any of the Programs and training materials, please contact us via the “Contact Us” page and the support team will assist you and provide suitable alternatives.</p>
+<h3 style="color: var(--primary-color); margin-bottom: 15px;">4. Continuous development</h3>
+<p style="margin-bottom: 25px; color: var(--text-muted);">We periodically review the Accessibility rating on our platform, and we welcome your suggestions and feedback that help us improve the educational experience to be more inclusive.</p>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="footer">
+<div class="footer-top">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+
+<p>A certified professional training platform aiming to prepare professional cadres capable of dealing with the modern labor market.</p>
+<div class="social-links">
+<a aria-label="Facebook" class="social-link" href="#"><i class="fab fa-facebook-f"></i></a>
+<a aria-label="Instagram" class="social-link" href="#"><i class="fab fa-instagram"></i></a>
+<a aria-label="LinkedIn" class="social-link" href="#"><i class="fab fa-linkedin-in"></i></a>
+<a aria-label="WhatsApp" class="social-link" href="#"><i class="fab fa-whatsapp"></i></a>
+</div>
+</div>
+<div class="footer-links-col">
+<h5>Quick Links</h5>
+<ul>
+<li><a href="../../en/index.html">Home</a></li>
+<li><a href="about.html">About Us</a></li>
+<li><a href="programs.html">Our Programs</a></li>
+
+<li><a href="verify.html">Verify Certificates</a></li>
+<li><a href="contact.html">Contact Us</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<h5>Programs</h5>
+<ul>
+<li><a href="#programs">Professional PhD</a></li>
+<li><a href="#programs">Professional Masters</a></li>
+<li><a href="#programs">Professional Diploma</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<h5>Legal</h5>
+<ul>
+<li><a href="privacy.html">Privacy Policy</a></li>
+<li><a href="terms.html">Terms &amp; Conditions</a></li>
+<li><a href="refund.html">Refund Policy</a></li>
+<li><a href="accessibility.html">Accessibility</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<div class="container">
+<p>© 2026 Nibras. All rights reserved.</p>
+</div>
+</div>
+</footer>
+<!-- Scroll to Top -->
+<button aria-label="العودة للأعلى" class="scroll-top" id="scrollTop">
+<i class="fas fa-arrow-up"></i>
+</button>
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+<script src="../../assets/js/script.js"></script>
+</body>
+</html>

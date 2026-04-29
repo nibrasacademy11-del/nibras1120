@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Services | Nibras</title>
+<meta content="Nibras - an accredited vocational training and qualification platform, which aims to prepare professional cadres capable of dealing with the requirements of the modern labor market." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&amp;family=Tajawal:wght@300;400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<link href="../../assets/css/style.css" rel="stylesheet"/>
+</head>
+<body>
+
+        <!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="../ar/checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+        
+    <!-- Floating Cart Button -->
+    <div class="floating-cart" onclick="toggleCart(event)">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="floating-cart-badge cart-badge">0</span>
+    </div>
+            
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+<div class="nav-container">
+<a class="nav-logo" href="../../en/index.html">
+<img alt="Nibras" src="../../assets/img/logo.png"/>
+</a>
+<ul class="nav-links" id="navLinks">
+<li><a class="nav-btn" href="../ar/programs.html" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
+<li><a class="nav-link" href="../../en/index.html">Home</a></li>
+<li><a class="nav-link" href="about.html">About Us</a></li>
+<li><a class="nav-link active" href="programs.html">Services</a></li>
+
+<li><a class="nav-link" href="contact.html">Contact Us</a></li>
+<li><a class="nav-link" href="verify.html">Verify Certificates</a></li>
+<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a class="nav-btn" href="login.html">Login</a></li>
+</ul>
+<button aria-label="القائمة" class="hamburger" id="hamburger">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+<ul>
+<li><a class="nav-btn" href="../ar/programs.html" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
+<li><a href="../../en/index.html">Home</a></li>
+<li><a href="about.html">About Us</a></li>
+<li><a href="programs.html">Services</a></li>
+      <li><a href="articles.html">Articles</a></li>
+
+<li><a href="contact.html">Contact Us</a></li>
+<li><a href="verify.html">Verify Certificates</a></li>
+<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a class="mobile-btn" href="login.html">Login</a></li>
+</ul>
+</div>
+<!-- Page Header -->
+
+  <section class="page-header">
+    <div class="container">
+      <h1>Services and Our Programs</h1>
+      <p>Discover the accredited career programs we offer to advance your career path</p>
+    </div>
+  </section>
+<!-- Start Learning Sections -->
+  <section class="programs-section" style="padding: 80px 0; background: white;">
+    <div class="container">
+      <div class="programs-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+        
+        <div class="program-card featured">
+          <div class="program-icon"><i class="fas fa-graduation-cap"></i></div>
+          <h3>Professional PhD Department</h3>
+          <p>A high-level professional program to prepare experts and influential leaders in their fields.</p>
+          <a href="phd.html" class="btn-primary">Go to Program <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-user-tie"></i></div>
+          <h3>Professional Masters Department</h3>
+          <p>An advanced path combining academic study and practical experience to develop your leadership capabilities.</p>
+          <a href="masters.html" class="btn-outline">Go to Program <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-award"></i></div>
+          <h3>Professional Diploma Department</h3>
+          <p>Specialized practical programs to gain applied skills that enhance your chances in the labor market.</p>
+          <a href="diploma.html" class="btn-outline">Go to Program <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-briefcase"></i></div>
+          <h3>Professional Courses Department</h3>
+          <p>Applied training programs designed to qualify you directly for labor market requirements.</p>
+          <a href="vocational.html" class="btn-outline">Go to Program <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <div class="program-card">
+          <div class="program-icon"><i class="fas fa-certificate"></i></div>
+          <h3>Professional Certifications Department</h3>
+          <p>Focused and practical courses to develop specific skills quickly and efficiently.</p>
+          <a href="pro_courses.html" class="btn-outline">Go to Program <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  
+  <!-- Services Header -->
+  <section style="padding-top: 80px; text-align: center; background: var(--bg-surface);">
+    <div class="container">
+        <h2 class="section-title">Our Services <span class="highlight">Professional</span></h2>
+        <p class="section-subtitle">Integrated solutions designed to meet the needs of individuals, companies, and training centers</p>
+    </div>
+  </section>
+
+  <!-- Detailed Services Section -->
+  <section class="services-detailed-section" style="padding: 60px 0 80px 0; background: var(--bg-surface);">
+    <div class="container">
+      
+      <!-- Service 1: Individuals -->
+      <div class="service-row" style="display:flex; flex-wrap:wrap; align-items:center; gap:40px; margin-bottom:60px; background:white; padding:40px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.05);">
+        <div class="service-content" style="flex:1; min-width:300px;">
+            <div style="width:60px; height:60px; background:rgba(201,162,39,0.1); color:var(--primary-color); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.8rem; margin-bottom:20px;">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <h3 style="color:var(--primary-dark); font-size:1.6rem; margin-bottom:15px;">Training Services for Individuals</h3>
+            <p style="color:var(--text-muted); line-height:1.8; margin-bottom:20px; font-size:1.05rem;">نقدم برامج تدريبية مهنية مصممة خصيصاً لتلبية تطلعاتك Professional، من خلال مسارات تعليمية تجمع بين المعرفة الأكاديمية والتطبيق العملي.</p>
+            <h4 style="color:var(--text-color); margin-bottom:10px;">Features:</h4>
+            <ul style="list-style:none; padding:0; line-height:1.8; color:var(--text-muted);">
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> Professional certificates and accreditations from international bodies.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> Study of real cases and applied projects.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> Flexibility in learning to suit the trainee's schedule.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> Continuous support and professional guidance during and after training.</li>
+            </ul>
+        </div>
+      </div>
+
+      <!-- Service 2: Companies -->
+      <div class="service-row" style="display:flex; flex-wrap:wrap; align-items:center; gap:40px; margin-bottom:60px; background:white; padding:40px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.05);">
+        <div class="service-content" style="flex:1; min-width:300px;">
+            <div style="width:60px; height:60px; background:rgba(201,162,39,0.1); color:var(--primary-color); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.8rem; margin-bottom:20px;">
+                <i class="fas fa-building"></i>
+            </div>
+            <h3 style="color:var(--primary-dark); font-size:1.6rem; margin-bottom:15px;">خدمات التدريب للشركات والمؤسسات</h3>
+            <p style="color:var(--text-muted); line-height:1.8; margin-bottom:20px; font-size:1.05rem;">نصمم برامج تدريبية مخصصة تواكب أهداف مؤسستك وتساهم في رفع كفاءة كوادرها، لضمان أعلى مستوى من الأداء المهني.</p>
+            <h4 style="color:var(--text-color); margin-bottom:10px;">Features:</h4>
+            <ul style="list-style:none; padding:0; line-height:1.8; color:var(--text-muted);">
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> برامج مصممة وفقاً لتحليل الاحتياجات التدريبية (TNA) للمؤسسة.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> تدريب في مقر الشركة أو عبر الإنترنت بمرونة تامة.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> تقارير أداء دورية لمتابعة تقدم الموظفين.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> اعتمادات وتوثيق للبرامج المنفذة لتعزيز السيرة الذاتية للمؤسسة.</li>
+            </ul>
+        </div>
+      </div>
+
+      <!-- Service 3: Training Centers -->
+      <div class="service-row" style="display:flex; flex-wrap:wrap; align-items:center; gap:40px; background:white; padding:40px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.05);">
+        <div class="service-content" style="flex:1; min-width:300px;">
+            <div style="width:60px; height:60px; background:rgba(201,162,39,0.1); color:var(--primary-color); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.8rem; margin-bottom:20px;">
+                <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <h3 style="color:var(--primary-dark); font-size:1.6rem; margin-bottom:15px;">خدمات التدريب لمراكز التدريب والمعاهد</h3>
+            <p style="color:var(--text-muted); line-height:1.8; margin-bottom:20px; font-size:1.05rem;">نقدم حقائب تدريبية جاهزة للاستخدام، ومصممة وفق أفضل المعايير Professional لتلبية احتياجات عملائك ورفع مستوى البرامج المقدمة لديهم.</p>
+            <h4 style="color:var(--text-color); margin-bottom:10px;">Features:</h4>
+            <ul style="list-style:none; padding:0; line-height:1.8; color:var(--text-muted);">
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> حقائب تدريبية شاملة (دليل المدرب، دليل المتدرب، العرض التقديمي، أدوات التقييم).</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> تحديث مستمر للمحتوى ليواكب التغيرات في سوق العمل.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> توفير اعتمادات وتوثيق للحقائب لتسهيل تقديمها من قبل المراكز.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> إمكانية تصميم حقائب تدريبية مخصصة بناءً على طلب المركز.</li>
+            </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+<!-- Why Section -->
+
+
+  <!-- Newsletter / CTA Section -->
+
+
+  <!-- Articles Section -->
+
+
+  <!-- Contact Section -->
+
+
+  
+<!-- Footer -->
+<footer class="footer">
+<div class="footer-top">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+
+<p>A certified professional training platform aiming to prepare professional cadres capable of dealing with the modern labor market.
+            </p>
+<div class="social-links">
+<a aria-label="Facebook" class="social-link" href="#"><i class="fab fa-facebook-f"></i></a>
+<a aria-label="Instagram" class="social-link" href="#"><i class="fab fa-instagram"></i></a>
+<a aria-label="LinkedIn" class="social-link" href="#"><i class="fab fa-linkedin-in"></i></a>
+<a aria-label="WhatsApp" class="social-link" href="#"><i class="fab fa-whatsapp"></i></a>
+</div>
+</div>
+<div class="footer-links-col">
+<h5>Quick Links</h5>
+<ul>
+<li><a href="../../en/index.html">Home</a></li>
+<li><a href="about.html">About Us</a></li>
+<li><a href="programs.html">Our Programs</a></li>
+
+<li><a href="verify.html">Verify Certificates</a></li>
+<li><a href="contact.html">Contact Us</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<h5>Programs</h5>
+<ul>
+<li><a href="#programs">Professional PhD</a></li>
+<li><a href="#programs">Professional Masters</a></li>
+<li><a href="#programs">Professional Diploma</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<h5>Legal</h5>
+<ul>
+<li><a href="privacy.html">Privacy Policy</a></li>
+<li><a href="terms.html">Terms &amp; Conditions</a></li>
+<li><a href="refund.html">Refund Policy</a></li>
+<li><a href="accessibility.html">Accessibility</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<div class="container">
+<p>© 2026 Nibras. All rights reserved.</p>
+</div>
+</div>
+</footer>
+<!-- Scroll to Top -->
+<button aria-label="العودة للأعلى" class="scroll-top" id="scrollTop">
+<i class="fas fa-arrow-up"></i>
+</button>
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+<script src="../../assets/js/script.js"></script>
+</body>
+</html>

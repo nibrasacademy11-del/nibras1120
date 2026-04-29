@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>عن الأكاديمية | أكاديمية نبراس</title>
+  <meta name="description" content="أكاديمية نبراس - منصة تدريب وتأهيل مهني معتمدة، تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
+</head>
+<body>
+
+        <!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>الإجمالي:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+        
+    <!-- Floating Cart Button -->
+    <div class="floating-cart" onclick="toggleCart(event)">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="floating-cart-badge cart-badge">0</span>
+    </div>
+            
+<!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>الإجمالي:</span>
+                    <strong id="cartTotal">0.00 US$</strong>
+                </div>
+                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+        
+
+  
+  </div>
+
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar">
+    <div class="nav-container">
+      <a href="../../index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../en/about.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+        <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
+        <li><a href="about.html" class="nav-link active">عن الأكاديمية</a></li>
+        <li><a href="programs.html" class="nav-link">البرامج والخدمات</a></li>
+        <li><a href="articles.html" class="nav-link">المقالات</a></li>
+        
+        <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
+        <li><a href="verify.html" class="nav-link">التحقق من الشهادات</a></li>
+        
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="القائمة">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../en/about.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+      <li><a href="../../index.html">الرئيسية</a></li>
+      <li><a href="about.html">عن الأكاديمية</a></li>
+      <li><a href="programs.html">البرامج والخدمات</a></li>
+      <li><a href="articles.html">المقالات</a></li>
+      
+      <li><a href="contact.html">تواصل معنا</a></li>
+      <li><a href="verify.html">التحقق من الشهادات</a></li>
+      
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
+    </ul>
+  </div>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>عن الأكاديمية</h1>
+      <p>تعرف أكثر على منصة نبراس للتدريب والتأهيل المهني المعتمد</p>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item" data-target="26">
+          <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+          <div class="stat-number"><span class="counter">0</span>+</div>
+          <div class="stat-label">مدرب معتمد</div>
+        </div>
+        <div class="stat-item" data-target="66">
+          <div class="stat-icon"><i class="fas fa-certificate"></i></div>
+          <div class="stat-number"><span class="counter">0</span>+</div>
+          <div class="stat-label">اعتماد مهني</div>
+        </div>
+        <div class="stat-item" data-target="500">
+          <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+          <div class="stat-number"><span class="counter">0</span>+</div>
+          <div class="stat-label">طالب وخريج</div>
+        </div>
+        <div class="stat-item" data-target="5">
+          <div class="stat-icon"><i class="fas fa-star"></i></div>
+          <div class="stat-number"><span class="counter">0</span></div>
+          <div class="stat-label">تقييم الطلاب</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <!-- About Content Section -->
+  <section id="about" class="about-section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-visual">
+          <div class="about-img-wrapper">
+            <div class="about-shape-bg"></div>
+            <div class="about-info-cards">
+              <div class="about-info-card">
+                <i class="fas fa-medal"></i>
+                <div>
+                  <strong>اعتماد دولي</strong>
+                  <p>برامج موثقة ومعتمدة</p>
+                </div>
+              </div>
+              <div class="about-info-card">
+                <i class="fas fa-briefcase"></i>
+                <div>
+                  <strong>تطبيق عملي</strong>
+                  <p>خبرة حقيقية في السوق</p>
+                </div>
+              </div>
+              <div class="about-info-card">
+                <i class="fas fa-route"></i>
+                <div>
+                  <strong>مسار واضح</strong>
+                  <p>خطة تطوير متكاملة</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="about-content">
+          <div class="section-badge">قصتنا</div>
+          <h2 class="section-title">أكاديمية نبراس <span class="highlight">القصة والبداية</span></h2>
+          <p class="about-text">
+            تأسست أكاديمية نبراس انطلاقًا من إيماننا بأن التعليم المهني الحقيقي يجب أن يكون عمليًا، معتمدًا، ومتصلاً باحتياجات سوق العمل الفعلية. ومنذ أكثر من ثلاث سنوات في المملكة العربية السعودية، تعمل الأكاديمية على تقديم برامج تدريبية متخصصة تساعد الأفراد والمؤسسات على تطوير مهاراتهم وبناء مسارات مهنية قوية ومستدامة.
+          </p>
+          <p class="about-text">
+            في نبراس، نؤمن أن المعرفة وحدها لا تكفي، بل يجب أن تُترجم إلى مهارات قابلة للتطبيق ونتائج ملموسة في الواقع المهني.
+          </p>
+          <div class="about-features" style="display:flex; flex-direction:column; gap:8px;">
+            <p><strong>من نحن:</strong> أكاديمية نبراس هي منصة تعليم وتدريب مهني متخصصة، تقدم برامج معتمدة وموجهة للأفراد والجهات والمؤسسات. نغطي مجموعة من التخصصات الحيوية من بينها:</p>
+            <ul style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <li><i class="fas fa-check-circle"></i> العلوم السياسية</li>
+              <li><i class="fas fa-check-circle"></i> علوم الاقتصاد</li>
+              <li><i class="fas fa-check-circle"></i> حوكمة الشركات</li>
+              <li><i class="fas fa-check-circle"></i> الأمن السيبراني</li>
+              <li><i class="fas fa-check-circle"></i> إدارة الفنادق</li>
+              <li><i class="fas fa-check-circle"></i> الخدمات اللوجستية</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision & Mission Section -->
+  <section class="why-section" style="background: var(--bg-surface);">
+    <div class="container">
+      <div class="why-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-eye"></i></div>
+          <h4>رؤيتنا</h4>
+          <p>أن تواصل نبراس للتدريب والتعاون المهني دورها كجهة مرجعية في التأهيل المهني والاعتماد الاحترافي، من خلال تطوير نماذج تدريبية متقدمة تواكب التحولات المهنية، وتلبي احتياجات الأفراد والمؤسسات في بيئات العمل الحديثة</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-bullseye"></i></div>
+          <h4>رسالتنا</h4>
+          <p>العمل على نقل الخبرة العملية والمعرفة المتخصصة إلى برامج تدريب وتأهيل مهني ذات قيمة حقيقية، تركز على التطبيق، وتستند إلى معايير اعتماد واضحة، بما يسهم في رفع كفاءة الكوادر المهنية، وتعزيز جاهزيتها للتحديات الواقعية في سوق العمل.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-flag"></i></div>
+          <h4>أهدافنا</h4>
+          <ul style="text-align: right; color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; padding-right:15px; list-style:circle;">
+            <li>تطوير برامج تدريبية مهنية تعكس الخبرة المتراكمة وتواكب متطلبات السوق.</li>
+            <li>دعم التطور المهني المستدام للأفراد من خلال مسارات تدريب واضحة ومترابطة.</li>
+            <li>تقديم محتوى تدريبي يعتمد على أفضل الممارسات العملية وليس الطرح النظري المجرد.</li>
+            <li>توسيع نطاق التعاون المهني مع جهات تدريب واعتماد محلية ودولية.</li>
+            <li>الإسهام في بناء قيادات مهنية قادرة على اتخاذ القرار وإدارة التغيير.</li>
+          </ul>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-star"></i></div>
+          <h4>قيمنا</h4>
+          <ul style="text-align: right; color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; padding-right:15px; list-style:circle;">
+            <li><strong>الخبرة:</strong> برامج مبنية على ممارسة فعلية وفهم عميق لواقع العمل.</li>
+            <li><strong>الجودة:</strong> التزام ثابت بمعايير عالية في المحتوى، والتنفيذ، والتقييم.</li>
+            <li><strong>الوضوح:</strong> شفافية في الطرح، واعتمادات واضحة، ومسارات تدريب محددة.</li>
+            <li><strong>التحديث المستمر:</strong> تطوير البرامج بما يتلاءم مع التغيرات المهنية والتقنية.</li>
+            <li><strong>الاحتراف المؤسسي:</strong> تعامل مهني يعكس نضج الكيان وثقة عملائه وشركائه.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Learning Experience Section -->
+  <section class="why-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">مميزاتنا</div>
+        <h2 class="section-title">تجربة التعلم <span class="highlight">في نبراس</span></h2>
+        <p class="section-subtitle">تعتمد أكاديمية نبراس نموذج تعلم حديث يجمع بين الأساس الأكاديمي والتطبيق العملي</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-video"></i></div>
+          <h4>محاضرات مباشرة ومسجلة</h4>
+          <p>محتوى متوفر في أي وقت للرجوع إليه</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-user-circle"></i></div>
+          <h4>حساب متدرب خاص</h4>
+          <p>لمتابعة التقدم الأكاديمي بكل سهولة</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-tasks"></i></div>
+          <h4>تقييمات مرحلية</h4>
+          <p>لضمان فهم المادة بدون نظام الرسوب المزعج</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-file-alt"></i></div>
+          <h4>اختبارات نهائية</h4>
+          <p>اختبارات معتمدة لبعض البرامج لضمان الجودة</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-download"></i></div>
+          <h4>شهادات رقمية</h4>
+          <p>قابلة للتحميل مباشرة بعد إتمام البرنامج</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-users-cog"></i></div>
+          <h4>نخبة من المدربين</h4>
+          <p>مدربون ومتخصصون معتمدون دوليًا</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ and Learning Mechanism Section -->
+  <section class="faq-section" style="padding: 80px 0; background: white;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">دليل المتدرب</div>
+        <h2 class="section-title">آلية التعلم والأسئلة <span class="highlight">الشائعة</span></h2>
+      </div>
+      
+      <div class="learning-mech" style="margin-bottom: 50px;">
+        <h3 style="color:var(--primary-color); margin-bottom:20px;">آلية التعلم عبر منصة نبراس</h3>
+        <p style="color:var(--text-muted); line-height:1.8; margin-bottom:15px;">تعتمد نبراس للتدريب والتعاون المهني نموذجًا تدريبيًا مرنًا يجمع بين التفاعل المباشر وسهولة الوصول إلى المحتوى، بما يضمن تجربة تعلم احترافية ومنظمة للمتدرب.</p>
+        
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+            <div style="background:var(--bg-surface); padding:20px; border-radius:10px;">
+                <h4 style="color:var(--secondary-color);"><i class="fas fa-video"></i> التدريب المباشر</h4>
+                <p style="font-size:0.9rem; color:var(--text-color); margin-top:10px;">يتم تقديم المحاضرات عبر بث مباشر تفاعلي، يتيح للمتدرب التواصل المباشر مع المحاضر، وطرح الأسئلة، والمشاركة في النقاشات خلال وقت المحاضرة.</p>
+            </div>
+            <div style="background:var(--bg-surface); padding:20px; border-radius:10px;">
+                <h4 style="color:var(--secondary-color);"><i class="fas fa-user-circle"></i> حساب خاص</h4>
+                <p style="font-size:0.9rem; color:var(--text-color); margin-top:10px;">يحصل كل متدرب على حساب يتيح له الدخول لجلسات البث، والوصول السهل لجدول المحاضرات، ومتابعة المحتوى من مكان واحد.</p>
+            </div>
+            <div style="background:var(--bg-surface); padding:20px; border-radius:10px;">
+                <h4 style="color:var(--secondary-color);"><i class="fas fa-play-circle"></i> محاضرات مسجلة</h4>
+                <p style="font-size:0.9rem; color:var(--text-color); margin-top:10px;">بعد انتهاء كل محاضرة، يتم رفع التسجيل لتتمكن من مراجعته في أي وقت طوال فترة البرنامج.</p>
+            </div>
+            <div style="background:var(--bg-surface); padding:20px; border-radius:10px;">
+                <h4 style="color:var(--secondary-color);"><i class="fas fa-bell"></i> تنبيهات ومواعيد</h4>
+                <p style="font-size:0.9rem; color:var(--text-color); margin-top:10px;">ترسل المنصة إشعارات بريدية بتذكير مواعيد المحاضرات وتوفر التسجيلات بعد انتهائها.</p>
+            </div>
+        </div>
+      </div>
+
+      <div class="evaluation-mech" style="margin-bottom: 50px;">
+        <h3 style="color:var(--primary-color); margin-bottom:20px;">آلية التقييم والمتابعة</h3>
+        <div style="background: var(--bg-surface); padding: 30px; border-radius: 10px; border-right: 4px solid var(--secondary-color);">
+            <p style="color:var(--text-color); line-height:1.8; margin-bottom:15px;"><strong>خلال فترة البرنامج، يتم تطبيق:</strong></p>
+            <ul style="list-style:none; padding:0; margin-bottom:15px;">
+                <li style="margin-bottom:10px;"><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> تقييمات ومراجعات مرحلية بعد الوحدات الأساسية.</li>
+                <li><i class="fas fa-check" style="color:var(--primary-color); margin-left:10px;"></i> اختبارات ذكية لقياس الفهم والاستيعاب دون تعقيد.</li>
+            </ul>
+            <p style="color:var(--text-color); line-height:1.8;"><strong>فلسفة التقييم:</strong> لا نؤمن بثقافة "النجاح أو الرسوب"، بل نؤمن بقياس نسبة الاستيعاب ودعم المتدرب للوصول لأعلى مستوى. قد تتضمن بعض البرامج اختبارًا نهائيًا للتأكد من استيعاب الصورة الكاملة.</p>
+        </div>
+      </div>
+
+      <div class="faq-container">
+        <h3 style="color:var(--primary-color); margin-bottom:20px;">أسئلة سريعة تهم المتدرب</h3>
+        
+        <div class="faq-item" style="margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:15px;">
+            <h5 style="color:var(--secondary-color); margin-bottom:5px;"><i class="fas fa-question-circle" style="color:var(--primary-color);"></i> هل الماجستير المهني معترف به؟</h5>
+            <p style="font-size:0.95rem; color:var(--text-color);">الماجستير المهني معتمد مهنيًا ويُستخدم لتطوير المسار الوظيفي والقيادي، وهو يختلف في طبيعته عن الاعتماد الأكاديمي الجامعي.</p>
+        </div>
+        <div class="faq-item" style="margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:15px;">
+            <h5 style="color:var(--secondary-color); margin-bottom:5px;"><i class="fas fa-question-circle" style="color:var(--primary-color);"></i> هل يمكن استخدام الشهادة في الترقية الوظيفية؟</h5>
+            <p style="font-size:0.95rem; color:var(--text-color);">نعم، تُستخدم الشهادات المهنية لدعم الترقية الوظيفية وتعزيز السيرة الذاتية، وفق سياسات جهة العمل.</p>
+        </div>
+        <div class="faq-item" style="margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:15px;">
+            <h5 style="color:var(--secondary-color); margin-bottom:5px;"><i class="fas fa-question-circle" style="color:var(--primary-color);"></i> هل يوجد رسوب في البرامج المهنية؟</h5>
+            <p style="font-size:0.95rem; color:var(--text-color);">لا يوجد مفهوم الرسوب، لكن توجد تقييمات تهدف إلى رفع مستوى الاستيعاب وتحقيق أقصى استفادة مهنية.</p>
+        </div>
+        <div class="faq-item" style="margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:15px;">
+            <h5 style="color:var(--secondary-color); margin-bottom:5px;"><i class="fas fa-question-circle" style="color:var(--primary-color);"></i> هل البرامج مناسبة للموظفين؟ وهل يمكن الجمع بين العمل والدراسة؟</h5>
+            <p style="font-size:0.95rem; color:var(--text-color);">نعم، جميع البرامج مصممة لتناسب الموظفين. يعتمد نظام التعلم على المرونة وإمكانية الوصول للمحتوى في أي وقت.</p>
+        </div>
+        <div class="faq-item" style="margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:15px;">
+            <h5 style="color:var(--secondary-color); margin-bottom:5px;"><i class="fas fa-question-circle" style="color:var(--primary-color);"></i> ما الفرق بين الدبلوم المهني والماجستير المهني؟</h5>
+            <p style="font-size:0.95rem; color:var(--text-color);">الدبلوم يركّز على مهارات تخصصية محددة، بينما الماجستير المهني يركّز على التطوير الشامل والقيادي.</p>
+        </div>
+        <div class="faq-item" style="margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:15px;">
+            <h5 style="color:var(--secondary-color); margin-bottom:5px;"><i class="fas fa-question-circle" style="color:var(--primary-color);"></i> هل يشترط مؤهل جامعي للتسجيل؟</h5>
+            <p style="font-size:0.95rem; color:var(--text-color);">يعتمد ذلك على نوع البرنامج، ويتم توضيح شروط القبول لكل برنامج بشكل مستقل.</p>
+        </div>
+        <div class="faq-item" style="margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:15px;">
+            <h5 style="color:var(--secondary-color); margin-bottom:5px;"><i class="fas fa-question-circle" style="color:var(--primary-color);"></i> هل توجد خطط تقسيط أو تسهيلات دفع؟</h5>
+            <p style="font-size:0.95rem; color:var(--text-color);">نعم، تتوفر خيارات دفع مرنة وفق سياسة كل برنامج.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  
+<!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            
+            <p>منصة تدريب وتأهيل مهني معتمدة تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث.</p>
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>روابط سريعة</h5>
+            <ul>
+              <li><a href="../../index.html">الرئيسية</a></li>
+              <li><a href="about.html">عن الأكاديمية</a></li>
+              <li><a href="programs.html">برامجنا</a></li>
+              
+              <li><a href="verify.html">التحقق من الشهادات</a></li>
+              <li><a href="contact.html">تواصل معنا</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>البرامج</h5>
+            <ul>
+              <li><a href="#programs">الدكتوراة المهنية</a></li>
+              <li><a href="#programs">الماجستير المهني</a></li>
+              <li><a href="#programs">الدبلوم المهني</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>قانوني</h5>
+            <ul>
+              <li><a href="privacy.html">سياسة الخصوصية</a></li>
+              <li><a href="terms.html">الشروط والأحكام</a></li>
+              <li><a href="refund.html">سياسة الاسترداد</a></li>
+              <li><a href="accessibility.html">إمكانية الوصول</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 أكاديمية نبراس. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="../../assets/js/script.js"></script>
+</body>
+</html>
