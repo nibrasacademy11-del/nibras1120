@@ -87,3 +87,74 @@ exports.getMe = async (req, res) => {
         res.status(500).json({ message: 'Server error.' });
     }
 };
+
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
+exports.forgotPassword = async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.body.email.toLowerCase() });
+        if (!user) return res.status(404).json({ message: 'لا يوجد حساب مسجل بهذا البريد الإلكتروني.' });
+
+        const resetToken = crypto.randomBytes(20).toString('hex');
+        user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+        user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+        await user.save();
+
+        // Check if origin is available from headers for the correct URL
+        const origin = req.headers.origin || `${req.protocol}://${req.get('host')}`;
+        const resetUrl = `${origin}/pages/ar/reset-password.html?token=${resetToken}`;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER || 'nibras8883@gmail.com',
+                pass: process.env.EMAIL_PASS || 'your-app-password-here' // The user MUST set this in Vercel
+            }
+        });
+
+        const message = `مرحباً،\n\nلقد طلبت إعادة تعيين كلمة المرور لحسابك في أكاديمية نبراس.\n\nمن فضلك اضغط على الرابط التالي لتغيير كلمة المرور:\n\n${resetUrl}\n\nهذا الرابط صالح لمدة 10 دقائق فقط.`;
+
+        await transporter.sendMail({
+            from: 'أكاديمية نبراس <noreply@nibras.com>',
+            to: user.email,
+            subject: 'إعادة تعيين كلمة المرور - أكاديمية نبراس',
+            text: message
+        });
+
+        res.json({ message: 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.' });
+    } catch (error) {
+        if (req.body.email) {
+            const user = await User.findOne({ email: req.body.email.toLowerCase() });
+            if (user) {
+                user.resetPasswordToken = undefined;
+                user.resetPasswordExpire = undefined;
+                await user.save();
+            }
+        }
+        console.error(error);
+        res.status(500).json({ message: 'حدث خطأ أثناء إرسال الإيميل. تأكد من إعدادات البريد.' });
+    }
+};
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const resetPasswordToken = crypto.createHash('sha256').update(req.body.token).digest('hex');
+
+        const user = await User.findOne({
+            resetPasswordToken,
+            resetPasswordExpire: { $gt: Date.now() }
+        });
+
+        if (!user) return res.status(400).json({ message: 'الرابط غير صالح أو انتهت صلاحيته.' });
+
+        user.password = await bcrypt.hash(req.body.password, 10);
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save();
+
+        res.json({ message: 'تم تغيير كلمة المرور بنجاح. يمكنك تسجيل الدخول الآن.' });
+    } catch (error) {
+        res.status(500).json({ message: 'حدث خطأ في السيرفر.' });
+    }
+};

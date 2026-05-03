@@ -162,6 +162,67 @@ function initPublicAuth(isEN, isAdminPagePath) {
             }
         });
     }
+
+    const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+    const resetPasswordForm = document.getElementById('resetPasswordForm');
+
+    if (forgotPasswordForm) {
+        forgotPasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgotEmail').value.trim();
+            const btn = forgotPasswordForm.querySelector('button');
+            const originalText = btn.textContent;
+            btn.textContent = isEN ? 'Sending...' : 'جاري الإرسال...';
+            btn.disabled = true;
+            try {
+                await apiFetch('/api/auth/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                showToast(isEN ? 'Reset link sent to your email.' : 'تم إرسال الرابط، تفقد بريدك الإلكتروني.');
+                forgotPasswordForm.reset();
+            } catch (error) {
+                showToast(error.message, true);
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        });
+    }
+
+    if (resetPasswordForm) {
+        resetPasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('resetPassword').value;
+            const confirmPassword = document.getElementById('resetConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showToast(isEN ? 'Passwords do not match.' : 'كلمتا المرور غير متطابقتين.', true);
+                return;
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            if (!token) {
+                showToast(isEN ? 'Invalid or missing token.' : 'رابط الاستعادة غير صالح أو مفقود.', true);
+                return;
+            }
+
+            try {
+                await apiFetch('/api/auth/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token, password })
+                });
+                showToast(isEN ? 'Password updated successfully.' : 'تم تغيير كلمة المرور بنجاح.');
+                setTimeout(() => window.location.href = 'login.html', 1500);
+            } catch (error) {
+                showToast(error.message, true);
+            }
+        });
+    }
 }
 
 function initVerifyForm(isEN) {
