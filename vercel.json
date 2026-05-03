@@ -18,6 +18,11 @@
       "continue": true
     },
     {
+      "src": "/en/(.*)",
+      "dest": "/en/$1",
+      "continue": true
+    },
+    {
       "src": "/(.*)",
       "dest": "server.js"
     }

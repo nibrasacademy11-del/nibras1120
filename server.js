@@ -37,6 +37,7 @@ app.use(cookieParser());
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/pages', express.static(path.join(__dirname, 'pages')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/en', express.static(path.join(__dirname, 'en')));
 app.use(express.static(__dirname));
 
 // Routes
