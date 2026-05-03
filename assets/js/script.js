@@ -247,23 +247,66 @@ function initVerifyForm(isEN) {
         const resultDiv = document.getElementById('verifyResult');
         if (!code || !resultDiv) return;
         resultDiv.classList.remove('hidden');
-        resultDiv.innerHTML = `<p>${isEN ? 'Checking...' : 'جاري التحقق...'}</p>`;
+        resultDiv.className = 'verify-result';
+        resultDiv.innerHTML = `
+            <div class="verify-loading">
+                <i class="fas fa-spinner fa-spin" style="font-size:1.5rem; color:var(--primary);"></i>
+                <p>${isEN ? 'Checking certificate...' : 'جاري التحقق من الشهادة...'}</p>
+            </div>
+        `;
         try {
             const data = await apiFetch(`/api/certificates/${encodeURIComponent(code)}`);
             const cert = data.certificate;
+            resultDiv.className = 'verify-result verify-success';
             resultDiv.innerHTML = `
-                <div style="padding:22px; background:linear-gradient(135deg,#fff,#f8f9fb); border-radius:14px; border:1px solid #e6e8ef; box-shadow:0 8px 20px rgba(0,0,0,0.06); text-align:${isEN ? 'left' : 'right'};">
-                    <h3 style="color:var(--primary-color); margin-bottom:14px; font-size:1.2rem;">
-                        ${isEN ? 'Certificate verified successfully' : 'تم التحقق من الشهادة بنجاح'} ✓
-                    </h3>
-                    <p style="margin:8px 0;"><strong>${isEN ? 'Name' : 'الاسم'}:</strong> ${cert.trainee_name}</p>
-                    <p style="margin:8px 0;"><strong>${isEN ? 'Program' : 'البرنامج'}:</strong> ${cert.program_name}</p>
-                    <p style="margin:8px 0;"><strong>${isEN ? 'Issue date' : 'تاريخ الإصدار'}:</strong> ${cert.issue_date}</p>
-                    ${cert.pdf_url ? `<a href="${cert.pdf_url}" target="_blank" download style="display:inline-block; margin-top:15px; padding:10px 16px; border-radius:10px; background:var(--primary-color,#7a1c28); color:#fff; text-decoration:none;">${isEN ? 'Download PDF certificate' : 'تنزيل نسخة PDF'}</a>` : ''}
+                <div class="verify-result-header">
+                    <div class="verify-check-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>${isEN ? 'Verified Certificate' : 'شهادة موثّقة'}</h3>
+                    <p>${isEN ? 'This certificate is authentic and registered in our system.' : 'هذه الشهادة صحيحة ومسجلة في نظام أكاديمية نبراس.'}</p>
                 </div>
+                <div class="verify-data-grid">
+                    <div class="verify-data-item">
+                        <span class="verify-data-label"><i class="fas fa-user"></i> ${isEN ? 'Trainee Name' : 'اسم المتدرب'}</span>
+                        <span class="verify-data-value">${cert.trainee_name}</span>
+                    </div>
+                    <div class="verify-data-item">
+                        <span class="verify-data-label"><i class="fas fa-graduation-cap"></i> ${isEN ? 'Program' : 'البرنامج التدريبي'}</span>
+                        <span class="verify-data-value">${cert.program_name}</span>
+                    </div>
+                    <div class="verify-data-item">
+                        <span class="verify-data-label"><i class="fas fa-hashtag"></i> ${isEN ? 'Certificate No.' : 'رقم الشهادة'}</span>
+                        <span class="verify-data-value">${cert.cert_num}</span>
+                    </div>
+                    <div class="verify-data-item">
+                        <span class="verify-data-label"><i class="fas fa-calendar-alt"></i> ${isEN ? 'Issue Date' : 'تاريخ الإصدار'}</span>
+                        <span class="verify-data-value">${cert.issue_date}</span>
+                    </div>
+                    ${cert.field ? `
+                    <div class="verify-data-item">
+                        <span class="verify-data-label"><i class="fas fa-briefcase"></i> ${isEN ? 'Field' : 'التخصص / المجال'}</span>
+                        <span class="verify-data-value">${cert.field}</span>
+                    </div>` : ''}
+                </div>
+                ${cert.pdf_url ? `
+                <div class="verify-download">
+                    <a href="${cert.pdf_url}" target="_blank" class="btn-primary verify-download-btn">
+                        <i class="fas fa-file-pdf"></i> ${isEN ? 'Download PDF Certificate' : 'تنزيل نسخة PDF من الشهادة'}
+                    </a>
+                </div>` : ''}
             `;
         } catch (error) {
-            resultDiv.innerHTML = `<p style="color:#b42318; font-weight:600;">${error.message}</p>`;
+            resultDiv.className = 'verify-result verify-error-result';
+            resultDiv.innerHTML = `
+                <div class="verify-result-header">
+                    <div class="verify-error-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <h3>${isEN ? 'Certificate Not Found' : 'لم يتم العثور على الشهادة'}</h3>
+                    <p>${isEN ? 'Please check the certificate number and try again.' : 'يرجى التأكد من رقم الشهادة والمحاولة مرة أخرى.'}</p>
+                </div>
+            `;
         }
     });
 }
