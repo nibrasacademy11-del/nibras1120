@@ -41,26 +41,30 @@ async function checkAuthAndUpdateNav(isEN) {
 }
 
 function updateNavLinks(isEN, isLoggedIn) {
+    // Detect if we're inside pages/ar/ or at root level
+    const currentPath = window.location.pathname.toLowerCase();
+    const isInsidePages = currentPath.includes('/pages/');
+    
     // All login/profile anchor links in navbar and mobile menu
     const loginSelectors = [
         'a[href="pages/ar/login.html"]',
         'a[href="login.html"]',
         'a[href="pages/ar/profile.html"]',
         'a[href="profile.html"]',
-        'a[href$="profile.html"]'
+        'a[href$="profile.html"]',
+        'a[href$="login.html"]'
     ];
     const loginLinks = document.querySelectorAll(loginSelectors.join(', '));
     loginLinks.forEach(el => {
         // Skip admin/logout buttons
-        if (el.closest('.dash-header') || el.classList.contains('mobile-btn')) return;
+        if (el.closest('.dash-header')) return;
         
         if (isLoggedIn) {
-            const newHref = el.href.includes('pages/ar/') ? 'pages/ar/profile.html' : 'profile.html';
-            el.href = newHref;
+            // Use simple relative path based on where we ARE, not where the link points
+            el.href = isInsidePages ? 'profile.html' : 'pages/ar/profile.html';
             el.innerHTML = `<i class="fas fa-user-circle"></i> ${isEN ? 'My Account' : 'حسابي'}`;
         } else {
-            const newHref = el.href.includes('pages/ar/') ? 'pages/ar/login.html' : 'login.html';
-            el.href = newHref;
+            el.href = isInsidePages ? 'login.html' : 'pages/ar/login.html';
             el.innerHTML = isEN ? 'Login' : 'تسجيل الدخول';
         }
     });
