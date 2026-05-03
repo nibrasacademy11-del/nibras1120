@@ -19,21 +19,38 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isAdminPagePath) initAdminPanel(isEN);
     if (isProfilePath) initProfile(isEN);
 
-    // Update Navigation if logged in
-    const userName = localStorage.getItem('nibras_user_name');
-    if (userName) {
-        document.querySelectorAll('a[href="pages/ar/login.html"], a[href="login.html"]').forEach(el => {
-            el.href = el.href.replace('login.html', 'profile.html');
-            el.innerHTML = `<i class="fas fa-user-circle"></i> ${isEN ? 'My Account' : 'حسابي'}`;
-        });
-    }
+    // Update Navigation based on login state
+    updateNavAuth(isEN);
 });
+
+function updateNavAuth(isEN) {
+    const userName = localStorage.getItem('nibras_user_name');
+    // All login/profile anchor links in navbar and mobile menu
+    const loginLinks = document.querySelectorAll(
+        'a[href="pages/ar/login.html"], a[href="login.html"], a[href$="profile.html"]'
+    );
+    loginLinks.forEach(el => {
+        if (userName) {
+            // User IS logged in → show "حسابي"
+            const newHref = el.href.includes('pages/ar/') ? 'pages/ar/profile.html' : 'profile.html';
+            el.href = newHref;
+            el.innerHTML = `<i class="fas fa-user-circle"></i> ${isEN ? 'My Account' : 'حسابي'}`;
+        } else {
+            // User NOT logged in → show "تسجيل الدخول"
+            const newHref = el.href.includes('pages/ar/') ? 'pages/ar/login.html' : 'login.html';
+            el.href = newHref;
+            el.innerHTML = isEN ? 'Login' : 'تسجيل الدخول';
+        }
+    });
+}
 
 window.logout = async () => {
     try {
         await apiFetch('/api/auth/logout', { method: 'POST' });
     } catch(err) {}
     localStorage.removeItem('nibras_user_name');
+    // Update navbar immediately before redirect
+    updateNavAuth(document.documentElement.lang === 'en');
     window.location.href = 'login.html';
 };
 
