@@ -7,11 +7,17 @@
   --gold-light: #e0c05c;
   --gold-dark: #a88620;
   --blue-dark: #082d55;
-  
+
+  /* Aliases for legacy code compatibility */
+  --primary-color: #6c0311;
+  --secondary-color: #c9a03f;
+  --text-color: #1e1e1e;
+  --text-dark: #1e1e1e;
+
   --bg-main: #ffffff;
   --bg-surface: #f4f6f9;
   --bg-card: #ffffff;
-  
+
   --text-main: #1e1e1e;
   --text-muted: #64748b;
   --white: #ffffff;
@@ -82,7 +88,7 @@ img { max-width: 100%; display: block; }
   display: flex; align-items: center; justify-content: space-between;
 }
 .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; }
-.nav-logo img { height: 50px; }
+.nav-logo img { height: 50px; width: auto; object-fit: contain; }
 .logo-text { color: var(--text-main); font-weight: 400; }
 .logo-text strong { color: var(--primary); font-weight: 700; }
 .nav-links { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
@@ -476,7 +482,8 @@ img { max-width: 100%; display: block; }
   font-size: 1.1rem; z-index: 900; opacity: 0; transform: translateY(20px);
   transition: var(--transition); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow);
 }
-.scroll-top.visible { opacity: 1; transform: translateY(0); }
+/* Support both .visible and .show class for scroll-top */
+.scroll-top.visible, .scroll-top.show { opacity: 1; transform: translateY(0); }
 .scroll-top:hover { box-shadow: 0 6px 24px rgba(108,3,17,.4); transform: translateY(-3px); }
 
 /* ===== Toast ===== */
@@ -1067,4 +1074,52 @@ img { max-width: 100%; display: block; }
 
 .page-header h1 {
     font-size: 2.8rem !important;
+}
+
+/* ===== Profile Page ===== */
+.profile-section { padding: 120px 0 60px; background: var(--bg-surface); min-height: 80vh; }
+.profile-card {
+  background: var(--bg-card); border-radius: var(--radius);
+  padding: 40px; box-shadow: var(--shadow-hover); border: 1px solid var(--border);
+  max-width: 800px; margin: 0 auto;
+}
+.profile-header {
+  display: flex; align-items: center; gap: 24px;
+  border-bottom: 2px solid var(--border); padding-bottom: 24px; margin-bottom: 32px;
+}
+.profile-avatar {
+  width: 80px; height: 80px; min-width: 80px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--white); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; font-weight: 800;
+}
+.profile-info h2 { color: var(--text-main); margin-bottom: 6px; font-size: 1.5rem; }
+.profile-info p { color: var(--text-muted); margin: 0; font-size: 0.95rem; }
+.profile-details {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+}
+.detail-item {
+  background: var(--bg-surface); border: 1px solid var(--border);
+  padding: 18px; border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+.detail-item:hover { border-color: var(--primary); }
+.detail-label {
+  font-size: 0.85rem; color: var(--text-muted);
+  margin-bottom: 6px; display: block; font-weight: 500;
+}
+.detail-value { font-size: 1.1rem; color: var(--text-main); font-weight: 700; }
+.logout-btn {
+  background: #ffebee; color: #c62828; padding: 12px 28px;
+  border-radius: var(--radius-sm); font-weight: 700; border: none;
+  cursor: pointer; transition: var(--transition); font-family: var(--font);
+  font-size: 1rem; display: inline-flex; align-items: center; gap: 8px;
+}
+.logout-btn:hover { background: #ffcdd2; transform: translateY(-2px); }
+
+@media (max-width: 600px) {
+  .profile-details { grid-template-columns: 1fr; }
+  .profile-header { flex-direction: column; text-align: center; }
+  .profile-card { padding: 24px 16px; }
 }

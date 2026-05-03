@@ -11,6 +11,23 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// CORS - Required for cookie-based auth on Vercel (cross-origin)
+const allowedOrigins = [
+    'http://localhost:3000',
+    process.env.FRONTEND_URL || 'https://nibras1120.vercel.app'
+];
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (origin && (allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production')) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    next();
+});
+
 // Init middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
