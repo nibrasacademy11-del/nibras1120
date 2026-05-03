@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const isEN = document.documentElement.lang === 'en';
     const path = window.location.pathname.toLowerCase();
     const isAdminPagePath = path.endsWith('/admin.html');
-    const isProfilePath = path.endsWith('/profile.html');
 
     cleanupDuplicateIds(['cartSidebar', 'cartOverlay', 'cartItems', 'cartTotal', 'cartBadge']);
     initLayout();
@@ -17,66 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initVerifyForm(isEN);
     initPublicAuth(isEN, isAdminPagePath);
     if (isAdminPagePath) initAdminPanel(isEN);
-    if (isProfilePath) initProfile(isEN);
-
-    // Update Navigation based on ACTUAL login state (check API, not just localStorage)
-    checkAuthAndUpdateNav(isEN);
 });
-
-async function checkAuthAndUpdateNav(isEN) {
-    try {
-        const data = await apiFetch('/api/auth/me');
-        if (data && data.user) {
-            // User IS actually logged in → save name and update nav
-            localStorage.setItem('nibras_user_name', data.user.name);
-            updateNavLinks(isEN, true);
-        } else {
-            throw new Error('not logged in');
-        }
-    } catch(err) {
-        // User NOT logged in → clear stale data and update nav
-        localStorage.removeItem('nibras_user_name');
-        updateNavLinks(isEN, false);
-    }
-}
-
-function updateNavLinks(isEN, isLoggedIn) {
-    // Detect if we're inside pages/ar/ or at root level
-    const currentPath = window.location.pathname.toLowerCase();
-    const isInsidePages = currentPath.includes('/pages/');
-    
-    // All login/profile anchor links in navbar and mobile menu
-    const loginSelectors = [
-        'a[href="pages/ar/login.html"]',
-        'a[href="login.html"]',
-        'a[href="pages/ar/profile.html"]',
-        'a[href="profile.html"]',
-        'a[href$="profile.html"]',
-        'a[href$="login.html"]'
-    ];
-    const loginLinks = document.querySelectorAll(loginSelectors.join(', '));
-    loginLinks.forEach(el => {
-        // Skip admin/logout buttons
-        if (el.closest('.dash-header')) return;
-        
-        if (isLoggedIn) {
-            // Use simple relative path based on where we ARE, not where the link points
-            el.href = isInsidePages ? 'profile.html' : 'pages/ar/profile.html';
-            el.innerHTML = `<i class="fas fa-user-circle"></i> ${isEN ? 'My Account' : 'حسابي'}`;
-        } else {
-            el.href = isInsidePages ? 'login.html' : 'pages/ar/login.html';
-            el.innerHTML = isEN ? 'Login' : 'تسجيل الدخول';
-        }
-    });
-}
 
 window.logout = async () => {
     try {
         await apiFetch('/api/auth/logout', { method: 'POST' });
     } catch(err) {}
-    localStorage.removeItem('nibras_user_name');
-    // Update navbar immediately before redirect
-    updateNavLinks(document.documentElement.lang === 'en', false);
     const path = window.location.pathname.toLowerCase();
     if (path.endsWith('/admin.html')) {
         window.location.reload();
@@ -190,15 +135,14 @@ function initPublicAuth(isEN, isAdminPagePath) {
                 return;
             }
             try {
-                const data = await apiFetch('/api/auth/register', {
+                await apiFetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, phone, password })
                 });
-                if(data && data.user) localStorage.setItem('nibras_user_name', data.user.name);
                 showToast(isEN ? 'Account created successfully.' : 'تم إنشاء الحساب بنجاح.');
                 setTimeout(() => {
-                    window.location.href = 'profile.html';
+                    window.location.href = homeUrl;
                 }, 600);
             } catch (error) {
                 showToast(error.message, true);
@@ -217,13 +161,12 @@ function initPublicAuth(isEN, isAdminPagePath) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-                if(data && data.user) localStorage.setItem('nibras_user_name', data.user.name);
                 showToast(isEN ? 'Login successful.' : 'تم تسجيل الدخول بنجاح.');
                 setTimeout(() => {
                     if (data.user && data.user.role === 'admin') {
                         window.location.href = 'admin.html';
                     } else {
-                        window.location.href = 'profile.html';
+                        window.location.href = homeUrl;
                     }
                 }, 500);
             } catch (error) {
@@ -636,41 +579,4 @@ window.addEventListener('click', (event) => {
     }
 });
 
-async function initProfile(isEN) {
-    const profileContent = document.getElementById('profileContent');
-    if (!profileContent) return;
-    try {
-        const data = await apiFetch('/api/auth/me');
-        if (!data || !data.user) throw new Error('Not logged in');
-        const user = data.user;
-        const roleText = user.role === 'admin' ? 'مدير (Admin)' : 'طالب (Student)';
-        const dateText = new Date(user.createdAt || Date.now()).toLocaleDateString('ar-EG');
-        
-        profileContent.innerHTML = `
-            <div class="profile-header">
-              <div class="profile-avatar">${user.name.charAt(0).toUpperCase()}</div>
-              <div class="profile-info">
-                <h2>${user.name}</h2>
-                <p>${user.email}</p>
-                <p style="margin-top:5px; font-size:0.9rem; color:#888;">${user.phone || ''}</p>
-              </div>
-            </div>
-            <div class="profile-details">
-              <div class="detail-item">
-                <span class="detail-label">الدور (Role)</span>
-                <span class="detail-value">${roleText}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">تاريخ الانضمام</span>
-                <span class="detail-value">${dateText}</span>
-              </div>
-            </div>
-            <div style="text-align: center; margin-top: 40px;">
-              <button onclick="window.logout()" class="logout-btn">تسجيل الخروج <i class="fas fa-sign-out-alt"></i></button>
-            </div>
-        `;
-    } catch(error) {
-        showToast(isEN ? 'Please login first.' : 'برجاء تسجيل الدخول أولاً.', true);
-        setTimeout(() => window.location.href = 'login.html', 1000);
-    }
-}
+

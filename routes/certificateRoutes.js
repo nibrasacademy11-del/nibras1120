@@ -33,6 +33,8 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }
 });
 
+// Download must come BEFORE :code to prevent 'download' matching as a certificate code
+router.get('/certificates/download/:filename', certificateController.downloadPdf);
 router.get('/certificates/:code', certificateController.getCertificate);
 router.get('/admin/certificates', authRequired, adminRequired, certificateController.getAllCertificates);
 router.post('/admin/certificates', authRequired, adminRequired, upload.single('pdf'), certificateController.addCertificate);
