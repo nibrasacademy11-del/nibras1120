@@ -305,7 +305,10 @@ async function initAdminPanel(isEN) {
         if (data.user && data.user.role === 'admin') {
             if (loginPage) loginPage.style.display = 'none';
             if (dashboard) dashboard.classList.add('active');
+            const adminUserEl = document.getElementById('adminUser');
+            if (adminUserEl) adminUserEl.textContent = data.user.name || 'الأدمن';
             await renderAdminCerts(isEN);
+            await renderAdminUsers(isEN);
         }
     } catch (error) {
         if (loginPage) loginPage.style.display = 'flex';
@@ -385,10 +388,11 @@ async function renderAdminCerts(isEN) {
             <td style="padding:12px;">${c.issue_date}</td>
             <td style="padding:12px;">${c.pdf_url ? `<a href="${c.pdf_url}" target="_blank" download style="color:#0f766e; text-decoration:none; font-weight:600;">${isEN ? 'Download' : 'تحميل'}</a>` : `<span style="color:#999;">${isEN ? 'N/A' : 'غير مرفق'}</span>`}</td>
             <td style="padding:12px;">
-                <button onclick="deleteCert(${c.id})" style="color:#b42318; background:#fff0f0; border:1px solid #ffd6d6; border-radius:8px; padding:6px 10px; cursor:pointer;">${isEN ? 'Delete' : 'حذف'}</button>
+                <button onclick="window.deleteCert('${c._id}')" style="color:#b42318; background:#fff0f0; border:1px solid #ffd6d6; border-radius:8px; padding:6px 10px; cursor:pointer;">${isEN ? 'Delete' : 'حذف'}</button>
             </td>
         </tr>
     `).join('');
+
 
     container.innerHTML = `
         <table class="dash-table" style="width:100%; border-collapse:separate; border-spacing:0 8px;">
@@ -406,9 +410,70 @@ async function renderAdminCerts(isEN) {
     `;
 }
 
+async function renderAdminUsers(isEN) {
+    const container = document.getElementById('usersTableContainer');
+    if (!container) return;
+    try {
+        const data = await apiFetch('/api/auth/users');
+        const users = data.users || [];
+
+        if (!users.length) {
+            container.innerHTML = `<p style="text-align:center; padding:20px;">${isEN ? 'No registered users.' : 'لا يوجد عملاء مسجلين حالياً.'}</p>`;
+            return;
+        }
+
+        const rows = users.map(u => {
+            const role = u.role === 'admin' ? (isEN ? 'Admin' : 'مدير') : (isEN ? 'Student' : 'طالب');
+            const date = new Date(u.createdAt || Date.now()).toLocaleDateString('ar-EG');
+            return `
+                <tr style="background:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+                    <td style="padding:12px;">${u.name}</td>
+                    <td style="padding:12px;">${u.email}</td>
+                    <td style="padding:12px;">${u.phone || '—'}</td>
+                    <td style="padding:12px;"><span style="background:${u.role === 'admin' ? '#fef3c7' : '#dbeafe'}; color:${u.role === 'admin' ? '#92400e' : '#1e40af'}; padding:4px 12px; border-radius:50px; font-size:0.85rem; font-weight:600;">${role}</span></td>
+                    <td style="padding:12px;">${date}</td>
+                </tr>
+            `;
+        }).join('');
+
+        container.innerHTML = `
+            <p style="margin-bottom:15px; color:#666; font-size:0.9rem;">${isEN ? 'Total registered:' : 'إجمالي المسجلين:'} <strong>${users.length}</strong></p>
+            <table class="dash-table" style="width:100%; border-collapse:separate; border-spacing:0 8px;">
+                <thead>
+                    <tr style="background:#f8f9fa;">
+                        <th style="padding:12px;">${isEN ? 'Name' : 'الاسم'}</th>
+                        <th style="padding:12px;">${isEN ? 'Email' : 'البريد الإلكتروني'}</th>
+                        <th style="padding:12px;">${isEN ? 'Phone' : 'الهاتف'}</th>
+                        <th style="padding:12px;">${isEN ? 'Role' : 'الدور'}</th>
+                        <th style="padding:12px;">${isEN ? 'Joined' : 'تاريخ التسجيل'}</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        `;
+    } catch (error) {
+        container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${error.message}</p>`;
+    }
+}
+
+window.refreshUsers = async () => {
+    const isEN = document.documentElement.lang === 'en';
+    await renderAdminUsers(isEN);
+};
+
 window.logout = async () => {
-    await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => null);
-    window.location.reload();
+    try {
+        await apiFetch('/api/auth/logout', { method: 'POST' });
+    } catch(err) {}
+    localStorage.removeItem('nibras_user_name');
+    // Admin logout → go back to admin login
+    const path = window.location.pathname.toLowerCase();
+    if (path.endsWith('/admin.html')) {
+        window.location.reload();
+    } else {
+        updateNavAuth(document.documentElement.lang === 'en');
+        window.location.href = 'login.html';
+    }
 };
 
 window.deleteCert = async (id) => {

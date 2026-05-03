@@ -87,7 +87,7 @@
             <img src="../../assets/img/logo.png" alt="Logo">
             <div>
                 <span id="adminUser">المسؤول</span>
-                <button onclick="logout()" style="margin-right:15px; background:none; border:1px solid white; color:white; padding:5px 10px; border-radius:5px; cursor:pointer;">خروج</button>
+                <button onclick="window.logout()" style="margin-right:15px; background:none; border:1px solid white; color:white; padding:5px 10px; border-radius:5px; cursor:pointer;">خروج</button>
             </div>
         </header>
 
@@ -114,6 +114,17 @@
                 <h2>الشهادات المضافة مؤخراً</h2>
                 <div id="certsTableContainer">
                     <p style="text-align:center; padding:20px;">جاري تحميل البيانات...</p>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h2>بيانات العملاء المسجلين</h2>
+                    <button onclick="window.refreshUsers()" style="background:var(--primary); color:white; border:none; padding:8px 18px; border-radius:8px; cursor:pointer; font-family:inherit;"><i class="fas fa-sync-alt"></i> تحديث</button>
+                </div>
+                <div id="usersTableContainer">
+                    <p style="text-align:center; padding:20px;">جاري تحميل بيانات العملاء...</p>
                 </div>
             </div>
         </div>
