@@ -4,8 +4,19 @@ const certificateController = require('../controllers/certificateController');
 const { authRequired, adminRequired } = require('../middleware/auth');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
-const uploadsDir = path.join(__dirname, '..', 'uploads', 'certificates');
+// Use /tmp on Vercel (read-only filesystem), otherwise use local uploads
+const isVercel = !!process.env.VERCEL;
+const uploadsDir = isVercel
+    ? '/tmp/certificates'
+    : path.join(__dirname, '..', 'uploads', 'certificates');
+
+// Ensure directory exists
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadsDir),
     filename: (req, file, cb) => {

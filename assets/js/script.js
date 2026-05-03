@@ -19,24 +19,46 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isAdminPagePath) initAdminPanel(isEN);
     if (isProfilePath) initProfile(isEN);
 
-    // Update Navigation based on login state
-    updateNavAuth(isEN);
+    // Update Navigation based on ACTUAL login state (check API, not just localStorage)
+    checkAuthAndUpdateNav(isEN);
 });
 
-function updateNavAuth(isEN) {
-    const userName = localStorage.getItem('nibras_user_name');
+async function checkAuthAndUpdateNav(isEN) {
+    try {
+        const data = await apiFetch('/api/auth/me');
+        if (data && data.user) {
+            // User IS actually logged in → save name and update nav
+            localStorage.setItem('nibras_user_name', data.user.name);
+            updateNavLinks(isEN, true);
+        } else {
+            throw new Error('not logged in');
+        }
+    } catch(err) {
+        // User NOT logged in → clear stale data and update nav
+        localStorage.removeItem('nibras_user_name');
+        updateNavLinks(isEN, false);
+    }
+}
+
+function updateNavLinks(isEN, isLoggedIn) {
     // All login/profile anchor links in navbar and mobile menu
-    const loginLinks = document.querySelectorAll(
-        'a[href="pages/ar/login.html"], a[href="login.html"], a[href$="profile.html"]'
-    );
+    const loginSelectors = [
+        'a[href="pages/ar/login.html"]',
+        'a[href="login.html"]',
+        'a[href="pages/ar/profile.html"]',
+        'a[href="profile.html"]',
+        'a[href$="profile.html"]'
+    ];
+    const loginLinks = document.querySelectorAll(loginSelectors.join(', '));
     loginLinks.forEach(el => {
-        if (userName) {
-            // User IS logged in → show "حسابي"
+        // Skip admin/logout buttons
+        if (el.closest('.dash-header') || el.classList.contains('mobile-btn')) return;
+        
+        if (isLoggedIn) {
             const newHref = el.href.includes('pages/ar/') ? 'pages/ar/profile.html' : 'profile.html';
             el.href = newHref;
             el.innerHTML = `<i class="fas fa-user-circle"></i> ${isEN ? 'My Account' : 'حسابي'}`;
         } else {
-            // User NOT logged in → show "تسجيل الدخول"
             const newHref = el.href.includes('pages/ar/') ? 'pages/ar/login.html' : 'login.html';
             el.href = newHref;
             el.innerHTML = isEN ? 'Login' : 'تسجيل الدخول';
@@ -50,8 +72,13 @@ window.logout = async () => {
     } catch(err) {}
     localStorage.removeItem('nibras_user_name');
     // Update navbar immediately before redirect
-    updateNavAuth(document.documentElement.lang === 'en');
-    window.location.href = 'login.html';
+    updateNavLinks(document.documentElement.lang === 'en', false);
+    const path = window.location.pathname.toLowerCase();
+    if (path.endsWith('/admin.html')) {
+        window.location.reload();
+    } else {
+        window.location.href = 'login.html';
+    }
 };
 
 function initLayout() {
