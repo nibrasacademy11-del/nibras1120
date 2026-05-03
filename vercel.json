@@ -8,6 +8,13 @@
   ],
   "routes": [
     {
+      "source": "/api/(.*)",
+      "destination": "server.js"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
       "source": "/(.*)",
       "destination": "server.js"
     }
