@@ -22,9 +22,9 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-router.get('/public/:code', certificateController.getCertificate);
-router.get('/', authRequired, adminRequired, certificateController.getAllCertificates);
-router.post('/', authRequired, adminRequired, upload.single('pdf'), certificateController.addCertificate);
-router.delete('/:id', authRequired, adminRequired, certificateController.deleteCertificate);
+router.get('/certificates/:code', certificateController.getCertificate);
+router.get('/admin/certificates', authRequired, adminRequired, certificateController.getAllCertificates);
+router.post('/admin/certificates', authRequired, adminRequired, upload.single('pdf'), certificateController.addCertificate);
+router.delete('/admin/certificates/:id', authRequired, adminRequired, certificateController.deleteCertificate);
 
 module.exports = router;
