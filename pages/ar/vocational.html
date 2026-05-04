@@ -40,28 +40,6 @@
         <span class="floating-cart-badge cart-badge">0</span>
     </div>
             
-<!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>الإجمالي:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
-
-  
-  </div>
 
   <!-- Navbar -->
   <nav id="navbar" class="navbar scrolled">
@@ -123,70 +101,70 @@
           <div class="program-icon"><i class="fas fa-book"></i></div>
           <h3 style="font-size:1.2rem;">دورة إدارة الأداء الوظيفي (KPIs)</h3>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.1rem; margin-top:10px;">215.00 US$</p>
-          <a href="contact.html" class="btn-outline" style="margin-top:auto;">إضافة الي العربة <i class="fas fa-arrow-left"></i></a>
+          <button class="btn-primary" style="margin-top:auto;" onclick="addToCart('voc_11', 'دورة إدارة الأداء الوظيفي (KPIs)', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
         </div>
         
         <div class="program-card">
           <div class="program-icon"><i class="fas fa-book"></i></div>
           <h3 style="font-size:1.2rem;">دورة القيادة الإدارية</h3>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.1rem; margin-top:10px;">215.00 US$</p>
-          <a href="contact.html" class="btn-outline" style="margin-top:auto;">إضافة الي العربة <i class="fas fa-arrow-left"></i></a>
+          <button class="btn-primary" style="margin-top:auto;" onclick="addToCart('voc_1', 'دورة القيادة الإدارية', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
         </div>
         
         <div class="program-card">
           <div class="program-icon"><i class="fas fa-book"></i></div>
           <h3 style="font-size:1.2rem;">دورة خدمة العملاء</h3>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.1rem; margin-top:10px;">215.00 US$</p>
-          <a href="contact.html" class="btn-outline" style="margin-top:auto;">إضافة الي العربة <i class="fas fa-arrow-left"></i></a>
+          <button class="btn-primary" style="margin-top:auto;" onclick="addToCart('voc_0', 'دورة خدمة العملاء', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
         </div>
         
         <div class="program-card">
           <div class="program-icon"><i class="fas fa-book"></i></div>
           <h3 style="font-size:1.2rem;">دورة المحاسبة لغير المحاسبين</h3>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.1rem; margin-top:10px;">215.00 US$</p>
-          <a href="contact.html" class="btn-outline" style="margin-top:auto;">إضافة الي العربة <i class="fas fa-arrow-left"></i></a>
+          <button class="btn-primary" style="margin-top:auto;" onclick="addToCart('voc_12', 'دورة المحاسبة لغير المحاسبين', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
         </div>
         
         <div class="program-card">
           <div class="program-icon"><i class="fas fa-book"></i></div>
           <h3 style="font-size:1.2rem;">دورة مهارات البيع</h3>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.1rem; margin-top:10px;">215.00 US$</p>
-          <a href="contact.html" class="btn-outline" style="margin-top:auto;">إضافة الي العربة <i class="fas fa-arrow-left"></i></a>
+          <button class="btn-primary" style="margin-top:auto;" onclick="addToCart('voc_9', 'دورة مهارات البيع', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
         </div>
         
         <div class="program-card">
           <div class="program-icon"><i class="fas fa-book"></i></div>
           <h3 style="font-size:1.2rem;">دورة إعداد التقارير الإدارية</h3>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.1rem; margin-top:10px;">215.00 US$</p>
-          <a href="contact.html" class="btn-outline" style="margin-top:auto;">إضافة الي العربة <i class="fas fa-arrow-left"></i></a>
+          <button class="btn-primary" style="margin-top:auto;" onclick="addToCart('voc_8', 'دورة إعداد التقارير الإدارية', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
         </div>
         
         <div class="program-card">
           <div class="program-icon"><i class="fas fa-book"></i></div>
           <h3 style="font-size:1.2rem;">دورة إدارة الوقت وضغوط العمل</h3>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.1rem; margin-top:10px;">215.00 US$</p>
-          <a href="contact.html" class="btn-outline" style="margin-top:auto;">إضافة الي العربة <i class="fas fa-arrow-left"></i></a>
+          <button class="btn-primary" style="margin-top:auto;" onclick="addToCart('voc_10', 'دورة إدارة الوقت وضغوط العمل', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
         </div>
         
         <div class="program-card">
           <div class="program-icon"><i class="fas fa-book"></i></div>
           <h3 style="font-size:1.2rem;">دورة إدارة الموارد البشرية</h3>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.1rem; margin-top:10px;">215.00 US$</p>
-          <a href="contact.html" class="btn-outline" style="margin-top:auto;">إضافة الي العربة <i class="fas fa-arrow-left"></i></a>
+          <button class="btn-primary" style="margin-top:auto;" onclick="addToCart('voc_4', 'دورة إدارة الموارد البشرية', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
         </div>
         
         <div class="program-card">
           <div class="program-icon"><i class="fas fa-book"></i></div>
           <h3 style="font-size:1.2rem;">دورة نظام العمل السعودي</h3>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.1rem; margin-top:10px;">215.00 US$</p>
-          <a href="contact.html" class="btn-outline" style="margin-top:auto;">إضافة الي العربة <i class="fas fa-arrow-left"></i></a>
+          <button class="btn-primary" style="margin-top:auto;" onclick="addToCart('voc_3', 'دورة نظام العمل السعودي', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
         </div>
         
         <div class="program-card">
           <div class="program-icon"><i class="fas fa-book"></i></div>
           <h3 style="font-size:1.2rem;">دورة إدارة المشاريع</h3>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.1rem; margin-top:10px;">215.00 US$</p>
-          <a href="contact.html" class="btn-outline" style="margin-top:auto;">إضافة الي العربة <i class="fas fa-arrow-left"></i></a>
+          <button class="btn-primary" style="margin-top:auto;" onclick="addToCart('voc_2', 'دورة إدارة المشاريع', 215)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
         </div>
         
       </div>
@@ -259,4 +237,3 @@
   <script src="../../assets/js/script.js"></script>
 </body>
 </html>
-
