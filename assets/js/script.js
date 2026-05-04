@@ -623,3 +623,47 @@ window.addEventListener('click', (event) => {
 });
 
 
+window.handleContact = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const isEN = document.documentElement.lang === 'en';
+    
+    // Collect data using placeholders as they are the only identifiers in some pages
+    const name = form.querySelector('input[placeholder*="الاسم"], input[placeholder*="name"]')?.value || '';
+    const email = form.querySelector('input[placeholder*="البريد"], input[placeholder*="email"], input[placeholder*="e-mail"]')?.value || '';
+    const phone = form.querySelector('input[placeholder*="الهاتف"], input[placeholder*="phone"]')?.value || '';
+    const subject = form.querySelector('input[placeholder*="موضوع"], input[placeholder*="subject"]')?.value || '';
+    const message = form.querySelector('textarea')?.value || '';
+
+    // Prepare message for WhatsApp
+    const whatsappMessage = isEN 
+        ? `Hello Nibras Academy, I would like to contact you.\n\n*Name:* ${name}\n*Email:* ${email}\n*Phone:* ${phone}\n*Subject:* ${subject}\n*Message:* ${message}`
+        : `مرحباً أكاديمية نبراس، أود التواصل معكم.\n\n*الاسم:* ${name}\n*البريد الإلكتروني:* ${email}\n*رقم الهاتف:* ${phone}\n*الموضوع:* ${subject}\n*الرسالة:* ${message}`;
+
+    const encodedMessage = encodeURIComponent(whatsappMessage);
+    const whatsappUrl = `https://wa.me/201515188608?text=${encodedMessage}`;
+
+    // Optional: Save to database first
+    try {
+        await fetch('/api/inquiries', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name,
+                email,
+                phone,
+                subject,
+                message
+            })
+        });
+    } catch (err) {
+        console.error('Failed to save inquiry to database:', err);
+    }
+
+    // Redirect to WhatsApp
+    window.open(whatsappUrl, '_blank');
+    
+    // Reset form and show success
+    form.reset();
+    showToast(isEN ? 'Opening WhatsApp...' : 'جاري فتح واتساب...');
+};

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>إتمام الدفع | أكاديمية نبراس</title>
+  <title>Checkout | Nibras Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="../../assets/css/style.css" />
   <style>
@@ -73,7 +73,7 @@
         <!-- Cart Sidebar -->
         <div id="cartSidebar" class="cart-sidebar">
             <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
                 <button onclick="toggleCart(event)" class="close-cart">&times;</button>
             </div>
             <div id="cartItems" class="cart-items">
@@ -81,10 +81,10 @@
             </div>
             <div class="cart-footer">
                 <div class="cart-total">
-                    <span>الإجمالي:</span>
+                    <span>Total:</span>
                     <strong id="cartTotal">0.00 US$</strong>
                 </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
             </div>
         </div>
         <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
@@ -92,16 +92,15 @@
   <!-- Navbar -->
   <nav id="navbar" class="navbar scrolled">
     <div class="nav-container">
-      <a href="../../index.html" class="nav-logo">
-        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
+      <a href="../../en/index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="Nibras Academy" />
       </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
-        <li><a href="about.html" class="nav-link">عن الأكاديمية</a></li>
-        <li><a href="programs.html" class="nav-link">البرامج والخدمات</a></li>
-        <li><a href="articles.html" class="nav-link">المقالات</a></li>
-        
-        <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
+        <li><a href="../../en/index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="programs.html" class="nav-link">Programs & Services</a></li>
+        <li><a href="articles.html" class="nav-link">Articles</a></li>
+        <li><a href="contact.html" class="nav-link">Contact Us</a></li>
       </ul>
     </div>
   </nav>
@@ -109,8 +108,8 @@
   <!-- Page Header -->
   <section class="page-header">
     <div class="container">
-      <h1>إتمام الدفع</h1>
-      <p>أكمل بياناتك لإتمام عملية التسجيل والدفع بشكل آمن.</p>
+      <h1>Checkout</h1>
+      <p>Complete your details to finish registration and payment securely.</p>
     </div>
   </section>
 
@@ -121,45 +120,45 @@
         
         <!-- Form -->
         <div class="checkout-box">
-            <h3><i class="fas fa-user-edit"></i> بيانات المتدرب</h3>
+            <h3><i class="fas fa-user-edit"></i> Student Information</h3>
             <form id="checkoutForm">
                 <div class="form-group">
-                    <label>الاسم الرباعي (كما سيكتب في الشهادة)</label>
-                    <input type="text" id="chkName" required placeholder="أدخل اسمك بالكامل">
+                    <label>Full Name (as it will appear on the certificate)</label>
+                    <input type="text" id="chkName" required placeholder="Enter your full name">
                 </div>
                 <div class="form-group">
-                    <label>البريد الإلكتروني</label>
+                    <label>Email Address</label>
                     <input type="email" id="chkEmail" required placeholder="example@email.com">
                 </div>
                 <div class="form-group">
-                    <label>رقم الهاتف (واتساب)</label>
-                    <input type="tel" id="chkPhone" required placeholder="+201234567890">
+                    <label>Phone Number (WhatsApp)</label>
+                    <input type="tel" id="chkPhone" required placeholder="+1234567890">
                 </div>
                 <div class="form-group">
-                    <label>الدولة</label>
-                    <input type="text" id="chkCountry" required placeholder="مصر، السعودية، الإمارات...">
+                    <label>Country</label>
+                    <input type="text" id="chkCountry" required placeholder="Your Country">
                 </div>
                 
-                <h3 style="margin-top:30px;"><i class="fas fa-headset"></i> طريقة الدفع</h3>
+                <h3 style="margin-top:30px;"><i class="fas fa-headset"></i> Payment Method</h3>
                 <div style="background: #f8f9fa; padding:15px; border-radius:8px; border:1px solid #ddd; margin-bottom:20px;">
                     <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
                         <input type="radio" name="paymentMethod" checked>
-                        <span>إتمام الدفع مع أحد ممثلي خدمة العملاء (عبر واتساب)</span>
+                        <span>Complete payment with a Customer Service representative (via WhatsApp)</span>
                     </label>
                 </div>
                 
-                <button type="submit" class="btn-primary" style="width:100%; font-size:1.1rem; padding:15px;">تأكيد الطلب وإتمام الدفع <i class="fab fa-whatsapp"></i></button>
+                <button type="submit" class="btn-primary" style="width:100%; font-size:1.1rem; padding:15px;">Confirm Order & Checkout <i class="fab fa-whatsapp"></i></button>
             </form>
         </div>
 
         <!-- Order Summary -->
         <div class="checkout-box">
-            <h3><i class="fas fa-receipt"></i> ملخص الطلب</h3>
+            <h3><i class="fas fa-receipt"></i> Order Summary</h3>
             <div id="checkoutItems">
                 <!-- Items injected by JS -->
             </div>
             <div class="order-total">
-                <span>الإجمالي الكلي:</span>
+                <span>Grand Total:</span>
                 <span id="checkoutTotal">0.00 US$</span>
             </div>
         </div>
@@ -179,7 +178,7 @@
         const checkoutTotalElement = document.getElementById('checkoutTotal');
         
         if (cartItems.length === 0) {
-            checkoutItemsContainer.innerHTML = '<p style="text-align:center; color:red; margin:20px 0;">السلة فارغة. يرجى إضافة برامج أولاً.</p>';
+            checkoutItemsContainer.innerHTML = '<p style="text-align:center; color:red; margin:20px 0;">Cart is empty. Please add programs first.</p>';
             checkoutTotalElement.innerText = '0.00 US$';
             document.querySelector('#checkoutForm button').disabled = true;
             return;
@@ -189,11 +188,12 @@
         let total = 0;
         
         cartItems.forEach(item => {
-            total += (item.price * (item.qty || 1));
+            const itemTotal = (item.price * (item.qty || 1));
+            total += itemTotal;
             html += `
             <div class="order-summary-item">
                 <span style="font-weight:600; color:var(--text-color); max-width:70%;">${item.name}</span>
-                <span style="color:var(--primary-color); font-weight:bold;">${(item.price * (item.qty || 1))}.00 US$</span>
+                <span style="color:var(--primary-color); font-weight:bold;">${itemTotal}.00 US$</span>
             </div>
             `;
         });
@@ -220,29 +220,27 @@
             programsList += `${index + 1}- ${item.name} (${itemTotal} US$)\n`;
         });
         
-        const whatsappMessage = `طلب اشتراك جديد من الأكاديمية:\n\n` +
-                                `*بيانات المتدرب:*\n` +
-                                `- الاسم: ${name}\n` +
-                                `- البريد: ${email}\n` +
-                                `- الهاتف: ${phone}\n` +
-                                `- الدولة: ${country}\n\n` +
-                                `*البرامج المختارة:*\n${programsList}\n` +
-                                `*الإجمالي الكلي: ${total}.00 US$*`;
+        const whatsappMessage = `New subscription request from the Academy:\n\n` +
+                                `*Student Information:*\n` +
+                                `- Name: ${name}\n` +
+                                `- Email: ${email}\n` +
+                                `- Phone: ${phone}\n` +
+                                `- Country: ${country}\n\n` +
+                                `*Selected Programs:*\n${programsList}\n` +
+                                `*Grand Total: ${total}.00 US$*`;
                                 
         const encodedMessage = encodeURIComponent(whatsappMessage);
         const whatsappUrl = `https://wa.me/201515188608?text=${encodedMessage}`;
         
         const btn = e.target.querySelector('button');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري فتح واتساب...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening WhatsApp...';
         btn.disabled = true;
         
         setTimeout(() => {
             window.open(whatsappUrl, '_blank');
-            btn.innerHTML = 'تأكيد الطلب وإتمام الدفع <i class="fab fa-whatsapp"></i>';
+            btn.innerHTML = 'Confirm Order & Checkout <i class="fab fa-whatsapp"></i>';
             btn.disabled = false;
-            // Optionally clear cart? User might want to keep it until payment is confirmed manually
-            // localStorage.removeItem('nibras_cart');
-            showToast('تم تحويلك إلى واتساب لإكمال عملية الدفع.');
+            showToast('Redirecting to WhatsApp to complete payment.');
         }, 1000);
     });
   </script>
@@ -255,3 +253,4 @@
             
 </body>
 </html>
+
