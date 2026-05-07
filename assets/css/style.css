@@ -1515,11 +1515,18 @@ html[dir="ltr"], html[dir="rtl"] {
 }
 
 .aura-title span {
-    display: inline-block; /* Changed from block to be 'in the text' and centered */
-    margin-top: 10px;
+    display: block; /* Changed back to block for separate line */
+    margin-top: 15px;
 }
 
-/* Force Admin to be Arabic only (RTL) */
+/* Adjust Cart for RTL to avoid overlap with mobile menu */
+[dir="rtl"] .cart-sidebar {
+    inset-inline-end: auto;
+    inset-inline-start: -400px;
+}
+[dir="rtl"] .cart-sidebar.open {
+    inset-inline-start: 0;
+}
 .admin-body {
     direction: rtl !important;
     text-align: right !important;
