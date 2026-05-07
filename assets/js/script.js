@@ -57,6 +57,13 @@ function initLayout() {
         const scrollTopBtn = document.getElementById('scrollTop');
         if (scrollTopBtn) scrollTopBtn.classList.toggle('show', window.scrollY > 400);
     };
+
+    const scrollTopBtn = document.getElementById('scrollTop');
+    if (scrollTopBtn) {
+        scrollTopBtn.onclick = () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+    }
 }
 
 function initCounters() {

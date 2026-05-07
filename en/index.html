@@ -10,7 +10,7 @@
                 name="description" />
         <link href="https://fonts.googleapis.com" rel="preconnect" />
         <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&amp;display=swap"
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;700&family=Tajawal:wght@400;700;900&family=Outfit:wght@400;700;900&display=swap"
                 rel="stylesheet" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
         <link href="../assets/css/style.css" rel="stylesheet" />
@@ -58,35 +58,44 @@
                         <li><a class="mobile-btn" href="../pages/en/login.html">Login</a></li>
                 </ul>
         </div>
-        <!-- Hero Section -->
-        <section class="hero" id="home"
-                style="overflow:hidden; position:relative; padding: 250px 0 150px; background: white; text-align: center;">
-                <!-- Minimalist Light Background -->
-                <div
-                        style="position:absolute; inset:0; background-image: radial-gradient(rgba(108,3,17,0.03) 2px, transparent 2px); background-size: 30px 30px; pointer-events: none;">
+        <!-- Hero Section (Aura Design) -->
+        <section class="hero-aura" id="home">
+                <!-- Animated Background Auras -->
+                <div class="aura-bg">
+                        <div class="aura-blob aura-1"></div>
+                        <div class="aura-blob aura-2"></div>
+                        <div class="aura-blob aura-3"></div>
                 </div>
-                <div class="container" style="position: relative; z-index: 2; max-width: 900px; margin: 0 auto;">
-                        <h1 class="hero-title"
-                                style="font-size: clamp(2.8rem, 6vw, 4.5rem); line-height: 1.4; font-weight: 800; margin-bottom: 30px; color: var(--text-main);">
-                                Rise to the Top with<br />
-                                <span style="color: var(--primary-dark); font-weight: 900;">Nibras</span>
-                        </h1>
-                        <p class="hero-desc"
-                                style="font-size: 1.4rem; color: var(--text-muted); margin: 0 auto 20px; line-height: 1.9; max-width: 800px; font-weight: 500;">
-                                Discover your true potential and turn your ambition into reality! We provide you with
-                                the most powerful professional programs and internationally accredited academic degrees
-                                to always keep you ahead of the competition.
-                        </p>
-                        <p class="hero-desc"
-                                style="font-size: 1.2rem; color: var(--primary-color); margin: 0 auto 50px; line-height: 1.8; max-width: 700px; font-weight: 600;">
-                                "Success begins with a step... Take your first step today to lead tomorrow!"
-                        </p>
-                        <div class="hero-actions"
-                                style="display:flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-                                <a class="btn-primary" href="../pages/en/start.html"
-                                        style="padding: 16px 40px; border-radius: 50px; font-weight:700; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(108,3,17,0.15);"><i
-                                                class="fas fa-graduation-cap"></i> Start your journey of change now</a>
+
+                <div class="hero-aura-content">
+                        <div class="glass-badge reveal active">
+                                <i class="fas fa-certificate"></i> Verified Excellence & Accreditation
                         </div>
+                        <h1 class="aura-title reveal active">
+                                Rise to the Top with<br />
+                                <span>نِبْرَاسّ</span>
+                        </h1>
+                        <p class="aura-desc reveal active">
+                                Discover your true potential and turn your ambition into reality! We provide you with
+                                the most powerful professional programs to keep you ahead.
+                        </p>
+                        <div class="aura-actions reveal active">
+                                <a class="btn-primary" href="../pages/en/start.html"
+                                        style="padding: 18px 48px; border-radius: 50px; font-weight:800; font-size: 1.2rem; box-shadow: 0 20px 40px rgba(108,3,17,0.2);">
+                                        Get Started Now <i class="fas fa-arrow-right"></i>
+                                </a>
+                                <a class="btn-outline" href="#programs"
+                                        style="padding: 18px 48px; border-radius: 50px; font-weight:700; font-size: 1.1rem; border: 2px solid var(--primary);">
+                                        View Programs
+                                </a>
+                        </div>
+                </div>
+
+                <!-- Decorative Bottom Wave -->
+                <div class="hero-decorative-svg">
+                        <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,250.7C960,235,1056,181,1152,165.3C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" fill="#f4f6f9" fill-opacity="1"></path>
+                        </svg>
                 </div>
         </section>
         <!-- Stats Section -->
