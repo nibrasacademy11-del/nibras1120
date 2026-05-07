@@ -328,7 +328,7 @@ async function initAdminPanel(isEN) {
         const data = await apiFetch('/api/auth/me');
         if (data.user && data.user.role === 'admin') {
             if (loginPage) loginPage.style.display = 'none';
-            if (dashboard) dashboard.classList.add('active');
+            if (dashboard) dashboard.style.display = 'flex';
             const adminUserEl = document.getElementById('adminUser');
             if (adminUserEl) adminUserEl.textContent = data.user.name || 'الأدمن';
             await renderAdminCerts(isEN);
@@ -406,27 +406,31 @@ async function renderAdminCerts(isEN) {
     }
 
     const rows = adminCertificates.map((c) => `
-        <tr style="background:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
-            <td style="padding:12px;">${c.trainee_name}</td>
-            <td style="padding:12px; font-weight:700; color:#7a1c28;">${c.cert_num}</td>
-            <td style="padding:12px;">${c.issue_date}</td>
-            <td style="padding:12px;">${c.pdf_url ? `<a href="${c.pdf_url}" target="_blank" download style="color:#0f766e; text-decoration:none; font-weight:600;">${isEN ? 'Download' : 'تحميل'}</a>` : `<span style="color:#999;">${isEN ? 'N/A' : 'غير مرفق'}</span>`}</td>
-            <td style="padding:12px;">
-                <button onclick="window.deleteCert('${c._id}')" style="color:#b42318; background:#fff0f0; border:1px solid #ffd6d6; border-radius:8px; padding:6px 10px; cursor:pointer;">${isEN ? 'Delete' : 'حذف'}</button>
+        <tr>
+            <td data-label="${isEN ? 'Name' : 'الاسم'}">${c.trainee_name}</td>
+            <td data-label="${isEN ? 'Certificate No.' : 'رقم الشهادة'}" style="font-weight:700; color:#7a1c28;">${c.cert_num}</td>
+            <td data-label="${isEN ? 'Issue Date' : 'التاريخ'}">${c.issue_date}</td>
+            <td data-label="PDF">${c.pdf_url ? `<a href="${c.pdf_url}" target="_blank" download style="color:#0f766e; text-decoration:none; font-weight:600;"><i class="fas fa-file-pdf"></i> ${isEN ? 'Download' : 'تحميل'}</a>` : `<span style="color:#999;">${isEN ? 'N/A' : 'غير مرفق'}</span>`}</td>
+            <td data-label="${isEN ? 'Actions' : 'إدارة'}">
+                <button onclick="window.deleteCert('${c._id}')" class="btn-save" style="background:#fff0f0; color:#b42318; border:1px solid #ffd6d6; padding:6px 12px; font-size:0.85rem;">
+                    <i class="fas fa-trash-alt"></i> ${isEN ? 'Delete' : 'حذف'}
+                </button>
             </td>
         </tr>
     `).join('');
 
+    const totalCertsEl = document.getElementById('totalCertsCount');
+    if (totalCertsEl) totalCertsEl.textContent = adminCertificates.length;
 
     container.innerHTML = `
-        <table class="dash-table" style="width:100%; border-collapse:separate; border-spacing:0 8px;">
+        <table class="admin-table">
             <thead>
-                <tr style="background:#f8f9fa;">
-                    <th style="padding:12px;">${isEN ? 'Name' : 'الاسم'}</th>
-                    <th style="padding:12px;">${isEN ? 'Certificate No.' : 'رقم الشهادة'}</th>
-                    <th style="padding:12px;">${isEN ? 'Issue Date' : 'التاريخ'}</th>
-                    <th style="padding:12px;">PDF</th>
-                    <th style="padding:12px;">${isEN ? 'Actions' : 'إدارة'}</th>
+                <tr>
+                    <th>${isEN ? 'Name' : 'الاسم'}</th>
+                    <th>${isEN ? 'Certificate No.' : 'رقم الشهادة'}</th>
+                    <th>${isEN ? 'Issue Date' : 'التاريخ'}</th>
+                    <th>PDF</th>
+                    <th>${isEN ? 'Actions' : 'إدارة'}</th>
                 </tr>
             </thead>
             <tbody>${rows}</tbody>
@@ -447,29 +451,32 @@ async function renderAdminUsers(isEN) {
         }
 
         const rows = users.map(u => {
-            const role = u.role === 'admin' ? (isEN ? 'Admin' : 'مدير') : (isEN ? 'Student' : 'طالب');
+            const roleClass = u.role === 'admin' ? 'admin' : 'user';
+            const roleName = u.role === 'admin' ? (isEN ? 'Admin' : 'مدير') : (isEN ? 'Student' : 'طالب');
             const date = new Date(u.createdAt || Date.now()).toLocaleDateString('ar-EG');
             return `
-                <tr style="background:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
-                    <td style="padding:12px;">${u.name}</td>
-                    <td style="padding:12px;">${u.email}</td>
-                    <td style="padding:12px;">${u.phone || '—'}</td>
-                    <td style="padding:12px;"><span style="background:${u.role === 'admin' ? '#fef3c7' : '#dbeafe'}; color:${u.role === 'admin' ? '#92400e' : '#1e40af'}; padding:4px 12px; border-radius:50px; font-size:0.85rem; font-weight:600;">${role}</span></td>
-                    <td style="padding:12px;">${date}</td>
+                <tr>
+                    <td data-label="${isEN ? 'Name' : 'الاسم'}">${u.name}</td>
+                    <td data-label="${isEN ? 'Email' : 'البريد'}">${u.email}</td>
+                    <td data-label="${isEN ? 'Phone' : 'الهاتف'}">${u.phone || '—'}</td>
+                    <td data-label="${isEN ? 'Role' : 'الدور'}"><span class="badge ${roleClass}">${roleName}</span></td>
+                    <td data-label="${isEN ? 'Joined' : 'التسجيل'}">${date}</td>
                 </tr>
             `;
         }).join('');
 
+        const totalUsersEl = document.getElementById('totalUsersCount');
+        if (totalUsersEl) totalUsersEl.textContent = users.length;
+
         container.innerHTML = `
-            <p style="margin-bottom:15px; color:#666; font-size:0.9rem;">${isEN ? 'Total registered:' : 'إجمالي المسجلين:'} <strong>${users.length}</strong></p>
-            <table class="dash-table" style="width:100%; border-collapse:separate; border-spacing:0 8px;">
+            <table class="admin-table">
                 <thead>
-                    <tr style="background:#f8f9fa;">
-                        <th style="padding:12px;">${isEN ? 'Name' : 'الاسم'}</th>
-                        <th style="padding:12px;">${isEN ? 'Email' : 'البريد الإلكتروني'}</th>
-                        <th style="padding:12px;">${isEN ? 'Phone' : 'الهاتف'}</th>
-                        <th style="padding:12px;">${isEN ? 'Role' : 'الدور'}</th>
-                        <th style="padding:12px;">${isEN ? 'Joined' : 'تاريخ التسجيل'}</th>
+                    <tr>
+                        <th>${isEN ? 'Name' : 'الاسم'}</th>
+                        <th>${isEN ? 'Email' : 'البريد'}</th>
+                        <th>${isEN ? 'Phone' : 'الهاتف'}</th>
+                        <th>${isEN ? 'Role' : 'الدور'}</th>
+                        <th>${isEN ? 'Joined' : 'التسجيل'}</th>
                     </tr>
                 </thead>
                 <tbody>${rows}</tbody>

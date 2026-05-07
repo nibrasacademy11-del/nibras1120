@@ -4,61 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>لوحة التحكم | أكاديمية نبراس</title>
+    <title>الإدارة | أكاديمية نبراس</title>
     <link rel="icon" type="image/png" href="../../assets/img/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link rel="stylesheet" href="../../assets/css/style.css" />
-    
-    <style>
-        :root {
-            --primary: #7a1c28;
-            --primary-dark: #5a141d;
-            --accent: #d4af37;
-            --bg-body: #f5f7fa;
-            --bg-card: #ffffff;
-            --text-dark: #1a1a2e;
-            --border: #e8e8f0;
-            --radius-lg: 20px;
-        }
-
-        body { font-family: 'Cairo', sans-serif; background: var(--bg-body); color: #444; min-height: 100vh; margin: 0; }
-
-        /* Login Layout */
-        .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-dark), var(--primary)); }
-        .login-card { background: white; padding: 40px; border-radius: var(--radius-lg); width: 100%; max-width: 400px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); text-align: center; }
-        .login-card img { height: 60px; margin-bottom: 20px; }
-        .login-card h1 { margin-bottom: 25px; color: var(--primary); font-size: 1.5rem; }
-        .field { margin-bottom: 15px; text-align: right; }
-        .field label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
-        .field input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
-        .login-btn { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; }
-
-        /* Dashboard Layout */
-        .dashboard { display: none; }
-        .dashboard.active { display: block; }
-        .dash-header { background: var(--primary-dark); color: white; padding: 15px 30px; display: flex; align-items: center; justify-content: space-between; }
-        .dash-header img { height: 40px; }
-        .dash-content { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
-        
-        .dash-section { background: white; padding: 25px; border-radius: 15px; border: 1px solid var(--border); margin-bottom: 30px; }
-        .dash-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        
-        .dash-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .dash-form-group { text-align: right; }
-        .dash-form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
-        .dash-form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
-        
-        .dash-submit-btn { margin-top: 20px; background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        
-        .dash-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .dash-table th { background: #f8f9fa; padding: 12px; text-align: right; border-bottom: 2px solid #eee; }
-        .dash-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: right; }
-        
-        #toast { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; background: #333; color: white; border-radius: 8px; display: none; z-index: 9999; }
-    </style>
+    <link rel="stylesheet" href="../../assets/css/admin.css" />
 </head>
 
 <body>
@@ -66,75 +18,204 @@
     <div class="login-page" id="loginPage">
         <div class="login-card">
             <img src="../../assets/img/logo.png" alt="Logo">
-            <h1>لوحة التحكم</h1>
+            <h1>أكاديمية نبراس</h1>
+            <p>منصة الإدارة والتحكم</p>
             <form id="loginForm">
-                <div class="field">
+                <div class="input-group">
                     <label>البريد الإلكتروني</label>
-                    <input type="email" id="loginEmail" placeholder="nibras8883@gmail.com" value="nibras8883@gmail.com" required>
+                    <input type="email" id="loginEmail" placeholder="admin@nibras.com" value="nibras8883@gmail.com" required>
                 </div>
-                <div class="field">
+                <div class="input-group">
                     <label>كلمة المرور</label>
-                    <input type="password" id="loginPassword" placeholder="Aa01515416972" value="Aa01515416972" required>
+                    <input type="password" id="loginPassword" placeholder="••••••••" value="Aa01515416972" required>
                 </div>
-                <button type="submit" class="login-btn">دخول</button>
+                <button type="submit" class="login-btn">دخول للنظام</button>
             </form>
         </div>
     </div>
 
     <!-- Dashboard Section -->
-    <div class="dashboard" id="dashboard">
-        <header class="dash-header">
-            <img src="../../assets/img/logo.png" alt="Logo">
-            <div>
-                <span id="adminUser">المسؤول</span>
-                <button onclick="window.logout()" style="margin-right:15px; background:none; border:1px solid white; color:white; padding:5px 10px; border-radius:5px; cursor:pointer;">خروج</button>
+    <div class="dashboard admin-container" id="dashboard" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../../assets/img/logo.png" alt="Logo">
+                <h2>نبراس</h2>
             </div>
-        </header>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link active" onclick="showSection('certs-section', this)">
+                        <i class="fas fa-certificate"></i>
+                        <span>الشهادات</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('users-section', this)">
+                        <i class="fas fa-users"></i>
+                        <span>العملاء</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a onclick="window.logout()" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>تسجيل الخروج</span>
+                </a>
+            </div>
+        </aside>
 
-        <div class="dash-content">
-            <div class="dash-section">
-                <div class="dash-section-header">
-                    <h2>إضافة شهادة جديدة</h2>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1 id="sectionTitle">إدارة الشهادات</h1>
+                    <p id="sectionDesc">إضافة وتعديل بيانات شهادات المتدربين</p>
                 </div>
-                <form id="adminCertForm">
-                    <div class="dash-form-grid">
-                        <div class="dash-form-group"><label>رقم الشهادة *</label><input type="text" id="adminCertNum" required></div>
-                        <div class="dash-form-group"><label>اسم المتدرب *</label><input type="text" id="adminTraineeName" required></div>
-                        <div class="dash-form-group"><label>البرنامج التدريبي *</label><input type="text" id="adminProgramName" required></div>
-                        <div class="dash-form-group"><label>المجال / التخصص *</label><input type="text" id="adminField" required></div>
-                        <div class="dash-form-group"><label>تاريخ الإصدار *</label><input type="date" id="adminIssueDate" required></div>
-                        <div class="dash-form-group"><label>ملف الشهادة PDF (اختياري)</label><input type="file" id="adminPdfFile" accept="application/pdf"></div>
-                    </div>
-                    <p style="margin-top:12px; color:#666; font-size:0.9rem;">يمكنك رفع نسخة PDF من الشهادة ليتمكن العميل من تنزيلها مباشرة بعد التحقق.</p>
-                    <button type="submit" class="dash-submit-btn">حفظ الشهادة</button>
-                </form>
+                <div class="user-profile">
+                    <span id="adminUser">المسؤول</span>
+                    <i class="fas fa-user-shield" style="color: var(--primary);"></i>
+                </div>
             </div>
 
-            <div class="dash-section">
-                <h2>الشهادات المضافة مؤخراً</h2>
-                <div id="certsTableContainer">
-                    <p style="text-align:center; padding:20px;">جاري تحميل البيانات...</p>
+            <!-- Stats Bar -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>إجمالي الشهادات</h3>
+                        <p id="totalCertsCount">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon accent">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>العملاء النشطين</h3>
+                        <p id="totalUsersCount">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certificates Section -->
+            <div id="certs-section" class="tab-content">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-plus-circle"></i> إضافة شهادة جديدة</h2>
+                    </div>
+                    <form id="adminCertForm" class="admin-form">
+                        <div class="form-group">
+                            <label>رقم الشهادة *</label>
+                            <input type="text" id="adminCertNum" required placeholder="مثلاً: NIB-2024-001">
+                        </div>
+                        <div class="form-group">
+                            <label>اسم المتدرب *</label>
+                            <input type="text" id="adminTraineeName" required placeholder="الاسم الكامل">
+                        </div>
+                        <div class="form-group">
+                            <label>البرنامج التدريبي *</label>
+                            <input type="text" id="adminProgramName" required placeholder="اسم الدورة أو الدبلوم">
+                        </div>
+                        <div class="form-group">
+                            <label>المجال / التخصص *</label>
+                            <input type="text" id="adminField" required placeholder="مثلاً: الإدارة المالية">
+                        </div>
+                        <div class="form-group">
+                            <label>تاريخ الإصدار *</label>
+                            <input type="date" id="adminIssueDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>ملف الشهادة PDF (اختياري)</label>
+                            <input type="file" id="adminPdfFile" accept="application/pdf">
+                        </div>
+                        <div class="form-submit">
+                            <button type="submit" class="btn-save">حفظ البيانات</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-list-ul"></i> السجلات المضافة مؤخراً</h2>
+                    </div>
+                    <div id="certsTableContainer" class="table-container">
+                        <p style="text-align:center; padding:40px; color: var(--text-muted);">جاري تحميل البيانات...</p>
+                    </div>
                 </div>
             </div>
 
             <!-- Users Section -->
-            <div class="dash-section">
-                <div class="dash-section-header">
-                    <h2>بيانات العملاء المسجلين</h2>
-                    <button onclick="window.refreshUsers()" style="background:var(--primary); color:white; border:none; padding:8px 18px; border-radius:8px; cursor:pointer; font-family:inherit;"><i class="fas fa-sync-alt"></i> تحديث</button>
-                </div>
-                <div id="usersTableContainer">
-                    <p style="text-align:center; padding:20px;">جاري تحميل بيانات العملاء...</p>
+            <div id="users-section" class="tab-content hidden">
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-users-cog"></i> قاعدة بيانات العملاء</h2>
+                        <button onclick="window.refreshUsers()" class="btn-save" style="background: var(--accent); color: var(--primary-dark);">
+                            <i class="fas fa-sync-alt"></i> تحديث
+                        </button>
+                    </div>
+                    <div id="usersTableContainer" class="table-container">
+                        <p style="text-align:center; padding:40px; color: var(--text-muted);">جاري تحميل بيانات العملاء...</p>
+                    </div>
                 </div>
             </div>
+        </main>
+
+        <!-- Mobile Toggle -->
+        <div class="mobile-nav-toggle" id="mobileToggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
         </div>
     </div>
 
     <div id="toast"></div>
+
+    <script>
+        function showSection(sectionId, element) {
+            // Hide all sections
+            document.querySelectorAll('.tab-content').forEach(section => {
+                section.classList.add('hidden');
+            });
+            // Show target section
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Update active link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            // Update title
+            const titles = {
+                'certs-section': ['إدارة الشهادات', 'إضافة وتعديل بيانات شهادات المتدربين'],
+                'users-section': ['إدارة العملاء', 'متابعة بيانات العملاء المسجلين في المنصة']
+            };
+            document.getElementById('sectionTitle').textContent = titles[sectionId][0];
+            document.getElementById('sectionDesc').textContent = titles[sectionId][1];
+
+            // Close sidebar on mobile after click
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('mobileToggle').innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.getElementById('mobileToggle');
+            sidebar.classList.toggle('active');
+            if (sidebar.classList.contains('active')) {
+                toggle.innerHTML = '<i class="fas fa-times"></i>';
+            } else {
+                toggle.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        }
+    </script>
 
     <!-- Main Script -->
     <script src="../../assets/js/script.js"></script>
 </body>
 
 </html>
+
 
