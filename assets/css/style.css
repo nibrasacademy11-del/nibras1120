@@ -1484,28 +1484,22 @@ img { max-width: 100%; display: block; }
 }
 
 /* --- Dynamic Direction Support (RTL/LTR) --- */
-html[dir="ltr"] {
-    text-align: left;
-}
-html[dir="rtl"] {
-    text-align: right;
+html[dir="ltr"], html[dir="rtl"] {
+    text-align: center;
 }
 
 /* logical properties for layout */
 .hero-aura-content {
-    text-align: start;
+    text-align: center !important;
 }
 
 .section-header {
-    text-align: start;
+    text-align: center;
 }
 
-[dir="ltr"] .aura-title span {
-    text-align: left;
-}
-
-[dir="rtl"] .aura-title span {
-    text-align: right;
+.aura-title span {
+    display: inline-block; /* Changed from block to be 'in the text' and centered */
+    margin-top: 10px;
 }
 
 /* Force Admin to be Arabic only (RTL) */
