@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initVerifyForm(isEN);
     initPublicAuth(isEN, isAdminPagePath);
     if (isAdminPagePath) initAdminPanel(isEN);
+    updateNavAuth(isEN);
 });
 
 window.logout = async () => {
@@ -148,6 +149,9 @@ function initPublicAuth(isEN, isAdminPagePath) {
                     body: JSON.stringify({ name, email, phone, password })
                 });
                 showToast(isEN ? 'Account created successfully.' : 'تم إنشاء الحساب بنجاح.');
+                if (data.user && data.user.name) {
+                    localStorage.setItem('nibras_user_name', data.user.name);
+                }
                 setTimeout(() => {
                     window.location.href = homeUrl;
                 }, 600);
@@ -169,6 +173,9 @@ function initPublicAuth(isEN, isAdminPagePath) {
                     body: JSON.stringify({ email, password })
                 });
                 showToast(isEN ? 'Login successful.' : 'تم تسجيل الدخول بنجاح.');
+                if (data.user && data.user.name) {
+                    localStorage.setItem('nibras_user_name', data.user.name);
+                }
                 setTimeout(() => {
                     if (data.user && data.user.role === 'admin') {
                         window.location.href = 'admin.html';
@@ -565,6 +572,38 @@ window.logout = async () => {
         window.location.href = 'login.html';
     }
 };
+
+function updateNavAuth(isEN) {
+    const userName = localStorage.getItem('nibras_user_name');
+    if (!userName) return;
+
+    const firstName = userName.split(' ')[0];
+    const profileUrl = isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html';
+    
+    // Try by ID first
+    let navAuth = document.getElementById('navAuth');
+    let mobileNavAuth = document.getElementById('mobileNavAuth');
+    
+    // Fallback: search for links containing "login.html"
+    if (!navAuth) {
+        const loginLinks = Array.from(document.querySelectorAll('.nav-links a[href*="login.html"]'));
+        const desktopLogin = loginLinks.find(l => !l.classList.contains('mobile-btn'));
+        if (desktopLogin) navAuth = desktopLogin.parentElement;
+    }
+    if (!mobileNavAuth) {
+        const mobileLoginLinks = Array.from(document.querySelectorAll('.mobile-menu a[href*="login.html"], .mobile-menu .mobile-btn'));
+        if (mobileLoginLinks.length > 0) {
+            mobileNavAuth = mobileLoginLinks[0].parentElement;
+        }
+    }
+
+    if (navAuth) {
+        navAuth.innerHTML = `<a href="${profileUrl}" class="nav-btn"><i class="fas fa-user-circle"></i> ${firstName}</a>`;
+    }
+    if (mobileNavAuth) {
+        mobileNavAuth.innerHTML = `<a href="${profileUrl}" class="mobile-btn"><i class="fas fa-user-circle"></i> ${firstName}</a>`;
+    }
+}
 
 window.deleteCert = async (id) => {
     const isEN = document.documentElement.lang === 'en';
