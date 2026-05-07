@@ -287,12 +287,18 @@ img { max-width: 100%; display: block; }
   width: 100%;
   border-radius: 30px;
   box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: -10px 0 30px rgba(0,0,0,0.1);
 }
 
 .floating-stats-card {
   position: absolute;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   padding: 15px 20px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.5);
@@ -1107,6 +1113,40 @@ img { max-width: 100%; display: block; }
   .page-header { padding: 120px 20px 60px; }
   .admin-card, .verify-card, .contact-form, .auth-card { padding: 30px 20px; }
   .stats-grid { grid-template-columns: 1fr; }
+  .aura-title {
+    font-size: 3.2rem;
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+  .aura-title span {
+    font-size: 3.8rem;
+    margin-top: 10px;
+  }
+  .aura-desc {
+    font-size: 1.15rem;
+    padding: 0 10px;
+    margin-bottom: 40px;
+  }
+  .aura-actions {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 20px;
+    gap: 15px;
+  }
+  .aura-actions .btn-primary,
+  .aura-actions .btn-outline {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.1rem;
+    justify-content: center;
+  }
+  .hero-aura {
+    padding: 120px 0 60px;
+  }
+  .glass-badge {
+    font-size: 0.85rem;
+    padding: 8px 16px;
+  }
 }
 @media (max-width: 480px) {
   .hero-title { font-size: 1.8rem; }
