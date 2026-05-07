@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     phone: { type: String, default: '' },
     password: { type: String, required: true },
     role: { type: String, enum: ['student', 'admin', 'user'], default: 'student' },
+    enrolledCourses: [{ type: String }],
     resetPasswordToken: String,
     resetPasswordExpire: Date
 }, { timestamps: true });

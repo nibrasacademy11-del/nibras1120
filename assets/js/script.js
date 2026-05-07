@@ -173,7 +173,8 @@ function initPublicAuth(isEN, isAdminPagePath) {
                     if (data.user && data.user.role === 'admin') {
                         window.location.href = 'admin.html';
                     } else {
-                        window.location.href = homeUrl;
+                        // Redirect student to their profile
+                        window.location.href = 'profile.html';
                     }
                 }, 500);
             } catch (error) {
@@ -373,6 +374,8 @@ async function initAdminPanel(isEN) {
             if (pdfInput && pdfInput.files && pdfInput.files[0]) {
                 formData.append('pdf', pdfInput.files[0]);
             }
+            const userId = document.getElementById('adminCertUserId')?.value;
+            if (userId) formData.append('userId', userId);
 
             try {
                 await apiFetch('/api/admin/certificates', {
@@ -382,6 +385,33 @@ async function initAdminPanel(isEN) {
                 adminCertForm.reset();
                 showToast(isEN ? 'Certificate added successfully.' : 'تمت إضافة الشهادة بنجاح.');
                 await renderAdminCerts(isEN);
+            } catch (error) {
+                showToast(error.message, true);
+            }
+        });
+    }
+
+    const editUserForm = document.getElementById('editUserForm');
+    if (editUserForm) {
+        editUserForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editUserId').value;
+            const payload = {
+                name: document.getElementById('editUserName').value.trim(),
+                email: document.getElementById('editUserEmail').value.trim(),
+                phone: document.getElementById('editUserPhone').value.trim(),
+                role: document.getElementById('editUserRole').value,
+                enrolledCourses: document.getElementById('editUserCourses').value.split(',').map(s => s.trim()).filter(s => s)
+            };
+            try {
+                await apiFetch(`/api/auth/users/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                showToast(isEN ? 'User updated.' : 'تم تحديث بيانات المستخدم.');
+                if (window.closeEditModal) window.closeEditModal();
+                await renderAdminUsers(isEN);
             } catch (error) {
                 showToast(error.message, true);
             }
@@ -445,25 +475,31 @@ async function renderAdminUsers(isEN) {
         const data = await apiFetch('/api/auth/users');
         const users = data.users || [];
 
-        if (!users.length) {
-            container.innerHTML = `<p style="text-align:center; padding:20px;">${isEN ? 'No registered users.' : 'لا يوجد عملاء مسجلين حالياً.'}</p>`;
-            return;
-        }
-
         const rows = users.map(u => {
             const roleClass = u.role === 'admin' ? 'admin' : 'user';
             const roleName = u.role === 'admin' ? (isEN ? 'Admin' : 'مدير') : (isEN ? 'Student' : 'طالب');
             const date = new Date(u.createdAt || Date.now()).toLocaleDateString('ar-EG');
+            const userJson = JSON.stringify(u).replace(/"/g, '&quot;');
             return `
                 <tr>
                     <td data-label="${isEN ? 'Name' : 'الاسم'}">${u.name}</td>
                     <td data-label="${isEN ? 'Email' : 'البريد'}">${u.email}</td>
                     <td data-label="${isEN ? 'Phone' : 'الهاتف'}">${u.phone || '—'}</td>
                     <td data-label="${isEN ? 'Role' : 'الدور'}"><span class="badge ${roleClass}">${roleName}</span></td>
-                    <td data-label="${isEN ? 'Joined' : 'التسجيل'}">${date}</td>
+                    <td data-label="${isEN ? 'Actions' : 'إدارة'}">
+                        <button onclick="window.editUser('${userJson}')" class="btn-save" style="padding:6px 10px; font-size:0.8rem; background: var(--accent); color: var(--primary-dark);"><i class="fas fa-edit"></i></button>
+                        <button onclick="window.deleteUser('${u._id}')" class="btn-save" style="padding:6px 10px; font-size:0.8rem; background: #fff0f0; color: #b42318; border:1px solid #ffd6d6;"><i class="fas fa-trash-alt"></i></button>
+                    </td>
                 </tr>
             `;
         }).join('');
+
+        // Populate User Dropdown in Cert Form
+        const certUserSelect = document.getElementById('adminCertUserId');
+        if (certUserSelect) {
+            certUserSelect.innerHTML = '<option value="">--- اختر مستخدم ---</option>' + 
+                users.map(u => `<option value="${u._id}">${u.name} (${u.email})</option>`).join('');
+        }
 
         const totalUsersEl = document.getElementById('totalUsersCount');
         if (totalUsersEl) totalUsersEl.textContent = users.length;
@@ -476,7 +512,7 @@ async function renderAdminUsers(isEN) {
                         <th>${isEN ? 'Email' : 'البريد'}</th>
                         <th>${isEN ? 'Phone' : 'الهاتف'}</th>
                         <th>${isEN ? 'Role' : 'الدور'}</th>
-                        <th>${isEN ? 'Joined' : 'التسجيل'}</th>
+                        <th>${isEN ? 'Actions' : 'إدارة'}</th>
                     </tr>
                 </thead>
                 <tbody>${rows}</tbody>
@@ -486,6 +522,29 @@ async function renderAdminUsers(isEN) {
         container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${error.message}</p>`;
     }
 }
+
+window.editUser = (userStr) => {
+    const user = JSON.parse(userStr);
+    document.getElementById('editUserId').value = user._id;
+    document.getElementById('editUserName').value = user.name;
+    document.getElementById('editUserEmail').value = user.email;
+    document.getElementById('editUserPhone').value = user.phone || '';
+    document.getElementById('editUserRole').value = user.role;
+    document.getElementById('editUserCourses').value = (user.enrolledCourses || []).join(', ');
+    document.getElementById('editUserModal').style.display = 'flex';
+};
+
+window.deleteUser = async (id) => {
+    const isEN = document.documentElement.lang === 'en';
+    if (!confirm(isEN ? 'Delete user?' : 'هل تريد حذف المستخدم؟')) return;
+    try {
+        await apiFetch(`/api/auth/users/${id}`, { method: 'DELETE' });
+        showToast(isEN ? 'User deleted.' : 'تم حذف المستخدم.');
+        await renderAdminUsers(isEN);
+    } catch (error) {
+        showToast(error.message, true);
+    }
+};
 
 window.refreshUsers = async () => {
     const isEN = document.documentElement.lang === 'en';

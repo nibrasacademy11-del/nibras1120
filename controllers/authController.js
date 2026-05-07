@@ -169,3 +169,47 @@ exports.resetPassword = async (req, res) => {
         res.status(500).json({ message: 'حدث خطأ في السيرفر.' });
     }
 };
+
+exports.updateUser = async (req, res) => {
+    try {
+        const { name, email, phone, role, enrolledCourses } = req.body;
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ message: 'User not found.' });
+
+        if (name) user.name = name;
+        if (email) user.email = email.toLowerCase();
+        if (phone !== undefined) user.phone = phone;
+        if (role) user.role = role;
+        if (enrolledCourses) user.enrolledCourses = enrolledCourses;
+
+        await user.save();
+        res.json({ message: 'User updated successfully.', user });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating user.' });
+    }
+};
+
+exports.deleteUser = async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id);
+        if (!user) return res.status(404).json({ message: 'User not found.' });
+        res.json({ message: 'User deleted successfully.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting user.' });
+    }
+};
+
+exports.getUserProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if (!user) return res.status(404).json({ message: 'User not found.' });
+        
+        // Fetch certificates linked to this user
+        const Certificate = require('../models/Certificate');
+        const certificates = await Certificate.find({ userId: user._id }).select('-pdf_data');
+        
+        res.json({ user, certificates });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching profile.' });
+    }
+};

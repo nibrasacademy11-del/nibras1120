@@ -24,7 +24,7 @@ exports.getAllCertificates = async (req, res) => {
 
 exports.addCertificate = async (req, res) => {
     try {
-        const { certNum, traineeName, programName, field, issueDate } = req.body;
+        const { certNum, traineeName, programName, field, issueDate, userId } = req.body;
         if (!certNum || !traineeName || !programName || !issueDate) {
             return res.status(400).json({ message: 'Please complete required fields.' });
         }
@@ -36,7 +36,8 @@ exports.addCertificate = async (req, res) => {
             trainee_name: traineeName.trim(),
             program_name: programName.trim(),
             field: (field || '').trim(),
-            issue_date: issueDate
+            issue_date: issueDate,
+            userId: userId || null
         };
 
         // If PDF was uploaded, store it in MongoDB as binary

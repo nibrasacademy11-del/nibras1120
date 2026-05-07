@@ -9,6 +9,9 @@ router.post('/logout', authController.logout);
 router.post('/forgot-password', authController.forgotPassword);
 router.post('/reset-password', authController.resetPassword);
 router.get('/me', authRequired, authController.getMe);
+router.get('/profile', authRequired, authController.getUserProfile);
 router.get('/users', authRequired, adminRequired, authController.getAllUsers);
+router.put('/users/:id', authRequired, adminRequired, authController.updateUser);
+router.delete('/users/:id', authRequired, adminRequired, authController.deleteUser);
 
 module.exports = router;

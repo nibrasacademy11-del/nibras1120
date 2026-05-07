@@ -8,7 +8,8 @@ const certificateSchema = new mongoose.Schema({
     issue_date: { type: String, required: true },
     pdf_url: { type: String, default: null },
     pdf_data: { type: Buffer, default: null },
-    pdf_mimetype: { type: String, default: 'application/pdf' }
+    pdf_mimetype: { type: String, default: 'application/pdf' },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Certificate', certificateSchema);

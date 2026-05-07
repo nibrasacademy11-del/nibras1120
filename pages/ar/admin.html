@@ -115,6 +115,12 @@
                             <input type="text" id="adminTraineeName" required placeholder="الاسم الكامل">
                         </div>
                         <div class="form-group">
+                            <label>ربط بحساب مسجل (اختياري)</label>
+                            <select id="adminCertUserId">
+                                <option value="">--- اختر مستخدم ---</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label>البرنامج التدريبي *</label>
                             <input type="text" id="adminProgramName" required placeholder="اسم الدورة أو الدبلوم">
                         </div>
@@ -162,6 +168,45 @@
             </div>
         </main>
 
+        <!-- User Edit Modal -->
+        <div id="editUserModal" class="dashboard-modal" style="display:none;">
+            <div class="modal-content">
+                <div class="section-header">
+                    <h2><i class="fas fa-user-edit"></i> تعديل بيانات المستخدم</h2>
+                    <button onclick="closeEditModal()" class="close-btn">&times;</button>
+                </div>
+                <form id="editUserForm" class="admin-form">
+                    <input type="hidden" id="editUserId">
+                    <div class="form-group">
+                        <label>الاسم الكامل</label>
+                        <input type="text" id="editUserName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" id="editUserEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>رقم الهاتف</label>
+                        <input type="text" id="editUserPhone">
+                    </div>
+                    <div class="form-group">
+                        <label>الدور الوظيفي</label>
+                        <select id="editUserRole">
+                            <option value="student">طالب (Student)</option>
+                            <option value="admin">مدير (Admin)</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>الدورات المسجلة (افصل بينها بفاصلة)</label>
+                        <textarea id="editUserCourses" rows="3" placeholder="مثلاً: دبلوم الإدارة، دورة المحاسبة"></textarea>
+                    </div>
+                    <div class="form-submit">
+                        <button type="submit" class="btn-save">تحديث البيانات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- Mobile Toggle -->
         <div class="mobile-nav-toggle" id="mobileToggle" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
@@ -172,28 +217,20 @@
 
     <script>
         function showSection(sectionId, element) {
-            // Hide all sections
             document.querySelectorAll('.tab-content').forEach(section => {
                 section.classList.add('hidden');
             });
-            // Show target section
             document.getElementById(sectionId).classList.remove('hidden');
-            
-            // Update active link
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
             element.classList.add('active');
-
-            // Update title
             const titles = {
                 'certs-section': ['إدارة الشهادات', 'إضافة وتعديل بيانات شهادات المتدربين'],
                 'users-section': ['إدارة العملاء', 'متابعة بيانات العملاء المسجلين في المنصة']
             };
             document.getElementById('sectionTitle').textContent = titles[sectionId][0];
             document.getElementById('sectionDesc').textContent = titles[sectionId][1];
-
-            // Close sidebar on mobile after click
             if (window.innerWidth <= 768) {
                 document.getElementById('sidebar').classList.remove('active');
                 document.getElementById('mobileToggle').innerHTML = '<i class="fas fa-bars"></i>';
@@ -204,11 +241,11 @@
             const sidebar = document.getElementById('sidebar');
             const toggle = document.getElementById('mobileToggle');
             sidebar.classList.toggle('active');
-            if (sidebar.classList.contains('active')) {
-                toggle.innerHTML = '<i class="fas fa-times"></i>';
-            } else {
-                toggle.innerHTML = '<i class="fas fa-bars"></i>';
-            }
+            toggle.innerHTML = sidebar.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editUserModal').style.display = 'none';
         }
     </script>
 
