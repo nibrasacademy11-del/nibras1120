@@ -178,7 +178,16 @@ function initPublicAuth(isEN, isAdminPagePath) {
                 }
                 setTimeout(() => {
                     if (data.user && data.user.role === 'admin') {
-                        window.location.href = 'admin.html';
+                        // Admin is Arabic only as requested - always redirect to Arabic admin
+                        const currentPath = window.location.pathname;
+                        if (currentPath.includes('/en/')) {
+                            window.location.href = '../ar/admin.html';
+                        } else if (currentPath.includes('/pages/ar/')) {
+                            window.location.href = 'admin.html';
+                        } else {
+                            // From root or other paths
+                            window.location.href = 'pages/ar/admin.html';
+                        }
                     } else {
                         // Redirect student to their profile
                         window.location.href = 'profile.html';
@@ -573,9 +582,6 @@ function displayUsers(users, isEN) {
 }
 
 window.editUser = async (id) => {
-    // DIAGNOSTIC ALERT
-    alert("جاري محاولة فتح بيانات العميل: " + id);
-    
     try {
         // Direct fetch to be 100% sure we have fresh, correct data
         const data = await apiFetch(`/api/auth/users/${id}`);
@@ -607,7 +613,7 @@ window.editUser = async (id) => {
         
     } catch (err) {
         console.error("Critical Edit Error:", err);
-        alert("عذراً، فشل فتح النافذة. الخطأ: " + err.message);
+        showToast(document.documentElement.lang === 'en' ? 'Failed to load user data.' : 'فشل تحميل بيانات العميل.', true);
     }
 };
 
