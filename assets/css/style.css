@@ -441,6 +441,12 @@ img { max-width: 100%; display: block; }
   text-shadow: 0 5px 15px rgba(108, 3, 17, 0.1);
 }
 
+[lang="en"] .aura-title span {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
 .aura-desc {
   font-size: 1.4rem;
   color: #333;
@@ -1259,6 +1265,7 @@ img { max-width: 100%; display: block; }
     right: -400px; /* Hidden by default */
     width: 350px;
     height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
     background: white;
     z-index: 10000;
     box-shadow: -5px 0 15px rgba(0,0,0,0.1);
@@ -1331,8 +1338,10 @@ img { max-width: 100%; display: block; }
 
 .cart-footer {
     padding: 20px;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
     background: var(--bg-surface);
     border-top: 1px solid #ddd;
+    flex-shrink: 0; /* Ensure footer doesn't shrink */
 }
 
 .cart-total {

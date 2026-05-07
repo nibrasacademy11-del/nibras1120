@@ -18,55 +18,33 @@
 
 <body>
 
-        <!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>الإجمالي:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
-
-        
-    <!-- Floating Cart Button -->
-    <div class="floating-cart" onclick="toggleCart(event)">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="floating-cart-badge cart-badge">0</span>
+  <!-- Cart Sidebar -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+      <button onclick="toggleCart(event)" class="close-cart">&times;</button>
     </div>
-            
-<!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>الإجمالي:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
+    <div id="cartItems" class="cart-items">
+      <!-- Items will be injected here -->
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>الإجمالي:</span>
+        <strong id="cartTotal">0.00 US$</strong>
+      </div>
+      <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+    </div>
+  </div>
+  <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+
+  <!-- Floating Cart Button -->
+  <div class="floating-cart" onclick="toggleCart(event)">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="floating-cart-badge cart-badge">0</span>
+  </div>
 
   <!-- Navbar -->
-  <nav id="navbar" class="navbar">
+  <nav id="navbar" class="navbar scrolled">
     <div class="nav-container">
       <a href="../../index.html" class="nav-logo">
         <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
@@ -116,17 +94,19 @@
   </section>
 
   <!-- Articles Section -->
-  <section class="articles-section" style="padding-top: 60px;">
+  <section class="articles-section" style="padding: 80px 0;">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">ماذا قالوا عن <span class="highlight">نبراس</span></h2>
-        <p class="section-subtitle">منذ انطلاق أكاديمية نبراس، كان هدفنا واضحًا: تقديم تجربة تعليمية احترافية تُحدث أثرًا حقيقيًا في حياة المتدربين. وقد حظيت الأكاديمية بتغطيات إعلامية مميزة من صحف وقنوات مصرية وسعودية، أشادت برؤيتها، وبرامجها المهنية، وأثرها في تطوير المهارات وبناء الكفاءات. في هذا القسم نستعرض أبرز ما كُتب وقيل عن نبراس في وسائل الإعلام المختلفة.</p>
+        <p class="section-subtitle">منذ انطلاق أكاديمية نبراس، كان هدفنا واضحًا: تقديم تجربة تعليمية احترافية تُحدث أثرًا حقيقيًا في حياة المتدربين. وقد حظيت الأكاديمية بتغطيات إعلامية مميزة من صحف وقنوات مصرية وسعودية، أشادت برؤيتها، وبرامجها المهنية، وأثرها في تطوير المهارات وبناء الكفاءات.</p>
       </div>
       
       <div class="articles-grid">
         <div class="article-card">
           <div class="article-body" style="text-align: center; padding: 40px 20px;">
-            <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-newspaper"></i></div>
+            <div style="margin-bottom: 25px; height: 80px; display: flex; align-items: center; justify-content: center;">
+              <img src="../../assets/img/جدة-24-.webp" alt="جدة 24" style="max-height: 100%; width: auto;">
+            </div>
             <h4>تغطية جدة 24</h4>
             <p>مقال يسلط الضوء على نجاحات أكاديمية نبراس ودورها في التطوير المهني.</p>
             <a href="https://jeddah24.net/mix/0702/46636/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> قراءة المقال</a>
@@ -135,7 +115,9 @@
 
         <div class="article-card">
           <div class="article-body" style="text-align: center; padding: 40px 20px;">
-            <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-newspaper"></i></div>
+            <div style="margin-bottom: 25px; height: 80px; display: flex; align-items: center; justify-content: center;">
+              <img src="../../assets/img/السعودية-الاخبارية.webp" alt="أخبار السعودية" style="max-height: 100%; width: auto;">
+            </div>
             <h4>صحيفة أخبار السعودية</h4>
             <p>إشادة بالبرامج التقنية والمهنية التي تقدمها أكاديمية نبراس لرواد الأعمال والمحترفين.</p>
             <a href="https://alsaudi.news/technology/0702/53533/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> قراءة المقال</a>
@@ -144,7 +126,9 @@
 
         <div class="article-card">
           <div class="article-body" style="text-align: center; padding: 40px 20px;">
-            <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-newspaper"></i></div>
+            <div style="margin-bottom: 25px; height: 80px; display: flex; align-items: center; justify-content: center;">
+              <img src="../../assets/img/الرياض.webp" alt="أخبار الرياض" style="max-height: 100%; width: auto;">
+            </div>
             <h4>أخبار الرياض</h4>
             <p>تغطية مميزة لبرامج وتأثير الأكاديمية على المتدربين في مختلف المجالات.</p>
             <a href="https://alriyadhnews.net/mix/0702/47160/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> قراءة المقال</a>
@@ -153,7 +137,9 @@
 
         <div class="article-card">
           <div class="article-body" style="text-align: center; padding: 40px 20px;">
-            <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-newspaper"></i></div>
+            <div style="margin-bottom: 25px; height: 80px; display: flex; align-items: center; justify-content: center;">
+              <img src="../../assets/img/عكاظ-اليوم-1.webp" alt="أخبار عكاظ" style="max-height: 100%; width: auto;">
+            </div>
             <h4>أخبار عكاظ</h4>
             <p>نظرة متعمقة حول مسارات التعليم والتأهيل المتميزة في أكاديمية نبراس.</p>
             <a href="https://okaznews.net/mix/0702/44015/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> قراءة المقال</a>
@@ -217,5 +203,3 @@
   <script src="../../assets/js/script.js"></script>
 </body>
 </html>
-
-
