@@ -475,59 +475,74 @@ async function renderAdminCerts(isEN) {
     `;
 }
 
+let allAdminUsers = [];
+
 async function renderAdminUsers(isEN) {
     const container = document.getElementById('usersTableContainer');
     if (!container) return;
+
     try {
         const data = await apiFetch('/api/auth/users');
-        const users = data.users || [];
-
-        const rows = users.map(u => {
-            const roleClass = u.role === 'admin' ? 'admin' : 'user';
-            const roleName = u.role === 'admin' ? (isEN ? 'Admin' : 'مدير') : (isEN ? 'Student' : 'طالب');
-            const date = new Date(u.createdAt || Date.now()).toLocaleDateString('ar-EG');
-            const userJson = JSON.stringify(u).replace(/"/g, '&quot;');
-            return `
-                <tr>
-                    <td data-label="${isEN ? 'Name' : 'الاسم'}">${u.name}</td>
-                    <td data-label="${isEN ? 'Email' : 'البريد'}">${u.email}</td>
-                    <td data-label="${isEN ? 'Phone' : 'الهاتف'}">${u.phone || '—'}</td>
-                    <td data-label="${isEN ? 'Role' : 'الدور'}"><span class="badge ${roleClass}">${roleName}</span></td>
-                    <td data-label="${isEN ? 'Actions' : 'إدارة'}">
-                        <button onclick="window.editUser('${userJson}')" class="btn-save" style="padding:6px 10px; font-size:0.8rem; background: var(--accent); color: var(--primary-dark);"><i class="fas fa-edit"></i></button>
-                        <button onclick="window.deleteUser('${u._id}')" class="btn-save" style="padding:6px 10px; font-size:0.8rem; background: #fff0f0; color: #b42318; border:1px solid #ffd6d6;"><i class="fas fa-trash-alt"></i></button>
-                    </td>
-                </tr>
-            `;
-        }).join('');
-
-        // Populate User Dropdown in Cert Form
-        const certUserSelect = document.getElementById('adminCertUserId');
-        if (certUserSelect) {
-            certUserSelect.innerHTML = '<option value="">--- اختر مستخدم ---</option>' + 
-                users.map(u => `<option value="${u._id}">${u.name} (${u.email})</option>`).join('');
-        }
-
-        const totalUsersEl = document.getElementById('totalUsersCount');
-        if (totalUsersEl) totalUsersEl.textContent = users.length;
-
-        container.innerHTML = `
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>${isEN ? 'Name' : 'الاسم'}</th>
-                        <th>${isEN ? 'Email' : 'البريد'}</th>
-                        <th>${isEN ? 'Phone' : 'الهاتف'}</th>
-                        <th>${isEN ? 'Role' : 'الدور'}</th>
-                        <th>${isEN ? 'Actions' : 'إدارة'}</th>
-                    </tr>
-                </thead>
-                <tbody>${rows}</tbody>
-            </table>
-        `;
+        allAdminUsers = data.users || [];
+        displayUsers(allAdminUsers, isEN);
     } catch (error) {
         container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${error.message}</p>`;
     }
+}
+
+function displayUsers(users, isEN) {
+    const container = document.getElementById('usersTableContainer');
+    if (!container) return;
+
+    // Populate User Dropdown in Cert Form (always use full list)
+    const certUserSelect = document.getElementById('adminCertUserId');
+    if (certUserSelect && allAdminUsers.length > 0) {
+        const currentVal = certUserSelect.value;
+        certUserSelect.innerHTML = '<option value="">--- اختر مستخدم ---</option>' + 
+            allAdminUsers.map(u => `<option value="${u._id}">${u.name} (${u.email})</option>`).join('');
+        certUserSelect.value = currentVal;
+    }
+
+    if (!users.length) {
+        container.innerHTML = `<p style="text-align:center; padding:20px;">${isEN ? 'No matching users.' : 'لا يوجد عملاء مطابقين للبحث.'}</p>`;
+        return;
+    }
+
+    const rows = users.map(u => {
+        const roleClass = u.role === 'admin' ? 'admin' : 'user';
+        const roleName = u.role === 'admin' ? (isEN ? 'Admin' : 'مدير') : (isEN ? 'Student' : 'طالب');
+        const userJson = JSON.stringify(u).replace(/"/g, '&quot;');
+        return `
+            <tr>
+                <td data-label="${isEN ? 'Name' : 'الاسم'}">${u.name}</td>
+                <td data-label="${isEN ? 'Email' : 'البريد'}">${u.email}</td>
+                <td data-label="${isEN ? 'Phone' : 'الهاتف'}">${u.phone || '—'}</td>
+                <td data-label="${isEN ? 'Role' : 'الدور'}"><span class="badge ${roleClass}">${roleName}</span></td>
+                <td data-label="${isEN ? 'Actions' : 'إدارة'}">
+                    <button onclick="window.editUser('${userJson}')" class="btn-save" style="padding:6px 10px; font-size:0.8rem; background: var(--accent); color: var(--primary-dark);"><i class="fas fa-edit"></i></button>
+                    <button onclick="window.deleteUser('${u._id}')" class="btn-save" style="padding:6px 10px; font-size:0.8rem; background: #fff0f0; color: #b42318; border:1px solid #ffd6d6;"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+
+    const totalUsersEl = document.getElementById('totalUsersCount');
+    if (totalUsersEl) totalUsersEl.textContent = allAdminUsers.length;
+
+    container.innerHTML = `
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>${isEN ? 'Name' : 'الاسم'}</th>
+                    <th>${isEN ? 'Email' : 'البريد'}</th>
+                    <th>${isEN ? 'Phone' : 'الهاتف'}</th>
+                    <th>${isEN ? 'Role' : 'الدور'}</th>
+                    <th>${isEN ? 'Actions' : 'إدارة'}</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
+    `;
 }
 
 window.editUser = (userStr) => {
@@ -551,6 +566,20 @@ window.deleteUser = async (id) => {
     } catch (error) {
         showToast(error.message, true);
     }
+};
+
+window.filterUsers = () => {
+    const isEN = document.documentElement.lang === 'en';
+    const query = document.getElementById('userSearchInput').value.toLowerCase().trim();
+    if (!query) {
+        displayUsers(allAdminUsers, isEN);
+        return;
+    }
+    const filtered = allAdminUsers.filter(u => 
+        u.email.toLowerCase().includes(query) || 
+        u.name.toLowerCase().includes(query)
+    );
+    displayUsers(filtered, isEN);
 };
 
 window.refreshUsers = async () => {

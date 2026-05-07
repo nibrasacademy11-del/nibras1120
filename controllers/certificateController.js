@@ -57,7 +57,20 @@ exports.addCertificate = async (req, res) => {
             await cert.save();
         }
 
-        res.status(201).json({ id: cert._id, message: 'Certificate added successfully.' });
+        // AUTO-ADD TO USER PROFILE: If a user is linked, add this program to their enrolledCourses
+        if (userId) {
+            const User = require('../models/User');
+            const user = await User.findById(userId);
+            if (user) {
+                // Add course if not already there
+                if (!user.enrolledCourses.includes(programName.trim())) {
+                    user.enrolledCourses.push(programName.trim());
+                    await user.save();
+                }
+            }
+        }
+
+        res.status(201).json({ id: cert._id, message: 'Certificate added and linked to profile successfully.' });
     } catch (error) {
         console.error('Error adding certificate:', error);
         res.status(500).json({ message: 'Server error while saving certificate.' });

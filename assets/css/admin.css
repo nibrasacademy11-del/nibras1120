@@ -619,3 +619,35 @@ body {
 .close-btn:hover {
     color: var(--primary);
 }
+
+/* Search Box in Admin */
+.search-box-admin {
+    position: relative;
+    flex: 1;
+    max-width: 300px;
+    margin: 0 20px;
+}
+
+.search-box-admin i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.search-box-admin input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.search-box-admin input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(122, 28, 40, 0.1);
+}
