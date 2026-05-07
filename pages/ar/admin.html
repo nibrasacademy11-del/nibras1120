@@ -229,6 +229,12 @@
                 link.classList.remove('active');
             });
             element.classList.add('active');
+
+            // Refresh data when switching to users section
+            if (sectionId === 'users-section' && window.refreshUsers) {
+                window.refreshUsers();
+            }
+
             const titles = {
                 'certs-section': ['إدارة الشهادات', 'إضافة وتعديل بيانات شهادات المتدربين'],
                 'users-section': ['إدارة العملاء', 'متابعة بيانات العملاء المسجلين في المنصة']

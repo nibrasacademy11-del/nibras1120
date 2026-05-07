@@ -11,6 +11,7 @@ router.post('/reset-password', authController.resetPassword);
 router.get('/me', authRequired, authController.getMe);
 router.get('/profile', authRequired, authController.getUserProfile);
 router.get('/users', authRequired, adminRequired, authController.getAllUsers);
+router.get('/users/:id', authRequired, adminRequired, authController.getSingleUser);
 router.put('/users/:id', authRequired, adminRequired, authController.updateUser);
 router.delete('/users/:id', authRequired, adminRequired, authController.deleteUser);
 

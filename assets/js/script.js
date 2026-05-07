@@ -392,6 +392,7 @@ async function initAdminPanel(isEN) {
                 adminCertForm.reset();
                 showToast(isEN ? 'Certificate added successfully.' : 'تمت إضافة الشهادة بنجاح.');
                 await renderAdminCerts(isEN);
+                await renderAdminUsers(isEN); // Refresh user list to see new courses
             } catch (error) {
                 showToast(error.message, true);
             }
@@ -402,6 +403,9 @@ async function initAdminPanel(isEN) {
     if (editUserForm) {
         editUserForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const submitBtn = editUserForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            
             const id = document.getElementById('editUserId').value;
             const payload = {
                 name: document.getElementById('editUserName').value.trim(),
@@ -410,17 +414,41 @@ async function initAdminPanel(isEN) {
                 role: document.getElementById('editUserRole').value,
                 enrolledCourses: document.getElementById('editUserCourses').value.split(',').map(s => s.trim()).filter(s => s)
             };
+
             try {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+                
                 await apiFetch(`/api/auth/users/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-                showToast(isEN ? 'User updated.' : 'تم تحديث بيانات المستخدم.');
+                
+                showToast(isEN ? 'User updated successfully.' : 'تم تحديث بيانات العميل بنجاح.');
                 if (window.closeEditModal) window.closeEditModal();
                 await renderAdminUsers(isEN);
             } catch (error) {
                 showToast(error.message, true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+    }
+
+    // Event Delegation for Users Table
+    const usersContainer = document.getElementById('usersTableContainer');
+    if (usersContainer) {
+        usersContainer.addEventListener('click', async (e) => {
+            const editBtn = e.target.closest('.edit-user-btn');
+            const deleteBtn = e.target.closest('.delete-user-btn');
+            if (editBtn) {
+                const id = editBtn.getAttribute('data-id');
+                window.editUser(id);
+            } else if (deleteBtn) {
+                const id = deleteBtn.getAttribute('data-id');
+                window.deleteUser(id);
             }
         });
     }
@@ -511,7 +539,6 @@ function displayUsers(users, isEN) {
     const rows = users.map(u => {
         const roleClass = u.role === 'admin' ? 'admin' : 'user';
         const roleName = u.role === 'admin' ? (isEN ? 'Admin' : 'مدير') : (isEN ? 'Student' : 'طالب');
-        const userJson = JSON.stringify(u).replace(/"/g, '&quot;');
         return `
             <tr>
                 <td data-label="${isEN ? 'Name' : 'الاسم'}">${u.name}</td>
@@ -519,8 +546,8 @@ function displayUsers(users, isEN) {
                 <td data-label="${isEN ? 'Phone' : 'الهاتف'}">${u.phone || '—'}</td>
                 <td data-label="${isEN ? 'Role' : 'الدور'}"><span class="badge ${roleClass}">${roleName}</span></td>
                 <td data-label="${isEN ? 'Actions' : 'إدارة'}">
-                    <button onclick="window.editUser('${userJson}')" class="btn-save" style="padding:6px 10px; font-size:0.8rem; background: var(--accent); color: var(--primary-dark);"><i class="fas fa-edit"></i></button>
-                    <button onclick="window.deleteUser('${u._id}')" class="btn-save" style="padding:6px 10px; font-size:0.8rem; background: #fff0f0; color: #b42318; border:1px solid #ffd6d6;"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn-save edit-user-btn" data-id="${u._id}" style="padding:6px 10px; font-size:0.8rem; background: var(--accent); color: var(--primary-dark);"><i class="fas fa-edit"></i></button>
+                    <button class="btn-save delete-user-btn" data-id="${u._id}" style="padding:6px 10px; font-size:0.8rem; background: #fff0f0; color: #b42318; border:1px solid #ffd6d6;"><i class="fas fa-trash-alt"></i></button>
                 </td>
             </tr>
         `;
@@ -545,15 +572,43 @@ function displayUsers(users, isEN) {
     `;
 }
 
-window.editUser = (userStr) => {
-    const user = JSON.parse(userStr);
-    document.getElementById('editUserId').value = user._id;
-    document.getElementById('editUserName').value = user.name;
-    document.getElementById('editUserEmail').value = user.email;
-    document.getElementById('editUserPhone').value = user.phone || '';
-    document.getElementById('editUserRole').value = user.role;
-    document.getElementById('editUserCourses').value = (user.enrolledCourses || []).join(', ');
-    document.getElementById('editUserModal').style.display = 'flex';
+window.editUser = async (id) => {
+    // DIAGNOSTIC ALERT
+    alert("جاري محاولة فتح بيانات العميل: " + id);
+    
+    try {
+        // Direct fetch to be 100% sure we have fresh, correct data
+        const data = await apiFetch(`/api/auth/users/${id}`);
+        const user = (data && data.user) ? data.user : data;
+
+        if (!user || !user._id) {
+            throw new Error("بيانات العميل غير مكتملة");
+        }
+
+        document.getElementById('editUserId').value = user._id;
+        document.getElementById('editUserName').value = user.name || '';
+        document.getElementById('editUserEmail').value = user.email || '';
+        document.getElementById('editUserPhone').value = user.phone || '';
+        document.getElementById('editUserRole').value = user.role || 'student';
+        
+        let courses = '';
+        if (Array.isArray(user.enrolledCourses)) {
+            courses = user.enrolledCourses.join(', ');
+        } else if (typeof user.enrolledCourses === 'string') {
+            courses = user.enrolledCourses;
+        }
+        
+        document.getElementById('editUserCourses').value = courses;
+        
+        const modal = document.getElementById('editUserModal');
+        modal.style.display = 'flex';
+        modal.style.visibility = 'visible';
+        modal.style.opacity = '1';
+        
+    } catch (err) {
+        console.error("Critical Edit Error:", err);
+        alert("عذراً، فشل فتح النافذة. الخطأ: " + err.message);
+    }
 };
 
 window.deleteUser = async (id) => {
