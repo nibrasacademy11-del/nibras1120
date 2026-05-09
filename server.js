@@ -57,7 +57,7 @@ const bcrypt = require('bcryptjs');
 async function ensureAdmin() {
     try {
         if (!process.env.MONGO_URI) return; // DB might not be connected if no URI
-        const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'nibras8883@gmail.com').toLowerCase();
+        const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'info@nibras-ac.com').toLowerCase();
         const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Aa01515416972';
         
         const existing = await User.findOne({ email: ADMIN_EMAIL });

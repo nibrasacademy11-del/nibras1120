@@ -11,7 +11,7 @@ exports.createInquiry = async (req, res) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: process.env.EMAIL_USER || 'nibras8883@gmail.com',
+                user: process.env.EMAIL_USER || 'info@nibras-ac.com',
                 pass: process.env.EMAIL_PASS || 'your-app-password-here'
             }
         });
