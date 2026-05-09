@@ -828,6 +828,7 @@ window.addEventListener('click', (event) => {
 window.handleContact = async (event) => {
     event.preventDefault();
     const form = event.target;
+    const btn = form.querySelector('button[type="submit"]');
     const isEN = document.documentElement.lang === 'en';
     
     // Collect data using placeholders as they are the only identifiers in some pages
@@ -837,13 +838,10 @@ window.handleContact = async (event) => {
     const subject = form.querySelector('input[placeholder*="موضوع"], input[placeholder*="subject"]')?.value || '';
     const message = form.querySelector('textarea')?.value || '';
 
-    // Prepare message for WhatsApp
-    const whatsappMessage = isEN 
-        ? `Hello Nibras Academy, I would like to contact you.\n\n*Name:* ${name}\n*Email:* ${email}\n*Phone:* ${phone}\n*Subject:* ${subject}\n*Message:* ${message}`
-        : `مرحباً أكاديمية نبراس، أود التواصل معكم.\n\n*الاسم:* ${name}\n*البريد الإلكتروني:* ${email}\n*رقم الهاتف:* ${phone}\n*الموضوع:* ${subject}\n*الرسالة:* ${message}`;
-
-    const encodedMessage = encodeURIComponent(whatsappMessage);
-    const whatsappUrl = `https://wa.me/201112220796?text=${encodedMessage}`;
+    // UI Feedback
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = isEN ? '<i class="fas fa-spinner fa-spin"></i> Sending...' : '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
 
     // Save to database and trigger email notification
     try {
@@ -858,14 +856,14 @@ window.handleContact = async (event) => {
                 message
             })
         });
+        
+        showToast(isEN ? 'Message sent successfully! We will contact you soon.' : 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
+        form.reset();
     } catch (err) {
         console.error('Failed to submit inquiry:', err);
+        showToast(isEN ? 'Failed to send message. Please try again.' : 'فشل إرسال الرسالة. يرجى المحاولة مرة أخرى.', true);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
     }
-
-    // Redirect to WhatsApp
-    window.open(whatsappUrl, '_blank');
-    
-    // Reset form and show success
-    form.reset();
-    showToast(isEN ? 'Opening WhatsApp...' : 'جاري فتح واتساب...');
 };
