@@ -3,15 +3,19 @@ const nodemailer = require('nodemailer');
 
 exports.createInquiry = async (req, res) => {
     try {
+        console.log('--- New Inquiry Request ---');
+        console.log('Body:', req.body);
         const { name, email, phone, subject, message } = req.body;
+        
         const inquiry = new Inquiry({ name, email, phone, subject, message });
         await inquiry.save();
+        console.log('Inquiry saved to DB.');
 
         // Send Email Notification
         const transporter = nodemailer.createTransport({
             host: 'smtp.hostinger.com',
             port: 465,
-            secure: true, // Use SSL
+            secure: true,
             auth: {
                 user: process.env.EMAIL_USER || 'info@nibras-ac.com',
                 pass: process.env.EMAIL_PASS || '921019Aa@'
@@ -37,11 +41,17 @@ ${message}`,
             replyTo: email
         };
 
-        transporter.sendMail(mailOptions).catch(err => console.error('Email sending failed:', err));
+        console.log('Sending email...');
+        transporter.sendMail(mailOptions)
+            .then(info => console.log('Email sent successfully! MessageId:', info.messageId))
+            .catch(err => {
+                console.error('Email ERROR in transporter:', err.message);
+                console.error(err);
+            });
 
         res.status(201).json({ message: 'Inquiry submitted successfully.' });
     } catch (error) {
-        console.error('Inquiry submission error:', error);
+        console.error('CRITICAL Inquiry error:', error);
         res.status(500).json({ message: 'Server error while submitting inquiry.' });
     }
 };
