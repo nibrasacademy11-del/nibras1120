@@ -9,10 +9,12 @@ exports.createInquiry = async (req, res) => {
 
         // Send Email Notification
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.hostinger.com',
+            port: 465,
+            secure: true, // Use SSL
             auth: {
                 user: process.env.EMAIL_USER || 'info@nibras-ac.com',
-                pass: process.env.EMAIL_PASS || 'your-app-password-here'
+                pass: process.env.EMAIL_PASS || '921019Aa@'
             }
         });
 

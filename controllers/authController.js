@@ -117,10 +117,12 @@ exports.forgotPassword = async (req, res) => {
         const resetUrl = `${origin}/pages/ar/reset-password.html?token=${resetToken}`;
 
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.hostinger.com',
+            port: 465,
+            secure: true, // Use SSL
             auth: {
                 user: process.env.EMAIL_USER || 'info@nibras-ac.com',
-                pass: process.env.EMAIL_PASS || 'your-app-password-here' // The user MUST set this in Vercel
+                pass: process.env.EMAIL_PASS || '921019Aa@'
             }
         });
 
