@@ -123,6 +123,9 @@ exports.forgotPassword = async (req, res) => {
             auth: {
                 user: process.env.EMAIL_USER || 'info@nibras-ac.com',
                 pass: process.env.EMAIL_PASS || '921019Aa@'
+            },
+            tls: {
+                rejectUnauthorized: false
             }
         });
 
