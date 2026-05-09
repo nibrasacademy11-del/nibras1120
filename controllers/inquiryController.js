@@ -1,11 +1,42 @@
 const Inquiry = require('../models/Inquiry');
+const nodemailer = require('nodemailer');
 
 exports.createInquiry = async (req, res) => {
     try {
-        const inquiry = new Inquiry(req.body);
+        const { name, email, phone, subject, message } = req.body;
+        const inquiry = new Inquiry({ name, email, phone, subject, message });
         await inquiry.save();
+
+        // Send Email Notification
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER || 'nibras8883@gmail.com',
+                pass: process.env.EMAIL_PASS || 'your-app-password-here'
+            }
+        });
+
+        const mailOptions = {
+            from: `"${name}" <${email}>`,
+            to: 'info@nibras-ac.com',
+            subject: `New Inquiry: ${subject || 'Nibras Academy'}`,
+            text: `You have received a new message from the Contact Us form:
+
+Name: ${name}
+Email: ${email}
+Phone: ${phone || 'N/A'}
+Subject: ${subject || 'N/A'}
+
+Message:
+${message}`,
+            replyTo: email
+        };
+
+        transporter.sendMail(mailOptions).catch(err => console.error('Email sending failed:', err));
+
         res.status(201).json({ message: 'Inquiry submitted successfully.' });
     } catch (error) {
+        console.error('Inquiry submission error:', error);
         res.status(500).json({ message: 'Server error while submitting inquiry.' });
     }
 };

@@ -845,9 +845,9 @@ window.handleContact = async (event) => {
     const encodedMessage = encodeURIComponent(whatsappMessage);
     const whatsappUrl = `https://wa.me/201112220796?text=${encodedMessage}`;
 
-    // Optional: Save to database first
+    // Save to database and trigger email notification
     try {
-        await fetch('/api/inquiries', {
+        await apiFetch('/api/inquiries', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -859,7 +859,7 @@ window.handleContact = async (event) => {
             })
         });
     } catch (err) {
-        console.error('Failed to save inquiry to database:', err);
+        console.error('Failed to submit inquiry:', err);
     }
 
     // Redirect to WhatsApp
