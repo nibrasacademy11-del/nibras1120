@@ -132,7 +132,7 @@ exports.forgotPassword = async (req, res) => {
         const message = `مرحباً،\n\nلقد طلبت إعادة تعيين كلمة المرور لحسابك في أكاديمية نبراس.\n\nمن فضلك اضغط على الرابط التالي لتغيير كلمة المرور:\n\n${resetUrl}\n\nهذا الرابط صالح لمدة 10 دقائق فقط.`;
 
         await transporter.sendMail({
-            from: 'أكاديمية نبراس <noreply@nibras.com>',
+            from: '"أكاديمية نبراس" <info@nibras-ac.com>',
             to: user.email,
             subject: 'إعادة تعيين كلمة المرور - أكاديمية نبراس',
             text: message

@@ -22,7 +22,7 @@ exports.createInquiry = async (req, res) => {
         });
 
         const mailOptions = {
-            from: `"${name}" <${email}>`,
+            from: `"Nibras Contact Form" <info@nibras-ac.com>`,
             to: 'info@nibras-ac.com',
             subject: `New Inquiry: ${subject || 'Nibras Academy'}`,
             text: `You have received a new message from the Contact Us form:
