@@ -42,12 +42,14 @@ ${message}`,
         };
 
         console.log('Sending email...');
-        transporter.sendMail(mailOptions)
-            .then(info => console.log('Email sent successfully! MessageId:', info.messageId))
-            .catch(err => {
-                console.error('Email ERROR in transporter:', err.message);
-                console.error(err);
-            });
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log('Email sent successfully! MessageId:', info.messageId);
+        } catch (err) {
+            console.error('Email ERROR in transporter:', err.message);
+            // We still want to return 201 because the inquiry was saved to DB, 
+            // but we'll know it failed.
+        }
 
         res.status(201).json({ message: 'Inquiry submitted successfully.' });
     } catch (error) {
