@@ -843,7 +843,7 @@ window.handleContact = async (event) => {
         : `مرحباً أكاديمية نبراس، أود التواصل معكم.\n\n*الاسم:* ${name}\n*البريد الإلكتروني:* ${email}\n*رقم الهاتف:* ${phone}\n*الموضوع:* ${subject}\n*الرسالة:* ${message}`;
 
     const encodedMessage = encodeURIComponent(whatsappMessage);
-    const whatsappUrl = `https://wa.me/201515188608?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/201112220796?text=${encodedMessage}`;
 
     // Optional: Save to database first
     try {
