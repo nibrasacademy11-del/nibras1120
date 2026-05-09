@@ -14,8 +14,8 @@ exports.createInquiry = async (req, res) => {
         // Send Email Notification
         const transporter = nodemailer.createTransport({
             host: 'smtp.hostinger.com',
-            port: 465,
-            secure: true,
+            port: 587,
+            secure: false, // use STARTTLS
             auth: {
                 user: process.env.EMAIL_USER || 'info@nibras-ac.com',
                 pass: process.env.EMAIL_PASS || '921019Aa@'
