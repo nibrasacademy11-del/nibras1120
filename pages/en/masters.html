@@ -40,26 +40,6 @@
         <i class="fas fa-shopping-cart"></i>
         <span class="floating-cart-badge cart-badge">0</span>
     </div>
-            
-<!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
 
 <!-- Navbar -->
 <nav class="navbar scrolled" id="navbar">
@@ -115,9 +95,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Innovation and Development Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">The program aims to qualify trainees to understand institutional innovation and development management, and to transform ideas into practical solutions applicable in work environments.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_0')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_0', 'Professional Master in Innovation and Development Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_0')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_0', 'Professional Master in Innovation and Development Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -126,9 +106,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Project Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"></p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_1')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_1', 'Professional Master in Project Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_1')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_1', 'Professional Master in Project Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -137,9 +117,9 @@
           <h3 style="font-size:1.2rem;">Professional Master of Business Administration (MBA)</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">This program is an integrated professional path that aims to qualify trainees on modern business management concepts and applications, and build a comprehensive understanding of the organization’s various functions to support professional readiness and career development.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_2')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_2', 'Professional Master of Business Administration (MBA)', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_2')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_2', 'Professional Master of Business Administration (MBA)', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -148,9 +128,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Risk Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on identifying, analyzing, and managing risks within organizations.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_3')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_3', 'Professional Master in Risk Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_3')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_3', 'Professional Master in Risk Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -159,9 +139,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Accounting and Financial Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional program focusing on understanding accounting and financial management to support managerial decision-making.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_4')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_4', 'Professional Master in Accounting and Financial Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_4')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_4', 'Professional Master in Accounting and Financial Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -170,9 +150,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Occupational Safety and Health</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on building safe work environments and managing occupational risks.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_5')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_5', 'Professional Master in Occupational Safety and Health', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_5')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_5', 'Professional Master in Occupational Safety and Health', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -181,9 +161,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Hotel Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional program that focuses on managing hotel and service facilities according to modern quality standards.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_6')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_6', 'Professional Master in Hotel Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_6')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_6', 'Professional Master in Hotel Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -192,9 +172,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Health Administration</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focusing on the organization and management of health services and associated policies.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_7')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_7', 'Professional Master in Health Administration', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_7')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_7', 'Professional Master in Health Administration', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -203,9 +183,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Hospital Administration</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A specialized program focusing on the administrative and operational aspects of hospitals and health facilities. -- --- ---</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_8')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_8', 'Professional Master in Hospital Administration', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_8')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_8', 'Professional Master in Hospital Administration', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -214,9 +194,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Supply Chain</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on managing supply chains efficiently, from planning to distribution, to support business continuity and improve operational performance.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_9')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_9', 'Professional Master in Supply Chain', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_9')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_9', 'Professional Master in Supply Chain', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -225,9 +205,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Marketing and Sales</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional program that focuses on understanding markets and customers and building effective marketing strategies, while linking marketing and sales to achieve practical results that support employment opportunities and professional growth.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_10')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_10', 'Professional Master in Marketing and Sales', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_10')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_10', 'Professional Master in Marketing and Sales', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -236,9 +216,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Human Resources</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on qualifying the trainee to understand human capital management and build effective systems for managing individuals within organizations.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_11')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_11', 'Professional Master in Human Resources', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_11')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_11', 'Professional Master in Human Resources', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -247,9 +227,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Data Analysis</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on analyzing and using data to support administrative decisions.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_12')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_12', 'Professional Master in Data Analysis', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_12')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_12', 'Professional Master in Data Analysis', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -258,9 +238,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Cybersecurity</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focused on protecting systems and information and managing digital risks.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_13')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_13', 'Professional Master in Cybersecurity', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_13')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_13', 'Professional Master in Cybersecurity', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -269,9 +249,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Artificial Intelligence</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focused on understanding the applications of artificial intelligence in business environments.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_14')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_14', 'Professional Master in Artificial Intelligence', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_14')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_14', 'Professional Master in Artificial Intelligence', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -280,9 +260,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Digital Transformation and Technology Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focusing on technology management and digital transformation within organizations.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_15')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_15', 'Professional Master in Digital Transformation and Technology Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_15')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_15', 'Professional Master in Digital Transformation and Technology Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -291,9 +271,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Executive Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A comprehensive program focusing on management from an integrated executive perspective.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_16')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_16', 'Professional Master in Executive Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_16')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_16', 'Professional Master in Executive Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -302,9 +282,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Strategic Planning</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on formulating and implementing corporate strategies. -- --- ---</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_17')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_17', 'Professional Master in Strategic Planning', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_17')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_17', 'Professional Master in Strategic Planning', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -313,9 +293,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Public Relations and Media</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on institutional communication, building mental image, and managing relationships with the public.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_18')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_18', 'Professional Master in Public Relations and Media', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_18')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_18', 'Professional Master in Public Relations and Media', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -324,9 +304,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Administrative Leadership</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on developing leadership skills and building the ability to manage teams and make decisions. -- --- ---</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_19')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_19', 'Professional Master in Administrative Leadership', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_19')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_19', 'Professional Master in Administrative Leadership', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -335,9 +315,9 @@
           <h3 style="font-size:1.2rem;">Professional Master in Quality Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on quality systems and continuous improvement within institutions.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('mst_modal_20')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('mst_20', 'Professional Master in Quality Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('mst_modal_20')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('mst_20', 'Professional Master in Quality Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         

@@ -40,26 +40,6 @@
         <i class="fas fa-shopping-cart"></i>
         <span class="floating-cart-badge cart-badge">0</span>
     </div>
-            
-<!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
 
 <!-- Navbar -->
 <nav class="navbar scrolled" id="navbar">
@@ -115,9 +95,9 @@
           <h3 style="font-size:1.2rem;">Professional Doctorate in Business Administration</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional doctoral program designed to qualify cadres with advanced thinking and high applied ability in the fields of management, deepen knowledge in understanding complex business environments, and formulate strategic solutions applicable to organizations.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_0')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_0', 'Professional Doctorate in Business Administration', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_0')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_0', 'Professional Doctorate in Business Administration', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -126,9 +106,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in supply chains</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focused on managing complex supply chains, improving operational efficiency and flexibility through advanced analysis and decision-making.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_1')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_1', 'Professional doctorate in supply chains', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_1')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_1', 'Professional doctorate in supply chains', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -137,9 +117,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in hospital administration</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A specialized program focusing on advanced hospital management, improving the quality of services and operational governance.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_2')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_2', 'Professional doctorate in hospital administration', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_2')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_2', 'Professional doctorate in hospital administration', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -148,9 +128,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in health administration</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focusing on health policy, managing complex health systems, and linking planning to implementation.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_3')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_3', 'Professional doctorate in health administration', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_3')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_3', 'Professional doctorate in health administration', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -159,9 +139,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in marketing and sales</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">An advanced professional program that focuses on building marketing and sales strategies based on deep market analysis, and linking marketing decisions to sustainable business performance.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_4')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_4', 'Professional doctorate in marketing and sales', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_4')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_4', 'Professional doctorate in marketing and sales', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -170,9 +150,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in human resources</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on advanced systems for managing human competencies and developing human resources strategies coupled with institutional results.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_5')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_5', 'Professional doctorate in human resources', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_5')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_5', 'Professional doctorate in human resources', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -181,9 +161,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in corporate governance</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focusing on advanced construction of governance frameworks and institutional interconnections between management, compliance, and internal and external regulation.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_6')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_6', 'Professional doctorate in corporate governance', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_6')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_6', 'Professional doctorate in corporate governance', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -192,9 +172,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in innovation and development management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on building high applied expertise in the field of institutional innovation, linking development to results, and designing new solutions to improve institutional performance.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_7')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_7', 'Professional doctorate in innovation and development management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_7')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_7', 'Professional doctorate in innovation and development management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -203,9 +183,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in project management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"></p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_8')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_8', 'Professional doctorate in project management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_8')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_8', 'Professional doctorate in project management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -214,9 +194,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in strategic planning</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focusing on formulating and implementing strategies in complex environments.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_9')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_9', 'Professional doctorate in strategic planning', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_9')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_9', 'Professional doctorate in strategic planning', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -225,9 +205,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in public relations and media</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focusing on corporate communication, reputation management, and media influence making.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_10')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_10', 'Professional doctorate in public relations and media', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_10')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_10', 'Professional doctorate in public relations and media', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -236,9 +216,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in administrative leadership</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on building leaders capable of influencing and making decisions in complex environments.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_11')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_11', 'Professional doctorate in administrative leadership', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_11')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_11', 'Professional doctorate in administrative leadership', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -247,9 +227,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in accounting and financial management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focusing on advanced financial analysis and strategic decision support.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_12')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_12', 'Professional doctorate in accounting and financial management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_12')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_12', 'Professional doctorate in accounting and financial management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -258,9 +238,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in risk management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on building advanced frameworks for identifying, analyzing, and managing enterprise risks.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_13')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_13', 'Professional doctorate in risk management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_13')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_13', 'Professional doctorate in risk management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -269,9 +249,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in quality management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on continuous improvement and building high-performance quality systems.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_14')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_14', 'Professional doctorate in quality management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_14')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_14', 'Professional doctorate in quality management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -280,9 +260,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in occupational safety and health</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on managing occupational risks and building advanced and sustainable safety systems.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_15')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_15', 'Professional doctorate in occupational safety and health', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_15')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_15', 'Professional doctorate in occupational safety and health', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -291,9 +271,9 @@
           <h3 style="font-size:1.2rem;">Professional Doctorate in Hotel Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focused on advanced management of hospitality facilities, improving operational experience and profitability.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_16')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_16', 'Professional Doctorate in Hotel Management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_16')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_16', 'Professional Doctorate in Hotel Management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -302,9 +282,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in data analysis</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on advanced data analysis to support strategic decisions.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_17')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_17', 'Professional doctorate in data analysis', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_17')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_17', 'Professional doctorate in data analysis', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -313,9 +293,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in cybersecurity</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focused on protecting systems and information and managing digital risks.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_18')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_18', 'Professional doctorate in cybersecurity', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_18')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_18', 'Professional doctorate in cybersecurity', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -324,9 +304,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in artificial intelligence</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on employing artificial intelligence in decision-making and improving performance.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_19')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_19', 'Professional doctorate in artificial intelligence', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_19')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_19', 'Professional doctorate in artificial intelligence', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -335,9 +315,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in digital transformation and technology management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focused on leading digital transformation and managing technology effectively.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_20')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_20', 'Professional doctorate in digital transformation and technology management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_20')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_20', 'Professional doctorate in digital transformation and technology management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -346,9 +326,9 @@
           <h3 style="font-size:1.2rem;">Professional doctorate in executive management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A comprehensive program focusing on executive leadership and managing organizations from a holistic perspective.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1600.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('phd_modal_21')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('phd_21', 'Professional doctorate in executive management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('phd_modal_21')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('phd_21', 'Professional doctorate in executive management', 1600)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         

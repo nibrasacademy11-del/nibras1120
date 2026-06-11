@@ -40,26 +40,6 @@
         <i class="fas fa-shopping-cart"></i>
         <span class="floating-cart-badge cart-badge">0</span>
     </div>
-            
-<!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
 
 <!-- Navbar -->
 <nav class="navbar scrolled" id="navbar">
@@ -115,9 +95,9 @@
           <h3 style="font-size:1.2rem;">Customer service course</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">This course focuses on developing customer dealing skills and building a positive experience that reflects a professional image of the organization.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_0')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_0', 'Customer service course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_0')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_0', 'Customer service course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -126,9 +106,9 @@
           <h3 style="font-size:1.2rem;">Administrative leadership course</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"></p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_1')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_1', 'Administrative leadership course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_1')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_1', 'Administrative leadership course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -137,9 +117,9 @@
           <h3 style="font-size:1.2rem;">Project management course</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">This course aims to provide the trainee with the basics of project management, from planning to implementation and follow-up, in a practical manner that focuses on achieving results.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_2')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_2', 'Project management course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_2')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_2', 'Project management course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -148,9 +128,9 @@
           <h3 style="font-size:1.2rem;">Saudi labor system course</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A specialized course aimed at introducing the Saudi labor system, and the rights and duties of both the worker and the employer, in a way that enhances regulatory compliance within establishments.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_3')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_3', 'Saudi labor system course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_3')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_3', 'Saudi labor system course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -159,9 +139,9 @@
           <h3 style="font-size:1.2rem;">Human resources management course</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">This course focuses on providing trainees with a practical understanding of the functions of human resources management and its role in supporting organizational performance, from planning and recruitment to performance management and competency development.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_4')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_4', 'Human resources management course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_4')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_4', 'Human resources management course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -170,9 +150,9 @@
           <h3 style="font-size:1.2rem;">CAPM Course – Project Management Basics</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">An introductory course to build a strong knowledge base in project management, and is a practical introduction for those wishing to work in this field.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_5')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_5', 'CAPM Course – Project Management Basics', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_5')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_5', 'CAPM Course – Project Management Basics', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -181,9 +161,9 @@
           <h3 style="font-size:1.2rem;">SHRM Course – Professional Human Resource Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"></p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_6')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_6', 'SHRM Course – Professional Human Resource Management', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_6')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_6', 'SHRM Course – Professional Human Resource Management', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -192,9 +172,9 @@
           <h3 style="font-size:1.2rem;">PMP Course – Professional Project Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A specialized professional course aimed at qualifying trainees to understand project management methodologies in accordance with international best practices, and to deal with all stages of the project with high professionalism.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_7')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_7', 'PMP Course – Professional Project Management', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_7')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_7', 'PMP Course – Professional Project Management', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -203,9 +183,9 @@
           <h3 style="font-size:1.2rem;">Management reporting course</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">This course aims to develop management reporting skills in a clear and professional manner that supports decision-making.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_8')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_8', 'Management reporting course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_8')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_8', 'Management reporting course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -214,9 +194,9 @@
           <h3 style="font-size:1.2rem;">Selling skills course</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">This course focuses on developing selling skills and building successful relationships with customers to achieve better results.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_9')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_9', 'Selling skills course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_9')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_9', 'Selling skills course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -225,9 +205,9 @@
           <h3 style="font-size:1.2rem;">Time management and work stress course</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">This course aims to help trainees organize time and deal with work pressures efficiently to achieve balance and productivity.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_10')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_10', 'Time management and work stress course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_10')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_10', 'Time management and work stress course', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -236,9 +216,9 @@
           <h3 style="font-size:1.2rem;">Job Performance Management Course (KPIs)</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">This course focuses on understanding key performance indicators and how to use them to measure and improve the performance of individuals and organizations.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_11')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_11', 'Job Performance Management Course (KPIs)', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_11')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_11', 'Job Performance Management Course (KPIs)', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -247,9 +227,9 @@
           <h3 style="font-size:1.2rem;">Accounting course for non-accountants</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A simplified course aimed at enabling non-specialists to understand the basics of accounting and read financial statements to support decision-making.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">215.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_12')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_12', 'Accounting course for non-accountants', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_12')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_12', 'Accounting course for non-accountants', 215)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -258,9 +238,9 @@
           <h3 style="font-size:1.2rem;">Power BI course - data analysis and presentation</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A practical course that focuses on analyzing data and building interactive reports and dashboards that support decision-making.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_13')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_13', 'Power BI course - data analysis and presentation', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_13')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_13', 'Power BI course - data analysis and presentation', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -269,9 +249,9 @@
           <h3 style="font-size:1.2rem;">Six Sigma course – quality management and continuous improvement</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A specialized professional course aimed at enabling trainees to understand the Six Sigma methodology and apply it to improving operations, reducing errors, and raising the efficiency of organizational performance using internationally approved analysis tools. The course focuses on the applied aspect and linking continuous improvement to measurable results within different work environments.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_14')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_14', 'Six Sigma course – quality management and continuous improvement', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_14')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_14', 'Six Sigma course – quality management and continuous improvement', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -280,9 +260,9 @@
           <h3 style="font-size:1.2rem;">MOS Course – Microsoft Office Professional Skills</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A practical course aimed at increasing the efficiency of using Microsoft Office programs in a professional work environment.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_15')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_15', 'MOS Course – Microsoft Office Professional Skills', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_15')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_15', 'MOS Course – Microsoft Office Professional Skills', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -291,9 +271,9 @@
           <h3 style="font-size:1.2rem;">FMAA Course – Financial Analysis and Valuation</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional course that focuses on financial analysis, company evaluation, and understanding financial statements in a practical way.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_16')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_16', 'FMAA Course – Financial Analysis and Valuation', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_16')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_16', 'FMAA Course – Financial Analysis and Valuation', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -302,9 +282,9 @@
           <h3 style="font-size:1.2rem;">CMA Course - Professional Management Accounting</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A specialized course aimed at developing an understanding of management accounting and its role in supporting financial decision-making and strategic planning.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_17')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_17', 'CMA Course - Professional Management Accounting', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_17')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_17', 'CMA Course - Professional Management Accounting', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -313,9 +293,9 @@
           <h3 style="font-size:1.2rem;">CCXP Course – Professional Customer Experience and Service</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional course that aims to build a distinguished customer experience and improve the quality of interaction with customers to enhance loyalty and satisfaction.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">535.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('crs_modal_18')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('crs_18', 'CCXP Course – Professional Customer Experience and Service', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('crs_modal_18')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('crs_18', 'CCXP Course – Professional Customer Experience and Service', 535)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         

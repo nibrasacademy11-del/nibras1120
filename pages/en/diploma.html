@@ -40,26 +40,6 @@
         <i class="fas fa-shopping-cart"></i>
         <span class="floating-cart-badge cart-badge">0</span>
     </div>
-            
-<!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
 
 <!-- Navbar -->
 <nav class="navbar scrolled" id="navbar">
@@ -115,9 +95,9 @@
           <h3 style="font-size:1.2rem;">Diploma in applied strategic planning</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A diploma that provides skills and experience in formulating and implementing strategic plans within institutions, with tools for measuring progress and decision-making.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_0')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_0', 'Diploma in applied strategic planning', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_0')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_0', 'Diploma in applied strategic planning', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -126,9 +106,9 @@
           <h3 style="font-size:1.2rem;">Advanced Diploma in Human Resources Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">The diploma focuses on developing people management skills and provides a practical framework that helps in clearly understanding human resources policies and procedures. -- -- ----</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_1')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_1', 'Advanced Diploma in Human Resources Management', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_1')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_1', 'Advanced Diploma in Human Resources Management', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -137,9 +117,9 @@
           <h3 style="font-size:1.2rem;">Professional Diploma in Business Administration</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A practical diploma that aims to qualify trainees for a comprehensive understanding of business management processes, and to develop the basic skills required to work in multiple commercial and administrative environments.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_2')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_2', 'Professional Diploma in Business Administration', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_2')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_2', 'Professional Diploma in Business Administration', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -148,9 +128,9 @@
           <h3 style="font-size:1.2rem;">Diploma in occupational safety and health</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">دبلوم يركّز على بناء بيئات عمل آمنة من خلال فهم أنظمة السلامة وتقييم المخاطر المهنية.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_3')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_3', 'Diploma in occupational safety and health', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_3')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_3', 'Diploma in occupational safety and health', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -159,9 +139,9 @@
           <h3 style="font-size:1.2rem;">Professional cybersecurity diploma</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional diploma focusing on protecting information and digital systems, and managing cyber risks in work environments.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_4')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_4', 'Professional cybersecurity diploma', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_4')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_4', 'Professional cybersecurity diploma', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -170,9 +150,9 @@
           <h3 style="font-size:1.2rem;">Diploma in Artificial Intelligence for Business</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A diploma that focuses on understanding the applications of artificial intelligence in business environments, and how to employ them to improve performance and decision-making.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_5')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_5', 'Diploma in Artificial Intelligence for Business', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_5')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_5', 'Diploma in Artificial Intelligence for Business', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -181,9 +161,9 @@
           <h3 style="font-size:1.2rem;">Diploma in data analysis for decision support</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional diploma focusing on analyzing data and transforming it into information that supports administrative and strategic decisions.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_6')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_6', 'Diploma in data analysis for decision support', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_6')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_6', 'Diploma in data analysis for decision support', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -192,9 +172,9 @@
           <h3 style="font-size:1.2rem;">Diploma in digital transformation and technology management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional diploma that focuses on enabling the trainee to understand digital transformation from an administrative perspective, and technology management as a supportive tool for institutional performance and decision-making.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_7')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_7', 'Diploma in digital transformation and technology management', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_7')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_7', 'Diploma in digital transformation and technology management', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -203,9 +183,9 @@
           <h3 style="font-size:1.2rem;">Diploma in project management and institutional development</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A practical diploma that focuses on how to plan, implement, and follow up projects within institutions, and linking this to institutional development procedures.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_8')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_8', 'Diploma in project management and institutional development', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_8')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_8', 'Diploma in project management and institutional development', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -214,9 +194,9 @@
           <h3 style="font-size:1.2rem;">Diploma in Public Relations and Corporate Media</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A diploma that focuses on developing communication skills and managing the mental image of the organization in business environments.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_9')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_9', 'Diploma in Public Relations and Corporate Media', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_9')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_9', 'Diploma in Public Relations and Corporate Media', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -225,9 +205,9 @@
           <h3 style="font-size:1.2rem;">Professional Diploma in Accounting and Financial Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A diploma that focuses on understanding the basics of accounting and finance, and how to manage companies&#39; financial resources efficiently.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_10')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_10', 'Professional Diploma in Accounting and Financial Management', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_10')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_10', 'Professional Diploma in Accounting and Financial Management', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -236,9 +216,9 @@
           <h3 style="font-size:1.2rem;">Professional Diploma in Marketing and Sales</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A practical diploma that focuses on understanding the market, customer behavior, and marketing and sales strategies to increase engagement and achieve results.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_11')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_11', 'Professional Diploma in Marketing and Sales', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_11')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_11', 'Professional Diploma in Marketing and Sales', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -247,9 +227,9 @@
           <h3 style="font-size:1.2rem;">Diploma in Enterprise Risk Management</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional diploma focusing on identifying, analyzing and managing risks within organizations to support stability and sustainability.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_12')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_12', 'Diploma in Enterprise Risk Management', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_12')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_12', 'Diploma in Enterprise Risk Management', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -258,9 +238,9 @@
           <h3 style="font-size:1.2rem;">Diploma in Administrative Leadership</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A diploma that focuses on developing leadership skills and building the ability to influence and manage teams.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_13')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_13', 'Diploma in Administrative Leadership', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_13')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_13', 'Diploma in Administrative Leadership', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
@@ -269,9 +249,9 @@
           <h3 style="font-size:1.2rem;">Advanced Quality Management Diploma</h3>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional diploma focusing on quality systems, continuous improvement, and raising the efficiency of operations within institutions.</p>
           <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">505.00 US$</p>
-          <div style="display:flex; gap:10px; margin-top:auto;">
-              <button class="btn-outline" style="flex:1;" onclick="openModal('dip_modal_14')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" style="flex:1;" onclick="addToCart('dip_14', 'Advanced Quality Management Diploma', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-outline" onclick="openModal('dip_modal_14')">Details <i class="fas fa-info-circle"></i></button>
+              <button class="btn-primary" onclick="addToCart('dip_14', 'Advanced Quality Management Diploma', 505)">Add to Cart <i class="fas fa-cart-plus"></i></button>
           </div>
         </div>
         
