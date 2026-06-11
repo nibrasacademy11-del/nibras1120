@@ -1108,14 +1108,18 @@ img { max-width: 100%; display: block; }
   .hamburger { display: flex !important; }
   .hero-image-side { display: none; }
   .hero-content { max-width: 100%; }
-  .programs-grid, .why-grid, .articles-grid { grid-template-columns: 1fr 1fr; }
+  .programs-grid, .why-grid, .articles-grid { grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 768px) {
   
   .about-grid, .contact-grid { grid-template-columns: 1fr; }
-  .programs-grid, .why-grid, .articles-grid { grid-template-columns: 1fr; }
+  .programs-grid, .why-grid, .articles-grid { grid-template-columns: 1fr !important; gap: 18px !important; }
+  .program-card { padding: 24px 18px; }
+  .program-icon { width: 48px; height: 48px; font-size: 1.2rem; margin-bottom: 14px; }
+  .program-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+  .program-card > p { font-size: .85rem; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .form-row { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }

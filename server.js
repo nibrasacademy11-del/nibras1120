@@ -3,7 +3,16 @@ const path = require('path');
 const fs = require('fs');
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
 const connectDB = require('./config/db');
+
+// Global error handlers - prevent server crashes
+process.on('unhandledRejection', (err) => {
+    console.error('UNHANDLED REJECTION:', err?.message || err);
+});
+process.on('uncaughtException', (err) => {
+    console.error('UNCAUGHT EXCEPTION:', err?.message || err);
+});
 
 // Connect Database
 connectDB();
@@ -56,7 +65,8 @@ const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 async function ensureAdmin() {
     try {
-        if (!process.env.MONGO_URI) return; // DB might not be connected if no URI
+        // Check if mongoose is actually connected before querying
+        if (!process.env.MONGO_URI || mongoose.connection.readyState !== 1) return;
         const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'info@nibras-ac.com').toLowerCase();
         const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Aa01515416972';
         
@@ -73,11 +83,23 @@ async function ensureAdmin() {
         await adminUser.save();
         console.log('Default Admin created.');
     } catch (err) {
-        console.error('Error creating default admin:', err);
+        console.error('Error creating default admin:', err.message);
     }
 }
 // Wait slightly for DB connection to establish before ensuring admin
 setTimeout(ensureAdmin, 3000);
+
+// Global Error Handler - prevents crashes from uncaught errors in routes
+app.use((err, req, res, next) => {
+    console.error('Unhandled Error:', err?.message || err);
+    if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(413).json({ message: 'File too large. Max 10MB allowed.' });
+    }
+    if (err.message === 'Only PDF files are allowed.') {
+        return res.status(400).json({ message: 'Only PDF files are allowed.' });
+    }
+    res.status(500).json({ message: 'Internal server error.' });
+});
 
 // Export for Vercel Serverless
 module.exports = app;
