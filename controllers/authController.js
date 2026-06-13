@@ -117,15 +117,15 @@ exports.forgotPassword = async (req, res) => {
         const resetUrl = `${origin}/pages/ar/reset-password.html?token=${resetToken}`;
 
         const transporter = nodemailer.createTransport({
-            host: 'smtp.hostinger.com',
-            port: 587,
-            secure: false, // use STARTTLS
+            host: process.env.EMAIL_HOST || 'smtp.hostinger.com',
+            port: parseInt(process.env.EMAIL_PORT, 10) || 587,
+            secure: process.env.EMAIL_SECURE === 'true',
             auth: {
-                user: process.env.EMAIL_USER || 'info@nibras-ac.com',
-                pass: process.env.EMAIL_PASS || '921019Aa@'
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
             },
             tls: {
-                rejectUnauthorized: false
+                rejectUnauthorized: process.env.NODE_ENV === 'production'
             }
         });
 

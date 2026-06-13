@@ -86,8 +86,10 @@ async function ensureAdmin() {
         console.error('Error creating default admin:', err.message);
     }
 }
-// Wait slightly for DB connection to establish before ensuring admin
-setTimeout(ensureAdmin, 3000);
+// Ensure admin is created once database connection is established
+mongoose.connection.once('open', () => {
+    ensureAdmin();
+});
 
 // Global Error Handler - prevents crashes from uncaught errors in routes
 app.use((err, req, res, next) => {

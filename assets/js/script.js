@@ -19,17 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateNavAuth(isEN);
 });
 
-window.logout = async () => {
-    try {
-        await apiFetch('/api/auth/logout', { method: 'POST' });
-    } catch(err) {}
-    const path = window.location.pathname.toLowerCase();
-    if (path.endsWith('/admin.html')) {
-        window.location.reload();
-    } else {
-        window.location.href = 'login.html';
-    }
-};
+
 
 function initLayout() {
     const hamburger = document.getElementById('hamburger');
@@ -143,7 +133,7 @@ function initPublicAuth(isEN, isAdminPagePath) {
                 return;
             }
             try {
-                await apiFetch('/api/auth/register', {
+                const data = await apiFetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, phone, password })

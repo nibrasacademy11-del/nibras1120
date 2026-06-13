@@ -137,7 +137,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                const response = await fetch('/api/auth/profile');
+                const response = await fetch('/api/auth/profile', { credentials: 'include' });
                 if (!response.ok) throw new Error('Unauthorized');
                 const data = await response.json();
                 const user = data.user;
