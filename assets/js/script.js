@@ -34,13 +34,102 @@ function initLayout() {
         }, 1000);
     }
 
+    // Ensure mobile overlay backdrop exists in DOM
+    let mobileOverlay = document.getElementById('mobileOverlay');
+    if (!mobileOverlay) {
+        mobileOverlay = document.createElement('div');
+        mobileOverlay.id = 'mobileOverlay';
+        mobileOverlay.className = 'mobile-overlay';
+        document.body.appendChild(mobileOverlay);
+    }
+
+    function closeMobileMenu() {
+        if (hamburger) hamburger.classList.remove('active');
+        if (navLinks) navLinks.classList.remove('active');
+        if (mobileMenu) mobileMenu.classList.remove('active');
+        if (mobileOverlay) mobileOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function openMobileMenu() {
+        if (hamburger) hamburger.classList.add('active');
+        if (navLinks) navLinks.classList.add('active');
+        if (mobileMenu) mobileMenu.classList.add('active');
+        if (mobileOverlay) mobileOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function toggleMobileMenu() {
+        if (mobileMenu && mobileMenu.classList.contains('active')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    }
+
     if (hamburger) {
-        hamburger.onclick = () => {
-            hamburger.classList.toggle('active');
-            if (navLinks) navLinks.classList.toggle('active');
-            if (mobileMenu) mobileMenu.classList.toggle('active');
+        hamburger.onclick = (e) => {
+            e.stopPropagation();
+            toggleMobileMenu();
         };
     }
+
+    if (mobileOverlay) {
+        mobileOverlay.onclick = () => {
+            closeMobileMenu();
+        };
+    }
+
+    if (mobileMenu) {
+        // Prevent clicks inside drawer from bubbling to overlay
+        mobileMenu.onclick = (e) => {
+            e.stopPropagation();
+        };
+
+        // Add clean header with Close button (×) if not already present
+        if (!mobileMenu.querySelector('.mobile-menu-header')) {
+            const isEN = document.documentElement.lang === 'en';
+            const brandTitle = isEN ? 'Nibras Academy' : 'أكاديمية نبراس';
+            const logoImg = document.querySelector('.nav-logo img')?.getAttribute('src') || '/assets/img/logo.png';
+            const homeHref = isEN ? '/en/index.html' : '/index.html';
+
+            const headerEl = document.createElement('div');
+            headerEl.className = 'mobile-menu-header';
+            headerEl.innerHTML = `
+                <a href="${homeHref}" class="mobile-menu-brand">
+                    <img src="${logoImg}" alt="${brandTitle}" />
+                    <span>${brandTitle}</span>
+                </a>
+                <button class="mobile-close-btn" aria-label="إغلاق">&times;</button>
+            `;
+            mobileMenu.insertBefore(headerEl, mobileMenu.firstChild);
+
+            const closeBtn = headerEl.querySelector('.mobile-close-btn');
+            if (closeBtn) {
+                closeBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    closeMobileMenu();
+                };
+            }
+        }
+
+        // Close menu when any internal link or button is clicked
+        mobileMenu.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                const href = a.getAttribute('href');
+                if (!href || href.startsWith('#') || a.getAttribute('onclick')) {
+                    closeMobileMenu();
+                }
+            });
+        });
+    }
+
+    // Close mobile menu on Escape key press
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('active')) {
+            closeMobileMenu();
+        }
+    });
 
     window.onscroll = () => {
         const scrollTopBtn = document.getElementById('scrollTop');
