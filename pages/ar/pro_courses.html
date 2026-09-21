@@ -123,21 +123,23 @@
       </div>
 
       <!-- Search & Specialty Filter Controls -->
-      <div style="max-width: 950px; margin: 0 auto 35px; display: flex; flex-direction: column; gap: 15px;">
-        <div style="position: relative;">
-          <input type="text" id="courseSearch" placeholder="ابحث عن دورة تدريبية (مثل: PMP, خدمة العملاء, نظام العمل السعودي)..." style="width: 100%; padding: 14px 45px 14px 18px; border: 1px solid var(--border); border-radius: 12px; font-size: 1rem; font-family: inherit; background:#fff;" />
-          <i class="fas fa-search" style="position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+      <div style="max-width: 950px; margin: 0 auto 35px;">
+        <div class="search-box-wrapper">
+          <input type="text" id="courseSearch" class="search-box-input" placeholder="ابحث عن دورة تدريبية (مثل: PMP, خدمة العملاء, نظام العمل السعودي, Power BI)..." />
+          <i class="fas fa-search search-box-icon"></i>
         </div>
 
-        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;" id="specialtyFilterButtons">
-          <button class="filter-tag active" onclick="filterBySpecialty('all', this)">الكل</button>
-          <button class="filter-tag" onclick="filterBySpecialty('المشاريع', this)">إدارة المشاريع</button>
-          <button class="filter-tag" onclick="filterBySpecialty('القيادة', this)">القيادة والإدارة</button>
-          <button class="filter-tag" onclick="filterBySpecialty('العمل السعودي', this)">نظام العمل السعودي</button>
-          <button class="filter-tag" onclick="filterBySpecialty('الموارد البشرية', this)">الموارد البشرية</button>
-          <button class="filter-tag" onclick="filterBySpecialty('العملاء', this)">خدمة العملاء CCXP</button>
-          <button class="filter-tag" onclick="filterBySpecialty('الجودة', this)">الجودة و Six Sigma</button>
-          <button class="filter-tag" onclick="filterBySpecialty('المحاسبة', this)">المحاسبة و CMA</button>
+        <div class="filter-tags-wrapper" id="specialtyFilterButtons">
+          <button class="filter-tag active" onclick="filterBySpecialty('all', this)"><i class="fas fa-th-large"></i> الكل</button>
+          <button class="filter-tag" onclick="filterBySpecialty('projects', this)"><i class="fas fa-tasks"></i> إدارة المشاريع الاحترافية</button>
+          <button class="filter-tag" onclick="filterBySpecialty('leadership', this)"><i class="fas fa-user-tie"></i> القيادة والإدارة</button>
+          <button class="filter-tag" onclick="filterBySpecialty('hr', this)"><i class="fas fa-users-cog"></i> الموارد البشرية SHRM</button>
+          <button class="filter-tag" onclick="filterBySpecialty('labor', this)"><i class="fas fa-balance-scale"></i> نظام العمل السعودي</button>
+          <button class="filter-tag" onclick="filterBySpecialty('customer', this)"><i class="fas fa-headset"></i> خدمة العملاء CCXP</button>
+          <button class="filter-tag" onclick="filterBySpecialty('quality', this)"><i class="fas fa-award"></i> الجودة و Six Sigma</button>
+          <button class="filter-tag" onclick="filterBySpecialty('finance', this)"><i class="fas fa-coins"></i> المحاسبة و CMA</button>
+          <button class="filter-tag" onclick="filterBySpecialty('tech', this)"><i class="fas fa-chart-pie"></i> تحليل البيانات و Power BI</button>
+          <button class="filter-tag" onclick="filterBySpecialty('admin', this)"><i class="fas fa-clipboard-check"></i> المهارات التنفيذية وتطوير الأداء</button>
         </div>
       </div>
 
@@ -375,30 +377,56 @@
       }).join('');
     }
 
-    document.getElementById('courseSearch').addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase().trim();
-      const filtered = allCourses.filter(m => 
-        (m.titleAr && m.titleAr.toLowerCase().includes(q)) ||
-        (m.titleEn && m.titleEn.toLowerCase().includes(q)) ||
-        (m.specialty && m.specialty.toLowerCase().includes(q)) ||
-        (m.descriptionAr && m.descriptionAr.toLowerCase().includes(q))
-      );
+    let currentCourseFilterKey = 'all';
+
+    const specialtyTerms = {
+      'all': [],
+      'projects': ['المشاريع', 'PMP', 'CAPM', 'Project'],
+      'leadership': ['القيادة', 'Leadership'],
+      'hr': ['الموارد البشرية', 'SHRM', 'HR'],
+      'labor': ['نظام العمل السعودي', 'العمل'],
+      'customer': ['خدمة العملاء', 'CCXP', 'تجربة العملاء'],
+      'quality': ['الجودة', 'Six Sigma', 'Quality'],
+      'finance': ['المحاسبة', 'CMA', 'FMAA', 'المالي'],
+      'tech': ['Power BI', 'تحليل البيانات', 'Microsoft Office', 'MOS'],
+      'admin': ['التقارير الإدارية', 'مهارات البيع', 'إدارة الوقت', 'KPIs', 'الأداء الوظيفي']
+    };
+
+    function applyFilterAndSearch() {
+      const q = (document.getElementById('courseSearch')?.value || '').toLowerCase().trim();
+      const filtered = allCourses.filter(m => {
+        let matchesSpecialty = true;
+        if (currentCourseFilterKey !== 'all') {
+          const terms = specialtyTerms[currentCourseFilterKey] || [];
+          matchesSpecialty = terms.some(t => {
+            const term = t.toLowerCase();
+            return (m.specialty && m.specialty.toLowerCase().includes(term)) ||
+                   (m.titleAr && m.titleAr.toLowerCase().includes(term)) ||
+                   (m.titleEn && m.titleEn.toLowerCase().includes(term));
+          });
+        }
+
+        let matchesQuery = true;
+        if (q) {
+          matchesQuery = (m.titleAr && m.titleAr.toLowerCase().includes(q)) ||
+                         (m.titleEn && m.titleEn.toLowerCase().includes(q)) ||
+                         (m.specialty && m.specialty.toLowerCase().includes(q)) ||
+                         (m.descriptionAr && m.descriptionAr.toLowerCase().includes(q));
+        }
+
+        return matchesSpecialty && matchesQuery;
+      });
+
       renderCourses(filtered);
-    });
+    }
 
-    function filterBySpecialty(specialty, btn) {
+    document.getElementById('courseSearch').addEventListener('input', applyFilterAndSearch);
+
+    function filterBySpecialty(key, btn) {
+      currentCourseFilterKey = key;
       document.querySelectorAll('#specialtyFilterButtons .filter-tag').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      if (specialty === 'all') {
-        renderCourses(allCourses);
-      } else {
-        const filtered = allCourses.filter(m => 
-          (m.specialty && m.specialty.includes(specialty)) ||
-          (m.titleAr && m.titleAr.includes(specialty))
-        );
-        renderCourses(filtered);
-      }
+      if (btn) btn.classList.add('active');
+      applyFilterAndSearch();
     }
 
     document.addEventListener('DOMContentLoaded', loadCourses);

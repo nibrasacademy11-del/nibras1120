@@ -2503,4 +2503,138 @@ html[dir="ltr"], html[dir="rtl"] {
   color: #ffffff !important;
 }
 
+/* ==========================================================================
+   Program Specialty Tags & Search Controls (Executive Burgundy & White Theme)
+   ========================================================================== */
+.filter-tags-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: var(--text-main);
+  border: 1.5px solid rgba(90, 2, 14, 0.15);
+  padding: 9px 20px;
+  border-radius: 50px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  user-select: none;
+  outline: none;
+}
+
+.filter-tag i {
+  font-size: 0.85rem;
+  color: var(--gold);
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.filter-tag:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(90, 2, 14, 0.12);
+}
+
+.filter-tag:hover i {
+  color: var(--primary);
+  transform: scale(1.15);
+}
+
+.filter-tag.active {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%) !important;
+  color: #ffffff !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 6px 20px rgba(90, 2, 14, 0.32) !important;
+  transform: translateY(-1px);
+}
+
+.filter-tag.active i {
+  color: #fce798 !important;
+}
+
+.filter-tag .tag-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 10px;
+  background: rgba(90, 2, 14, 0.08);
+  color: var(--primary);
+}
+
+.filter-tag.active .tag-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* Elegant Search Input Styling */
+.search-box-wrapper {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.search-box-input {
+  width: 100%;
+  padding: 16px 50px 16px 20px;
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  font-size: 1.05rem;
+  font-family: inherit;
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: var(--text-main);
+  box-sizing: border-box;
+}
+
+[dir="ltr"] .search-box-input {
+  padding: 16px 20px 16px 50px;
+}
+
+.search-box-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(90, 2, 14, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.search-box-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 20px;
+  color: var(--text-muted);
+  font-size: 1.15rem;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+[dir="ltr"] .search-box-icon {
+  right: auto;
+  left: 20px;
+}
+
+.search-box-input:focus + .search-box-icon {
+  color: var(--primary);
+}
+
+
 

@@ -90,8 +90,53 @@
     </div>
   </section>
 
+  <!-- Section: محرك البحث واكتشاف التخصصات والبرامج -->
+  <section id="search-section" style="padding: 55px 0 45px; background: #ffffff; border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 25px;">
+        <div class="section-badge"><i class="fas fa-compass"></i> دليل البرامج والتخصصات</div>
+        <h2 class="section-title">ابحث في <span class="highlight">كافة التخصصات والبرامج</span></h2>
+        <p class="section-subtitle">استكشف البرامج المعتمدة في الأكاديمية (ماجستير، دكتوراه، دبلومات، دورات تدريبية) واختر مجالك المهني</p>
+      </div>
+
+      <!-- Search Box Input -->
+      <div class="search-box-wrapper">
+        <input type="text" id="catalogSearch" class="search-box-input" placeholder="ابحث باسم البرنامج أو التخصص (مثل: MBA، إدارة المشاريع، الأمن السيبراني)..." />
+        <i class="fas fa-search search-box-icon"></i>
+      </div>
+
+      <!-- Specialty Keyword Filter Tags with Icons -->
+      <div class="filter-tags-wrapper" id="catalogFilterButtons">
+        <button class="filter-tag active" onclick="filterCatalog('all', this)"><i class="fas fa-th-large"></i> الكل</button>
+        <button class="filter-tag" onclick="filterCatalog('business', this)"><i class="fas fa-briefcase"></i> إدارة الأعمال</button>
+        <button class="filter-tag" onclick="filterCatalog('projects', this)"><i class="fas fa-tasks"></i> إدارة المشاريع</button>
+        <button class="filter-tag" onclick="filterCatalog('hr', this)"><i class="fas fa-users-cog"></i> الموارد البشرية</button>
+        <button class="filter-tag" onclick="filterCatalog('finance', this)"><i class="fas fa-coins"></i> المالية والمحاسبة</button>
+        <button class="filter-tag" onclick="filterCatalog('marketing', this)"><i class="fas fa-bullhorn"></i> التسويق والمبيعات</button>
+        <button class="filter-tag" onclick="filterCatalog('cyber', this)"><i class="fas fa-shield-alt"></i> الأمن السيبراني</button>
+        <button class="filter-tag" onclick="filterCatalog('ai', this)"><i class="fas fa-robot"></i> الذكاء الاصطناعي</button>
+        <button class="filter-tag" onclick="filterCatalog('quality', this)"><i class="fas fa-award"></i> الجودة والتحسين</button>
+        <button class="filter-tag" onclick="filterCatalog('health', this)"><i class="fas fa-hospital-user"></i> الإدارة الصحية</button>
+        <button class="filter-tag" onclick="filterCatalog('safety', this)"><i class="fas fa-hard-hat"></i> السلامة المهنية</button>
+        <button class="filter-tag" onclick="filterCatalog('strategy', this)"><i class="fas fa-chess"></i> التخطيط الاستراتيجي</button>
+        <button class="filter-tag" onclick="filterCatalog('leadership', this)"><i class="fas fa-user-tie"></i> القيادة الإدارية</button>
+      </div>
+
+      <!-- Interactive Search Results Grid -->
+      <div id="catalogResultsArea" style="margin-top: 35px; display: none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; padding: 0 5px;">
+          <h3 style="font-size: 1.25rem; color: var(--primary); margin:0;">
+            <i class="fas fa-filter text-gold"></i> نتائج البحث والتخصصات (<span id="catalogCount">0</span>)
+          </h3>
+          <button onclick="resetCatalog()" class="btn-outline" style="font-size: 0.85rem; padding: 6px 14px;"><i class="fas fa-times"></i> مسح التصفية</button>
+        </div>
+        <div id="catalogGrid" class="programs-grid" style="grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 25px;"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- Section: المسارات التعليمية الأربعة -->
-  <section style="padding: 90px 0; background: var(--bg-main);">
+  <section id="pathways" style="padding: 90px 0; background: var(--bg-main);">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">اختر مسارك المهني</div>
@@ -397,6 +442,176 @@
   </button>
   <div class="toast" id="toast"></div>
 
-  <script src="../../assets/js/script.js" defer></script>
+  <script src="../../assets/js/script.js"></script>
+  <script>
+    let allCatalogCourses = [];
+    let currentCatalogKey = 'all';
+
+    const specialtyTerms = {
+      'all': [],
+      'business': ['إدارة الأعمال', 'الإدارة التنفيذية', 'الابتكار', 'حوكمة الشركات', 'Business'],
+      'projects': ['المشروعات', 'المشاريع', 'Project', 'PMP', 'CAPM'],
+      'hr': ['الموارد البشرية', 'HR', 'SHRM'],
+      'finance': ['المالية', 'المحاسبة', 'Finance', 'Accounting', 'CMA', 'FMAA'],
+      'marketing': ['التسويق', 'المبيعات', 'Marketing', 'Sales'],
+      'cyber': ['الأمن السيبراني', 'السيبراني', 'Cybersecurity'],
+      'ai': ['الذكاء الاصطناعي', 'AI'],
+      'quality': ['الجودة', 'Quality', 'Six Sigma'],
+      'health': ['الصحية', 'المستشفيات', 'Healthcare', 'Hospital'],
+      'safety': ['السلامة والصحة المهنية', 'السلامة', 'Safety'],
+      'strategy': ['التخطيط الاستراتيجي', 'الاستراتيجي', 'Strategic'],
+      'leadership': ['القيادة', 'Leadership']
+    };
+
+    async function ensureCoursesLoaded() {
+      if (allCatalogCourses.length > 0) return allCatalogCourses;
+      try {
+        const res = await fetch('/api/courses');
+        const data = await res.json();
+        allCatalogCourses = data.courses || [];
+      } catch (err) {
+        console.error('Error fetching catalog courses:', err);
+      }
+      return allCatalogCourses;
+    }
+
+    function getLevelLabel(type) {
+      switch(type) {
+        case 'master': case 'masters': return { label: 'ماجستير مهني', icon: 'fa-graduation-cap' };
+        case 'phd': case 'doctorate': return { label: 'دكتوراه مهنية', icon: 'fa-user-graduate' };
+        case 'diploma': case 'diplomas': return { label: 'دبلوم مهني', icon: 'fa-award' };
+        default: return { label: 'دورة تدريبية', icon: 'fa-book-reader' };
+      }
+    }
+
+    function renderCatalogGrid(list) {
+      const grid = document.getElementById('catalogGrid');
+      const countEl = document.getElementById('catalogCount');
+      if (countEl) countEl.textContent = list.length;
+
+      if (!list || list.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px; font-size: 1.1rem;"><i class="fas fa-search" style="font-size:2rem; color:var(--gold); display:block; margin-bottom:12px;"></i> لا توجد برامج مطابقة لمعايير البحث في هذا التخصص حالياً.</p>';
+        return;
+      }
+
+      grid.innerHTML = list.map(item => {
+        const title = item.titleAr || item.title || 'برنامج مهني معتمد';
+        const desc = item.descriptionAr || item.description || 'برنامج مهني متكامل ومصمم لتطوير الكفاءات وسوق العمل.';
+        const price = item.price || 0;
+        const slug = item.slug || item._id;
+        const specialty = item.specialty || 'تخصص مهني';
+        const levelInfo = getLevelLabel(item.type);
+        const isComingSoon = item.status === 'coming_soon';
+
+        let actionBtn = '';
+        if (isComingSoon) {
+          actionBtn = `<a href="program-detail.html?slug=${slug}" class="btn-outline" style="width:100%; text-align:center; border-color:var(--gold); color:var(--primary); font-weight:700;"><i class="fas fa-bell"></i> سجل اهتمامك بالبرنامج</a>`;
+        } else {
+          actionBtn = `<button class="btn-primary" style="width:100%;" onclick="addToCart('${item._id}', '${title.replace(/'/g, "\\'")}', ${price})"><i class="fas fa-cart-plus"></i> إضافة إلى السلة</button>`;
+        }
+
+        return `
+          <div class="program-card" style="display:flex; flex-direction:column; justify-content:space-between; height:100%;">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:8px;">
+                <span class="badge" style="background:#fdf2f4; color:var(--primary); font-size:0.8rem; padding:4px 10px; border-radius:12px; font-weight:600;">
+                  <i class="fas fa-tag" style="color:var(--gold);"></i> ${specialty}
+                </span>
+                <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">
+                  <i class="fas ${levelInfo.icon} text-gold"></i> ${levelInfo.label}
+                </span>
+              </div>
+              <h3 style="font-size:1.12rem; color:var(--primary); margin-bottom:10px; line-height:1.45;">${title}</h3>
+              <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:15px;">
+                ${desc}
+              </p>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin:15px 0 12px; border-top:1px solid var(--border); padding-top:12px;">
+                <span style="color:var(--text-muted); font-size:0.85rem;">رسوم البرنامج:</span>
+                <strong style="color:var(--primary); font-size:1.25rem;">${price}.00 US$</strong>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <a href="program-detail.html?slug=${slug}" class="btn-outline" style="width:100%; text-align:center;"><i class="fas fa-info-circle"></i> التفاصيل الكاملة والمحاور</a>
+                ${actionBtn}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function applyCatalogFilter() {
+      const searchInput = document.getElementById('catalogSearch');
+      const q = (searchInput ? searchInput.value : '').toLowerCase().trim();
+      const resultsArea = document.getElementById('catalogResultsArea');
+
+      // If key is 'all' and no search query, hide results area to show normal pathways
+      if (currentCatalogKey === 'all' && !q) {
+        resultsArea.style.display = 'none';
+        return;
+      }
+
+      resultsArea.style.display = 'block';
+      const courses = await ensureCoursesLoaded();
+
+      const filtered = courses.filter(c => {
+        // Specialty match
+        let matchesSpecialty = true;
+        if (currentCatalogKey !== 'all') {
+          const terms = specialtyTerms[currentCatalogKey] || [];
+          matchesSpecialty = terms.some(term => {
+            const t = term.toLowerCase();
+            return (c.specialty && c.specialty.toLowerCase().includes(t)) ||
+                   (c.titleAr && c.titleAr.toLowerCase().includes(t)) ||
+                   (c.titleEn && c.titleEn.toLowerCase().includes(t));
+          });
+        }
+
+        // Query match
+        let matchesQuery = true;
+        if (q) {
+          matchesQuery = (c.titleAr && c.titleAr.toLowerCase().includes(q)) ||
+                         (c.titleEn && c.titleEn.toLowerCase().includes(q)) ||
+                         (c.specialty && c.specialty.toLowerCase().includes(q)) ||
+                         (c.descriptionAr && c.descriptionAr.toLowerCase().includes(q));
+        }
+
+        return matchesSpecialty && matchesQuery;
+      });
+
+      renderCatalogGrid(filtered);
+    }
+
+    async function filterCatalog(key, btn) {
+      currentCatalogKey = key;
+      document.querySelectorAll('#catalogFilterButtons .filter-tag').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      await applyCatalogFilter();
+
+      if (key !== 'all') {
+        const resultsArea = document.getElementById('catalogResultsArea');
+        resultsArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function resetCatalog() {
+      currentCatalogKey = 'all';
+      const searchInput = document.getElementById('catalogSearch');
+      if (searchInput) searchInput.value = '';
+      document.querySelectorAll('#catalogFilterButtons .filter-tag').forEach(b => b.classList.remove('active'));
+      const allBtn = document.querySelector('#catalogFilterButtons .filter-tag');
+      if (allBtn) allBtn.classList.add('active');
+      document.getElementById('catalogResultsArea').style.display = 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('catalogSearch');
+      if (searchInput) {
+        searchInput.addEventListener('input', applyCatalogFilter);
+      }
+      ensureCoursesLoaded();
+    });
+  </script>
 </body>
 </html>

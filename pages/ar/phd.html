@@ -123,22 +123,29 @@
       </div>
 
       <!-- Search & Specialty Filter Controls -->
-      <div style="max-width: 950px; margin: 0 auto 35px; display: flex; flex-direction: column; gap: 15px;">
-        <div style="position: relative;">
-          <input type="text" id="phdSearch" placeholder="ابحث عن برنامج دكتوراه أو تخصص..." style="width: 100%; padding: 14px 45px 14px 18px; border: 1px solid var(--border); border-radius: 12px; font-size: 1rem; font-family: inherit; background:#fff;" />
-          <i class="fas fa-search" style="position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+      <div style="max-width: 950px; margin: 0 auto 35px;">
+        <div class="search-box-wrapper">
+          <input type="text" id="phdSearch" class="search-box-input" placeholder="ابحث عن برنامج دكتوراه أو تخصص (مثال: الدكتوراه المهنية في إدارة الأعمال، إدارة المشاريع)..." />
+          <i class="fas fa-search search-box-icon"></i>
         </div>
 
-        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;" id="specialtyFilterButtons">
-          <button class="filter-tag active" onclick="filterBySpecialty('all', this)">الكل</button>
-          <button class="filter-tag" onclick="filterBySpecialty('إدارة الأعمال', this)">إدارة الأعمال</button>
-          <button class="filter-tag" onclick="filterBySpecialty('الموارد البشرية', this)">الموارد البشرية</button>
-          <button class="filter-tag" onclick="filterBySpecialty('إدارة المشاريع', this)">إدارة المشاريع</button>
-          <button class="filter-tag" onclick="filterBySpecialty('التخطيط الاستراتيجي', this)">التخطيط الاستراتيجي</button>
-          <button class="filter-tag" onclick="filterBySpecialty('القيادة', this)">القيادة الإدارية</button>
-          <button class="filter-tag" onclick="filterBySpecialty('الجودة', this)">الجودة</button>
-          <button class="filter-tag" onclick="filterBySpecialty('الأمن السيبراني', this)">الأمن السيبراني</button>
-          <button class="filter-tag" onclick="filterBySpecialty('الذكاء الاصطناعي', this)">الذكاء الاصطناعي</button>
+        <div class="filter-tags-wrapper" id="specialtyFilterButtons">
+          <button class="filter-tag active" onclick="filterBySpecialty('all', this)"><i class="fas fa-th-large"></i> الكل</button>
+          <button class="filter-tag" onclick="filterBySpecialty('business', this)"><i class="fas fa-briefcase"></i> إدارة الأعمال والقيادة</button>
+          <button class="filter-tag" onclick="filterBySpecialty('projects', this)"><i class="fas fa-tasks"></i> إدارة المشاريع</button>
+          <button class="filter-tag" onclick="filterBySpecialty('hr', this)"><i class="fas fa-users-cog"></i> الموارد البشرية</button>
+          <button class="filter-tag" onclick="filterBySpecialty('finance', this)"><i class="fas fa-coins"></i> المالية والمحاسبة</button>
+          <button class="filter-tag" onclick="filterBySpecialty('marketing', this)"><i class="fas fa-bullhorn"></i> التسويق والمبيعات</button>
+          <button class="filter-tag" onclick="filterBySpecialty('cyber', this)"><i class="fas fa-shield-alt"></i> الأمن السيبراني</button>
+          <button class="filter-tag" onclick="filterBySpecialty('ai', this)"><i class="fas fa-robot"></i> الذكاء الاصطناعي</button>
+          <button class="filter-tag" onclick="filterBySpecialty('quality', this)"><i class="fas fa-award"></i> الجودة والتحسين</button>
+          <button class="filter-tag" onclick="filterBySpecialty('health', this)"><i class="fas fa-hospital-user"></i> الإدارة الصحية والمستشفيات</button>
+          <button class="filter-tag" onclick="filterBySpecialty('safety', this)"><i class="fas fa-hard-hat"></i> السلامة والصحة المهنية</button>
+          <button class="filter-tag" onclick="filterBySpecialty('strategy', this)"><i class="fas fa-chess"></i> التخطيط الاستراتيجي</button>
+          <button class="filter-tag" onclick="filterBySpecialty('risk', this)"><i class="fas fa-shield-virus"></i> إدارة المخاطر</button>
+          <button class="filter-tag" onclick="filterBySpecialty('tech', this)"><i class="fas fa-laptop-code"></i> التحول الرقمي والبيانات</button>
+          <button class="filter-tag" onclick="filterBySpecialty('supply', this)"><i class="fas fa-truck-loading"></i> سلاسل الإمداد</button>
+          <button class="filter-tag" onclick="filterBySpecialty('pr', this)"><i class="fas fa-broadcast-tower"></i> العلاقات العامة</button>
         </div>
       </div>
 
@@ -375,27 +382,63 @@
       }).join('');
     }
 
-    document.getElementById('phdSearch').addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase().trim();
-      const filtered = allPhd.filter(m => 
-        (m.titleAr && m.titleAr.toLowerCase().includes(q)) ||
-        (m.titleEn && m.titleEn.toLowerCase().includes(q)) ||
-        (m.specialty && m.specialty.toLowerCase().includes(q)) ||
-        (m.descriptionAr && m.descriptionAr.toLowerCase().includes(q))
-      );
+    let currentPhdFilterKey = 'all';
+
+    const specialtyTerms = {
+      'all': [],
+      'business': ['إدارة الأعمال', 'الإدارة التنفيذية', 'الابتكار', 'حوكمة الشركات', 'Business'],
+      'projects': ['المشروعات', 'المشاريع', 'Project', 'PMP', 'CAPM'],
+      'hr': ['الموارد البشرية', 'HR', 'SHRM'],
+      'finance': ['المالية', 'المحاسبة', 'Finance', 'Accounting', 'CMA'],
+      'marketing': ['التسويق', 'المبيعات', 'Marketing', 'Sales'],
+      'cyber': ['الأمن السيبراني', 'السيبراني', 'Cybersecurity'],
+      'ai': ['الذكاء الاصطناعي', 'AI'],
+      'quality': ['الجودة', 'Quality'],
+      'health': ['الصحية', 'المستشفيات', 'Healthcare', 'Hospital'],
+      'safety': ['السلامة والصحة المهنية', 'السلامة', 'Safety'],
+      'tech': ['التحول الرقمي', 'تحليل البيانات', 'Data', 'Digital'],
+      'strategy': ['التخطيط الاستراتيجي', 'الاستراتيجي', 'Strategic'],
+      'leadership': ['القيادة', 'Leadership'],
+      'risk': ['المخاطر', 'Risk'],
+      'supply': ['سلاسل الإمداد', 'Supply'],
+      'pr': ['العلاقات العامة', 'الإعلام', 'PR']
+    };
+
+    function applyFilterAndSearch() {
+      const q = (document.getElementById('phdSearch')?.value || '').toLowerCase().trim();
+      const filtered = allPhd.filter(m => {
+        let matchesSpecialty = true;
+        if (currentPhdFilterKey !== 'all') {
+          const terms = specialtyTerms[currentPhdFilterKey] || [];
+          matchesSpecialty = terms.some(t => {
+            const term = t.toLowerCase();
+            return (m.specialty && m.specialty.toLowerCase().includes(term)) ||
+                   (m.titleAr && m.titleAr.toLowerCase().includes(term)) ||
+                   (m.titleEn && m.titleEn.toLowerCase().includes(term));
+          });
+        }
+
+        let matchesQuery = true;
+        if (q) {
+          matchesQuery = (m.titleAr && m.titleAr.toLowerCase().includes(q)) ||
+                         (m.titleEn && m.titleEn.toLowerCase().includes(q)) ||
+                         (m.specialty && m.specialty.toLowerCase().includes(q)) ||
+                         (m.descriptionAr && m.descriptionAr.toLowerCase().includes(q));
+        }
+
+        return matchesSpecialty && matchesQuery;
+      });
+
       renderPhd(filtered);
-    });
+    }
 
-    function filterBySpecialty(specialty, btn) {
+    document.getElementById('phdSearch').addEventListener('input', applyFilterAndSearch);
+
+    function filterBySpecialty(key, btn) {
+      currentPhdFilterKey = key;
       document.querySelectorAll('#specialtyFilterButtons .filter-tag').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      if (specialty === 'all') {
-        renderPhd(allPhd);
-      } else {
-        const filtered = allPhd.filter(m => m.specialty && m.specialty.includes(specialty));
-        renderPhd(filtered);
-      }
+      if (btn) btn.classList.add('active');
+      applyFilterAndSearch();
     }
 
     document.addEventListener('DOMContentLoaded', loadPhd);
