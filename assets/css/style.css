@@ -2956,5 +2956,122 @@ html[dir="ltr"], html[dir="rtl"] {
   color: var(--primary);
 }
 
+/* =======================================================
+   Vision & Mission Grid (عن نبراس - رؤيتنا ورسالتنا)
+   ======================================================= */
+.vision-mission-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  align-items: stretch;
+}
+
+.vision-mission-card {
+  background: #ffffff;
+  border-radius: var(--radius, 16px);
+  padding: 40px;
+  box-shadow: var(--shadow, 0 10px 30px rgba(0, 0, 0, 0.05));
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vision-mission-card.vision-card {
+  border-top: 5px solid var(--primary, #5a020e);
+}
+
+.vision-mission-card.mission-card {
+  border-top: 5px solid var(--gold, #d4af37);
+}
+
+.vision-mission-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(90, 2, 14, 0.09);
+}
+
+.vm-icon-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.vm-icon-box.vision-icon {
+  background: #fef1f2;
+  color: var(--primary, #5a020e);
+}
+
+.vm-icon-box.mission-icon {
+  background: #fffcf0;
+  color: var(--gold, #d4af37);
+}
+
+.vision-mission-card h3 {
+  font-size: 1.6rem;
+  color: var(--primary, #5a020e);
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.vm-lead {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-main, #1e293b);
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.vm-desc {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--text-muted, #64748b);
+  margin: 0;
+}
+
+/* Tablet & Mobile Screens: Stack vertically (فوق بعض مش قصاد بعض) */
+@media (max-width: 991px) {
+  .vision-mission-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  
+  .vision-mission-card {
+    padding: 30px 22px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .vision-mission-grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .vision-mission-card {
+    padding: 24px 18px !important;
+    border-radius: 14px !important;
+  }
+
+  .vision-mission-card h3 {
+    font-size: 1.35rem !important;
+    margin-bottom: 10px !important;
+  }
+
+  .vm-lead {
+    font-size: 1rem !important;
+    line-height: 1.65 !important;
+    margin-bottom: 10px !important;
+  }
+
+  .vm-desc {
+    font-size: 0.95rem !important;
+    line-height: 1.65 !important;
+  }
+}
+
+
 
 
