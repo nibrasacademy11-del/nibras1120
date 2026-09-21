@@ -37,13 +37,13 @@
   </div>
 
   <!-- Navbar -->
-  <nav id="navbar" class="navbar scrolled">
+  <nav id="navbar" class="navbar">
     <div class="nav-container">
       <a href="../../en/index.html" class="nav-logo">
         <img src="../../assets/img/logo.png" alt="Nibras Academy" />
       </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="../ar/verify.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> العربية</a></li>
+        <li><a href="../ar/verify.html" class="lang-switch-btn"><i class="fas fa-globe"></i> العربية</a></li>
         <li><a href="../../en/index.html" class="nav-link">Home</a></li>
         <li><a href="about.html" class="nav-link">About Us</a></li>
         <li><a href="programs.html" class="nav-link">Programs & Services</a></li>
@@ -51,7 +51,7 @@
         <li><a href="contact.html" class="nav-link">Contact Us</a></li>
         <li><a href="verify.html" class="nav-link active">Certificate Verification</a></li>
         <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li><a href="login.html" class="nav-btn">Sign In</a></li>
+        <li id="navAuth"><a href="login.html" class="nav-btn">Sign In</a></li>
       </ul>
       <button class="hamburger" id="hamburger" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -62,7 +62,7 @@
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
     <ul>
-      <li><a href="../ar/verify.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> العربية</a></li>
+      <li><a href="../ar/verify.html" class="lang-switch-btn"><i class="fas fa-globe"></i> العربية</a></li>
       <li><a href="../../en/index.html">Home</a></li>
       <li><a href="about.html">About Us</a></li>
       <li><a href="programs.html">Programs & Services</a></li>
@@ -70,7 +70,7 @@
       <li><a href="contact.html">Contact Us</a></li>
       <li><a href="verify.html">Certificate Verification</a></li>
       <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-      <li><a href="login.html" class="mobile-btn">Sign In</a></li>
+      <li id="mobileNavAuth"><a href="login.html" class="mobile-btn">Sign In</a></li>
     </ul>
   </div>
 

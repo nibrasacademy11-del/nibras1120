@@ -40,12 +40,13 @@
   </div>
 
   <!-- Navbar -->
-  <nav id="navbar" class="navbar scrolled">
+  <nav id="navbar" class="navbar">
     <div class="nav-container">
       <a href="../../en/index.html" class="nav-logo">
         <img src="../../assets/img/logo.png" alt="Nibras Academy" />
       </a>
       <ul class="nav-links" id="navLinks">
+        <li><a href="../ar/program-detail.html" id="langSwitchBtn" class="lang-switch-btn"><i class="fas fa-globe"></i> العربية</a></li>
         <li><a href="../../en/index.html" class="nav-link">Home</a></li>
         <li><a href="about.html" class="nav-link">About Us</a></li>
         <li><a href="programs.html" class="nav-link">Programs & Services</a></li>
@@ -60,6 +61,21 @@
       </button>
     </div>
   </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../ar/program-detail.html" id="mobileLangSwitchBtn" class="lang-switch-btn"><i class="fas fa-globe"></i> العربية</a></li>
+      <li><a href="../../en/index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="programs.html">Programs & Services</a></li>
+      <li><a href="articles.html">Articles & Media</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="verify.html">Verify Certificate</a></li>
+      <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+      <li id="mobileNavAuth"><a href="login.html" class="mobile-btn">Login</a></li>
+    </ul>
+  </div>
 
   <!-- Detail Header -->
   <section class="program-detail-header" id="progHeader">
@@ -196,6 +212,13 @@
       const urlParams = new URLSearchParams(window.location.search);
       const id = urlParams.get('id') || urlParams.get('slug');
 
+      if (id) {
+        const lBtn = document.getElementById('langSwitchBtn');
+        if (lBtn) lBtn.href = `../ar/program-detail.html?slug=${encodeURIComponent(id)}`;
+        const mlBtn = document.getElementById('mobileLangSwitchBtn');
+        if (mlBtn) mlBtn.href = `../ar/program-detail.html?slug=${encodeURIComponent(id)}`;
+      }
+
       if (!id) {
         document.getElementById('progTitle').textContent = 'Please specify a program';
         return;
@@ -205,6 +228,12 @@
         const data = await apiFetch(`/api/courses/${encodeURIComponent(id)}`);
         const p = data.course;
         if (!p) throw new Error('Program not found');
+
+        const activeSlug = p.slug || id;
+        const lBtn = document.getElementById('langSwitchBtn');
+        if (lBtn) lBtn.href = `../ar/program-detail.html?slug=${encodeURIComponent(activeSlug)}`;
+        const mlBtn = document.getElementById('mobileLangSwitchBtn');
+        if (mlBtn) mlBtn.href = `../ar/program-detail.html?slug=${encodeURIComponent(activeSlug)}`;
 
         const title = p.titleEn || p.titleAr || p.title;
         document.title = `${title} | Nibras Academy`;

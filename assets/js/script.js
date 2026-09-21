@@ -43,8 +43,6 @@ function initLayout() {
     }
 
     window.onscroll = () => {
-        const header = document.getElementById('navbar');
-        if (header) header.classList.toggle('scrolled', window.scrollY > 50);
         const scrollTopBtn = document.getElementById('scrollTop');
         if (scrollTopBtn) scrollTopBtn.classList.toggle('show', window.scrollY > 400);
     };
@@ -1167,27 +1165,27 @@ function updateNavAuth(isEN) {
     const firstName = userName.split(' ')[0];
     const profileUrl = isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html';
     
-    // Try by ID first
+    // 1. Desktop Nav Auth
     let navAuth = document.getElementById('navAuth');
-    let mobileNavAuth = document.getElementById('mobileNavAuth');
-    
-    // Fallback: search for links containing "login.html"
     if (!navAuth) {
         const loginLinks = Array.from(document.querySelectorAll('.nav-links a[href*="login.html"]'));
-        const desktopLogin = loginLinks.find(l => !l.classList.contains('mobile-btn'));
+        const desktopLogin = loginLinks.find(l => !l.classList.contains('mobile-btn') && !l.classList.contains('lang-switch-btn'));
         if (desktopLogin) navAuth = desktopLogin.parentElement;
     }
+    
+    // 2. Mobile Nav Auth
+    let mobileNavAuth = document.getElementById('mobileNavAuth');
     if (!mobileNavAuth) {
         const mobileLoginLinks = Array.from(document.querySelectorAll('.mobile-menu a[href*="login.html"], .mobile-menu .mobile-btn'));
-        if (mobileLoginLinks.length > 0) {
-            mobileNavAuth = mobileLoginLinks[0].parentElement;
-        }
+        const mobileLogin = mobileLoginLinks.find(l => !l.classList.contains('lang-switch-btn') && !l.href.includes('program-detail'));
+        if (mobileLogin) mobileNavAuth = mobileLogin.parentElement;
     }
 
-    if (navAuth) {
+    // Safeguard: NEVER overwrite a language switcher button!
+    if (navAuth && !navAuth.querySelector('.lang-switch-btn') && !navAuth.classList.contains('lang-switch-btn')) {
         navAuth.innerHTML = `<a href="${profileUrl}" class="nav-btn"><i class="fas fa-user-circle"></i> ${firstName}</a>`;
     }
-    if (mobileNavAuth) {
+    if (mobileNavAuth && !mobileNavAuth.querySelector('.lang-switch-btn') && !mobileNavAuth.classList.contains('lang-switch-btn')) {
         mobileNavAuth.innerHTML = `<a href="${profileUrl}" class="mobile-btn"><i class="fas fa-user-circle"></i> ${firstName}</a>`;
     }
 }

@@ -37,13 +37,13 @@
   </div>
 
   <!-- Navbar -->
-  <nav id="navbar" class="navbar scrolled">
+  <nav id="navbar" class="navbar">
     <div class="nav-container">
       <a href="../../index.html" class="nav-logo">
         <img src="../../assets/img/logo.png" alt="أكاديمية نبراس للتدريب والتأهيل المهني" />
       </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="../en/masters.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> English</a></li>
+        <li><a href="../en/masters.html" class="lang-switch-btn"><i class="fas fa-globe"></i> English</a></li>
         <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
         <li><a href="about.html" class="nav-link">من نحن</a></li>
         <li><a href="programs.html" class="nav-link active">البرامج والخدمات</a></li>
@@ -51,7 +51,7 @@
         <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
         <li><a href="verify.html" class="nav-link">التحقق من الشهادات</a></li>
         <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
+        <li id="navAuth"><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
       </ul>
       <button class="hamburger" id="hamburger" aria-label="القائمة">
         <span></span><span></span><span></span>
@@ -62,7 +62,7 @@
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
     <ul>
-      <li><a href="../en/masters.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> English</a></li>
+      <li><a href="../en/masters.html" class="lang-switch-btn"><i class="fas fa-globe"></i> English</a></li>
       <li><a href="../../index.html">الرئيسية</a></li>
       <li><a href="about.html">من نحن</a></li>
       <li><a href="programs.html">البرامج والخدمات</a></li>
@@ -70,7 +70,7 @@
       <li><a href="contact.html">تواصل معنا</a></li>
       <li><a href="verify.html">التحقق من الشهادات</a></li>
       <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
-      <li><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
+      <li id="mobileNavAuth"><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
     </ul>
   </div>
 
