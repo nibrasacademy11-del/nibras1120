@@ -49,6 +49,7 @@ exports.register = async (req, res) => {
         setAuthCookie(res, signToken(payload));
         res.status(201).json({ message: 'Account created successfully.', user: payload });
     } catch (error) {
+        console.error('Registration error:', error);
         res.status(500).json({ message: 'Server error during registration.' });
     }
 };
@@ -71,6 +72,7 @@ exports.login = async (req, res) => {
         setAuthCookie(res, signToken(payload));
         res.json({ message: 'Login successful.', user: payload });
     } catch (error) {
+        console.error('Login error:', error);
         res.status(500).json({ message: 'Server error during login.' });
     }
 };
@@ -86,6 +88,7 @@ exports.getMe = async (req, res) => {
         if (!user) return res.status(401).json({ message: 'Unauthorized.' });
         res.json({ user });
     } catch (error) {
+        console.error('GetMe error:', error);
         res.status(500).json({ message: 'Server error.' });
     }
 };

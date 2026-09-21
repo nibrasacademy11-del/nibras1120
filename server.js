@@ -49,6 +49,33 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/en', express.static(path.join(__dirname, 'en')));
 app.use(express.static(__dirname));
 
+// Ensure Database is connected for all API requests
+app.use('/api', async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        console.error('API Database Connection Error:', err.message);
+        return res.status(503).json({
+            message: 'Database connection failed. Please try again shortly.',
+            error: process.env.NODE_ENV === 'production' ? undefined : err.message
+        });
+    }
+});
+
+// Health check endpoint for diagnostics and monitoring
+app.get('/api/health', (req, res) => {
+    const readyState = mongoose.connection.readyState;
+    const states = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
+    res.json({
+        status: readyState === 1 ? 'ok' : 'degraded',
+        database: states[readyState] || 'unknown',
+        readyState,
+        env: process.env.NODE_ENV || 'development',
+        vercel: !!process.env.VERCEL
+    });
+});
+
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api', require('./routes/certificateRoutes'));
@@ -80,8 +107,9 @@ const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 async function ensureAdmin() {
     try {
-        // Check if mongoose is actually connected before querying
-        if (!process.env.MONGO_URI || mongoose.connection.readyState !== 1) return;
+        if (mongoose.connection.readyState !== 1) {
+            await connectDB();
+        }
         const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'info@nibras-ac.com').toLowerCase();
         const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Aa01515416972';
         
@@ -102,7 +130,8 @@ async function ensureAdmin() {
     }
 }
 // Ensure admin is created once database connection is established
-mongoose.connection.once('open', () => {
+connectDB().then(() => ensureAdmin()).catch(() => {});
+mongoose.connection.on('open', () => {
     ensureAdmin();
 });
 

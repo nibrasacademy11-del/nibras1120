@@ -201,6 +201,19 @@ async function apiFetch(url, options = {}) {
     return payload;
 }
 
+function formatAuthError(msg, isEN) {
+    if (isEN) return msg || 'An unexpected error occurred.';
+    if (!msg) return 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.';
+    if (msg.includes('Invalid email or password')) return 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+    if (msg.includes('Server error during login')) return 'حدث خطأ في الخادم أثناء تسجيل الدخول. يرجى المحاولة لاحقاً.';
+    if (msg.includes('Server error during registration')) return 'حدث خطأ في الخادم أثناء إنشاء الحساب. يرجى المحاولة لاحقاً.';
+    if (msg.includes('Database connection')) return 'تعذر الاتصال بقاعدة البيانات حالياً، يرجى المحاولة بعد قليل.';
+    if (msg.includes('This email is already registered')) return 'هذا البريد الإلكتروني مسجل بالفعل.';
+    if (msg.includes('Email and password are required')) return 'البريد الإلكتروني وكلمة المرور مطلوبان.';
+    if (msg.includes('Name, email and password are required')) return 'الاسم، البريد الإلكتروني وكلمة المرور مطلوبة.';
+    return msg;
+}
+
 function initPublicAuth(isEN, isAdminPagePath) {
     if (isAdminPagePath) return;
     const registerForm = document.getElementById('registerForm');
@@ -233,7 +246,7 @@ function initPublicAuth(isEN, isAdminPagePath) {
                     window.location.href = homeUrl;
                 }, 600);
             } catch (error) {
-                showToast(error.message, true);
+                showToast(formatAuthError(error.message, isEN), true);
             }
         });
     }
@@ -271,7 +284,7 @@ function initPublicAuth(isEN, isAdminPagePath) {
                     }
                 }, 500);
             } catch (error) {
-                showToast(error.message, true);
+                showToast(formatAuthError(error.message, isEN), true);
             }
         });
     }
@@ -482,7 +495,7 @@ async function initAdminPanel(isEN) {
                 }
                 window.location.reload();
             } catch (error) {
-                showToast(error.message, true);
+                showToast(formatAuthError(error.message, isEN), true);
             }
         });
     }
