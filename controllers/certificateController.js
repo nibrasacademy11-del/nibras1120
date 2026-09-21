@@ -24,7 +24,7 @@ exports.getAllCertificates = async (req, res) => {
 
 exports.addCertificate = async (req, res) => {
     try {
-        const { certNum, traineeName, programName, field, issueDate, userId } = req.body;
+        const { certNum, traineeName, programName, programType, field, issueDate, status, userId } = req.body;
         if (!certNum || !traineeName || !programName || !issueDate) {
             return res.status(400).json({ message: 'Please complete required fields.' });
         }
@@ -35,8 +35,10 @@ exports.addCertificate = async (req, res) => {
             cert_num: certNum.trim(),
             trainee_name: traineeName.trim(),
             program_name: programName.trim(),
+            program_type: (programType || 'برنامج مهني').trim(),
             field: (field || '').trim(),
             issue_date: issueDate,
+            status: status || 'Valid',
             userId: userId || null
         };
 
@@ -44,14 +46,12 @@ exports.addCertificate = async (req, res) => {
         if (req.file && req.file.buffer) {
             certData.pdf_data = req.file.buffer;
             certData.pdf_mimetype = req.file.mimetype || 'application/pdf';
-            // pdf_url points to the download API endpoint (will use cert ID)
-            certData.pdf_url = 'pending'; // will be updated after save
+            certData.pdf_url = 'pending';
         }
 
         const cert = new Certificate(certData);
         await cert.save();
 
-        // Update pdf_url with the actual cert ID
         if (req.file && req.file.buffer) {
             cert.pdf_url = `/api/certificates/download/${cert._id}`;
             await cert.save();
@@ -62,7 +62,6 @@ exports.addCertificate = async (req, res) => {
             const User = require('../models/User');
             const user = await User.findById(userId);
             if (user) {
-                // Add course if not already there
                 if (!user.enrolledCourses.includes(programName.trim())) {
                     user.enrolledCourses.push(programName.trim());
                     await user.save();
@@ -70,10 +69,33 @@ exports.addCertificate = async (req, res) => {
             }
         }
 
-        res.status(201).json({ id: cert._id, message: 'Certificate added and linked to profile successfully.' });
+        res.status(201).json({ id: cert._id, message: 'Certificate added successfully.' });
     } catch (error) {
         console.error('Error adding certificate:', error);
         res.status(500).json({ message: 'Server error while saving certificate.' });
+    }
+};
+
+exports.updateCertificate = async (req, res) => {
+    try {
+        const updateData = { ...req.body };
+        if (updateData.certNum) updateData.cert_num = updateData.certNum.trim();
+        if (updateData.traineeName) updateData.trainee_name = updateData.traineeName.trim();
+        if (updateData.programName) updateData.program_name = updateData.programName.trim();
+        if (updateData.programType) updateData.program_type = updateData.programType.trim();
+        if (updateData.issueDate) updateData.issue_date = updateData.issueDate;
+
+        if (req.file && req.file.buffer) {
+            updateData.pdf_data = req.file.buffer;
+            updateData.pdf_mimetype = req.file.mimetype || 'application/pdf';
+            updateData.pdf_url = `/api/certificates/download/${req.params.id}`;
+        }
+
+        const cert = await Certificate.findByIdAndUpdate(req.params.id, updateData, { new: true });
+        if (!cert) return res.status(404).json({ message: 'Certificate not found.' });
+        res.json({ message: 'Certificate updated successfully.', certificate: cert });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating certificate.' });
     }
 };
 

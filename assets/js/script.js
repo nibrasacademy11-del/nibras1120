@@ -263,71 +263,97 @@ function initVerifyForm(isEN) {
         resultDiv.classList.remove('hidden');
         resultDiv.className = 'verify-result';
         resultDiv.innerHTML = `
-            <div class="verify-loading">
-                <i class="fas fa-spinner fa-spin" style="font-size:1.5rem; color:var(--primary);"></i>
-                <p>${isEN ? 'Checking certificate...' : 'جاري التحقق من الشهادة...'}</p>
+            <div class="verify-loading" style="text-align:center; padding:25px;">
+                <i class="fas fa-spinner fa-spin" style="font-size:1.8rem; color:var(--primary);"></i>
+                <p style="margin-top:10px; color:var(--text-muted);">${isEN ? 'Searching official records...' : 'جاري التحقق من سجلات الشهادات...'}</p>
             </div>
         `;
         try {
             const data = await apiFetch(`/api/certificates/${encodeURIComponent(code)}`);
             const cert = data.certificate;
             resultDiv.className = 'verify-result verify-success';
+            
+            // Format status badge
+            const statusKey = (cert.status || 'Valid').toLowerCase();
+            let statusLabel = isEN ? 'Valid' : 'معتمدة وصالحة';
+            let statusBadgeClass = 'valid';
+            if (statusKey === 'suspended') { statusLabel = isEN ? 'Suspended' : 'معلقة'; statusBadgeClass = 'suspended'; }
+            if (statusKey === 'cancelled') { statusLabel = isEN ? 'Cancelled' : 'ملغاة'; statusBadgeClass = 'cancelled'; }
+            if (statusKey === 'expired') { statusLabel = isEN ? 'Expired' : 'منتهية الصلاحية'; statusBadgeClass = 'expired'; }
+
             resultDiv.innerHTML = `
-                <div class="verify-result-header">
-                    <div class="verify-check-icon">
+                <div class="verify-result-header" style="text-align:center; margin-bottom:20px;">
+                    <div class="verify-check-icon" style="font-size:2.5rem; color:#12b76a; margin-bottom:10px;">
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <h3>${isEN ? 'Verified Certificate' : 'شهادة موثّقة'}</h3>
-                    <p>${isEN ? 'This certificate is authentic and registered in our system.' : 'هذه الشهادة صحيحة ومسجلة في نظام أكاديمية نبراس.'}</p>
+                    <h3 style="font-size:1.4rem; color:var(--primary); margin-bottom:5px;">${isEN ? 'Verified Certificate' : 'شهادة موثّقة ومعتمدة'}</h3>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">${isEN ? 'This certificate is authentic and registered in the records of Nibras Academy.' : 'هذه الشهادة صحيحة ومسجلة رسمياً في سجلات أكاديمية نبراس.'}</p>
                 </div>
-                <div class="verify-data-grid">
+                
+                <div class="verify-data-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:15px; background:var(--bg-surface); padding:20px; border-radius:12px; border:1px solid var(--border); margin-bottom:20px;">
                     <div class="verify-data-item">
-                        <span class="verify-data-label"><i class="fas fa-user"></i> ${isEN ? 'Trainee Name' : 'اسم المتدرب'}</span>
-                        <span class="verify-data-value">${cert.trainee_name}</span>
+                        <span class="verify-data-label" style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:3px;"><i class="fas fa-user"></i> ${isEN ? 'Holder Name' : 'اسم حامل الشهادة'}</span>
+                        <strong class="verify-data-value" style="font-size:1.05rem; color:var(--primary);">${cert.trainee_name}</strong>
                     </div>
                     <div class="verify-data-item">
-                        <span class="verify-data-label"><i class="fas fa-graduation-cap"></i> ${isEN ? 'Program' : 'البرنامج التدريبي'}</span>
-                        <span class="verify-data-value">${cert.program_name}</span>
+                        <span class="verify-data-label" style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:3px;"><i class="fas fa-graduation-cap"></i> ${isEN ? 'Program' : 'اسم البرنامج'}</span>
+                        <strong class="verify-data-value" style="font-size:1.05rem; color:var(--primary);">${cert.program_name}</strong>
                     </div>
                     <div class="verify-data-item">
-                        <span class="verify-data-label"><i class="fas fa-hashtag"></i> ${isEN ? 'Certificate No.' : 'رقم الشهادة'}</span>
-                        <span class="verify-data-value">${cert.cert_num}</span>
+                        <span class="verify-data-label" style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:3px;"><i class="fas fa-layer-group"></i> ${isEN ? 'Credential Type' : 'نوع الشهادة'}</span>
+                        <span class="verify-data-value">${cert.program_type || (isEN ? 'Professional Certificate' : 'شهادة مهنية')}</span>
                     </div>
                     <div class="verify-data-item">
-                        <span class="verify-data-label"><i class="fas fa-calendar-alt"></i> ${isEN ? 'Issue Date' : 'تاريخ الإصدار'}</span>
+                        <span class="verify-data-label" style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:3px;"><i class="fas fa-briefcase"></i> ${isEN ? 'Specialty / Field' : 'التخصص'}</span>
+                        <span class="verify-data-value">${cert.field || '—'}</span>
+                    </div>
+                    <div class="verify-data-item">
+                        <span class="verify-data-label" style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:3px;"><i class="fas fa-hashtag"></i> ${isEN ? 'Certificate No.' : 'رقم الشهادة'}</span>
+                        <strong class="verify-data-value" dir="ltr">${cert.cert_num}</strong>
+                    </div>
+                    <div class="verify-data-item">
+                        <span class="verify-data-label" style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:3px;"><i class="fas fa-calendar-alt"></i> ${isEN ? 'Issue Date' : 'تاريخ الإصدار'}</span>
                         <span class="verify-data-value">${cert.issue_date}</span>
                     </div>
-                    ${cert.field ? `
                     <div class="verify-data-item">
-                        <span class="verify-data-label"><i class="fas fa-briefcase"></i> ${isEN ? 'Field' : 'التخصص / المجال'}</span>
-                        <span class="verify-data-value">${cert.field}</span>
-                    </div>` : ''}
+                        <span class="verify-data-label" style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:3px;"><i class="fas fa-shield-alt"></i> ${isEN ? 'Status' : 'حالة الشهادة'}</span>
+                        <span class="badge-status ${statusBadgeClass}">${statusLabel}</span>
+                    </div>
                 </div>
+
                 ${cert.pdf_url ? `
-                <div class="verify-download">
-                    <a href="${cert.pdf_url}" target="_blank" class="btn-primary verify-download-btn">
-                        <i class="fas fa-file-pdf"></i> ${isEN ? 'Download PDF Certificate' : 'تنزيل نسخة PDF من الشهادة'}
+                <div class="verify-download" style="text-align:center;">
+                    <a href="${cert.pdf_url}" target="_blank" class="btn-primary" style="display:inline-flex; align-items:center; gap:8px;">
+                        <i class="fas fa-file-pdf"></i> ${isEN ? 'Download Official Electronic PDF' : 'تنزيل النسخة الإلكترونية الرسمية (PDF)'}
                     </a>
                 </div>` : ''}
             `;
         } catch (error) {
             resultDiv.className = 'verify-result verify-error-result';
             resultDiv.innerHTML = `
-                <div class="verify-result-header">
-                    <div class="verify-error-icon">
+                <div class="verify-result-header" style="text-align:center; padding:20px;">
+                    <div class="verify-error-icon" style="font-size:2.5rem; color:#d92d20; margin-bottom:10px;">
                         <i class="fas fa-times-circle"></i>
                     </div>
-                    <h3>${isEN ? 'Certificate Not Found' : 'لم يتم العثور على الشهادة'}</h3>
-                    <p>${isEN ? 'Please check the certificate number and try again.' : 'يرجى التأكد من رقم الشهادة والمحاولة مرة أخرى.'}</p>
+                    <h3 style="color:#d92d20; font-size:1.3rem; margin-bottom:8px;">${isEN ? 'Certificate Not Found' : 'لم يتم العثور على سجل مطابق لرقم الشهادة'}</h3>
+                    <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.7; max-width:550px; margin:0 auto 15px;">
+                        ${isEN ? 'Please verify the certificate number as printed on your document. If you require further assistance, contact us at 01112220796 or info@nibras-ac.com' : 'يرجى التأكد من كتابة رقم الشهادة كما هو موضح في الوثيقة بدون فراغات زائدة. إذا استمرت المشكلة، يرجى التواصل مع فريق الأكاديمية لمراجعة السجلات عبر هاتف: 01112220796 أو info@nibras-ac.com'}
+                    </p>
                 </div>
             `;
         }
     });
 }
 
+// Global state for Admin Panel
+let adminAllPrograms = [];
+let adminAllArticles = [];
+let adminAllInquiries = [];
+let adminAllCertificates = [];
+let allAdminUsers = [];
+
 async function initAdminPanel(isEN) {
     const loginForm = document.getElementById('loginForm');
-    const adminCertForm = document.getElementById('adminCertForm');
     const loginPage = document.getElementById('loginPage');
     const dashboard = document.getElementById('dashboard');
 
@@ -337,9 +363,16 @@ async function initAdminPanel(isEN) {
             if (loginPage) loginPage.style.display = 'none';
             if (dashboard) dashboard.style.display = 'flex';
             const adminUserEl = document.getElementById('adminUser');
-            if (adminUserEl) adminUserEl.textContent = data.user.name || 'الأدمن';
-            await renderAdminCerts(isEN);
-            await renderAdminUsers(isEN);
+            if (adminUserEl) adminUserEl.textContent = data.user.name || 'المسؤول';
+            
+            // Load all sections
+            await Promise.allSettled([
+                renderAdminPrograms(isEN),
+                renderAdminArticles(isEN),
+                renderAdminInquiries(isEN),
+                renderAdminCerts(isEN),
+                renderAdminUsers(isEN)
+            ]);
         }
     } catch (error) {
         if (loginPage) loginPage.style.display = 'flex';
@@ -357,7 +390,7 @@ async function initAdminPanel(isEN) {
                     body: JSON.stringify({ email, password })
                 });
                 if (!data.user || data.user.role !== 'admin') {
-                    showToast(isEN ? 'Unauthorized.' : 'ليس لديك صلاحية الأدمن.', true);
+                    showToast(isEN ? 'Unauthorized: Admin privileges required.' : 'ليس لديك صلاحيات الأدمن للدخول.', true);
                     return;
                 }
                 window.location.reload();
@@ -367,15 +400,122 @@ async function initAdminPanel(isEN) {
         });
     }
 
+    // 1. Program Form Submit
+    const adminProgramForm = document.getElementById('adminProgramForm');
+    if (adminProgramForm) {
+        adminProgramForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSaveProg');
+            const orig = btn.innerHTML;
+            const editId = document.getElementById('progEditId').value;
+            
+            const payload = {
+                titleAr: document.getElementById('progTitleAr').value.trim(),
+                titleEn: document.getElementById('progTitleEn').value.trim(),
+                type: document.getElementById('progType').value,
+                specialty: document.getElementById('progSpecialty').value.trim(),
+                price: parseFloat(document.getElementById('progPrice').value) || 0,
+                status: document.getElementById('progStatus').value,
+                duration: document.getElementById('progDuration').value.trim(),
+                deliveryMethod: document.getElementById('progDelivery').value.trim(),
+                descriptionAr: document.getElementById('progDescAr').value.trim(),
+                topicsAr: document.getElementById('progTopicsAr').value.split(/[;\n]+/).map(s => s.trim()).filter(Boolean)
+            };
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+
+                if (editId) {
+                    await apiFetch(`/api/courses/${editId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    showToast(isEN ? 'Program updated successfully.' : 'تم تحديث البرنامج بنجاح.');
+                } else {
+                    await apiFetch('/api/courses', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    showToast(isEN ? 'Program added successfully.' : 'تمت إضافة البرنامج بنجاح.');
+                }
+
+                cancelProgEdit();
+                await renderAdminPrograms(isEN);
+            } catch (err) {
+                showToast(err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = orig;
+            }
+        });
+    }
+
+    // 2. Article Form Submit
+    const adminArticleForm = document.getElementById('adminArticleForm');
+    if (adminArticleForm) {
+        adminArticleForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSaveArt');
+            const orig = btn.innerHTML;
+            const editId = document.getElementById('artEditId').value;
+
+            const payload = {
+                titleAr: document.getElementById('artTitleAr').value.trim(),
+                category: document.getElementById('artCategory').value,
+                sourceUrl: document.getElementById('artSourceUrl').value.trim(),
+                author: document.getElementById('artAuthor').value.trim(),
+                contentAr: document.getElementById('artContentAr').value.trim(),
+                isPublished: document.getElementById('artPublished').checked
+            };
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+
+                if (editId) {
+                    await apiFetch(`/api/articles/${editId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    showToast(isEN ? 'Article updated successfully.' : 'تم تحديث المقال بنجاح.');
+                } else {
+                    await apiFetch('/api/articles', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    showToast(isEN ? 'Article created successfully.' : 'تمت إضافة المقال بنجاح.');
+                }
+
+                cancelArtEdit();
+                await renderAdminArticles(isEN);
+            } catch (err) {
+                showToast(err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = orig;
+            }
+        });
+    }
+
+    // 3. Certificate Form Submit
+    const adminCertForm = document.getElementById('adminCertForm');
     if (adminCertForm) {
         adminCertForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData();
             formData.append('certNum', document.getElementById('adminCertNum').value.trim());
             formData.append('traineeName', document.getElementById('adminTraineeName').value.trim());
+            formData.append('programType', document.getElementById('adminProgramType').value);
+            formData.append('status', document.getElementById('adminCertStatus').value);
             formData.append('programName', document.getElementById('adminProgramName').value.trim());
             formData.append('field', document.getElementById('adminField').value.trim());
             formData.append('issueDate', document.getElementById('adminIssueDate').value);
+            
             const pdfInput = document.getElementById('adminPdfFile');
             if (pdfInput && pdfInput.files && pdfInput.files[0]) {
                 formData.append('pdf', pdfInput.files[0]);
@@ -389,15 +529,16 @@ async function initAdminPanel(isEN) {
                     body: formData
                 });
                 adminCertForm.reset();
-                showToast(isEN ? 'Certificate added successfully.' : 'تمت إضافة الشهادة بنجاح.');
+                showToast(isEN ? 'Certificate added successfully.' : 'تمت إضافة بيانات الشهادة بنجاح.');
                 await renderAdminCerts(isEN);
-                await renderAdminUsers(isEN); // Refresh user list to see new courses
+                await renderAdminUsers(isEN);
             } catch (error) {
                 showToast(error.message, true);
             }
         });
     }
 
+    // 4. Edit User Form Submit
     const editUserForm = document.getElementById('editUserForm');
     if (editUserForm) {
         editUserForm.addEventListener('submit', async (e) => {
@@ -411,7 +552,7 @@ async function initAdminPanel(isEN) {
                 email: document.getElementById('editUserEmail').value.trim(),
                 phone: document.getElementById('editUserPhone').value.trim(),
                 role: document.getElementById('editUserRole').value,
-                enrolledCourses: document.getElementById('editUserCourses').value.split(',').map(s => s.trim()).filter(s => s)
+                enrolledCourses: document.getElementById('editUserCourses').value.split(',').map(s => s.trim()).filter(Boolean)
             };
 
             try {
@@ -453,48 +594,72 @@ async function initAdminPanel(isEN) {
     }
 }
 
-async function renderAdminCerts(isEN) {
-    const container = document.getElementById('certsTableContainer') || document.getElementById('addedCertsContainer');
+// -------------------------------------------------------------
+// Admin Programs Management
+// -------------------------------------------------------------
+async function renderAdminPrograms(isEN) {
+    const container = document.getElementById('programsTableContainer');
     if (!container) return;
     try {
-        const data = await apiFetch('/api/admin/certificates');
-        adminCertificates = data.certificates || [];
-    } catch (error) {
-        container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${error.message}</p>`;
+        const data = await apiFetch('/api/courses?limit=250');
+        adminAllPrograms = data.courses || [];
+        const countEl = document.getElementById('totalProgramsCount');
+        if (countEl) countEl.textContent = adminAllPrograms.length;
+        displayAdminPrograms(adminAllPrograms, isEN);
+    } catch (err) {
+        container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${err.message}</p>`;
+    }
+}
+
+function displayAdminPrograms(list, isEN) {
+    const container = document.getElementById('programsTableContainer');
+    if (!container) return;
+
+    if (!list.length) {
+        container.innerHTML = `<p style="text-align:center; padding:30px;">${isEN ? 'No programs found.' : 'لا توجد برامج مسجلة.'}</p>`;
         return;
     }
 
-    if (!adminCertificates.length) {
-        container.innerHTML = `<p style="text-align:center; padding:20px;">${isEN ? 'No certificates found.' : 'لا توجد شهادات مسجلة حالياً.'}</p>`;
-        return;
-    }
+    const typeNames = {
+        masters: 'ماجستير مهني',
+        phd: 'دكتوراه مهنية',
+        diploma: 'دبلوم مهني',
+        course: 'دورة تدريبية'
+    };
 
-    const rows = adminCertificates.map((c) => `
-        <tr>
-            <td data-label="${isEN ? 'Name' : 'الاسم'}">${c.trainee_name}</td>
-            <td data-label="${isEN ? 'Certificate No.' : 'رقم الشهادة'}" style="font-weight:700; color:#7a1c28;">${c.cert_num}</td>
-            <td data-label="${isEN ? 'Issue Date' : 'التاريخ'}">${c.issue_date}</td>
-            <td data-label="PDF">${c.pdf_url ? `<a href="${c.pdf_url}" target="_blank" download style="color:#0f766e; text-decoration:none; font-weight:600;"><i class="fas fa-file-pdf"></i> ${isEN ? 'Download' : 'تحميل'}</a>` : `<span style="color:#999;">${isEN ? 'N/A' : 'غير مرفق'}</span>`}</td>
-            <td data-label="${isEN ? 'Actions' : 'إدارة'}">
-                <button onclick="window.deleteCert('${c._id}')" class="btn-save" style="background:#fff0f0; color:#b42318; border:1px solid #ffd6d6; padding:6px 12px; font-size:0.85rem;">
-                    <i class="fas fa-trash-alt"></i> ${isEN ? 'Delete' : 'حذف'}
-                </button>
-            </td>
-        </tr>
-    `).join('');
+    const rows = list.map(p => {
+        const title = p.titleAr || p.title || p.titleEn;
+        const typeName = typeNames[p.type] || p.type;
+        const status = p.status || 'available';
+        const statusBadgeClass = status === 'coming_soon' ? 'coming_soon' : (status === 'unavailable' ? 'unavailable' : (status === 'hidden' ? 'hidden-status' : 'available'));
+        const statusLabel = status === 'coming_soon' ? 'قريباً' : (status === 'unavailable' ? 'غير متاح' : (status === 'hidden' ? 'مخفي' : 'متاح'));
 
-    const totalCertsEl = document.getElementById('totalCertsCount');
-    if (totalCertsEl) totalCertsEl.textContent = adminCertificates.length;
+        return `
+            <tr>
+                <td data-label="اسم البرنامج" style="font-weight:600; color:var(--primary);">${title}</td>
+                <td data-label="المسار"><span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 8px; border-radius:8px;">${typeName}</span></td>
+                <td data-label="التخصص">${p.specialty || '—'}</td>
+                <td data-label="السعر" style="font-weight:700;">${p.price || 0} US$</td>
+                <td data-label="الحالة"><span class="badge-status ${statusBadgeClass}">${statusLabel}</span></td>
+                <td data-label="إدارة" style="white-space:nowrap;">
+                    <button onclick="window.editProgram('${p._id}')" class="btn-save" style="padding:5px 10px; font-size:0.8rem; background:var(--accent); color:var(--primary-dark);" title="تعديل"><i class="fas fa-edit"></i></button>
+                    <button onclick="window.toggleProgramStatus('${p._id}', '${status === 'available' ? 'hidden' : 'available'}')" class="btn-save" style="padding:5px 10px; font-size:0.8rem; background:#f2f4f7; color:#475467;" title="تغيير الظهور"><i class="fas fa-eye${status === 'hidden' ? '-slash' : ''}"></i></button>
+                    <button onclick="window.deleteProgram('${p._id}')" class="btn-save" style="padding:5px 10px; font-size:0.8rem; background:#fff0f0; color:#b42318; border:1px solid #ffd6d6;" title="حذف"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            </tr>
+        `;
+    }).join('');
 
     container.innerHTML = `
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>${isEN ? 'Name' : 'الاسم'}</th>
-                    <th>${isEN ? 'Certificate No.' : 'رقم الشهادة'}</th>
-                    <th>${isEN ? 'Issue Date' : 'التاريخ'}</th>
-                    <th>PDF</th>
-                    <th>${isEN ? 'Actions' : 'إدارة'}</th>
+                    <th>اسم البرنامج</th>
+                    <th>المسار</th>
+                    <th>التخصص</th>
+                    <th>السعر</th>
+                    <th>الحالة</th>
+                    <th>إدارة</th>
                 </tr>
             </thead>
             <tbody>${rows}</tbody>
@@ -502,7 +667,349 @@ async function renderAdminCerts(isEN) {
     `;
 }
 
-let allAdminUsers = [];
+window.filterAdminPrograms = () => {
+    const type = document.getElementById('adminProgTypeFilter')?.value || 'all';
+    const query = document.getElementById('adminProgSearch')?.value.toLowerCase().trim() || '';
+
+    let filtered = adminAllPrograms;
+    if (type !== 'all') {
+        filtered = filtered.filter(p => p.type === type);
+    }
+    if (query) {
+        filtered = filtered.filter(p => 
+            (p.titleAr && p.titleAr.toLowerCase().includes(query)) ||
+            (p.titleEn && p.titleEn.toLowerCase().includes(query)) ||
+            (p.specialty && p.specialty.toLowerCase().includes(query))
+        );
+    }
+    displayAdminPrograms(filtered, false);
+};
+
+window.editProgram = (id) => {
+    const prog = adminAllPrograms.find(p => p._id === id);
+    if (!prog) return;
+
+    document.getElementById('progEditId').value = prog._id;
+    document.getElementById('progTitleAr').value = prog.titleAr || prog.title || '';
+    document.getElementById('progTitleEn').value = prog.titleEn || '';
+    document.getElementById('progType').value = prog.type || 'masters';
+    document.getElementById('progSpecialty').value = prog.specialty || '';
+    document.getElementById('progPrice').value = prog.price || 0;
+    document.getElementById('progStatus').value = prog.status || 'available';
+    document.getElementById('progDuration').value = prog.duration || '';
+    document.getElementById('progDelivery').value = prog.deliveryMethod || '';
+    document.getElementById('progDescAr').value = prog.descriptionAr || prog.description || '';
+    document.getElementById('progTopicsAr').value = Array.isArray(prog.topicsAr) ? prog.topicsAr.join(';\n') : '';
+
+    document.getElementById('btnSaveProg').textContent = 'تحديث بيانات البرنامج';
+    document.getElementById('btnCancelProgEdit').style.display = 'inline-block';
+
+    window.scrollTo({ top: document.getElementById('adminProgramForm').offsetTop - 80, behavior: 'smooth' });
+};
+
+window.cancelProgEdit = () => {
+    document.getElementById('progEditId').value = '';
+    document.getElementById('adminProgramForm').reset();
+    document.getElementById('btnSaveProg').textContent = 'حفظ البرنامج';
+    document.getElementById('btnCancelProgEdit').style.display = 'none';
+};
+
+window.deleteProgram = async (id) => {
+    if (!confirm('هل أنت متأكد من حذف هذا البرنامج؟')) return;
+    try {
+        await apiFetch(`/api/courses/${id}`, { method: 'DELETE' });
+        showToast('تم حذف البرنامج بنجاح.');
+        await renderAdminPrograms(false);
+    } catch (err) {
+        showToast(err.message, true);
+    }
+};
+
+window.toggleProgramStatus = async (id, newStatus) => {
+    try {
+        await apiFetch(`/api/courses/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+        });
+        showToast(`تم تغيير حالة البرنامج إلى: ${newStatus}`);
+        await renderAdminPrograms(false);
+    } catch (err) {
+        showToast(err.message, true);
+    }
+};
+
+// -------------------------------------------------------------
+// Admin Articles & Media Management
+// -------------------------------------------------------------
+async function renderAdminArticles(isEN) {
+    const container = document.getElementById('articlesTableContainer');
+    if (!container) return;
+    try {
+        const data = await apiFetch('/api/articles');
+        adminAllArticles = data.articles || [];
+        const countEl = document.getElementById('totalArticlesCount');
+        if (countEl) countEl.textContent = adminAllArticles.length;
+        displayAdminArticles(adminAllArticles, isEN);
+    } catch (err) {
+        container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${err.message}</p>`;
+    }
+}
+
+function displayAdminArticles(list, isEN) {
+    const container = document.getElementById('articlesTableContainer');
+    if (!container) return;
+
+    if (!list.length) {
+        container.innerHTML = `<p style="text-align:center; padding:30px;">${isEN ? 'No articles found.' : 'لا توجد مقالات أو تغطيات منشورة.'}</p>`;
+        return;
+    }
+
+    const rows = list.map(a => `
+        <tr>
+            <td data-label="العنوان" style="font-weight:600; color:var(--primary);">${a.titleAr || a.title}</td>
+            <td data-label="التصنيف"><span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 8px; border-radius:8px;">${a.category}</span></td>
+            <td data-label="المصدر">${a.sourceUrl ? `<a href="${a.sourceUrl}" target="_blank" style="color:var(--primary); text-decoration:underline;">رابط المصدر <i class="fas fa-external-link-alt"></i></a>` : (a.author || 'نبراس')}</td>
+            <td data-label="الحالة"><span class="badge-status ${a.isPublished ? 'available' : 'hidden-status'}">${a.isPublished ? 'منشور' : 'مسودة'}</span></td>
+            <td data-label="إدارة" style="white-space:nowrap;">
+                <button onclick="window.editArticle('${a._id}')" class="btn-save" style="padding:5px 10px; font-size:0.8rem; background:var(--accent); color:var(--primary-dark);"><i class="fas fa-edit"></i></button>
+                <button onclick="window.deleteArticle('${a._id}')" class="btn-save" style="padding:5px 10px; font-size:0.8rem; background:#fff0f0; color:#b42318; border:1px solid #ffd6d6;"><i class="fas fa-trash-alt"></i></button>
+            </td>
+        </tr>
+    `).join('');
+
+    container.innerHTML = `
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>العنوان</th>
+                    <th>التصنيف</th>
+                    <th>المصدر / الكاتب</th>
+                    <th>الحالة</th>
+                    <th>إدارة</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
+    `;
+}
+
+window.editArticle = (id) => {
+    const art = adminAllArticles.find(a => a._id === id);
+    if (!art) return;
+
+    document.getElementById('artEditId').value = art._id;
+    document.getElementById('artTitleAr').value = art.titleAr || art.title || '';
+    document.getElementById('artCategory').value = art.category || 'media';
+    document.getElementById('artSourceUrl').value = art.sourceUrl || '';
+    document.getElementById('artAuthor').value = art.author || '';
+    document.getElementById('artContentAr').value = art.contentAr || art.content || '';
+    document.getElementById('artPublished').checked = art.isPublished !== false;
+
+    document.getElementById('btnSaveArt').textContent = 'تحديث المقال';
+    document.getElementById('btnCancelArtEdit').style.display = 'inline-block';
+    window.scrollTo({ top: document.getElementById('adminArticleForm').offsetTop - 80, behavior: 'smooth' });
+};
+
+window.cancelArtEdit = () => {
+    document.getElementById('artEditId').value = '';
+    document.getElementById('adminArticleForm').reset();
+    document.getElementById('btnSaveArt').textContent = 'حفظ المقال';
+    document.getElementById('btnCancelArtEdit').style.display = 'none';
+};
+
+window.deleteArticle = async (id) => {
+    if (!confirm('هل أنت متأكد من حذف هذا المقال؟')) return;
+    try {
+        await apiFetch(`/api/articles/${id}`, { method: 'DELETE' });
+        showToast('تم حذف المقال بنجاح.');
+        await renderAdminArticles(false);
+    } catch (err) {
+        showToast(err.message, true);
+    }
+};
+
+// -------------------------------------------------------------
+// Admin Inquiries Management
+// -------------------------------------------------------------
+async function renderAdminInquiries(isEN) {
+    const container = document.getElementById('inquiriesTableContainer');
+    if (!container) return;
+    try {
+        const data = await apiFetch('/api/inquiries');
+        adminAllInquiries = data.inquiries || [];
+        const countEl = document.getElementById('totalInquiriesCount');
+        if (countEl) countEl.textContent = adminAllInquiries.length;
+        displayAdminInquiries(adminAllInquiries, isEN);
+    } catch (err) {
+        container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${err.message}</p>`;
+    }
+}
+
+function displayAdminInquiries(list, isEN) {
+    const container = document.getElementById('inquiriesTableContainer');
+    if (!container) return;
+
+    if (!list.length) {
+        container.innerHTML = `<p style="text-align:center; padding:30px;">${isEN ? 'No messages found.' : 'لا توجد رسائل تواصل جديدة.'}</p>`;
+        return;
+    }
+
+    const rows = list.map(m => {
+        const dateStr = m.createdAt ? new Date(m.createdAt).toLocaleDateString('ar-SA') : '—';
+        const status = m.status || 'New';
+        const badgeClass = status === 'New' ? 'new' : (status === 'In Progress' ? 'in_progress' : (status === 'Replied' ? 'replied' : 'closed'));
+
+        return `
+            <tr>
+                <td data-label="المرسل">
+                    <strong>${m.name}</strong><br>
+                    <small dir="ltr" style="color:var(--text-muted);">${m.phone}</small>
+                    ${m.email ? `<br><small style="color:var(--text-muted);">${m.email}</small>` : ''}
+                </td>
+                <td data-label="نوع الاستفسار">
+                    <span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 8px; border-radius:8px;">${m.inquiryType || 'عام'}</span>
+                    ${m.programOrService ? `<br><small style="color:var(--text-muted);">${m.programOrService}</small>` : ''}
+                </td>
+                <td data-label="الرسالة" style="max-width:300px; font-size:0.9rem; line-height:1.5;">${m.message}</td>
+                <td data-label="التاريخ"><small>${dateStr}</small></td>
+                <td data-label="الحالة">
+                    <select onchange="window.updateInquiryStatus('${m._id}', this.value)" style="padding:4px 8px; border-radius:8px; border:1px solid var(--border); font-family:inherit; font-size:0.85rem;">
+                        <option value="New" ${status === 'New' ? 'selected' : ''}>جديدة (New)</option>
+                        <option value="In Progress" ${status === 'In Progress' ? 'selected' : ''}>قيد المتابعة</option>
+                        <option value="Replied" ${status === 'Replied' ? 'selected' : ''}>تم الرد</option>
+                        <option value="Closed" ${status === 'Closed' ? 'selected' : ''}>مغلقة</option>
+                    </select>
+                </td>
+                <td data-label="إدارة">
+                    <a href="https://wa.me/${(m.phone || '').replace(/[^0-9]/g, '')}" target="_blank" class="btn-save" style="background:#e6f9ed; color:#12b76a; border:1px solid #a6f4c5; padding:5px 8px; font-size:0.8rem; text-decoration:none; display:inline-block;" title="مراسلة واتساب"><i class="fab fa-whatsapp"></i></a>
+                    <button onclick="window.deleteInquiry('${m._id}')" class="btn-save" style="padding:5px 8px; font-size:0.8rem; background:#fff0f0; color:#b42318; border:1px solid #ffd6d6;" title="حذف"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+
+    container.innerHTML = `
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>المرسل</th>
+                    <th>نوع الاستفسار</th>
+                    <th>الرسالة</th>
+                    <th>التاريخ</th>
+                    <th>الحالة</th>
+                    <th>إدارة</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
+    `;
+}
+
+window.filterAdminInquiries = () => {
+    const status = document.getElementById('inquiryStatusFilter')?.value || 'all';
+    if (status === 'all') {
+        displayAdminInquiries(adminAllInquiries, false);
+    } else {
+        displayAdminInquiries(adminAllInquiries.filter(m => m.status === status), false);
+    }
+};
+
+window.updateInquiryStatus = async (id, newStatus) => {
+    try {
+        await apiFetch(`/api/inquiries/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+        });
+        showToast('تم تحديث حالة الرسالة.');
+    } catch (err) {
+        showToast(err.message, true);
+    }
+};
+
+window.deleteInquiry = async (id) => {
+    if (!confirm('هل أنت متأكد من حذف هذه الرسالة؟')) return;
+    try {
+        await apiFetch(`/api/inquiries/${id}`, { method: 'DELETE' });
+        showToast('تم حذف الرسالة بنجاح.');
+        await renderAdminInquiries(false);
+    } catch (err) {
+        showToast(err.message, true);
+    }
+};
+
+// -------------------------------------------------------------
+// Admin Certificates Management
+// -------------------------------------------------------------
+async function renderAdminCerts(isEN) {
+    const container = document.getElementById('certsTableContainer') || document.getElementById('addedCertsContainer');
+    if (!container) return;
+    try {
+        const data = await apiFetch('/api/admin/certificates');
+        adminAllCertificates = data.certificates || [];
+    } catch (error) {
+        container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${error.message}</p>`;
+        return;
+    }
+
+    const totalCertsEl = document.getElementById('totalCertsCount');
+    if (totalCertsEl) totalCertsEl.textContent = adminAllCertificates.length;
+
+    if (!adminAllCertificates.length) {
+        container.innerHTML = `<p style="text-align:center; padding:20px;">${isEN ? 'No certificates found.' : 'لا توجد شهادات مسجلة حالياً.'}</p>`;
+        return;
+    }
+
+    const rows = adminAllCertificates.map((c) => {
+        const statusKey = (c.status || 'Valid').toLowerCase();
+        const badgeClass = statusKey === 'suspended' ? 'suspended' : (statusKey === 'cancelled' ? 'cancelled' : (statusKey === 'expired' ? 'expired' : 'valid'));
+        const statusLabel = statusKey === 'suspended' ? 'معلقة' : (statusKey === 'cancelled' ? 'ملغاة' : (statusKey === 'expired' ? 'منتهية' : 'معتمدة'));
+
+        return `
+            <tr>
+                <td data-label="اسم المتدرب" style="font-weight:600; color:var(--primary);">${c.trainee_name}</td>
+                <td data-label="البرنامج">${c.program_name}</td>
+                <td data-label="رقم الشهادة" style="font-weight:700; color:#7a1c28;" dir="ltr">${c.cert_num}</td>
+                <td data-label="الحالة"><span class="badge-status ${badgeClass}">${statusLabel}</span></td>
+                <td data-label="التاريخ">${c.issue_date}</td>
+                <td data-label="PDF">${c.pdf_url ? `<a href="${c.pdf_url}" target="_blank" download style="color:#0f766e; text-decoration:none; font-weight:600;"><i class="fas fa-file-pdf"></i> ${isEN ? 'Download' : 'تحميل'}</a>` : `<span style="color:#999;">${isEN ? 'N/A' : 'غير مرفق'}</span>`}</td>
+                <td data-label="إدارة">
+                    <button onclick="window.deleteCert('${c._id}')" class="btn-save" style="background:#fff0f0; color:#b42318; border:1px solid #ffd6d6; padding:6px 12px; font-size:0.85rem;">
+                        <i class="fas fa-trash-alt"></i> ${isEN ? 'Delete' : 'حذف'}
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+
+    container.innerHTML = `
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>اسم المتدرب</th>
+                    <th>البرنامج</th>
+                    <th>رقم الشهادة</th>
+                    <th>الحالة</th>
+                    <th>التاريخ</th>
+                    <th>PDF</th>
+                    <th>إدارة</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
+    `;
+}
+
+// Global refresh hooks
+window.refreshAdminPrograms = () => renderAdminPrograms(false);
+window.refreshAdminArticles = () => renderAdminArticles(false);
+window.refreshAdminInquiries = () => renderAdminInquiries(false);
+window.refreshAdminCerts = () => renderAdminCerts(false);
+
+
+// allAdminUsers declared in global admin state
+
 
 async function renderAdminUsers(isEN) {
     const container = document.getElementById('usersTableContainer');
@@ -821,12 +1328,32 @@ window.handleContact = async (event) => {
     const btn = form.querySelector('button[type="submit"]');
     const isEN = document.documentElement.lang === 'en';
     
-    // Collect data using placeholders as they are the only identifiers in some pages
-    const name = form.querySelector('input[placeholder*="الاسم"], input[placeholder*="name"]')?.value || '';
-    const email = form.querySelector('input[placeholder*="البريد"], input[placeholder*="email"], input[placeholder*="e-mail"]')?.value || '';
-    const phone = form.querySelector('input[placeholder*="الهاتف"], input[placeholder*="phone"]')?.value || '';
-    const subject = form.querySelector('input[placeholder*="موضوع"], input[placeholder*="subject"]')?.value || '';
-    const message = form.querySelector('textarea')?.value || '';
+    const name = form.querySelector('input[name="name"], input[placeholder*="الاسم"], input[placeholder*="name"]')?.value.trim() || '';
+    const email = form.querySelector('input[name="email"], input[placeholder*="البريد"], input[placeholder*="email"]')?.value.trim() || '';
+    const phone = form.querySelector('input[name="phone"], input[placeholder*="الجوال"], input[placeholder*="الهاتف"], input[placeholder*="phone"]')?.value.trim() || '';
+    const inquiryType = form.querySelector('select[name="inquiryType"]')?.value || '';
+    const programOrService = form.querySelector('input[name="programOrService"]')?.value.trim() || '';
+    const subject = form.querySelector('input[name="subject"], input[placeholder*="موضوع"], input[placeholder*="subject"]')?.value.trim() || 
+                    (inquiryType ? (isEN ? `Inquiry regarding ${inquiryType}` : `استفسار بخصوص ${inquiryType}`) : (isEN ? 'New Website Inquiry' : 'استفسار جديد من الموقع'));
+    const message = form.querySelector('textarea[name="message"], textarea')?.value.trim() || '';
+
+    // Validation (Requirement 27: Name, Phone, Message required; Email validated if provided)
+    if (!name) {
+        showToast(isEN ? 'Please enter your full name.' : 'يرجى إدخال الاسم الكامل.', true);
+        return;
+    }
+    if (!phone) {
+        showToast(isEN ? 'Please enter your contact phone number.' : 'يرجى إدخال رقم الجوال للتواصل.', true);
+        return;
+    }
+    if (!message) {
+        showToast(isEN ? 'Please enter your inquiry or message.' : 'يرجى كتابة رسالتك أو استفسارك.', true);
+        return;
+    }
+    if (email && !/^\S+@\S+\.\S+$/.test(email)) {
+        showToast(isEN ? 'Please enter a valid email address.' : 'صيغة البريد الإلكتروني غير صحيحة.', true);
+        return;
+    }
 
     // UI Feedback
     const originalText = btn.innerHTML;
@@ -842,18 +1369,21 @@ window.handleContact = async (event) => {
                 name,
                 email,
                 phone,
+                inquiryType,
+                programOrService,
                 subject,
                 message
             })
         });
         
-        showToast(isEN ? 'Message sent successfully! We will contact you soon.' : 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
+        showToast(isEN ? 'Message sent successfully! Our advisor will contact you soon.' : 'تم إرسال استفسارك بنجاح! سيتواصل معك فريق نبراس قريباً.');
         form.reset();
     } catch (err) {
         console.error('Failed to submit inquiry:', err);
-        showToast(isEN ? 'Failed to send message. Please try again.' : 'فشل إرسال الرسالة. يرجى المحاولة مرة أخرى.', true);
+        showToast(isEN ? 'Failed to send message. Please try again or reach us via WhatsApp.' : 'فشل إرسال الرسالة. يرجى المحاولة لاحقاً أو التواصل عبر واتساب.', true);
     } finally {
         btn.disabled = false;
         btn.innerHTML = originalText;
     }
 };
+

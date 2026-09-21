@@ -1,278 +1,307 @@
 <!DOCTYPE html>
-
-<html dir="ltr" lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Services | Nibras</title>
-<meta content="Nibras - an accredited vocational training and qualification platform, which aims to prepare professional cadres capable of dealing with the requirements of the modern labor market." name="description"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&amp;family=Tajawal:wght@300;400;500;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-<link href="../../assets/css/style.css" rel="stylesheet"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programs & Professional Services | Nibras Academy for Training & Professional Development</title>
+  <meta name="description" content="Explore certified professional tracks at Nibras Academy: Professional Master, Professional Doctorate, Diplomas, Training Courses, and Institutional Corporate Solutions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
 </head>
 <body>
 
-        <!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+  <!-- Cart Sidebar -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+      <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <strong id="cartTotal">0.00 US$</strong>
+      </div>
+      <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Proceed to Checkout <i class="fas fa-credit-card"></i></a>
+    </div>
+  </div>
+  <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+
+  <!-- Floating Cart Button -->
+  <div class="floating-cart" onclick="toggleCart(event)">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="floating-cart-badge cart-badge">0</span>
+  </div>
+
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar scrolled">
+    <div class="nav-container">
+      <a href="../../en/index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="Nibras Academy" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../ar/programs.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> العربية</a></li>
+        <li><a href="../../en/index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="programs.html" class="nav-link active">Programs & Services</a></li>
+        <li><a href="articles.html" class="nav-link">Articles & Media</a></li>
+        <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+        <li><a href="verify.html" class="nav-link">Certificate Verification</a></li>
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="nav-btn">Sign In</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../ar/programs.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> العربية</a></li>
+      <li><a href="../../en/index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="programs.html">Programs & Services</a></li>
+      <li><a href="articles.html">Articles & Media</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="verify.html">Certificate Verification</a></li>
+      <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+      <li><a href="login.html" class="mobile-btn">Sign In</a></li>
+    </ul>
+  </div>
+
+  <!-- Breadcrumb & Hero -->
+  <section class="page-header" style="background: linear-gradient(135deg, #380108 0%, #5a020e 45%, #750a18 100%); padding: 130px 0 70px; text-align: left; color: #fff;">
+    <div class="container">
+      <div style="font-size: 0.95rem; opacity: 0.85; margin-bottom: 15px;">
+        <a href="../../en/index.html" style="color: #fff; text-decoration: none;">Home</a> → 
+        <span style="color: var(--gold);">Programs & Services</span>
+      </div>
+      <div class="section-badge" style="background: rgba(200,154,80,0.2); color: var(--gold); border: 1px solid var(--gold); display: inline-block; padding: 6px 18px; border-radius: 20px; font-weight: 700; margin-bottom: 15px;">
+        Educational Tracks & Corporate Solutions
+      </div>
+      <h1 style="font-size: 2.6rem; font-weight: 800; margin-bottom: 15px;">Professional Programs & Services</h1>
+      <p style="font-size: 1.35rem; color: var(--gold); font-weight: 700; margin-bottom: 15px;">Engineered to Match Your Ambition & Empower Your Career</p>
+      <p style="font-size: 1.1rem; max-width: 800px; line-height: 1.8; opacity: 0.9; margin-bottom: 25px;">
+        At Nibras Academy, we provide comprehensive learning and training solutions covering skill acquisition, specialized diplomas, executive master degrees, and customized corporate training solutions.
+      </p>
+      <div style="display:flex; gap:15px; flex-wrap:wrap;">
+        <a href="#pathways" class="btn-primary"><i class="fas fa-compass"></i> Explore Educational Tracks</a>
+        <a href="#services" class="btn-outline" style="border-color:#fff; color:#fff;"><i class="fas fa-briefcase"></i> Corporate & Institute Solutions</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 Learning Tracks Section -->
+  <section id="pathways" style="padding: 80px 0; background: var(--bg-surface);">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 45px;">
+        <div class="section-badge">Choose Your Career Track</div>
+        <h2 class="section-title">From Skill Acquisition... <span class="highlight">To Executive Mastery</span></h2>
+        <p class="section-subtitle">Structured pathways tailored to each career stage and professional aspiration.</p>
+      </div>
+
+      <div class="pathways-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px;">
         
-
-        
-    <!-- Floating Cart Button -->
-    <div class="floating-cart" onclick="toggleCart(event)">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="floating-cart-badge cart-badge">0</span>
-    </div>
-            
-<!-- Navbar -->
-<nav class="navbar" id="navbar">
-<div class="nav-container">
-<a class="nav-logo" href="../../en/index.html">
-<img alt="Nibras" src="../../assets/img/logo.png"/>
-</a>
-<ul class="nav-links" id="navLinks">
-<li><a class="nav-btn" href="../ar/programs.html" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
-<li><a class="nav-link" href="../../en/index.html">Home</a></li>
-<li><a class="nav-link" href="about.html">About Us</a></li>
-<li><a class="nav-link active" href="programs.html">Services</a></li>
-
-<li><a class="nav-link" href="contact.html">Contact Us</a></li>
-<li><a class="nav-link" href="verify.html">Verify Certificates</a></li>
-<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li><a class="nav-btn" href="login.html">Login</a></li>
-</ul>
-<button aria-label="القائمة" class="hamburger" id="hamburger">
-<span></span><span></span><span></span>
-</button>
-</div>
-</nav>
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-<ul>
-<li><a class="nav-btn" href="../ar/programs.html" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
-<li><a href="../../en/index.html">Home</a></li>
-<li><a href="about.html">About Us</a></li>
-<li><a href="programs.html">Services</a></li>
-      <li><a href="articles.html">Articles</a></li>
-
-<li><a href="contact.html">Contact Us</a></li>
-<li><a href="verify.html">Verify Certificates</a></li>
-<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li><a class="mobile-btn" href="login.html">Login</a></li>
-</ul>
-</div>
-<!-- Page Header -->
-
-  <section class="page-header">
-    <div class="container">
-      <h1>Services and Our Programs</h1>
-      <p>Discover the accredited career programs we offer to advance your career path</p>
-    </div>
-  </section>
-<!-- Start Learning Sections -->
-  <section class="programs-section" style="padding: 80px 0; background: white;">
-    <div class="container">
-      <div class="programs-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-        
-        <div class="program-card featured">
-          <div class="program-icon"><i class="fas fa-graduation-cap"></i></div>
-          <h3>Professional PhD Department</h3>
-          <p>A high-level professional program to prepare experts and influential leaders in their fields.</p>
-          <a href="phd.html" class="btn-primary">Go to Program <i class="fas fa-arrow-right"></i></a>
-        </div>
-
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-user-tie"></i></div>
-          <h3>Professional Masters Department</h3>
-          <p>An advanced path combining academic study and practical experience to develop your leadership capabilities.</p>
-          <a href="masters.html" class="btn-outline">Go to Program <i class="fas fa-arrow-right"></i></a>
-        </div>
-
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-award"></i></div>
-          <h3>Professional Diploma Department</h3>
-          <p>Specialized practical programs to gain applied skills that enhance your chances in the labor market.</p>
-          <a href="diploma.html" class="btn-outline">Go to Program <i class="fas fa-arrow-right"></i></a>
-        </div>
-
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-briefcase"></i></div>
-          <h3>Professional Courses Department</h3>
-          <p>Applied training programs designed to qualify you directly for labor market requirements.</p>
-          <a href="vocational.html" class="btn-outline">Go to Program <i class="fas fa-arrow-right"></i></a>
-        </div>
-
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-certificate"></i></div>
-          <h3>Professional Certifications Department</h3>
-          <p>Focused and practical courses to develop specific skills quickly and efficiently.</p>
-          <a href="pro_courses.html" class="btn-outline">Go to Program <i class="fas fa-arrow-right"></i></a>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  
-  <!-- Services Header -->
-  <section style="padding-top: 80px; text-align: center; background: var(--bg-surface);">
-    <div class="container">
-        <h2 class="section-title">Our <span class="highlight">Professional</span> Services</h2>
-        <p class="section-subtitle">Integrated solutions designed to meet the needs of individuals, companies, and training centers</p>
-    </div>
-  </section>
-
-  <!-- Detailed Services Section -->
-  <section class="services-detailed-section" style="padding: 60px 0 80px 0; background: var(--bg-surface);">
-    <div class="container">
-      
-      <!-- Service 1: Individuals -->
-      <div class="service-row" style="display:flex; flex-wrap:wrap; align-items:center; gap:40px; margin-bottom:60px; background:white; padding:40px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.05);">
-        <div class="service-content" style="flex:1; min-width:300px;">
-            <div style="width:60px; height:60px; background:rgba(201,162,39,0.1); color:var(--primary-color); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.8rem; margin-bottom:20px;">
-                <i class="fas fa-user-graduate"></i>
-            </div>
-            <h3 style="color:var(--primary-dark); font-size:1.6rem; margin-bottom:15px;">Training Services for Individuals</h3>
-            <p style="color:var(--text-muted); line-height:1.8; margin-bottom:20px; font-size:1.05rem;">We offer professional training programs specifically designed to meet your professional aspirations, through educational paths that combine academic knowledge with practical application.</p>
-            <h4 style="color:var(--text-color); margin-bottom:10px;">Features:</h4>
-            <ul style="list-style:none; padding:0; line-height:1.8; color:var(--text-muted);">
-                <li><i class="fas fa-check" style="color:var(--primary-color); margin-right:10px;"></i> Professional certificates and accreditations from international bodies.</li>
-                <li><i class="fas fa-check" style="color:var(--primary-color); margin-right:10px;"></i> Study of real cases and applied projects.</li>
-                <li><i class="fas fa-check" style="color:var(--primary-color); margin-right:10px;"></i> Flexibility in learning to suit the trainee's schedule.</li>
-                <li><i class="fas fa-check" style="color:var(--primary-color); margin-right:10px;"></i> Continuous support and professional guidance during and after training.</li>
-            </ul>
-        </div>
-      </div>
-
-      <!-- Service 2: Companies -->
-      <div class="service-row" style="display:flex; flex-wrap:wrap; align-items:center; gap:40px; margin-bottom:60px; background:white; padding:40px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.05);">
-        <div class="service-content" style="flex:1; min-width:300px;">
-            <div style="width:60px; height:60px; background:rgba(201,162,39,0.1); color:var(--primary-color); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.8rem; margin-bottom:20px;">
-                <i class="fas fa-building"></i>
-            </div>
-            <h3 style="color:var(--primary-dark); font-size:1.6rem; margin-bottom:15px;">Training Services for Companies & Institutions</h3>
-            <p style="color:var(--text-muted); line-height:1.8; margin-bottom:20px; font-size:1.05rem;">We design customized training programs that align with your organization's goals and contribute to enhancing the efficiency of its staff to ensure the highest level of professional performance.</p>
-            <h4 style="color:var(--text-color); margin-bottom:10px;">Features:</h4>
-            <ul style="list-style:none; padding:0; line-height:1.8; color:var(--text-muted);">
-                <li><i class="fas fa-check" style="color:var(--primary-color); margin-right:10px;"></i> Programs designed according to Training Needs Analysis (TNA) for the organization.</li>
-                <li><i class="fas fa-check" style="color:var(--primary-color); margin-right:10px;"></i> Training at company headquarters or online with full flexibility.</li>
-                <li><i class="fas fa-check" style="color:var(--primary-color); margin-right:10px;"></i> Periodic performance reports to follow up on employee progress.</li>
-                <li><i class="fas fa-check" style="color:var(--primary-color); margin-right:10px;"></i> Accreditations and documentation for executed programs to enhance the organization's profile.</li>
-            </ul>
-        </div>
-      </div>
-
-      <!-- Service 3: Training Centers -->
-      <div class="service-row" style="display:flex; flex-wrap:wrap; align-items:center; gap:40px; background:white; padding:40px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.05);">
-        <div class="service-content" style="flex:1; min-width:300px;">
-            <div style="width:60px; height:60px; background:rgba(201,162,39,0.1); color:var(--primary-color); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.8rem; margin-bottom:20px;">
-                <i class="fas fa-chalkboard-teacher"></i>
-            </div>
-            <h3 style="color:var(--primary-dark); font-size:1.6rem; margin-bottom:15px;">Training Services for Training Centers & Institutes</h3>
-            <p style="color:var(--text-muted); line-height:1.8; margin-bottom:20px; font-size:1.05rem;">We provide ready-to-use training packages, designed according to the best professional standards to meet your clients' needs and elevate the level of programs offered to them.</p>
-            <h4 style="color:var(--text-color); margin-bottom:10px;">Features:</h4>
-            <ul style="list-style:none; padding:0; line-height:1.8; color:var(--text-muted);">
-                <li><i class="fas fa-check" style="color:var(--primary-color); margin-right:10px;"></i> Comprehensive training packages (Trainer's manual, Trainee's manual, presentation, evaluation tools).</li>
-                <li><i class="fas fa-check" style="color:var(--primary-color); margin-right:10px;"></i> Continuous content updates to keep pace with changes in the labor market.</li>
-                <li><i class="fas fa-check" style="color:var(--primary-color); margin-right:10px;"></i> Providing accreditations and documentation for packages to facilitate their delivery by centers.</li>
-                <li><i class="fas fa-check" style="color:var(--primary-color); margin-right:10px;"></i> Ability to design customized training packages upon center request.</li>
-            </ul>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-<!-- Why Section -->
-
-
-  <!-- Newsletter / CTA Section -->
-
-
-  <!-- Articles Section -->
-
-
-  <!-- Contact Section -->
-
-
-  
-<!-- Footer -->
-<footer class="footer">
-<div class="footer-top">
-<div class="container">
-<div class="footer-grid">
-<div class="footer-brand">
-
-<p>A certified professional training platform aiming to prepare professional cadres capable of dealing with the modern labor market.
+        <!-- Track 1: Courses -->
+        <div class="pathway-card" style="background:#fff; border-radius:16px; padding:30px; border:1px solid var(--border); display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 4px 20px rgba(0,0,0,0.03);">
+          <div>
+            <div style="font-size:0.85rem; font-weight:800; color:var(--gold); margin-bottom:8px;">01 — PRACTICAL TRACK</div>
+            <h3 style="font-size:1.4rem; color:var(--primary); margin-bottom:12px;">Training Courses</h3>
+            <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.7; margin-bottom:20px;">
+              A new skill today... A greater opportunity tomorrow. Specialized training focused on immediate operational excellence in leadership, PMP, customer experience, and labor regulations.
             </p>
-<div class="social-links">
-<a aria-label="Facebook" class="social-link" href="https://www.facebook.com/nibars8883" target="_blank"><i class="fab fa-facebook-f"></i></a>
-<a aria-label="Instagram" class="social-link" href="https://www.instagram.com/nibars8883" target="_blank"><i class="fab fa-instagram"></i></a>
-              <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
-<a aria-label="LinkedIn" class="social-link" href="https://www.linkedin.com/in/nibras-academy-5803a239b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-<a aria-label="WhatsApp" class="social-link" href="https://wa.me/201112220796" target="_blank"><i class="fab fa-whatsapp"></i></a>
-</div>
-</div>
-<div class="footer-links-col">
-<h5>Quick Links</h5>
-<ul>
-<li><a href="../../en/index.html">Home</a></li>
-<li><a href="about.html">About Us</a></li>
-<li><a href="programs.html">Our Programs</a></li>
+          </div>
+          <a href="pro_courses.html" class="btn-outline" style="width:100%; text-align:center;">Explore Courses <i class="fas fa-arrow-right"></i></a>
+        </div>
 
-<li><a href="verify.html">Verify Certificates</a></li>
-<li><a href="contact.html">Contact Us</a></li>
-</ul>
-</div>
-<div class="footer-links-col">
-<h5>Programs</h5>
-<ul>
-<li><a href="#programs">Professional PhD</a></li>
-<li><a href="#programs">Professional Masters</a></li>
-<li><a href="#programs">Professional Diploma</a></li>
-</ul>
-</div>
-<div class="footer-links-col">
-<h5>Legal</h5>
-<ul>
-<li><a href="privacy.html">Privacy Policy</a></li>
-<li><a href="terms.html">Terms &amp; Conditions</a></li>
-<li><a href="refund.html">Refund Policy</a></li>
-<li><a href="accessibility.html">Accessibility</a></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="footer-bottom">
-<div class="container">
-<p>© 2026 Nibras. All rights reserved.</p>
-</div>
-</div>
-</footer>
-<!-- Scroll to Top -->
-<button aria-label="العودة للأعلى" class="scroll-top" id="scrollTop">
-<i class="fas fa-arrow-up"></i>
-</button>
-<!-- Toast Notification -->
-<div class="toast" id="toast"></div>
-<script src="../../assets/js/script.js"></script>
+        <!-- Track 2: Diplomas -->
+        <div class="pathway-card" style="background:#fff; border-radius:16px; padding:30px; border:1px solid var(--border); display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 4px 20px rgba(0,0,0,0.03);">
+          <div>
+            <div style="font-size:0.85rem; font-weight:800; color:var(--gold); margin-bottom:8px;">02 — SPECIALIZATION</div>
+            <h3 style="font-size:1.4rem; color:var(--primary); margin-bottom:12px;">Professional Diplomas</h3>
+            <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.7; margin-bottom:20px;">
+              Deeper specialization... richer practical experience. Applied programs designed to consolidate functional mastery across 15 high-demand corporate disciplines.
+            </p>
+          </div>
+          <a href="diploma.html" class="btn-outline" style="width:100%; text-align:center;">Explore Diplomas <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <!-- Track 3: Masters -->
+        <div class="pathway-card featured" style="background:#fff; border-radius:16px; padding:30px; border:2px solid var(--gold); display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 8px 25px rgba(200,154,80,0.15);">
+          <div>
+            <div style="font-size:0.85rem; font-weight:800; color:var(--gold); margin-bottom:8px;">03 — EXECUTIVE MASTERY</div>
+            <h3 style="font-size:1.4rem; color:var(--primary); margin-bottom:12px;">Professional Master</h3>
+            <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.7; margin-bottom:20px;">
+              Elevate your expertise... expand your leadership horizons. Comprehensive master tracks across 18 specialized disciplines combining modern theory with strategic application.
+            </p>
+          </div>
+          <a href="masters.html" class="btn-primary" style="width:100%; text-align:center;">Explore Master Tracks <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <!-- Track 4: PhD -->
+        <div class="pathway-card" style="background:#fff; border-radius:16px; padding:30px; border:1px solid var(--border); display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 4px 20px rgba(0,0,0,0.03);">
+          <div>
+            <div style="font-size:0.85rem; font-weight:800; color:var(--gold); margin-bottom:8px;">04 — HIGHEST QUALIFICATION</div>
+            <h3 style="font-size:1.4rem; color:var(--primary); margin-bottom:12px;">Professional Doctorate</h3>
+            <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.7; margin-bottom:20px;">
+              For experienced leaders and researchers. High-level doctorate tracks focused on strategic research, governance, and transformational leadership.
+            </p>
+          </div>
+          <a href="phd.html" class="btn-outline" style="width:100%; text-align:center;">Explore Doctorate <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Corporate & Institutional Services (From PDF Page 30-33) -->
+  <section id="services" style="padding: 80px 0; background: #ffffff;">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 50px;">
+        <div class="section-badge">Corporate & Institutional Solutions</div>
+        <h2 class="section-title">Training Designed Around <span class="highlight">Your Needs</span></h2>
+        <p class="section-subtitle">
+          From individual skill acceleration to institutional capacity building and comprehensive training package development.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 50px;">
+        
+        <!-- Pillar 1 -->
+        <div style="background:var(--bg-surface); border-radius:16px; padding:35px; border:1px solid var(--border);">
+          <div style="font-size:2rem; color:var(--gold); margin-bottom:15px;"><i class="fas fa-building"></i></div>
+          <h3 style="font-size:1.35rem; color:var(--primary); margin-bottom:12px;">Corporate Solutions</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.8; margin-bottom:15px;">
+            Tailored programs crafted around strategic enterprise goals, skill gap audits, and team performance metrics with flexible remote delivery.
+          </p>
+          <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem; color:var(--text-main); display:flex; flex-direction:column; gap:8px;">
+            <li><i class="fas fa-check text-gold"></i> Training Needs Analysis (TNA)</li>
+            <li><i class="fas fa-check text-gold"></i> Custom Curriculum Development</li>
+            <li><i class="fas fa-check text-gold"></i> Progress Tracking & Comprehensive Reporting</li>
+          </ul>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div style="background:var(--bg-surface); border-radius:16px; padding:35px; border:1px solid var(--border);">
+          <div style="font-size:2rem; color:var(--gold); margin-bottom:15px;"><i class="fas fa-chalkboard-teacher"></i></div>
+          <h3 style="font-size:1.35rem; color:var(--primary); margin-bottom:12px;">Training Package Development</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.8; margin-bottom:15px;">
+            End-to-end training kit engineering for academic institutes and training academies seeking accredited, turnkey material.
+          </p>
+          <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem; color:var(--text-main); display:flex; flex-direction:column; gap:8px;">
+            <li><i class="fas fa-check text-gold"></i> Instructor & Trainee Manuals</li>
+            <li><i class="fas fa-check text-gold"></i> Interactive Slide Decks & Case Studies</li>
+            <li><i class="fas fa-check text-gold"></i> Assessment Toolkits & Evaluation Rubrics</li>
+          </ul>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div style="background:var(--bg-surface); border-radius:16px; padding:35px; border:1px solid var(--border);">
+          <div style="font-size:2rem; color:var(--gold); margin-bottom:15px;"><i class="fas fa-user-tie"></i></div>
+          <h3 style="font-size:1.35rem; color:var(--primary); margin-bottom:12px;">Individual Professional Coaching</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.8; margin-bottom:15px;">
+            Dedicated counseling helping professionals map out their educational pathway, choose the optimal track, and advance confidently.
+          </p>
+          <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem; color:var(--text-main); display:flex; flex-direction:column; gap:8px;">
+            <li><i class="fas fa-check text-gold"></i> Personalized Academic Advisory</li>
+            <li><i class="fas fa-check text-gold"></i> Digital Certificate Issuance & Verification</li>
+            <li><i class="fas fa-check text-gold"></i> Ongoing Knowledge Support</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Custom Request Form -->
+      <div style="max-width: 750px; margin: 0 auto; background: var(--bg-surface); border-radius: 20px; padding: 40px; border: 1px solid var(--border);">
+        <div style="text-align: center; margin-bottom: 25px;">
+          <h3 style="font-size: 1.5rem; color: var(--primary); margin-bottom: 8px;">Do You Have a Customized Training Need?</h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Send us your organizational requirements and our corporate solutions team will coordinate with you.</p>
+        </div>
+
+        <form id="serviceCustomForm" onsubmit="handleContact(event)">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
+            <input type="text" name="name" placeholder="Full Name *" required style="padding:12px 16px; border:1px solid var(--border); border-radius:10px; font-family:inherit;" />
+            <input type="tel" name="phone" placeholder="Contact Phone / WhatsApp *" required style="padding:12px 16px; border:1px solid var(--border); border-radius:10px; font-family:inherit;" />
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
+            <input type="email" name="email" placeholder="Email Address (Optional)" style="padding:12px 16px; border:1px solid var(--border); border-radius:10px; font-family:inherit;" />
+            <select name="inquiryType" style="padding:12px 16px; border:1px solid var(--border); border-radius:10px; font-family:inherit; background:#fff;">
+              <option value="الخدمات التدريبية للشركات">Corporate Solutions</option>
+              <option value="خدمات مراكز التدريب">Training Package Development</option>
+              <option value="الماجستير المهني">Executive Master Inquiries</option>
+              <option value="استفسار عام">Other Inquiries</option>
+            </select>
+          </div>
+          <textarea name="message" rows="4" placeholder="Briefly describe your team or institutional requirements *" required style="width:100%; padding:12px 16px; border:1px solid var(--border); border-radius:10px; font-family:inherit; margin-bottom:20px;"></textarea>
+          <button type="submit" class="btn-primary" style="width:100%; justify-content:center; padding:12px;">Submit Request</button>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="../../assets/img/logo.png" alt="Nibras Academy" style="max-height: 55px; margin-bottom: 15px;">
+            <p><strong>Nibras Academy for Training & Professional Development</strong><br>Building capabilities... Creating impact that extends into the future.</p>
+            <div class="social-links">
+              <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+              <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>Academy</h5>
+            <ul>
+              <li><a href="../../en/index.html">Home</a></li>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="programs.html">Programs & Services</a></li>
+              <li><a href="articles.html">Articles & Media</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Tracks</h5>
+            <ul>
+              <li><a href="pro_courses.html">Courses</a></li>
+              <li><a href="diploma.html">Diplomas</a></li>
+              <li><a href="masters.html">Professional Master</a></li>
+              <li><a href="phd.html">Doctorate</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Links</h5>
+            <ul>
+              <li><a href="verify.html">Verification</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="terms.html">Terms</a></li>
+              <li><a href="refund.html">Refunds</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 Nibras Academy for Training & Professional Development. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="Back to Top"><i class="fas fa-arrow-up"></i></button>
+  <div class="toast" id="toast"></div>
+
+  <script src="../../assets/js/script.js"></script>
 </body>
 </html>

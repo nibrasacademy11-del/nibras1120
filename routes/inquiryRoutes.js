@@ -7,6 +7,7 @@ router.post('/', inquiryController.createInquiry);
 
 // Admin only
 router.get('/', authRequired, adminRequired, inquiryController.getAllInquiries);
+router.put('/:id', authRequired, adminRequired, inquiryController.updateInquiryStatus);
 router.delete('/:id', authRequired, adminRequired, inquiryController.deleteInquiry);
 
 module.exports = router;

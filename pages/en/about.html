@@ -1,339 +1,285 @@
 <!DOCTYPE html>
+<html lang="en" dir="ltr">
 
-<html dir="ltr" lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>About Us | Nibras</title>
-<meta content="Nibras - an accredited vocational training and qualification platform, which aims to prepare professional cadres capable of dealing with the requirements of the modern labor market." name="description"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-<link href="../../assets/css/style.css" rel="stylesheet"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | Nibras Academy for Training & Professional Qualification</title>
+  <meta name="description"
+    content="Learn about Nibras Academy for Training & Professional Qualification - our vision, mission, core values, and training methodology for modern workplaces." />
+  <link rel="canonical" href="https://nibras-ac.com/pages/en/about.html" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
 </head>
+
 <body>
 
-        <!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
-
-        
-    <!-- Floating Cart Button -->
-    <div class="floating-cart" onclick="toggleCart(event)">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="floating-cart-badge cart-badge">0</span>
+  <!-- Cart Sidebar -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+      <button onclick="toggleCart(event)" class="close-cart">&times;</button>
     </div>
-
-<!-- Navbar -->
-<nav class="navbar" id="navbar">
-<div class="nav-container">
-<a class="nav-logo" href="../../en/index.html">
-<img alt="Nibras" src="../../assets/img/logo.png"/>
-</a>
-<ul class="nav-links" id="navLinks">
-<li><a class="nav-btn" href="../ar/about.html" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
-<li><a class="nav-link" href="../../en/index.html">Home</a></li>
-<li><a class="nav-link active" href="about.html">About Us</a></li>
-<li><a class="nav-link" href="programs.html">Services</a></li>
-
-<li><a class="nav-link" href="contact.html">Contact Us</a></li>
-<li><a class="nav-link" href="verify.html">Verify Certificates</a></li>
-<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li><a class="nav-btn" href="login.html">Login</a></li>
-</ul>
-<button aria-label="القائمة" class="hamburger" id="hamburger">
-<span></span><span></span><span></span>
-</button>
-</div>
-</nav>
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-<ul>
-<li><a class="nav-btn" href="../ar/about.html" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
-<li><a href="../../en/index.html">Home</a></li>
-<li><a href="about.html">About Us</a></li>
-<li><a href="programs.html">Services</a></li>
-      <li><a href="articles.html">Articles</a></li>
-
-<li><a href="contact.html">Contact Us</a></li>
-<li><a href="verify.html">Verify Certificates</a></li>
-<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li><a class="mobile-btn" href="login.html">Login</a></li>
-</ul>
-</div>
-<!-- Page Header -->
-<section class="page-header">
-<div class="container">
-<h1>About Us</h1>
-<p>Learn more about the Nebras platform for accredited vocational training and qualification</p>
-</div>
-</section>
-<!-- Stats Section -->
-<section class="stats-section">
-<div class="container">
-<div class="stats-grid">
-<div class="stat-item" data-target="26">
-<div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-<div class="stat-number"><span class="counter">0</span>+</div>
-<div class="stat-label">Certified trainer</div>
-</div>
-<div class="stat-item" data-target="66">
-<div class="stat-icon"><i class="fas fa-certificate"></i></div>
-<div class="stat-number"><span class="counter">0</span>+</div>
-<div class="stat-label">Professional accreditation</div>
-</div>
-<div class="stat-item" data-target="500">
-<div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
-<div class="stat-number"><span class="counter">0</span>+</div>
-<div class="stat-label">Student and graduate</div>
-</div>
-<div class="stat-item" data-target="5">
-<div class="stat-icon"><i class="fas fa-star"></i></div>
-<div class="stat-number"><span class="counter">0</span></div>
-<div class="stat-label">Student evaluation</div>
-</div>
-</div>
-</div>
-</section>
-<!-- About Content Section -->
-<section class="about-section" id="about">
-<div class="container">
-<div class="about-grid">
-<div class="about-visual">
-<div class="about-img-wrapper">
-<div class="about-shape-bg"></div>
-<div class="about-info-cards">
-<div class="about-info-card">
-<i class="fas fa-medal"></i>
-<div>
-<strong>International accreditation</strong>
-<p>Documented and accredited programs</p>
-</div>
-</div>
-<div class="about-info-card">
-<i class="fas fa-briefcase"></i>
-<div>
-<strong>Practical application</strong>
-<p>Real market experience</p>
-</div>
-</div>
-<div class="about-info-card">
-<i class="fas fa-route"></i>
-<div>
-<strong>Clear path</strong>
-<p>Integrated development plan</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="about-content">
-<div class="section-badge">Our story</div>
-<h2 class="section-title">Nibras <span class="highlight">The story and the beginning</span></h2>
-<p class="about-text">
-            Nibras was founded on our belief that true vocational education should be practical, accredited, and connected to actual labor market needs. For more than three years in the Kingdom of Saudi Arabia, the Academy has been working to provide specialized training programs that help individuals and institutions develop their skills and build strong and sustainable career paths.
-          </p>
-<p class="about-text">
-            At Nebras, we believe that knowledge alone is not enough, but must be translated into applicable skills and tangible results in the professional reality.
-          </p>
-<div class="about-features" style="display:flex; flex-direction:column; gap:8px;">
-<p><strong>About us:</strong> Nibras is a specialized vocational education and training platform that provides accredited and targeted programs for individuals, entities and institutions. We cover a range of vital specialties including:</p>
-<ul style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-<li><i class="fas fa-check-circle"></i> Political science</li>
-<li><i class="fas fa-check-circle"></i> Economics sciences</li>
-<li><i class="fas fa-check-circle"></i> Corporate governance</li>
-<li><i class="fas fa-check-circle"></i> Cyber ​​security</li>
-<li><i class="fas fa-check-circle"></i> Hotel management</li>
-<li><i class="fas fa-check-circle"></i> Logistics services</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Vision & Mission Section -->
-<section class="why-section" style="background: var(--bg-surface);">
-<div class="container">
-<div class="why-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-<div class="why-card">
-<div class="why-icon"><i class="fas fa-eye"></i></div>
-<h4>Our vision</h4>
-<p>To be a reliable reference in the field of professional training and accreditation at the region level, by providing educational programs with global standards and real impact.</p>
-</div>
-<div class="why-card">
-<div class="why-icon"><i class="fas fa-bullseye"></i></div>
-<h4>Our message</h4>
-<p>Providing high-quality vocational education and training that contributes to empowering individuals, raising the efficiency of human resources, and supporting institutions with effective training programs that keep pace with the requirements of the times.</p>
-</div>
-<div class="why-card">
-<div class="why-icon"><i class="fas fa-star"></i></div>
-<h4>Our values</h4>
-<ul style="text-align: right; color: var(--text-muted); font-size: 0.9rem; line-height: 1.7;">
-<li><strong>Credibility:</strong> Commitment to reliable content.</li>
-<li><strong>Quality:</strong> Highest standards of education.</li>
-<li><strong>Impact:</strong> Focus on practical results.</li>
-<li><strong>Continuous development:</strong> Lifelong learning.</li>
-<li><strong>Flexibility:</strong> An experience that suits everyone.</li>
-</ul>
-</div>
-</div>
-</div>
-</section>
-<!-- Learning Experience Section -->
-<section class="why-section">
-<div class="container">
-<div class="section-header">
-<div class="section-badge">Our advantages</div>
-<h2 class="section-title">Learning experience <span class="highlight">In Nebras</span></h2>
-<p class="section-subtitle">Nibras adopts a modern learning model that combines academic foundation with practical application</p>
-</div>
-<div class="why-grid">
-<div class="why-card">
-<div class="why-icon"><i class="fas fa-video"></i></div>
-<h4>Live and recorded lectures</h4>
-<p>Content is available at any time for your reference</p>
-</div>
-<div class="why-card">
-<div class="why-icon"><i class="fas fa-user-circle"></i></div>
-<h4>Private trainee account</h4>
-<p>To track academic progress with ease</p>
-</div>
-<div class="why-card">
-<div class="why-icon"><i class="fas fa-tasks"></i></div>
-<h4>Interim evaluations</h4>
-<p>To ensure understanding of the material without the annoying failure system</p>
-</div>
-<div class="why-card">
-<div class="why-icon"><i class="fas fa-file-alt"></i></div>
-<h4>Final exams</h4>
-<p>Certified tests for some programs to ensure quality</p>
-</div>
-<div class="why-card">
-<div class="why-icon"><i class="fas fa-download"></i></div>
-<h4>Digital certificates</h4>
-<p>Downloadable immediately after completing the program</p>
-</div>
-<div class="why-card">
-<div class="why-icon"><i class="fas fa-users-cog"></i></div>
-<h4>Elite coaches</h4>
-<p>Internationally certified trainers and specialists</p>
-</div>
-</div>
-</div>
-</section>
-  <!-- FAQ Section -->
-  <section class="faq-section" style="padding: 80px 0; background: white;">
-    <div class="container">
-      <div class="section-header">
-        <div class="section-badge">FAQ</div>
-        <h2 class="section-title">Frequently Asked <span class="highlight">Questions</span></h2>
-        <p class="section-subtitle">Answers to common questions about our programs and accreditations</p>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <strong id="cartTotal">0.00 US$</strong>
       </div>
-      
-      <div class="faq-grid" style="max-width: 800px; margin: 0 auto;">
-        
-        <div class="faq-item" style="margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:15px;">
-            <h5 style="color:var(--secondary-color); margin-bottom:5px;"><i class="fas fa-question-circle" style="color:var(--primary-color);"></i> Are the Academy programs accredited?</h5>
-            <p style="font-size:0.95rem; color:var(--text-color);">Yes, all Nibras Academy programs are accredited by reliable international and local bodies specialized in professional training.</p>
-        </div>
+      <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
+    </div>
+  </div>
+  <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
 
-        <div class="faq-item" style="margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:15px;">
-            <h5 style="color:var(--secondary-color); margin-bottom:5px;"><i class="fas fa-question-circle" style="color:var(--primary-color);"></i> How can I register for a program?</h5>
-            <p style="font-size:0.95rem; color:var(--text-color);">You can register easily by choosing the appropriate program, clicking the "Add to Cart" button, and then proceeding to checkout.</p>
-        </div>
+  <!-- Floating Cart Button -->
+  <div class="floating-cart" onclick="toggleCart(event)">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="floating-cart-badge cart-badge">0</span>
+  </div>
 
-        <div class="faq-item" style="margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:15px;">
-            <h5 style="color:var(--secondary-color); margin-bottom:5px;"><i class="fas fa-question-circle" style="color:var(--primary-color);"></i> Is there technical and professional support after graduation?</h5>
-            <p style="font-size:0.95rem; color:var(--text-color);">Certainly! At Nibras, we are keen to provide continuous guidance to our graduates to ensure they get the maximum benefit from the programs in the professional environment.</p>
-        </div>
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar scrolled">
+    <div class="nav-container">
+      <a href="../../en/index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="Nibras Academy" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../ar/about.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> العربية</a></li>
+        <li><a href="../../en/index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link active">About Us</a></li>
+        <li><a href="programs.html" class="nav-link">Programs & Services</a></li>
+        <li><a href="articles.html" class="nav-link">Articles & Media</a></li>
+        <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+        <li><a href="verify.html" class="nav-link">Verify Certificate</a></li>
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li id="navAuth"><a href="login.html" class="nav-btn">Login</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
 
-        <div class="faq-item" style="margin-bottom:15px; border-bottom:1px solid #ddd; padding-bottom:15px;">
-            <h5 style="color:var(--secondary-color); margin-bottom:5px;"><i class="fas fa-question-circle" style="color:var(--primary-color);"></i> Is the learning in-person or remote?</h5>
-            <p style="font-size:0.95rem; color:var(--text-color);">We provide flexible tracks that include remote training (live and recorded) to suit your schedule, in addition to some in-person programs.</p>
-        </div>
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../ar/about.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> العربية</a></li>
+      <li><a href="../../en/index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="programs.html">Programs & Services</a></li>
+      <li><a href="articles.html">Articles & Media</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="verify.html">Verify Certificate</a></li>
+      <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+      <li id="mobileNavAuth"><a href="login.html" class="mobile-btn">Login</a></li>
+    </ul>
+  </div>
 
+  <!-- Page Header -->
+  <section class="page-header" style="background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); color: #ffffff; padding: 130px 0 60px; text-align: center;">
+    <div class="container">
+      <div class="section-badge" style="background: rgba(255,255,255,0.15); color: #ffffff; margin-bottom: 12px;">About Us</div>
+      <h1 style="font-size: 2.6rem; color: #ffffff; margin-bottom: 15px;">About Nibras Academy</h1>
+      <p style="font-size: 1.2rem; max-width: 750px; margin: 0 auto; opacity: 0.95;">
+        Building competencies and making an impact that extends to the future
+      </p>
+    </div>
+  </section>
+
+  <!-- Intro Section -->
+  <section style="padding: 80px 0; background: #ffffff;">
+    <div class="container">
+      <div style="max-width: 950px; margin: 0 auto;">
+        <h2 style="font-size: 2.1rem; color: var(--primary); margin-bottom: 25px; line-height: 1.4;">
+          We Believe True Investment Begins with Human Potential
+        </h2>
+        <p style="font-size: 1.15rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 20px;">
+          At <strong>Nibras Academy for Training & Professional Qualification</strong>, we believe that real investment begins with human capability. Guided by this conviction, we deliver educational experiences that help individuals and professionals expand their knowledge, elevate their skills, and thrive in dynamic labor markets.
+        </p>
+        <p style="font-size: 1.15rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 20px;">
+          We do not view training as merely content delivered and concluded; we see it as an integrated journey starting from understanding learner goals through skill mastery to real-world value creation.
+        </p>
+        <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary-dark); padding: 15px 20px; background: #fdf2f4; border-left: 4px solid var(--primary); border-radius: 6px;">
+          Nibras... Because professional development never stops at one stage.
+        </div>
       </div>
     </div>
   </section>
 
-<!-- Footer -->
-<footer class="footer">
-<div class="footer-top">
-<div class="container">
-<div class="footer-grid">
-<div class="footer-brand">
+  <!-- Section: Stats -->
+  <section class="stats-section" style="padding: 70px 0; background: var(--bg-main);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">Measured Impact</div>
+        <h2 class="section-title">Nibras in Numbers... <span class="highlight">A Track Record That Speaks</span></h2>
+        <p class="section-subtitle">Grown through continuous commitment to professional qualification across key corporate sectors.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item" data-target="500">
+          <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+          <div class="stat-number"><span class="counter">0</span>+</div>
+          <div class="stat-label">Graduates & Learners</div>
+        </div>
+        <div class="stat-item" data-target="26">
+          <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+          <div class="stat-number"><span class="counter">0</span>+</div>
+          <div class="stat-label">Instructors & Experts</div>
+        </div>
+        <div class="stat-item" data-target="66">
+          <div class="stat-icon"><i class="fas fa-certificate"></i></div>
+          <div class="stat-number"><span class="counter">0</span>+</div>
+          <div class="stat-label">Programs & Specialties</div>
+        </div>
+        <div class="stat-item" data-target="5">
+          <div class="stat-icon"><i class="fas fa-history"></i></div>
+          <div class="stat-number"><span class="counter">0</span>+</div>
+          <div class="stat-label">Years of Experience</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<p>A certified professional training platform aiming to prepare professional cadres capable of dealing with the modern labor market.</p>
-<div class="social-links">
-<a aria-label="Facebook" class="social-link" href="https://www.facebook.com/nibars8883" target="_blank"><i class="fab fa-facebook-f"></i></a>
-<a aria-label="Instagram" class="social-link" href="https://www.instagram.com/nibars8883" target="_blank"><i class="fab fa-instagram"></i></a>
+  <!-- Vision & Mission -->
+  <section style="padding: 90px 0; background: #ffffff;">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+        <div style="background: #ffffff; border-radius: var(--radius); padding: 40px; border-top: 5px solid var(--primary); box-shadow: var(--shadow);">
+          <div style="width:50px; height:50px; border-radius:12px; background:#fef1f2; color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:20px;">
+            <i class="fas fa-eye"></i>
+          </div>
+          <h3 style="font-size: 1.6rem; color: var(--primary); margin-bottom: 15px;">Our Vision</h3>
+          <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-main); font-weight: 600; margin-bottom: 15px;">
+            To be a leading platform in professional training and qualification.
+          </p>
+          <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text-muted);">
+            Contributing to building future-ready competencies capable of navigating market transformations and participating effectively in the future of labor in Saudi Arabia and the Gulf region.
+          </p>
+        </div>
+
+        <div style="background: #ffffff; border-radius: var(--radius); padding: 40px; border-top: 5px solid var(--gold); box-shadow: var(--shadow);">
+          <div style="width:50px; height:50px; border-radius:12px; background:#fffcf0; color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:20px;">
+            <i class="fas fa-bullseye"></i>
+          </div>
+          <h3 style="font-size: 1.6rem; color: var(--primary); margin-bottom: 15px;">Our Mission</h3>
+          <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text-muted);">
+            Empowering individuals and professionals with practical knowledge, actionable skills, and applied expertise that enhance career readiness, foster competitive capability, and create genuine value in modern workplaces.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Values -->
+  <section style="padding: 90px 0; background: var(--bg-main);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">Core Values</div>
+        <h2 class="section-title">Values We Believe In... <span class="highlight">And Build Upon</span></h2>
+        <p class="section-subtitle">Principles that guide our educational standards and institutional integrity.</p>
+      </div>
+
+      <div class="why-grid-6">
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-star"></i></div>
+          <h3>Excellence</h3>
+          <p>Delivering high-value educational experiences committed to continuous improvement.</p>
+        </div>
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-user-shield"></i></div>
+          <h3>Professionalism</h3>
+          <p>Upholding transparency, credibility, and mutual responsibility with learners and partners.</p>
+        </div>
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-lightbulb"></i></div>
+          <h3>Innovation</h3>
+          <p>Adopting modern learning methodologies that respond to rapid technological and industry shifts.</p>
+        </div>
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-hands-helping"></i></div>
+          <h3>Empowerment</h3>
+          <p>Equipping individuals with tools and capabilities to create opportunities and lead change.</p>
+        </div>
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-chart-line"></i></div>
+          <h3>Impact</h3>
+          <p>Ensuring that true learning manifests in tangible workplace outcomes and performance.</p>
+        </div>
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-infinity"></i></div>
+          <h3>Lifelong Learning</h3>
+          <p>Believing development never ceases and sustained learning is the basis for lasting achievement.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="../../en/index.html" class="nav-logo" style="margin-bottom:15px; display:inline-block;">
+              <img src="../../assets/img/logo.png" alt="Nibras Academy" style="max-height:60px;" />
+            </a>
+            <h4 style="color:#ffffff; font-size:1.1rem; margin-bottom:8px;">Nibras Academy</h4>
+            <p style="color:#cbd5e1; font-size:0.95rem; line-height:1.7; margin-bottom:18px;">Knowledge that develops. Skills that empower. A future built together.</p>
+            <div class="social-links">
+              <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
               <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
-<a aria-label="LinkedIn" class="social-link" href="https://www.linkedin.com/in/nibras-academy-5803a239b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-<a aria-label="WhatsApp" class="social-link" href="https://wa.me/201112220796" target="_blank"><i class="fab fa-whatsapp"></i></a>
-</div>
-</div>
-<div class="footer-links-col">
-<h5>Quick Links</h5>
-<ul>
-<li><a href="../../en/index.html">Home</a></li>
-<li><a href="about.html">About Us</a></li>
-<li><a href="programs.html">Our Programs</a></li>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>Academy</h5>
+            <ul>
+              <li><a href="../../en/index.html">Home</a></li>
+              <li><a href="about.html">About Nibras</a></li>
+              <li><a href="programs.html">Programs</a></li>
+              <li><a href="articles.html">Articles & Media</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Programs</h5>
+            <ul>
+              <li><a href="pro_courses.html">Professional Courses</a></li>
+              <li><a href="diploma.html">Professional Diplomas</a></li>
+              <li><a href="masters.html">Professional Masters</a></li>
+              <li><a href="phd.html">Professional Doctorate</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Important Links</h5>
+            <ul>
+              <li><a href="verify.html">Verify Certificate</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="terms.html">Terms & Conditions</a></li>
+              <li><a href="refund.html">Refund Policy</a></li>
+              <li><a href="accessibility.html">Accessibility</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 Nibras Academy for Training & Professional Qualification. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
 
-<li><a href="verify.html">Verify Certificates</a></li>
-<li><a href="contact.html">Contact Us</a></li>
-</ul>
-</div>
-<div class="footer-links-col">
-<h5>Programs</h5>
-<ul>
-<li><a href="#programs">Professional PhD</a></li>
-<li><a href="#programs">Professional Masters</a></li>
-<li><a href="#programs">Professional Diploma</a></li>
-</ul>
-</div>
-<div class="footer-links-col">
-<h5>Legal</h5>
-<ul>
-<li><a href="privacy.html">Privacy Policy</a></li>
-<li><a href="terms.html">Terms &amp; Conditions</a></li>
-<li><a href="refund.html">Refund Policy</a></li>
-<li><a href="accessibility.html">Accessibility</a></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="footer-bottom">
-<div class="container">
-<p>© 2026 Nibras. All rights reserved.</p>
-</div>
-</div>
-</footer>
-<!-- Scroll to Top -->
-<button aria-label="العودة للأعلى" class="scroll-top" id="scrollTop">
-<i class="fas fa-arrow-up"></i>
-</button>
-<!-- Toast Notification -->
-<div class="toast" id="toast"></div>
-<script src="../../assets/js/script.js"></script>
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  <div class="toast" id="toast"></div>
+
+  <script src="../../assets/js/script.js" defer></script>
 </body>
 </html>
-
-

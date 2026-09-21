@@ -1,178 +1,229 @@
 <!DOCTYPE html>
-
-<html dir="ltr" lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Verify Certificates | Nibras</title>
-<meta content="Nibras - an accredited vocational training and qualification platform, which aims to prepare professional cadres capable of dealing with the requirements of the modern labor market." name="description"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-<link href="../../assets/css/style.css" rel="stylesheet"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certificate Verification | Nibras Academy for Training & Professional Development</title>
+  <meta name="description" content="Online digital verification system to validate and authenticate credentials issued by Nibras Academy." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
 </head>
 <body>
 
-        <!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
-
-        
-    <!-- Floating Cart Button -->
-    <div class="floating-cart" onclick="toggleCart(event)">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="floating-cart-badge cart-badge">0</span>
+  <!-- Cart Sidebar -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+      <button onclick="toggleCart(event)" class="close-cart">&times;</button>
     </div>
-            
-<!-- Navbar -->
-<nav class="navbar scrolled" id="navbar">
-<div class="nav-container">
-<a class="nav-logo" href="../../en/index.html">
-<img alt="Nibras" src="../../assets/img/logo.png"/>
-</a>
-<ul class="nav-links" id="navLinks">
-<li><a class="nav-btn" href="../ar/verify.html" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
-<li><a class="nav-link" href="../../en/index.html">Home</a></li>
-<li><a class="nav-link" href="about.html">About Us</a></li>
-<li><a class="nav-link" href="programs.html">Services</a></li>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <strong id="cartTotal">0.00 US$</strong>
+      </div>
+      <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Proceed to Checkout <i class="fas fa-credit-card"></i></a>
+    </div>
+  </div>
+  <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
 
-<li><a class="nav-link" href="contact.html">Contact Us</a></li>
-<li><a class="nav-link active" href="verify.html">Verify Certificates</a></li>
-<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li><a class="nav-btn" href="login.html">Login</a></li>
-</ul>
-<button aria-label="القائمة" class="hamburger" id="hamburger">
-<span></span><span></span><span></span>
-</button>
-</div>
-</nav>
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-<ul>
-<li><a class="nav-btn" href="../ar/verify.html" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
-<li><a href="../../en/index.html">Home</a></li>
-<li><a href="about.html">About Us</a></li>
-<li><a href="programs.html">Services</a></li>
-      <li><a href="articles.html">Articles</a></li>
+  <!-- Floating Cart Button -->
+  <div class="floating-cart" onclick="toggleCart(event)">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="floating-cart-badge cart-badge">0</span>
+  </div>
 
-<li><a href="contact.html">Contact Us</a></li>
-<li><a href="verify.html">Verify Certificates</a></li>
-<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li><a class="mobile-btn" href="login.html">Login</a></li>
-</ul>
-</div>
-<!-- Verify Section -->
-<section class="page-header">
-<div class="container">
-<h1>Verify Certificates</h1>
-<p>Enter your certificate number to verify its authenticity in Nibras records</p>
-</div>
-</section>
-<section class="verify-section">
-<div class="container">
-<div class="verify-card">
-<div class="verify-icon"><i class="fas fa-certificate"></i></div>
-<h2>Check your certificate now</h2>
-<p style="color:var(--text-muted); margin:8px 0 20px; line-height:1.9;">
-This verification service gives clients fast and trusted certificate validation backed by Nibras records and clear audit-ready details.
-</p>
-<form class="verify-form" id="verifyForm">
-<label>Certificate Number</label>
-<input id="certNumber" placeholder="Enter Certificate Number to verify..." required="" type="text"/>
-<button class="btn-primary" type="submit"><i class="fas fa-search"></i> Verify Now</button>
-</form>
-<div style="background:#f8f9fb; border:1px solid #e6e8ef; border-radius:12px; padding:14px; margin-top:16px; text-align:left;">
-<strong style="display:block; margin-bottom:8px; color:var(--primary-color);">Why clients trust this verification</strong>
-<ul style="margin:0; padding-left:18px; color:#4d5761; line-height:1.9;">
-<li>Direct match against the academy certificate registry.</li>
-<li>Immediate display of key certificate details.</li>
-<li>Optional PDF download when uploaded by admin.</li>
-</ul>
-</div>
-<div class="verify-result hidden" id="verifyResult">
-<!-- Result will be injected here via JS -->
-</div>
-</div>
-</div>
-</section>
-<!-- Footer -->
-<footer class="footer">
-<div class="footer-top">
-<div class="container">
-<div class="footer-grid">
-<div class="footer-brand">
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar scrolled">
+    <div class="nav-container">
+      <a href="../../en/index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="Nibras Academy" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../ar/verify.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> العربية</a></li>
+        <li><a href="../../en/index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="programs.html" class="nav-link">Programs & Services</a></li>
+        <li><a href="articles.html" class="nav-link">Articles & Media</a></li>
+        <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+        <li><a href="verify.html" class="nav-link active">Certificate Verification</a></li>
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="nav-btn">Sign In</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
 
-<p>A certified professional training platform aiming to prepare professional cadres capable of dealing with the modern labor market.</p>
-<div class="social-links">
-<a aria-label="Facebook" class="social-link" href="https://www.facebook.com/nibars8883" target="_blank"><i class="fab fa-facebook-f"></i></a>
-<a aria-label="Instagram" class="social-link" href="https://www.instagram.com/nibars8883" target="_blank"><i class="fab fa-instagram"></i></a>
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../ar/verify.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> العربية</a></li>
+      <li><a href="../../en/index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="programs.html">Programs & Services</a></li>
+      <li><a href="articles.html">Articles & Media</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="verify.html">Certificate Verification</a></li>
+      <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+      <li><a href="login.html" class="mobile-btn">Sign In</a></li>
+    </ul>
+  </div>
+
+  <!-- Breadcrumb & Header -->
+  <section class="page-header" style="background: linear-gradient(135deg, #380108 0%, #5a020e 45%, #750a18 100%); padding: 130px 0 70px; text-align: left; color: #fff;">
+    <div class="container">
+      <div style="font-size: 0.95rem; opacity: 0.85; margin-bottom: 15px;">
+        <a href="../../en/index.html" style="color: #fff; text-decoration: none;">Home</a> → 
+        <span style="color: var(--gold);">Certificate Verification</span>
+      </div>
+      <div class="section-badge" style="background: rgba(200,154,80,0.2); color: var(--gold); border: 1px solid var(--gold); display: inline-block; padding: 6px 16px; border-radius: 20px; font-weight: 700; margin-bottom: 15px;">
+        Credential Authentication
+      </div>
+      <h1 style="font-size: 2.6rem; font-weight: 800; margin-bottom: 15px;">Verify Certificate Online</h1>
+      <p style="font-size: 1.25rem; color: var(--gold); font-weight: 700; margin-bottom: 15px;">Instant, Reliable Validation for Nibras Qualifications</p>
+      <p style="font-size: 1.1rem; max-width: 800px; line-height: 1.8; opacity: 0.9; margin-bottom: 25px;">
+        Our digital verification portal enables employers and candidates to authenticate official records and match details instantly.
+      </p>
+    </div>
+  </section>
+
+  <!-- Verification Form Section -->
+  <section class="verify-section" style="padding: 70px 0; background: var(--bg-surface);">
+    <div class="container">
+      
+      <div class="verify-card" style="max-width: 750px; margin: 0 auto; background: #fff; border-radius: 20px; padding: 45px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        
+        <div style="text-align: center; margin-bottom: 30px;">
+          <div style="width: 70px; height: 70px; border-radius: 50%; background: #eef4fb; color: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 2rem;">
+            <i class="fas fa-certificate text-gold"></i>
+          </div>
+          <h2 style="font-size: 1.8rem; color: var(--primary); margin-bottom: 8px;">Certificate Verification</h2>
+          <p style="color: var(--text-muted); font-size: 1rem;">Enter the certificate reference number to search official records.</p>
+        </div>
+
+        <form class="verify-form" id="verifyForm" style="margin-bottom: 25px;">
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <input type="text" id="certNumber" required placeholder="Enter certificate number (e.g., NIB-2024-001)..." style="flex: 1; min-width: 260px; padding: 14px 18px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 1.05rem;" />
+            <button type="submit" class="btn-primary" style="padding: 14px 28px; font-size: 1.05rem;">
+              <i class="fas fa-search"></i> Verify Now
+            </button>
+          </div>
+        </form>
+
+        <!-- Verification Result Container -->
+        <div id="verifyResult" class="verify-result hidden"></div>
+
+        <!-- 3 Steps -->
+        <div style="margin-top: 35px; border-top: 1px solid var(--border); padding-top: 25px;">
+          <h4 style="color: var(--primary); margin-bottom: 15px; font-size: 1.1rem;"><i class="fas fa-info-circle text-gold"></i> Verification Steps</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div style="background: var(--bg-surface); padding: 15px; border-radius: 10px; border: 1px solid var(--border);">
+              <strong style="color: var(--gold); display: block; margin-bottom: 5px;">01 — Enter Cert Number</strong>
+              <small style="color: var(--text-muted);">Type the exact alphanumeric reference number as printed on the document.</small>
+            </div>
+            <div style="background: var(--bg-surface); padding: 15px; border-radius: 10px; border: 1px solid var(--border);">
+              <strong style="color: var(--gold); display: block; margin-bottom: 5px;">02 — Submit Request</strong>
+              <small style="color: var(--text-muted);">Click "Verify Now" to query the authorized database records.</small>
+            </div>
+            <div style="background: var(--bg-surface); padding: 15px; border-radius: 10px; border: 1px solid var(--border);">
+              <strong style="color: var(--gold); display: block; margin-bottom: 5px;">03 — Review Result</strong>
+              <small style="color: var(--text-muted);">View credential status, recipient details, and download digital PDF copy.</small>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Legal Notice -->
+      <div style="max-width: 750px; margin: 30px auto 0;">
+        
+        <!-- Not Found Guidance -->
+        <div style="background: #fff; border-radius: 14px; border: 1px solid var(--border); padding: 25px; margin-bottom: 20px;">
+          <h4 style="color: var(--primary); margin-bottom: 10px; font-size: 1.1rem;"><i class="fas fa-question-circle text-gold"></i> Certificate Not Found?</h4>
+          <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.8; margin-bottom: 15px;">
+            If no record matches the entered number, please verify that it was typed correctly without trailing spaces. If the issue persists, contact our records department for assistance.
+          </p>
+          <div style="display:flex; gap:15px; flex-wrap:wrap; font-size:0.95rem;">
+            <span><i class="fas fa-phone text-gold"></i> Phone: <strong>01112220796</strong></span>
+            <span><i class="fas fa-envelope text-gold"></i> Email: <strong>info@nibras-ac.com</strong></span>
+          </div>
+        </div>
+
+        <!-- Official Disclaimer -->
+        <div style="background: #fefcf3; border: 1px solid #f6e0b5; border-radius: 14px; padding: 25px;">
+          <h4 style="color: #8d5810; margin-bottom: 10px; font-size: 1.05rem;"><i class="fas fa-shield-alt"></i> Official Notice</h4>
+          <p style="color: #6a4a15; font-size: 0.92rem; line-height: 1.8; margin: 0;">
+            This electronic verification service displays records registered with Nibras Academy according to authorized system data. To ensure valid results, please rely exclusively on this official verification domain.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="../../assets/img/logo.png" alt="Nibras Academy" style="max-height: 55px; margin-bottom: 15px;">
+            <p><strong>Nibras Academy for Training & Professional Development</strong><br>Building capabilities... Creating impact that extends into the future.</p>
+            <div class="social-links">
+              <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
               <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
-<a aria-label="LinkedIn" class="social-link" href="https://www.linkedin.com/in/nibras-academy-5803a239b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-<a aria-label="WhatsApp" class="social-link" href="https://wa.me/201112220796" target="_blank"><i class="fab fa-whatsapp"></i></a>
-</div>
-</div>
-<div class="footer-links-col">
-<h5>Quick Links</h5>
-<ul>
-<li><a href="../../en/index.html">Home</a></li>
-<li><a href="about.html">About Us</a></li>
-<li><a href="programs.html">Our Programs</a></li>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>Academy</h5>
+            <ul>
+              <li><a href="../../en/index.html">Home</a></li>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="programs.html">Programs & Services</a></li>
+              <li><a href="articles.html">Articles & Media</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Tracks</h5>
+            <ul>
+              <li><a href="pro_courses.html">Courses</a></li>
+              <li><a href="diploma.html">Diplomas</a></li>
+              <li><a href="masters.html">Professional Master</a></li>
+              <li><a href="phd.html">Doctorate</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Links</h5>
+            <ul>
+              <li><a href="verify.html">Verification</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="terms.html">Terms</a></li>
+              <li><a href="refund.html">Refunds</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 Nibras Academy for Training & Professional Development. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
 
-<li><a href="verify.html">Verify Certificates</a></li>
-<li><a href="contact.html">Contact Us</a></li>
-</ul>
-</div>
-<div class="footer-links-col">
-<h5>Programs</h5>
-<ul>
-<li><a href="#programs">Professional PhD</a></li>
-<li><a href="#programs">Professional Masters</a></li>
-<li><a href="#programs">Professional Diploma</a></li>
-</ul>
-</div>
-<div class="footer-links-col">
-<h5>Legal</h5>
-<ul>
-<li><a href="privacy.html">Privacy Policy</a></li>
-<li><a href="terms.html">Terms &amp; Conditions</a></li>
-<li><a href="refund.html">Refund Policy</a></li>
-<li><a href="accessibility.html">Accessibility</a></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="footer-bottom">
-<div class="container">
-<p>© 2026 Nibras. All rights reserved.</p>
-</div>
-</div>
-</footer>
-<!-- Scroll to Top -->
-<button aria-label="العودة للأعلى" class="scroll-top" id="scrollTop">
-<i class="fas fa-arrow-up"></i>
-</button>
-<!-- Toast Notification -->
-<div class="toast" id="toast"></div>
-<script src="../../assets/js/script.js"></script>
+  <button class="scroll-top" id="scrollTop" aria-label="Back to Top"><i class="fas fa-arrow-up"></i></button>
+  <div class="toast" id="toast"></div>
+
+  <script src="../../assets/js/script.js"></script>
 </body>
 </html>
-
-

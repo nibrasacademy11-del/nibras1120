@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="pageTitle">Program Details | Nibras Academy</title>
+  <meta name="description" id="pageDescription" content="Professional program details and certified curricula at Nibras Academy for Training & Professional Qualification." />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
+</head>
+
+<body>
+
+  <!-- Cart Sidebar -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+      <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <strong id="cartTotal">0.00 US$</strong>
+      </div>
+      <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
+    </div>
+  </div>
+  <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+
+  <!-- Floating Cart Button -->
+  <div class="floating-cart" onclick="toggleCart(event)">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="floating-cart-badge cart-badge">0</span>
+  </div>
+
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar scrolled">
+    <div class="nav-container">
+      <a href="../../en/index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="Nibras Academy" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../../en/index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="programs.html" class="nav-link">Programs & Services</a></li>
+        <li><a href="articles.html" class="nav-link">Articles & Media</a></li>
+        <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+        <li><a href="verify.html" class="nav-link">Verify Certificate</a></li>
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li id="navAuth"><a href="login.html" class="nav-btn">Login</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Detail Header -->
+  <section class="program-detail-header" id="progHeader">
+    <div class="container">
+      <div style="font-size: 0.95rem; opacity: 0.85; margin-bottom: 15px;">
+        <a href="../../en/index.html" style="color:#ffffff;">Home</a> &gt; 
+        <a href="programs.html" style="color:#ffffff;">Programs</a> &gt; 
+        <span id="breadcrumbTitle">Program Details</span>
+      </div>
+      
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;" id="progBadges">
+        <span class="badge" style="background:var(--gold); color:#fff; font-weight:700; padding:6px 16px; border-radius:20px;" id="progTypeBadge">Professional Track</span>
+        <span class="badge" style="background:rgba(255,255,255,0.2); color:#fff; padding:6px 16px; border-radius:20px;" id="progSpecialtyBadge">Discipline</span>
+      </div>
+
+      <h1 id="progTitle" style="font-size: 2.4rem; color: #ffffff; margin-bottom: 20px; line-height: 1.3;">
+        Loading Program Details...
+      </h1>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 25px; font-size: 1rem; opacity: 0.95;">
+        <span><i class="fas fa-clock" style="color:var(--gold);"></i> Duration: <strong id="progDuration">—</strong></span>
+        <span><i class="fas fa-laptop-house" style="color:var(--gold);"></i> Delivery: <strong id="progDelivery">Online (Live & Recorded)</strong></span>
+        <span><i class="fas fa-award" style="color:var(--gold);"></i> Credential: <strong id="progCertType">Certified Professional Credential</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Layout -->
+  <section style="padding: 60px 0; background: var(--bg-main);">
+    <div class="container">
+      <div class="program-detail-layout">
+        
+        <!-- Right: Content -->
+        <div class="program-detail-content">
+          <div style="margin-bottom: 35px;">
+            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+              <i class="fas fa-info-circle"></i> Program Overview
+            </h3>
+            <p id="progDesc" style="font-size:1.05rem; line-height:1.8; color:var(--text-muted);">
+              Loading...
+            </p>
+          </div>
+
+          <div style="margin-bottom: 35px;" id="objectivesSec">
+            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+              <i class="fas fa-bullseye"></i> Learning Objectives
+            </h3>
+            <ul id="progObjectives" style="display:flex; flex-direction:column; gap:10px; font-size:1rem; color:var(--text-main);">
+            </ul>
+          </div>
+
+          <div style="margin-bottom: 35px;" id="topicsSec">
+            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+              <i class="fas fa-list-ul"></i> Key Modules & Topics
+            </h3>
+            <ul id="progTopics" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:12px; font-size:0.95rem;">
+            </ul>
+          </div>
+
+          <div style="margin-bottom: 35px;" id="audienceSec">
+            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+              <i class="fas fa-users"></i> Target Audience
+            </h3>
+            <ul id="progAudience" style="display:flex; flex-direction:column; gap:10px; font-size:1rem; color:var(--text-main);">
+            </ul>
+          </div>
+
+          <div style="margin-bottom: 35px;" id="outcomesSec">
+            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+              <i class="fas fa-gift"></i> Career Outcomes & Certifications
+            </h3>
+            <ul id="progOutcomes" style="display:flex; flex-direction:column; gap:10px; font-size:1rem; color:var(--text-main);">
+            </ul>
+          </div>
+
+          <div style="background:#fdf2f4; border:1px solid rgba(90,2,14,0.15); border-radius:12px; padding:25px;">
+            <h4 style="color:var(--primary); margin-bottom:10px;"><i class="fas fa-star" style="color:var(--gold);"></i> The Nibras Advantage</h4>
+            <ul style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.92rem; color:var(--text-muted);">
+              <li><i class="fas fa-check-circle" style="color:var(--primary); margin-right:6px;"></i> Live and on-demand interactive lectures</li>
+              <li><i class="fas fa-check-circle" style="color:var(--primary); margin-right:6px;"></i> Personalized trainee dashboard</li>
+              <li><i class="fas fa-check-circle" style="color:var(--primary); margin-right:6px;"></i> Digitally verifiable certificate with QR code</li>
+              <li><i class="fas fa-check-circle" style="color:var(--primary); margin-right:6px;"></i> High-caliber industry practitioners</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Left: Sidebar -->
+        <div class="program-detail-sidebar">
+          <div class="program-checkout-card">
+            <div style="text-align:center; border-bottom:1px solid #eee; padding-bottom:18px; margin-bottom:20px;">
+              <span style="display:block; font-size:0.95rem; color:var(--text-muted); margin-bottom:5px;">Tuition & Investment</span>
+              <div style="font-size:2.3rem; font-weight:800; color:var(--primary);" id="progPrice">0.00 US$</div>
+              <span id="progStatusTag" class="status-badge status-available" style="margin-top:8px;">Available for Enrollment</span>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:12px;" id="actionButtons">
+              <button id="btnAddToCart" class="btn-primary" style="width:100%; justify-content:center; font-size:1.05rem; padding:14px;">
+                Add to Cart <i class="fas fa-cart-plus"></i>
+              </button>
+              <a href="checkout.html" id="btnCheckout" class="btn-outline" style="width:100%; text-align:center; font-size:1.05rem; padding:12px;">
+                Quick Checkout <i class="fas fa-credit-card"></i>
+              </a>
+              <a href="#" id="btnWhatsApp" target="_blank" class="btn-outline" style="width:100%; text-align:center; background:#f0fdf4; border-color:#86efac; color:#166534; padding:12px;">
+                WhatsApp Inquiry <i class="fab fa-whatsapp"></i>
+              </a>
+            </div>
+
+            <div style="margin-top:25px; padding-top:20px; border-top:1px solid #eee; font-size:0.88rem; color:var(--text-muted); display:flex; flex-direction:column; gap:10px;">
+              <div><i class="fas fa-shield-alt" style="color:var(--primary); margin-right:6px;"></i> Instant Registration & Secure Verification</div>
+              <div><i class="fas fa-headset" style="color:var(--primary); margin-right:6px;"></i> Academic Advisory Support Throughout</div>
+              <div><i class="fas fa-certificate" style="color:var(--gold); margin-right:6px;"></i> Official Verification via Online Portal</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 Nibras Academy for Training & Professional Qualification. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="../../assets/js/script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id') || urlParams.get('slug');
+
+      if (!id) {
+        document.getElementById('progTitle').textContent = 'Please specify a program';
+        return;
+      }
+
+      try {
+        const data = await apiFetch(`/api/courses/${encodeURIComponent(id)}`);
+        const p = data.course;
+        if (!p) throw new Error('Program not found');
+
+        const title = p.titleEn || p.titleAr || p.title;
+        document.title = `${title} | Nibras Academy`;
+        document.getElementById('pageTitle').textContent = `${title} | Nibras Academy`;
+        document.getElementById('breadcrumbTitle').textContent = title;
+        document.getElementById('progTitle').textContent = title;
+
+        const typeLabels = {
+          'course': 'Professional Course',
+          'diploma': 'Professional Diploma',
+          'master': 'Professional Master',
+          'phd': 'Professional Doctorate'
+        };
+        document.getElementById('progTypeBadge').textContent = typeLabels[p.type] || p.type || 'Professional Track';
+        document.getElementById('progSpecialtyBadge').textContent = p.specialty || 'General';
+        document.getElementById('progDuration').textContent = p.duration || 'Flexible';
+        document.getElementById('progDelivery').textContent = p.deliveryMethod || 'Online (Live & Recorded)';
+        document.getElementById('progCertType').textContent = p.certificateType || 'Certified Professional Credential';
+
+        document.getElementById('progDesc').textContent = p.descriptionEn || p.descriptionAr || p.description || 'Comprehensive curriculum designed for professional development.';
+        
+        const objEl = document.getElementById('progObjectives');
+        const objs = (p.objectivesEn && p.objectivesEn.length) ? p.objectivesEn : p.objectivesAr;
+        if (objs && objs.length) {
+          objEl.innerHTML = objs.map(item => `<li><i class="fas fa-check" style="color:var(--primary); margin-right:8px;"></i> ${item}</li>`).join('');
+        } else {
+          document.getElementById('objectivesSec').style.display = 'none';
+        }
+
+        const topicsEl = document.getElementById('progTopics');
+        const topics = (p.topicsEn && p.topicsEn.length) ? p.topicsEn : p.topicsAr;
+        if (topics && topics.length) {
+          topicsEl.innerHTML = topics.map(t => `<li style="background:#f8fafc; border:1px solid var(--border); padding:10px 14px; border-radius:8px;"><i class="fas fa-layer-group" style="color:var(--gold); margin-right:6px;"></i> ${t}</li>`).join('');
+        } else {
+          document.getElementById('topicsSec').style.display = 'none';
+        }
+
+        const audEl = document.getElementById('progAudience');
+        const aud = (p.audienceEn && p.audienceEn.length) ? p.audienceEn : p.audienceAr;
+        if (aud && aud.length) {
+          audEl.innerHTML = aud.map(a => `<li><i class="fas fa-user-check" style="color:var(--primary); margin-right:8px;"></i> ${a}</li>`).join('');
+        } else {
+          document.getElementById('audienceSec').style.display = 'none';
+        }
+
+        const outEl = document.getElementById('progOutcomes');
+        const outs = (p.outcomesEn && p.outcomesEn.length) ? p.outcomesEn : p.outcomesAr;
+        if (outs && outs.length) {
+          outEl.innerHTML = outs.map(o => `<li><i class="fas fa-award" style="color:var(--secondary); margin-right:8px;"></i> ${o}</li>`).join('');
+        } else {
+          document.getElementById('outcomesSec').style.display = 'none';
+        }
+
+        const price = p.price || 0;
+        document.getElementById('progPrice').textContent = `${price.toFixed(2)} US$`;
+
+        const statusTag = document.getElementById('progStatusTag');
+        const btnCart = document.getElementById('btnAddToCart');
+        const btnCheckout = document.getElementById('btnCheckout');
+
+        if (p.status === 'coming_soon') {
+          statusTag.className = 'status-badge status-coming-soon';
+          statusTag.textContent = 'Coming Soon';
+          btnCart.outerHTML = `<a href="contact.html?subject=Interest+in+${encodeURIComponent(title)}" class="btn-primary" style="width:100%; justify-content:center; padding:14px; background:var(--gold); color:#ffffff;"><i class="fas fa-bell"></i> Register Interest</a>`;
+          if (btnCheckout) btnCheckout.style.display = 'none';
+        } else if (p.status === 'unavailable') {
+          statusTag.className = 'status-badge status-unavailable';
+          statusTag.textContent = 'Currently Unavailable';
+          btnCart.style.display = 'none';
+          if (btnCheckout) btnCheckout.style.display = 'none';
+        } else {
+          statusTag.className = 'status-badge status-available';
+          statusTag.textContent = 'Available for Enrollment';
+          btnCart.onclick = () => addToCart(p._id, title, price);
+        }
+
+        const waMsg = encodeURIComponent(`Hello, I would like to inquire about enrolling in: ${title}`);
+        document.getElementById('btnWhatsApp').href = `https://wa.me/201112220796?text=${waMsg}`;
+
+      } catch (err) {
+        document.getElementById('progTitle').textContent = 'Program Not Found';
+        document.getElementById('progDesc').textContent = 'Please check the programs listing or contact support.';
+      }
+    });
+  </script>
+</body>
+</html>

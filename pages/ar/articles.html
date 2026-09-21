@@ -1,21 +1,16 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>المقالات والإعلام | أكاديمية نبراس</title>
-  <meta name="description"
-    content="ماذا يقال عن نبراس في الصحف والإعلام. نستعرض أبرز ما كُتب وقيل عن نبراس في وسائل الإعلام المختلفة." />
+  <title>المقالات والإعلام | أكاديمية نبراس للتدريب والتأهيل المهني</title>
+  <meta name="description" content="تغطيات صحفية وإعلامية عن أكاديمية نبراس للتدريب والتأهيل المهني في كبرى الصحف السعودية والمصرية: جدة 24، أخبار السعودية، أخبار الرياض، وعكاظ." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="../../assets/css/style.css" />
 </head>
-
 <body>
 
   <!-- Cart Sidebar -->
@@ -24,9 +19,7 @@
       <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
       <button onclick="toggleCart(event)" class="close-cart">&times;</button>
     </div>
-    <div id="cartItems" class="cart-items">
-      <!-- Items will be injected here -->
-    </div>
+    <div id="cartItems" class="cart-items"></div>
     <div class="cart-footer">
       <div class="cart-total">
         <span>الإجمالي:</span>
@@ -47,18 +40,16 @@
   <nav id="navbar" class="navbar scrolled">
     <div class="nav-container">
       <a href="../../index.html" class="nav-logo">
-        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
+        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس للتدريب والتأهيل المهني" />
       </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="../en/articles.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+        <li><a href="../en/articles.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> English</a></li>
         <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
-        <li><a href="about.html" class="nav-link">عن الأكاديمية</a></li>
+        <li><a href="about.html" class="nav-link">من نحن</a></li>
         <li><a href="programs.html" class="nav-link">البرامج والخدمات</a></li>
-        <li><a href="articles.html" class="nav-link active">المقالات</a></li>
-        
+        <li><a href="articles.html" class="nav-link active">المقالات والإعلام</a></li>
         <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
         <li><a href="verify.html" class="nav-link">التحقق من الشهادات</a></li>
-        
         <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
         <li><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
       </ul>
@@ -71,80 +62,172 @@
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
     <ul>
-      <li><a href="../en/articles.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+      <li><a href="../en/articles.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> English</a></li>
       <li><a href="../../index.html">الرئيسية</a></li>
-      <li><a href="about.html">عن الأكاديمية</a></li>
+      <li><a href="about.html">من نحن</a></li>
       <li><a href="programs.html">البرامج والخدمات</a></li>
-      <li><a href="articles.html">المقالات</a></li>
-      
+      <li><a href="articles.html">المقالات والإعلام</a></li>
       <li><a href="contact.html">تواصل معنا</a></li>
       <li><a href="verify.html">التحقق من الشهادات</a></li>
-      
-        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
+      <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+      <li><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
     </ul>
   </div>
 
   <!-- Page Header -->
-  <section class="page-header">
+  <section class="page-header" style="background: linear-gradient(135deg, #380108 0%, #5a020e 45%, #750a18 100%); padding: 130px 0 70px; text-align: right; color: #fff;">
     <div class="container">
-      <h1>المقالات والإعلام</h1>
-      <p>ماذا يقال عن نبراس في الصحف والإعلام</p>
+      <div style="font-size: 0.95rem; opacity: 0.85; margin-bottom: 15px;">
+        <a href="../../index.html" style="color: #fff; text-decoration: none;">الرئيسية</a> ← 
+        <span style="color: var(--gold);">المقالات والإعلام</span>
+      </div>
+      <div class="section-badge" style="background: rgba(200,154,80,0.2); color: var(--gold); border: 1px solid var(--gold); display: inline-block; padding: 6px 18px; border-radius: 20px; font-weight: 700; margin-bottom: 15px;">
+        المركز الإعلامي والمقالات
+      </div>
+      <h1 style="font-size: 2.6rem; font-weight: 800; margin-bottom: 15px;">نبراس في الإعلام</h1>
+      <p style="font-size: 1.35rem; color: var(--gold); font-weight: 700; margin-bottom: 15px;">حضور إعلامي يواكب مسيرة الأكاديمية</p>
+      <p style="font-size: 1.1rem; max-width: 800px; line-height: 1.8; opacity: 0.9; margin-bottom: 25px;">
+        إلى جانب عملها في مجال التدريب والتأهيل المهني، حظيت أكاديمية نبراس بحضور في عدد من المنصات والصحف الإعلامية التي تناولت الأكاديمية وبرامجها ومساراتها المهنية.
+      </p>
+      <a href="#media-coverage" class="btn-primary"><i class="fas fa-newspaper"></i> اّطلع على التغطيات الإعلامية</a>
     </div>
   </section>
 
-  <!-- Articles Section -->
-  <section class="articles-section" style="padding: 80px 0;">
+  <!-- Media Coverage Section -->
+  <section id="media-coverage" style="padding: 80px 0; background: var(--bg-surface);">
     <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">ماذا قالوا عن <span class="highlight">نبراس</span></h2>
-        <p class="section-subtitle">منذ انطلاق أكاديمية نبراس، كان هدفنا واضحًا: تقديم تجربة تعليمية احترافية تُحدث أثرًا حقيقيًا في حياة المتدربين. وقد حظيت الأكاديمية بتغطيات إعلامية مميزة من صحف وقنوات مصرية وسعودية، أشادت برؤيتها، وبرامجها المهنية، وأثرها في تطوير المهارات وبناء الكفاءات.</p>
+      <div class="section-header" style="text-align: center; margin-bottom: 45px;">
+        <div class="section-badge">أبرز التغطيات الإعلامية</div>
+        <h2 class="section-title">نبراس كما تناولتها <span class="highlight">وسائل الإعلام</span></h2>
+        <p class="section-subtitle">نستعرض مجموعة من التغطيات المنشورة عبر منصات إعلامية مختلفة، مع إمكانية الانتقال إلى المصدر الأصلي وقراءة التغطية كاملة.</p>
       </div>
-      
-      <div class="articles-grid">
-        <div class="article-card">
-          <div class="article-body" style="text-align: center; padding: 40px 20px;">
-            <div style="margin-bottom: 25px; height: 80px; display: flex; align-items: center; justify-content: center;">
-              <img src="../../assets/img/جدة-24-.webp" alt="جدة 24" style="max-height: 100%; width: auto;">
+
+      <div class="articles-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 30px;">
+        
+        <!-- Coverage 1: Jeddah 24 -->
+        <div class="article-card" style="background:#fff; border-radius:16px; border:1px solid var(--border); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 6px 20px rgba(0,0,0,0.04);">
+          <div style="padding: 30px 25px;">
+            <div style="height: 75px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; background:#f9fbfd; border-radius:12px; padding:10px;">
+              <img src="../../assets/img/جدة-24-.webp" alt="جدة 24" style="max-height: 100%; max-width: 100%; object-fit: contain;">
             </div>
-            <h4>تغطية جدة 24</h4>
-            <p>مقال يسلط الضوء على نجاحات أكاديمية نبراس ودورها في التطوير المهني.</p>
-            <a href="https://jeddah24.net/mix/0702/46636/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> قراءة المقال</a>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 10px; border-radius:12px;">جدة 24</span>
+              <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-globe"></i> منصة إخبارية</span>
+            </div>
+            <h3 style="font-size: 1.2rem; color: var(--primary); margin-bottom: 12px; line-height: 1.4;">تغطية إعلامية عن أكاديمية نبراس</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;">
+              تغطية تناولت أكاديمية نبراس وبرامجها ومساراتها المهنية، مع استعراض جانب من تجربتها في مجال التدريب والتأهيل المهني وتطوير الكفاءات.
+            </p>
+          </div>
+          <div style="padding: 0 25px 25px;">
+            <a href="https://jeddah24.net/mix/0702/46636/" target="_blank" rel="noopener noreferrer" class="btn-outline" style="width: 100%; text-align: center; display: inline-flex; justify-content: center; align-items: center; gap: 8px;">
+              <i class="fas fa-external-link-alt"></i> قراءة التغطية كاملة
+            </a>
           </div>
         </div>
 
-        <div class="article-card">
-          <div class="article-body" style="text-align: center; padding: 40px 20px;">
-            <div style="margin-bottom: 25px; height: 80px; display: flex; align-items: center; justify-content: center;">
-              <img src="../../assets/img/السعودية-الاخبارية.webp" alt="أخبار السعودية" style="max-height: 100%; width: auto;">
+        <!-- Coverage 2: Saudi News -->
+        <div class="article-card" style="background:#fff; border-radius:16px; border:1px solid var(--border); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 6px 20px rgba(0,0,0,0.04);">
+          <div style="padding: 30px 25px;">
+            <div style="height: 75px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; background:#f9fbfd; border-radius:12px; padding:10px;">
+              <img src="../../assets/img/السعودية-الاخبارية.webp" alt="صحيفة أخبار السعودية" style="max-height: 100%; max-width: 100%; object-fit: contain;">
             </div>
-            <h4>صحيفة أخبار السعودية</h4>
-            <p>إشادة بالبرامج التقنية والمهنية التي تقدمها أكاديمية نبراس لرواد الأعمال والمحترفين.</p>
-            <a href="https://alsaudi.news/technology/0702/53533/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> قراءة المقال</a>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 10px; border-radius:12px;">صحيفة أخبار السعودية</span>
+              <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-globe"></i> صحيفة وطنية</span>
+            </div>
+            <h3 style="font-size: 1.2rem; color: var(--primary); margin-bottom: 12px; line-height: 1.4;">تغطية حول برامج ومسارات نبراس</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;">
+              تقرير تناول جانبًا من البرامج والمسارات المهنية التي تقدمها أكاديمية نبراس، وما توفره من خيارات للتطوير والتأهيل المهني لمواكبة سوق العمل.
+            </p>
+          </div>
+          <div style="padding: 0 25px 25px;">
+            <a href="https://alsaudi.news/technology/0702/53533/" target="_blank" rel="noopener noreferrer" class="btn-outline" style="width: 100%; text-align: center; display: inline-flex; justify-content: center; align-items: center; gap: 8px;">
+              <i class="fas fa-external-link-alt"></i> قراءة التغطية كاملة
+            </a>
           </div>
         </div>
 
-        <div class="article-card">
-          <div class="article-body" style="text-align: center; padding: 40px 20px;">
-            <div style="margin-bottom: 25px; height: 80px; display: flex; align-items: center; justify-content: center;">
-              <img src="../../assets/img/الرياض.webp" alt="أخبار الرياض" style="max-height: 100%; width: auto;">
+        <!-- Coverage 3: Riyadh News -->
+        <div class="article-card" style="background:#fff; border-radius:16px; border:1px solid var(--border); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 6px 20px rgba(0,0,0,0.04);">
+          <div style="padding: 30px 25px;">
+            <div style="height: 75px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; background:#f9fbfd; border-radius:12px; padding:10px;">
+              <img src="../../assets/img/الرياض.webp" alt="أخبار الرياض" style="max-height: 100%; max-width: 100%; object-fit: contain;">
             </div>
-            <h4>أخبار الرياض</h4>
-            <p>تغطية مميزة لبرامج وتأثير الأكاديمية على المتدربين في مختلف المجالات.</p>
-            <a href="https://alriyadhnews.net/mix/0702/47160/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> قراءة المقال</a>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 10px; border-radius:12px;">أخبار الرياض</span>
+              <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-globe"></i> منصة إخبارية</span>
+            </div>
+            <h3 style="font-size: 1.2rem; color: var(--primary); margin-bottom: 12px; line-height: 1.4;">تغطية إعلامية عن أكاديمية نبراس</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;">
+              تغطية تستعرض جانبًا من تجربة الأكاديمية وبرامجها، وحضورها في مجال التدريب والتطوير المهني في قطاعات الأعمال والتكنولوجيا الحديثة.
+            </p>
+          </div>
+          <div style="padding: 0 25px 25px;">
+            <a href="https://alriyadhnews.net/mix/0702/47160/" target="_blank" rel="noopener noreferrer" class="btn-outline" style="width: 100%; text-align: center; display: inline-flex; justify-content: center; align-items: center; gap: 8px;">
+              <i class="fas fa-external-link-alt"></i> قراءة التغطية كاملة
+            </a>
           </div>
         </div>
 
-        <div class="article-card">
-          <div class="article-body" style="text-align: center; padding: 40px 20px;">
-            <div style="margin-bottom: 25px; height: 80px; display: flex; align-items: center; justify-content: center;">
-              <img src="../../assets/img/عكاظ-اليوم-1.webp" alt="أخبار عكاظ" style="max-height: 100%; width: auto;">
+        <!-- Coverage 4: Okaz News -->
+        <div class="article-card" style="background:#fff; border-radius:16px; border:1px solid var(--border); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 6px 20px rgba(0,0,0,0.04);">
+          <div style="padding: 30px 25px;">
+            <div style="height: 75px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; background:#f9fbfd; border-radius:12px; padding:10px;">
+              <img src="../../assets/img/عكاظ-اليوم-1.webp" alt="أخبار عكاظ" style="max-height: 100%; max-width: 100%; object-fit: contain;">
             </div>
-            <h4>أخبار عكاظ</h4>
-            <p>نظرة متعمقة حول مسارات التعليم والتأهيل المتميزة في أكاديمية نبراس.</p>
-            <a href="https://okaznews.net/mix/0702/44015/" target="_blank" class="btn-outline" style="margin-top: 20px; display: inline-flex;"><i class="fas fa-external-link-alt"></i> قراءة المقال</a>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 10px; border-radius:12px;">أخبار عكاظ</span>
+              <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-globe"></i> منصة إخبارية</span>
+            </div>
+            <h3 style="font-size: 1.2rem; color: var(--primary); margin-bottom: 12px; line-height: 1.4;">تغطية حول التعليم والتأهيل المهني في نبراس</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;">
+              تقرير تناول جانبًا من مسارات التعليم والتأهيل المهني التي تقدمها أكاديمية نبراس، وبرامجها المتخصصة في عدد من المجالات القيادية والإدارية.
+            </p>
+          </div>
+          <div style="padding: 0 25px 25px;">
+            <a href="https://okaznews.net/mix/0702/44015/" target="_blank" rel="noopener noreferrer" class="btn-outline" style="width: 100%; text-align: center; display: inline-flex; justify-content: center; align-items: center; gap: 8px;">
+              <i class="fas fa-external-link-alt"></i> قراءة التغطية كاملة
+            </a>
           </div>
         </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Published Articles / CMS Dynamic Section -->
+  <section style="padding: 60px 0; background: #ffffff;">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 40px;">
+        <div class="section-badge">المقالات والمعرفة</div>
+        <h2 class="section-title">مقالات ورؤى <span class="highlight">مهنية متخصصة</span></h2>
+        <p class="section-subtitle">أحدث التحليلات والمقالات المهنية في القيادة، وإدارة الأعمال، والتحول الرقمي الصادرة عن خبرائنا.</p>
+      </div>
+
+      <div id="dynamicArticlesGrid" class="articles-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+        <!-- Loaded dynamically from /api/articles if available -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Notice Section from PDF Page 35 -->
+  <section style="padding: 60px 0; background: var(--bg-surface); border-top: 1px solid var(--border);">
+    <div class="container">
+      <div style="max-width: 850px; margin: 0 auto; text-align: center;">
+        <h3 style="font-size: 1.6rem; color: var(--primary); margin-bottom: 15px;">التغطيات من مصادرها الأصلية</h3>
+        <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 25px;">
+          اقرأ عن نبراس من المصدر مباشرة: نحرص على إتاحة التغطيات الإعلامية المنشورة عن الأكاديمية من خلال مصادرها الأصلية، حتى يتمكن الزائر من الاطلاع على المحتوى كاملاً وسياقه كما نُشر في المنصة الإعلامية.
+        </p>
+        <div style="height: 1px; background: var(--border); width: 60%; margin: 30px auto;"></div>
+        <h3 style="font-size: 1.6rem; color: var(--primary); margin-bottom: 15px;">المعرفة تمتد خارج قاعات التدريب</h3>
+        <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 25px;">
+          في نبراس، نواصل تطوير برامجنا ومساراتنا المهنية، والعمل على تقديم تجربة تعليمية تتناسب مع احتياجات المتدربين وتدعم تطورهم المهني. يمثل حضور الأكاديمية في المنصات الإعلامية جانباً من مسيرتها، بينما يبقى تطوير التجربة التعليمية وجودة البرامج هو الأساس الذي نواصل البناء عليه.
+        </p>
+        <p style="font-size: 1.2rem; font-weight: 700; color: var(--gold); margin-bottom: 25px;">
+          المعرفة تصنع البداية... والتطوير يصنع الأثر.
+        </p>
+        <a href="programs.html" class="btn-primary"><i class="fas fa-graduation-cap"></i> اكتشف برامج نبراس</a>
       </div>
     </div>
   </section>
@@ -155,30 +238,39 @@
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            <p>منصة تدريب وتأهيل مهني معتمدة تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث.</p>
+            <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" style="max-height: 55px; margin-bottom: 15px;">
+            <p><strong>أكاديمية نبراس للتدريب والتأهيل المهني</strong><br>نبني الكفاءات... ونصنع أثراً يمتد إلى المستقبل.</p>
             <div class="social-links">
               <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
               <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
               <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
-              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
               <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
             </div>
           </div>
           <div class="footer-links-col">
-            <h5>روابط سريعة</h5>
+            <h5>الأكاديمية</h5>
             <ul>
               <li><a href="../../index.html">الرئيسية</a></li>
-              <li><a href="about.html">عن الأكاديمية</a></li>
+              <li><a href="about.html">من نحن</a></li>
               <li><a href="programs.html">البرامج والخدمات</a></li>
-              <li><a href="articles.html">المقالات</a></li>
-              
-              <li><a href="verify.html">التحقق من الشهادات</a></li>
+              <li><a href="articles.html">المقالات والإعلام</a></li>
               <li><a href="contact.html">تواصل معنا</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
-            <h5>قانوني</h5>
+            <h5>المسارات التعليمية</h5>
             <ul>
+              <li><a href="pro_courses.html">الدورات التدريبية</a></li>
+              <li><a href="diploma.html">الدبلومات المهنية</a></li>
+              <li><a href="masters.html">الماجستير المهني</a></li>
+              <li><a href="phd.html">الدكتوراه المهنية</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>روابط هامة</h5>
+            <ul>
+              <li><a href="verify.html">التحقق من الشهادات</a></li>
               <li><a href="privacy.html">سياسة الخصوصية</a></li>
               <li><a href="terms.html">الشروط والأحكام</a></li>
               <li><a href="refund.html">سياسة الاسترداد</a></li>
@@ -190,16 +282,47 @@
     </div>
     <div class="footer-bottom">
       <div class="container">
-        <p>© 2026 أكاديمية نبراس. جميع الحقوق محفوظة.</p>
+        <p>© 2026 أكاديمية نبراس للتدريب والتأهيل المهني. جميع الحقوق محفوظة.</p>
       </div>
     </div>
   </footer>
 
-  <!-- Scroll to Top -->
-  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
-    <i class="fas fa-arrow-up"></i>
-  </button>
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
+  <div class="toast" id="toast"></div>
 
   <script src="../../assets/js/script.js"></script>
+
+  <script>
+    async function loadArticles() {
+      const container = document.getElementById('dynamicArticlesGrid');
+      try {
+        const res = await fetch('/api/articles?category=article');
+        const data = await res.json();
+        const articles = data.articles || [];
+        if (articles.length === 0) {
+          container.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px;">يتم حالياً تجهيز ونشر مقالات تخصصية جديدة، تابعونا قريباً.</p>';
+          return;
+        }
+
+        container.innerHTML = articles.map(art => `
+          <div class="article-card" style="background:#fff; border-radius:14px; border:1px solid var(--border); padding:25px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 10px; border-radius:12px; margin-bottom:10px; display:inline-block;">${art.category || 'مقال'}</span>
+              <h4 style="font-size:1.15rem; color:var(--primary); margin-bottom:10px;">${art.titleAr || art.title}</h4>
+              <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">${art.contentAr || art.content}</p>
+            </div>
+            <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:12px; display:flex; justify-content:space-between; align-items:center;">
+              <small style="color:var(--text-muted);">${new Date(art.createdAt).toLocaleDateString('ar-SA')}</small>
+              ${art.sourceUrl ? `<a href="${art.sourceUrl}" target="_blank" class="btn-outline" style="padding:4px 12px; font-size:0.85rem;">قراءة المصدر</a>` : ''}
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Failed to load articles:', err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadArticles);
+  </script>
 </body>
 </html>

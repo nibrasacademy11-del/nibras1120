@@ -54,6 +54,21 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api', require('./routes/certificateRoutes'));
 app.use('/api/courses', require('./routes/courseRoutes'));
 app.use('/api/inquiries', require('./routes/inquiryRoutes'));
+app.use('/api/articles', require('./routes/articleRoutes'));
+
+// Public Settings route
+const SiteSettings = require('./models/SiteSettings');
+app.get('/api/settings', async (req, res) => {
+    try {
+        let settings = await SiteSettings.findOne();
+        if (!settings) {
+            settings = await SiteSettings.create({});
+        }
+        res.json({ settings });
+    } catch (e) {
+        res.status(500).json({ message: 'Error fetching settings' });
+    }
+});
 
 // SPA Fallback or specific frontend routes
 app.get('/', (req, res) => {

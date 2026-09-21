@@ -1,278 +1,558 @@
 <!DOCTYPE html>
-
-<html dir="ltr" lang="en">
-
+<html lang="en" dir="ltr">
 <head>
-        <meta charset="utf-8" />
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <title>Home | Nibras</title>
-        <meta content="Nibras - an accredited vocational training and qualification platform, which aims to prepare professional cadres capable of dealing with the requirements of the modern labor market."
-                name="description" />
-        <link href="https://fonts.googleapis.com" rel="preconnect" />
-        <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;700&family=Tajawal:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-                rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-        <link href="../assets/css/style.css" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nibras Academy for Training & Professional Qualification | Building Competencies</title>
+  <meta name="description" content="Nibras Academy for Training & Professional Qualification - Building competencies and making an impact that extends to the future. Certified programs tailored for modern career demands." />
+  <link rel="canonical" href="https://nibras-ac.com/en/" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Nibras Academy for Training & Professional Qualification" />
+  <meta property="og:description" content="Building competencies and making an impact that extends to the future. Explore our Masters, Doctorate, Diploma, and Professional Courses." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nibras-ac.com/en/" />
+  <meta property="og:image" content="../assets/img/logo.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
-
 <body>
-        <!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-                <div class="cart-header">
-                        <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-                        <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-                </div>
-                <div id="cartItems" class="cart-items">
-                        <!-- Items will be injected here -->
-                </div>
-                <div class="cart-footer">
-                        <div class="cart-total">
-                                <span>Total:</span>
-                                <strong id="cartTotal">0.00 US$</strong>
-                        </div>
-                        <a href="../pages/en/checkout.html" class="btn-primary"
-                                style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i
-                                        class="fas fa-credit-card"></i></a>
-                </div>
+
+  <!-- Cart Sidebar -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+      <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+    </div>
+    <div id="cartItems" class="cart-items">
+      <!-- Injected by JS -->
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <strong id="cartTotal">0.00 US$</strong>
+      </div>
+      <a href="../pages/en/checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Proceed to Checkout <i class="fas fa-credit-card"></i></a>
+    </div>
+  </div>
+  <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+
+  <!-- Floating Cart Button -->
+  <div class="floating-cart" onclick="toggleCart(event)">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="floating-cart-badge cart-badge">0</span>
+  </div>
+
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="../assets/img/logo.png" alt="Nibras Academy" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> العربية</a></li>
+        <li><a href="index.html" class="nav-link active">Home</a></li>
+        <li><a href="../pages/en/about.html" class="nav-link">About Us</a></li>
+        <li><a href="../pages/en/programs.html" class="nav-link">Programs & Services</a></li>
+        <li><a href="../pages/en/articles.html" class="nav-link">Articles & Media</a></li>
+        <li><a href="../pages/en/contact.html" class="nav-link">Contact Us</a></li>
+        <li><a href="../pages/en/verify.html" class="nav-link">Verify Certificate</a></li>
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li id="navAuth"><a href="../pages/en/login.html" class="nav-btn">Login</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../index.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> العربية</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="../pages/en/about.html">About Us</a></li>
+      <li><a href="../pages/en/programs.html">Programs & Services</a></li>
+      <li><a href="../pages/en/articles.html">Articles & Media</a></li>
+      <li><a href="../pages/en/contact.html">Contact Us</a></li>
+      <li><a href="../pages/en/verify.html">Verify Certificate</a></li>
+      <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+      <li id="mobileNavAuth"><a href="../pages/en/login.html" class="mobile-btn">Login</a></li>
+    </ul>
+  </div>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero-aura">
+    <div class="aura-bg">
+      <div class="aura-blob aura-1"></div>
+      <div class="aura-blob aura-2"></div>
+      <div class="aura-blob aura-3"></div>
+      <div class="aura-blob aura-4"></div>
+    </div>
+
+    <div class="container">
+      <div class="hero-grid">
+        
+        <!-- Left Column: Content & Pitch -->
+        <div class="hero-text-content reveal active">
+          <div class="hero-brand-pill">
+            <span class="pill-dot"></span>
+            <span class="pill-text">Nibras Academy for Training & Professional Qualification</span>
+            <span class="pill-badge"><i class="fas fa-certificate"></i> Certified Tracks</span>
+          </div>
+
+          <h1 class="hero-heading">
+            Building Competencies...<br />
+            <span>Making an Impact that Extends to the Future</span>
+          </h1>
+
+          <p class="hero-lead">
+            At Nibras, we believe professional development starts with knowledge, transforms into skill, and creates enduring impact. We deliver specialized executive programs designed to meet the evolving workplace requirements in Saudi Arabia and the Gulf region.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="../pages/en/programs.html" class="btn-hero-primary">
+              <span>Explore Our Programs</span>
+              <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="../pages/en/about.html" class="btn-hero-secondary">
+              <span>Learn About Nibras</span>
+              <i class="fas fa-info-circle"></i>
+            </a>
+          </div>
+
+          <!-- Features Strip -->
+          <div class="hero-features-strip">
+            <div class="hero-feature-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Specialized Training</span>
+            </div>
+            <div class="hero-feature-item">
+              <i class="fas fa-laptop-code"></i>
+              <span>Flexible Learning</span>
+            </div>
+            <div class="hero-feature-item">
+              <i class="fas fa-tools"></i>
+              <span>Practical Skills</span>
+            </div>
+            <div class="hero-feature-item">
+              <i class="fas fa-chart-line"></i>
+              <span>Career Growth</span>
+            </div>
+          </div>
         </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
 
-        <!-- Floating Cart Button -->
-        <div class="floating-cart" onclick="toggleCart(event)">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="floating-cart-badge cart-badge">0</span>
+        <!-- Right Column: Visual Showcase Card -->
+        <div class="hero-visual-wrapper reveal active">
+          <div class="hero-aura-ring"></div>
+          
+          <div class="hero-emblem-card">
+            <img src="../assets/img/logo.png" alt="Nibras Academy for Training & Professional Qualification" />
+          </div>
+
+          <!-- Floating Badges -->
+          <div class="hero-float-chip chip-top">
+            <div class="chip-icon chip-gold"><i class="fas fa-graduation-cap"></i></div>
+            <div class="chip-text">
+              <strong>Master & Doctorate</strong>
+              <span>Executive Career Tracks</span>
+            </div>
+          </div>
+
+          <div class="hero-float-chip chip-bottom">
+            <div class="chip-icon chip-green"><i class="fas fa-award"></i></div>
+            <div class="chip-text">
+              <strong>Instant Digital Verification</strong>
+              <span>Certified Qualifications</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Navbar -->
-        <nav class="navbar" id="navbar">
-                <div class="nav-container">
-                        <a class="nav-logo" href="index.html">
-                                <img alt="Nibras" src="../assets/img/logo.png" />
-                        </a>
-                        <ul class="nav-links" id="navLinks">
-                                <li><a class="nav-btn" href="../index.html"
-                                                style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i
-                                                        class="fas fa-globe"></i> Arabic</a></li>
-                                <li><a class="nav-link active" href="index.html">Home</a></li>
-                                <li><a class="nav-link" href="../pages/en/about.html">About Us</a></li>
-                                <li><a class="nav-link" href="../pages/en/programs.html">Services</a></li>
-                                <li><a class="nav-link" href="../pages/en/articles.html">Articles</a></li>
+      </div>
+    </div>
+  </section>
 
-                                <li><a class="nav-link" href="../pages/en/contact.html">Contact Us</a></li>
-                                <li><a class="nav-link" href="../pages/en/verify.html">Verify Certificates</a></li>
-                                <li id="navAuth"><a class="nav-btn" href="../pages/en/login.html">Login</a></li>
-                        </ul>
-                        <button aria-label="القائمة" class="hamburger" id="hamburger">
-                                <span></span><span></span><span></span>
-                        </button>
-                </div>
-        </nav>
-        <!-- Mobile Menu -->
-        <div class="mobile-menu" id="mobileMenu">
-                <ul>
-                        <li><a class="nav-btn" href="../index.html"
-                                        style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i
-                                                class="fas fa-globe"></i> Arabic</a></li>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="../pages/en/about.html">About Us</a></li>
-                        <li><a href="../pages/en/programs.html">Services</a></li>
-                        <li><a href="../pages/en/articles.html">Articles</a></li>
-
-                        <li><a href="../pages/en/contact.html">Contact Us</a></li>
-                        <li><a href="../pages/en/verify.html">Verify Certificates</a></li>
-                        <li id="mobileNavAuth"><a class="mobile-btn" href="../pages/en/login.html">Login</a></li>
-                </ul>
+  <!-- Section: From Knowledge to Impact -->
+  <section class="impact-intro-section">
+    <div class="container">
+      <div class="impact-card">
+        <div class="section-badge" style="margin-bottom: 15px;">From Knowledge to Impact</div>
+        <h2>Professional Development is No Longer Optional</h2>
+        <p>
+          It has become an essential pillar for building a future-ready career. At <strong>Nibras Academy for Training & Professional Qualification</strong>, we deliver an educational journey combining specialized expertise, practical application, flexibility, and direct alignment with job market demands.
+        </p>
+        <p>
+          Whether acquiring a new skill, deepening your mastery, or preparing for high-impact leadership roles, Nibras provides pathways tailored to your ambitions.
+        </p>
+        <div style="font-weight: 700; color: var(--primary); font-size: 1.2rem; margin-bottom: 25px;">
+          Nibras... Your Partner in Professional Growth.
         </div>
-        <!-- Hero Section (Aura Design) -->
-        <section class="hero-aura" id="home">
-                <!-- Animated Background Auras -->
-                <div class="aura-bg">
-                        <div class="aura-blob aura-1"></div>
-                        <div class="aura-blob aura-2"></div>
-                        <div class="aura-blob aura-3"></div>
-                        <div class="aura-blob aura-4"></div>
-                </div>
+        <a href="../pages/en/about.html" class="btn-primary">
+          Discover More About Nibras <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
 
-                <div class="hero-aura-content">
-                        <div class="glass-badge reveal active">
-                                <i class="fas fa-certificate"></i> Verified Excellence & Accreditation
-                        </div>
-                        <h1 class="aura-title reveal active">
-                                Rise to the Top with<br />
-                                <span>Nibras</span>
-                        </h1>
-                        <p class="aura-desc reveal active">
-                                Discover your true potential and turn your ambition into reality! We provide you with
-                                the most powerful professional programs to keep you ahead.
-                        </p>
-                        <div class="aura-actions reveal active">
-                                <a href="../pages/en/programs.html" class="btn-primary">
-                                        Start Your Journey <i class="fas fa-arrow-right"></i>
-                                </a>
-                                <a href="#programs" class="btn-outline">
-                                        Browse Programs
-                                </a>
-                        </div>
-                </div>
+  <!-- Section: Why Nibras? -->
+  <section class="why-section" style="padding: 90px 0; background: #ffffff;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">Why Nibras?</div>
+        <h2 class="section-title">Because Your Ambition <span class="highlight">Deserves More Than Just a Certificate</span></h2>
+        <p class="section-subtitle">We designed the Nibras learning experience to empower your career goals with flexibility and tangible value.</p>
+      </div>
 
-                <!-- Decorative Bottom Wave -->
-                <div class="hero-decorative-svg">
-                        <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,250.7C960,235,1056,181,1152,165.3C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" fill="#f4f6f9" fill-opacity="1"></path>
-                        </svg>
-                </div>
-        </section>
-        <!-- Stats Section -->
-        <section class="stats-section">
-                <div class="container">
-                        <div class="stats-grid">
-                                <div class="stat-item" data-target="26">
-                                        <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-                                        <div class="stat-number"><span class="counter">0</span>+</div>
-                                        <div class="stat-label">Certified trainer</div>
-                                </div>
-                                <div class="stat-item" data-target="66">
-                                        <div class="stat-icon"><i class="fas fa-certificate"></i></div>
-                                        <div class="stat-number"><span class="counter">0</span>+</div>
-                                        <div class="stat-label">Professional accreditation</div>
-                                </div>
-                                <div class="stat-item" data-target="500">
-                                        <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
-                                        <div class="stat-number"><span class="counter">0</span>+</div>
-                                        <div class="stat-label">Student and graduate</div>
-                                </div>
-                                <div class="stat-item" data-target="5">
-                                        <div class="stat-icon"><i class="fas fa-star"></i></div>
-                                        <div class="stat-number"><span class="counter">0</span></div>
-                                        <div class="stat-label">Student evaluation</div>
-                                </div>
-                        </div>
-                </div>
-        </section>
-        <!-- Programs Section -->
-        <section class="programs-section" id="programs">
-                <div class="container">
-                        <div class="section-header">
-                                <div class="section-badge">Our Programs</div>
-                                <h2 class="section-title">Paths <span class="highlight">Learning and
-                                                qualification</span></h2>
-                                <p class="section-subtitle">Professional training programs in multiple fields aimed at
-                                        preparing cadres and developing skills</p>
-                        </div>
-                        <div class="programs-grid">
-                                <div class="program-card">
-                                        <div class="program-icon"><i class="fas fa-graduation-cap"></i></div>
-                                        <h3>Professional PhD</h3>
-                                        <p>An advanced program that focuses on practical application and strategic
-                                                leadership, to enable leaders to solve complex challenges and make
-                                                decisions with confidence.</p>
-                                        <ul class="program-features">
-                                                <li><i class="fas fa-check"></i> Advanced strategic leadership</li>
-                                                <li><i class="fas fa-check"></i> Research and practical application</li>
-                                                <li><i class="fas fa-check"></i> Accredited international certificate
-                                                </li>
-                                        </ul>
-                                        <a class="btn-outline" href="../pages/en/phd.html">View details <i
-                                                        class="fas fa-arrow-left"></i></a>
-                                </div>
-                                <div class="program-card featured">
-                                        <div class="program-badge">The most distinguished</div>
-                                        <div class="program-icon"><i class="fas fa-user-tie"></i></div>
-                                        <h3>Professional Masters</h3>
-                                        <p>Professional qualification that links academic knowledge and practical
-                                                application, to build leadership and executive skills that suit the
-                                                requirements of the labor market.</p>
-                                        <ul class="program-features">
-                                                <li><i class="fas fa-check"></i> Leadership and executive skills</li>
-                                                <li><i class="fas fa-check"></i> Linking theory to practical application
-                                                </li>
-                                                <li><i class="fas fa-check"></i> Professional network</li>
-                                        </ul>
-                                        <a class="btn-primary" href="../pages/en/masters.html">View details <i
-                                                        class="fas fa-arrow-left"></i></a>
-                                </div>
-                                <div class="program-card">
-                                        <div class="program-icon"><i class="fas fa-award"></i></div>
-                                        <h3>Professional Diploma</h3>
-                                        <p>An applied program that focuses on basic and specialized skills, to quickly
-                                                launch into the professional field or develop a career path.</p>
-                                        <ul class="program-features">
-                                                <li><i class="fas fa-check"></i> Quick launch in the field</li>
-                                                <li><i class="fas fa-check"></i> Practical specialized skills</li>
-                                                <li><i class="fas fa-check"></i> Accredited certificate</li>
-                                        </ul>
-                                        <a class="btn-outline" href="../pages/en/diploma.html">View details <i
-                                                        class="fas fa-arrow-left"></i></a>
-                                </div>
-                        </div>
-                </div>
-        </section>
-        <!-- Footer -->
-        <footer class="footer">
-                <div class="footer-top">
-                        <div class="container">
-                                <div class="footer-grid">
-                                        <div class="footer-brand">
+      <div class="why-grid-6">
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-layer-group"></i></div>
+          <h3>Diverse Programs & Pathways</h3>
+          <p>From focused short courses to professional diplomas and advanced degrees, options designed for every career phase.</p>
+        </div>
 
-                                                <p>A certified professional training platform aiming to prepare
-                                                        professional cadres capable of dealing with the modern labor
-                                                        market.</p>
-                                                <div class="social-links">
-                                                  <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                                                  <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-                                                  <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
-                                                  <a href="https://www.linkedin.com/in/nibras-academy-5803a239b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                                                  <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                                                </div>
-                                        </div>
-                                        <div class="footer-links-col">
-                                                <h5>Quick Links</h5>
-                                                <ul>
-                                                        <li><a href="index.html">Home</a></li>
-                                                        <li><a href="../pages/en/about.html">About Us</a></li>
-                                                        <li><a href="../pages/en/programs.html">Our Programs</a></li>
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-th-large"></i></div>
+          <h3>Multiple Disciplines</h3>
+          <p>A broad range of managerial, technical, and business fields addressing modern workplace realities.</p>
+        </div>
 
-                                                        <li><a href="../pages/en/verify.html">Verify Certificates</a>
-                                                        </li>
-                                                        <li><a href="../pages/en/contact.html">Contact Us</a></li>
-                                                </ul>
-                                        </div>
-                                        <div class="footer-links-col">
-                                                <h5>Programs</h5>
-                                                <ul>
-                                                        <li><a href="#programs">Professional PhD</a></li>
-                                                        <li><a href="#programs">Professional Masters</a></li>
-                                                        <li><a href="#programs">Professional Diploma</a></li>
-                                                </ul>
-                                        </div>
-                                        <div class="footer-links-col">
-                                                <h5>Legal</h5>
-                                                <ul>
-                                                        <li><a href="../pages/en/privacy.html">Privacy Policy</a></li>
-                                                        <li><a href="../pages/en/terms.html">Terms &amp; Conditions</a>
-                                                        </li>
-                                                        <li><a href="../pages/en/refund.html">Refund Policy</a></li>
-                                                        <li><a href="../pages/en/accessibility.html">Accessibility</a>
-                                                        </li>
-                                                </ul>
-                                        </div>
-                                </div>
-                        </div>
-                </div>
-                <div class="footer-bottom">
-                        <div class="container">
-                                <p>© 2026 Nibras. All rights reserved.</p>
-                        </div>
-                </div>
-        </footer>
-        <!-- Scroll to Top -->
-        <button aria-label="العودة للأعلى" class="scroll-top" id="scrollTop">
-                <i class="fas fa-arrow-up"></i>
-        </button>
-        <!-- Toast Notification -->
-        <div class="toast" id="toast"></div>
-        <script src="../assets/js/script.js"></script>
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-clock"></i></div>
+          <h3>Flexible Learning</h3>
+          <p>Learn and advance on your schedule without interrupting your work commitments or daily obligations.</p>
+        </div>
+
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-book-reader"></i></div>
+          <h3>Specialized Content</h3>
+          <p>Focused domain expertise centered on real-world practical application and actionable workplace insights.</p>
+        </div>
+
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-route"></i></div>
+          <h3>Comprehensive Experience</h3>
+          <p>A structured journey from program selection through interactive learning, milestone assessments, and continuous growth.</p>
+        </div>
+
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-rocket"></i></div>
+          <h3>Future-Oriented Mindset</h3>
+          <p>Keeping pace with rapid shifts in business, technology, and leadership to prepare you for what lies ahead.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Educational Pathways -->
+  <section id="pathways" class="programs-section" style="padding: 90px 0; background: var(--bg-main);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">Learning Pathways</div>
+        <h2 class="section-title">Pathways Tailored to <span class="highlight">Your Ambition</span></h2>
+        <p class="section-subtitle">From mastering a specific skill to achieving advanced executive credentials, Nibras provides clear pathways for every stage.</p>
+      </div>
+
+      <div class="pathways-grid">
+        <!-- 01 Courses -->
+        <div class="pathway-card">
+          <div>
+            <span class="pathway-badge">Track 01</span>
+            <h3 class="pathway-title">Professional Courses</h3>
+            <div class="pathway-tagline">New Skill Today... Bigger Opportunity Tomorrow</div>
+            <p class="pathway-desc">Targeted training courses to acquire specialized skills and update your operational knowledge across key sectors.</p>
+            <div class="pathway-audience">
+              <strong>Ideal For:</strong>
+              <ul>
+                <li>Employees and professionals</li>
+                <li>Those seeking targeted skill upgrades</li>
+                <li>Entrepreneurs and business owners</li>
+              </ul>
+            </div>
+          </div>
+          <a href="../pages/en/pro_courses.html" class="btn-outline" style="width:100%; text-align:center;">Explore Courses <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <!-- 02 Diplomas -->
+        <div class="pathway-card">
+          <div>
+            <span class="pathway-badge">Track 02</span>
+            <h3 class="pathway-title">Professional Diplomas</h3>
+            <div class="pathway-tagline">Deeper Specialization... Greater Competence</div>
+            <p class="pathway-desc">Comprehensive programs to specialize in a specific domain and build a robust foundation for career advancement.</p>
+            <div class="pathway-audience">
+              <strong>Ideal For:</strong>
+              <ul>
+                <li>Recent graduates and practitioners</li>
+                <li>Professionals seeking deeper specialization</li>
+                <li>Those pivoting into new career tracks</li>
+              </ul>
+            </div>
+          </div>
+          <a href="../pages/en/diploma.html" class="btn-outline" style="width:100%; text-align:center;">Explore Diplomas <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <!-- 03 Masters -->
+        <div class="pathway-card featured">
+          <div>
+            <span class="pathway-badge" style="background:var(--primary); color:#ffffff;">Most Popular</span>
+            <h3 class="pathway-title">Professional Masters</h3>
+            <div class="pathway-tagline">Elevate Your Expertise... Expand Your Horizons</div>
+            <p class="pathway-desc">Advanced graduate programs merging specialized knowledge with practical application to develop executive and strategic leaders.</p>
+            <div class="pathway-audience" style="background:#ffffff;">
+              <strong>Ideal For:</strong>
+              <ul>
+                <li>Managers seeking career acceleration</li>
+                <li>Professionals aiming for executive leadership</li>
+                <li>Consultants and organizational leaders</li>
+              </ul>
+            </div>
+          </div>
+          <a href="../pages/en/masters.html" class="btn-primary" style="width:100%; text-align:center;">Explore Masters <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <!-- 04 PhD -->
+        <div class="pathway-card">
+          <div>
+            <span class="pathway-badge">Track 04</span>
+            <h3 class="pathway-title">Professional Doctorate</h3>
+            <div class="pathway-tagline">For Senior Leaders & Subject Matter Experts</div>
+            <p class="pathway-desc">High-level executive programs focusing on deep industry mastery, strategic vision, and high-impact decision making.</p>
+            <div class="pathway-audience">
+              <strong>Ideal For:</strong>
+              <ul>
+                <li>Seasoned experts and advisors</li>
+                <li>Executive directors and senior leaders</li>
+                <li>Those driving transformative organizational value</li>
+              </ul>
+            </div>
+          </div>
+          <a href="../pages/en/phd.html" class="btn-outline" style="width:100%; text-align:center;">Explore Doctorate <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top: 45px;">
+        <p style="font-size:1.15rem; color:var(--text-muted); margin-bottom:18px;">Whatever your professional stage, Nibras has a track to help you reach the next level.</p>
+        <a href="../pages/en/programs.html" class="btn-primary" style="padding:14px 35px; font-size:1.1rem;">
+          View All Programs <i class="fas fa-th"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Specialties -->
+  <section class="specialties-section" style="padding: 90px 0; background: #ffffff;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">Disciplines</div>
+        <h2 class="section-title">Specializations for the <span class="highlight">Future of Business</span></h2>
+        <p class="section-subtitle">Choose the domain closest to your goals and build expertise aligned with modern labor market needs.</p>
+      </div>
+
+      <div class="specialties-container">
+        <div class="specialties-tags">
+          <a href="../pages/en/programs.html?specialty=Business" class="specialty-tag"><i class="fas fa-briefcase"></i> Business Administration</a>
+          <a href="../pages/en/programs.html?specialty=HR" class="specialty-tag"><i class="fas fa-users"></i> Human Resources</a>
+          <a href="../pages/en/programs.html?specialty=Projects" class="specialty-tag"><i class="fas fa-project-diagram"></i> Project Management</a>
+          <a href="../pages/en/programs.html?specialty=Marketing" class="specialty-tag"><i class="fas fa-bullhorn"></i> Marketing & Sales</a>
+          <a href="../pages/en/programs.html?specialty=Finance" class="specialty-tag"><i class="fas fa-coins"></i> Accounting & Financial Mgmt</a>
+          <a href="../pages/en/programs.html?specialty=Strategy" class="specialty-tag"><i class="fas fa-chess"></i> Strategic Planning</a>
+          <a href="../pages/en/programs.html?specialty=Risk" class="specialty-tag"><i class="fas fa-shield-alt"></i> Risk Management</a>
+          <a href="../pages/en/programs.html?specialty=Quality" class="specialty-tag"><i class="fas fa-medal"></i> Quality Management</a>
+          <a href="../pages/en/programs.html?specialty=Leadership" class="specialty-tag"><i class="fas fa-user-tie"></i> Leadership & Governance</a>
+          <a href="../pages/en/programs.html?specialty=Media" class="specialty-tag"><i class="fas fa-newspaper"></i> PR & Media Relations</a>
+          <a href="../pages/en/programs.html?specialty=Healthcare" class="specialty-tag"><i class="fas fa-hospital"></i> Healthcare & Hospital Admin</a>
+          <a href="../pages/en/programs.html?specialty=SupplyChain" class="specialty-tag"><i class="fas fa-truck-moving"></i> Supply Chain & Logistics</a>
+          <a href="../pages/en/programs.html?specialty=Cybersecurity" class="specialty-tag"><i class="fas fa-lock"></i> Cybersecurity</a>
+          <a href="../pages/en/programs.html?specialty=AI" class="specialty-tag"><i class="fas fa-robot"></i> Artificial Intelligence</a>
+          <a href="../pages/en/programs.html?specialty=Data" class="specialty-tag"><i class="fas fa-chart-pie"></i> Data Analytics</a>
+          <a href="../pages/en/programs.html?specialty=Digital" class="specialty-tag"><i class="fas fa-network-wired"></i> Digital Transformation</a>
+          <a href="../pages/en/programs.html?specialty=Safety" class="specialty-tag"><i class="fas fa-hard-hat"></i> Occupational Health & Safety</a>
+          <a href="../pages/en/programs.html?specialty=Hospitality" class="specialty-tag"><i class="fas fa-hotel"></i> Hospitality Management</a>
+        </div>
+
+        <div style="text-align:center;">
+          <a href="../pages/en/programs.html" class="btn-outline">
+            Explore All Disciplines <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Saudi & Gulf Labor Market -->
+  <section style="padding: 80px 0; background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); color: #ffffff; text-align: center;">
+    <div class="container">
+      <div style="max-width: 850px; margin: 0 auto;">
+        <div style="display:inline-block; background:rgba(212,175,55,0.25); color:var(--gold); border:1px solid var(--gold); padding:6px 20px; border-radius:30px; font-weight:700; margin-bottom:20px;">
+          Saudi & Gulf Labor Market Transformation
+        </div>
+        <h2 style="font-size: 2.2rem; margin-bottom: 20px; color:#ffffff;">Embracing Transformation... Preparing for the Future</h2>
+        <p style="font-size: 1.15rem; line-height: 1.8; opacity: 0.92; margin-bottom: 25px;">
+          Workplace environments in Saudi Arabia and the Gulf are undergoing accelerated transformations across business, technology, and management. Possessing practical, specialized competencies is key to thriving.
+        </p>
+        <p style="font-size: 1.25rem; font-weight: 700; color: var(--gold); margin-bottom: 30px;">
+          Today's Competencies... Shape Tomorrow's Economy.
+        </p>
+        <a href="../pages/en/about.html" class="btn-primary" style="background:#ffffff; color:var(--primary); font-weight:700;">
+          Read Our Vision <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: 4 Steps Journey -->
+  <section style="padding: 90px 0; background: var(--bg-main);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">Your Journey</div>
+        <h2 class="section-title">Your Journey with Nibras <span class="highlight">in 4 Simple Steps</span></h2>
+        <p class="section-subtitle">A clear roadmap guiding you from program discovery to tangible professional impact.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <h4>Discover</h4>
+          <p>Explore programs and specialties to find the track closest to your professional goals.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <h4>Choose</h4>
+          <p>Select the program and level matching your experience, schedule, and ambitions.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <h4>Learn</h4>
+          <p>Engage with expert mentors, practical coursework, and interactive live and recorded sessions.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">04</div>
+          <h4>Advance</h4>
+          <p>Apply your skills in the workplace, earn recognized credentials, and lead with confidence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Next Level -->
+  <section style="padding: 90px 0; background: #ffffff; text-align:center;">
+    <div class="container">
+      <div style="max-width: 800px; margin: 0 auto;">
+        <h2 style="font-size: 2.3rem; color: var(--primary); margin-bottom: 20px;">Your Next Level Starts Here</h2>
+        <p style="font-size: 1.15rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 25px;">
+          Wherever you are in your career, there is always a higher milestone within reach. Whether seeking a targeted skill, advanced credential, or executive leadership, Nibras helps you take that confident step.
+        </p>
+        <div style="font-size: 1.3rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 35px;">
+          Don't stop at what you know... Discover who you can become.
+        </div>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px;">
+          <a href="../pages/en/programs.html" class="btn-primary" style="padding:14px 36px; font-size:1.1rem;">
+            Explore Programs <i class="fas fa-arrow-right"></i>
+          </a>
+          <a href="../pages/en/contact.html" class="btn-outline" style="padding:14px 36px; font-size:1.1rem;">
+            Speak with an Advisor <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          
+          <!-- Col 1 -->
+          <div class="footer-brand">
+            <a href="index.html" class="nav-logo" style="margin-bottom:15px; display:inline-block;">
+              <img src="../assets/img/logo.png" alt="Nibras Academy" style="max-height:60px;" />
+            </a>
+            <h4 style="color:#ffffff; font-size:1.1rem; margin-bottom:8px;">Nibras Academy</h4>
+            <p style="color:#cbd5e1; font-size:0.95rem; line-height:1.7; margin-bottom:18px;">
+              Knowledge that develops. Skills that empower. A future built together.
+            </p>
+            <div class="social-links">
+              <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+              <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+
+          <!-- Col 2 -->
+          <div class="footer-links-col">
+            <h5>Academy</h5>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="../pages/en/about.html">About Nibras</a></li>
+              <li><a href="../pages/en/programs.html">Programs</a></li>
+              <li><a href="../pages/en/programs.html">Disciplines</a></li>
+              <li><a href="../pages/en/articles.html">Articles & Media</a></li>
+              <li><a href="../pages/en/contact.html">Contact Us</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 3 -->
+          <div class="footer-links-col">
+            <h5>Programs</h5>
+            <ul>
+              <li><a href="../pages/en/pro_courses.html">Professional Courses</a></li>
+              <li><a href="../pages/en/diploma.html">Professional Diplomas</a></li>
+              <li><a href="../pages/en/masters.html">Professional Masters</a></li>
+              <li><a href="../pages/en/phd.html">Professional Doctorate</a></li>
+              <li><a href="../pages/en/programs.html#services">Corporate Training</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 4 -->
+          <div class="footer-links-col">
+            <h5>Important Links</h5>
+            <ul>
+              <li><a href="../pages/en/verify.html">Verify Certificate</a></li>
+              <li><a href="../pages/en/privacy.html">Privacy Policy</a></li>
+              <li><a href="../pages/en/terms.html">Terms & Conditions</a></li>
+              <li><a href="../pages/en/refund.html">Refund Policy</a></li>
+              <li><a href="../pages/en/accessibility.html">Accessibility</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Help Box -->
+        <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px 25px; margin-top: 40px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px;">
+          <div>
+            <h5 style="color:var(--gold); font-size:1.05rem; margin-bottom:4px;">Need Help Choosing the Right Program?</h5>
+            <p style="color:#cbd5e1; font-size:0.9rem; margin:0;">Reach out to the Nibras team and we will guide you to the track best aligned with your career ambition.</p>
+          </div>
+          <a href="../pages/en/contact.html" class="btn-primary" style="padding:10px 24px; font-size:0.95rem;">Contact Us <i class="fas fa-headset"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 Nibras Academy for Training & Professional Qualification. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="../assets/js/script.js" defer></script>
 </body>
-
 </html>

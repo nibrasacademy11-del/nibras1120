@@ -651,3 +651,43 @@ body {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(122, 28, 40, 0.1);
 }
+
+.hidden {
+    display: none !important;
+}
+
+/* Status Badges */
+.badge-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+.badge-status.available { background: #e6f9ed; color: #12b76a; }
+.badge-status.coming_soon { background: #fef7e7; color: #b54708; }
+.badge-status.unavailable { background: #fee4e2; color: #d92d20; }
+.badge-status.hidden-status { background: #f2f4f7; color: #475467; }
+
+.badge-status.valid { background: #e6f9ed; color: #12b76a; }
+.badge-status.suspended { background: #fef7e7; color: #b54708; }
+.badge-status.cancelled { background: #fee4e2; color: #d92d20; }
+.badge-status.expired { background: #f2f4f7; color: #475467; }
+
+.badge-status.new { background: #eff8ff; color: #175cd3; }
+.badge-status.in_progress { background: #fef7e7; color: #b54708; }
+.badge-status.replied { background: #e6f9ed; color: #12b76a; }
+.badge-status.closed { background: #f2f4f7; color: #475467; }
+
+/* Grid form helpers */
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+@media (max-width: 768px) {
+    .form-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+

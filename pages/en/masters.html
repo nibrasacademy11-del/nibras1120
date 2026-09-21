@@ -1,1261 +1,376 @@
 <!DOCTYPE html>
-
-<html dir="ltr" lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Professional Masters section | Nibras</title>
-<meta content="Nibras - an accredited vocational training and qualification platform, which aims to prepare professional cadres capable of dealing with the requirements of the modern labor market." name="description"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-<link href="../../assets/css/style.css" rel="stylesheet"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Professional Master Programs | Nibras Academy for Training & Professional Development</title>
+  <meta name="description" content="Professional Master programs designed to provide specialized knowledge, develop leadership capabilities, and prepare executives for the evolving Gulf job market." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
 </head>
 <body>
 
-        <!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
-
-        
-    <!-- Floating Cart Button -->
-    <div class="floating-cart" onclick="toggleCart(event)">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="floating-cart-badge cart-badge">0</span>
+  <!-- Cart Sidebar -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+      <button onclick="toggleCart(event)" class="close-cart">&times;</button>
     </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <strong id="cartTotal">0.00 US$</strong>
+      </div>
+      <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Proceed to Checkout <i class="fas fa-credit-card"></i></a>
+    </div>
+  </div>
+  <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
 
-<!-- Navbar -->
-<nav class="navbar scrolled" id="navbar">
-<div class="nav-container">
-<a class="nav-logo" href="../../en/index.html">
-<img alt="Nibras" src="../../assets/img/logo.png"/>
-</a>
-<ul class="nav-links" id="navLinks">
-<li><a class="nav-btn" href="../ar/masters.html" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
-<li><a class="nav-link" href="../../en/index.html">Home</a></li>
-<li><a class="nav-link" href="about.html">About Us</a></li>
-<li><a class="nav-link" href="programs.html">Services</a></li>
+  <!-- Floating Cart Button -->
+  <div class="floating-cart" onclick="toggleCart(event)">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="floating-cart-badge cart-badge">0</span>
+  </div>
 
-<li><a class="nav-link" href="contact.html">Contact Us</a></li>
-<li><a class="nav-link" href="verify.html">Verify Certificates</a></li>
-<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li><a class="nav-btn" href="login.html">Login</a></li>
-</ul>
-<button aria-label="القائمة" class="hamburger" id="hamburger">
-<span></span><span></span><span></span>
-</button>
-</div>
-</nav>
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-<ul>
-<li><a class="nav-btn" href="../ar/masters.html" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> Arabic</a></li>
-<li><a href="../../en/index.html">Home</a></li>
-<li><a href="about.html">About Us</a></li>
-<li><a href="programs.html">Services</a></li>
-      <li><a href="articles.html">Articles</a></li>
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar scrolled">
+    <div class="nav-container">
+      <a href="../../en/index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="Nibras Academy" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../ar/masters.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> العربية</a></li>
+        <li><a href="../../en/index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="programs.html" class="nav-link active">Programs & Services</a></li>
+        <li><a href="articles.html" class="nav-link">Articles & Media</a></li>
+        <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+        <li><a href="verify.html" class="nav-link">Certificate Verification</a></li>
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li><a href="login.html" class="nav-btn">Sign In</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
 
-<li><a href="contact.html">Contact Us</a></li>
-<li><a href="verify.html">Verify Certificates</a></li>
-<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li><a class="mobile-btn" href="login.html">Login</a></li>
-</ul>
-</div>
-<!-- Page Header -->
-<section class="page-header">
-<div class="container">
-<h1>Professional Masters Department</h1>
-<p>An advanced path that combines academic study and practical experience to develop your leadership capabilities.</p>
-</div>
-</section>
-<!-- Items Section -->
-<section class="programs-section" style="padding: 80px 0; background: var(--bg-surface);">
-<div class="container">
-<div class="programs-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:30px;">
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../ar/masters.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> العربية</a></li>
+      <li><a href="../../en/index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="programs.html">Programs & Services</a></li>
+      <li><a href="articles.html">Articles & Media</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="verify.html">Certificate Verification</a></li>
+      <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
+      <li><a href="login.html" class="mobile-btn">Sign In</a></li>
+    </ul>
+  </div>
 
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Innovation and Development Management</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">The program aims to qualify trainees to understand institutional innovation and development management, and to transform ideas into practical solutions applicable in work environments.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_0')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_0', 'Professional Master in Innovation and Development Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Project Management</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"></p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_1')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_1', 'Professional Master in Project Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master of Business Administration (MBA)</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">This program is an integrated professional path that aims to qualify trainees on modern business management concepts and applications, and build a comprehensive understanding of the organization’s various functions to support professional readiness and career development.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_2')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_2', 'Professional Master of Business Administration (MBA)', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Risk Management</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on identifying, analyzing, and managing risks within organizations.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_3')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_3', 'Professional Master in Risk Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Accounting and Financial Management</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional program focusing on understanding accounting and financial management to support managerial decision-making.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_4')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_4', 'Professional Master in Accounting and Financial Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Occupational Safety and Health</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on building safe work environments and managing occupational risks.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_5')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_5', 'Professional Master in Occupational Safety and Health', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Hotel Management</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional program that focuses on managing hotel and service facilities according to modern quality standards.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_6')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_6', 'Professional Master in Hotel Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Health Administration</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focusing on the organization and management of health services and associated policies.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_7')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_7', 'Professional Master in Health Administration', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Hospital Administration</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A specialized program focusing on the administrative and operational aspects of hospitals and health facilities. -- --- ---</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_8')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_8', 'Professional Master in Hospital Administration', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Supply Chain</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on managing supply chains efficiently, from planning to distribution, to support business continuity and improve operational performance.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_9')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_9', 'Professional Master in Supply Chain', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Marketing and Sales</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A professional program that focuses on understanding markets and customers and building effective marketing strategies, while linking marketing and sales to achieve practical results that support employment opportunities and professional growth.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_10')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_10', 'Professional Master in Marketing and Sales', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Human Resources</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on qualifying the trainee to understand human capital management and build effective systems for managing individuals within organizations.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_11')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_11', 'Professional Master in Human Resources', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Data Analysis</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on analyzing and using data to support administrative decisions.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_12')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_12', 'Professional Master in Data Analysis', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Cybersecurity</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focused on protecting systems and information and managing digital risks.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_13')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_13', 'Professional Master in Cybersecurity', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Artificial Intelligence</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focused on understanding the applications of artificial intelligence in business environments.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_14')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_14', 'Professional Master in Artificial Intelligence', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Digital Transformation and Technology Management</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program focusing on technology management and digital transformation within organizations.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_15')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_15', 'Professional Master in Digital Transformation and Technology Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Executive Management</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A comprehensive program focusing on management from an integrated executive perspective.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_16')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_16', 'Professional Master in Executive Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Strategic Planning</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on formulating and implementing corporate strategies. -- --- ---</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_17')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_17', 'Professional Master in Strategic Planning', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Public Relations and Media</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on institutional communication, building mental image, and managing relationships with the public.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_18')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_18', 'Professional Master in Public Relations and Media', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Administrative Leadership</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on developing leadership skills and building the ability to manage teams and make decisions. -- --- ---</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_19')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_19', 'Professional Master in Administrative Leadership', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">Professional Master in Quality Management</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">A program that focuses on quality systems and continuous improvement within institutions.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_20')">Details <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_20', 'Professional Master in Quality Management', 1200)">Add to Cart <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-</div>
-</div>
-</div>
-</section>
+  <!-- Breadcrumb & Hero -->
+  <section class="page-header" style="background: linear-gradient(135deg, #380108 0%, #5a020e 45%, #750a18 100%); padding: 130px 0 70px; text-align: left; color: #fff;">
+    <div class="container">
+      <div style="font-size: 0.95rem; opacity: 0.8; margin-bottom: 15px;">
+        <a href="../../en/index.html" style="color: #fff; text-decoration: none;">Home</a> → 
+        <a href="programs.html" style="color: #fff; text-decoration: none;">Programs</a> → 
+        <span style="color: var(--gold);">Professional Master</span>
+      </div>
+      <div class="section-badge" style="background: rgba(200,154,80,0.2); color: var(--gold); border: 1px solid var(--gold); display: inline-block; padding: 6px 16px; border-radius: 20px; font-weight: 700; margin-bottom: 15px;">
+        Advanced Track | Level 03
+      </div>
+      <h1 style="font-size: 2.6rem; font-weight: 800; margin-bottom: 15px;">Professional Master Programs</h1>
+      <p style="font-size: 1.35rem; color: var(--gold); font-weight: 700; margin-bottom: 15px;">Elevate Your Expertise... Expand Your Professional Horizons</p>
+      <p style="font-size: 1.1rem; max-width: 800px; line-height: 1.8; opacity: 0.9; margin-bottom: 25px;">
+        Executive master programs specifically engineered to provide specialized practical knowledge, enhance managerial and strategic decision-making, and meet Saudi & Gulf corporate requirements.
+      </p>
+      <div style="display:flex; gap:15px; flex-wrap:wrap;">
+        <a href="#programs-list" class="btn-primary"><i class="fas fa-graduation-cap"></i> Explore Master Programs</a>
+        <a href="contact.html" class="btn-outline" style="border-color:#fff; color:#fff;"><i class="fab fa-whatsapp"></i> Speak with an Advisor</a>
+      </div>
+    </div>
+  </section>
 
-<!-- Modals Start -->
+  <!-- Section 02: Introduction -->
+  <section style="padding: 60px 0; background: #ffffff;">
+    <div class="container">
+      <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+        <div class="section-badge" style="margin-bottom: 12px;">Program Overview</div>
+        <h2 style="font-size: 2rem; color: var(--primary); margin-bottom: 20px;">What is a Professional Master?</h2>
+        <p style="font-size: 1.15rem; line-height: 1.9; color: var(--text-main); margin-bottom: 15px;">
+          A Professional Master is an applied learning track focused on deepening knowledge and practical skills within an executive domain, preparing practitioners for advanced leadership responsibilities and executive opportunities.
+        </p>
+        <p style="font-size: 1.1rem; line-height: 1.9; color: var(--text-muted);">
+          At Nibras Academy, we offer Professional Master programs across 18 specialized tracks aligned with current market needs and digital transformations in Saudi Arabia and the GCC.
+        </p>
+      </div>
+    </div>
+  </section>
 
-        <div id="mst_modal_0" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_0')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Innovation and Development Management</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>The program aims to qualify trainees to understand institutional innovation and development management, and to transform ideas into practical solutions applicable in work environments.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Developing innovative thinking</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Change management and institutional development</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Support continuous improvement</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Innovation and development management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Digital transformation and technology management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Strategic planning</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Administrative leadership</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in institutional development and improvement</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those looking for a career path in innovation</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Innovation and development tools</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Understanding change management</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master’s Degree in Innovation and Development Management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Fresh content</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Practical examples</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Consulting support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_0', 'Professional Master in Innovation and Development Management', 1200); closeModal('mst_modal_0')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_1" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_1')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Project Management</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p></p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> -- --- --</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those who want to work in project-based environments</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those looking for opportunities in project management and implementation</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Improving the ability to organize and follow up</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Understand time and resource management</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Project management</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Strategic planning</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Risk management</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Quality management</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Administrative leadership</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Project planning and implementation skills</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Understanding of risk and quality management</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's Degree in Project Management</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> -- --- ---</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Practical applications</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Organization and follow-up tools</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Ongoing training support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_1', 'Professional Master in Project Management', 1200); closeModal('mst_modal_1')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_2" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_2')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master of Business Administration (MBA)</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>This program is an integrated professional path that aims to qualify trainees on modern business management concepts and applications, and build a comprehensive understanding of the organization’s various functions to support professional readiness and career development.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Building a strong knowledge base in business management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Developing administrative and organizational skills</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Supporting transition or professional development in the administrative field</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Strategic planning</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Administrative leadership</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Marketing and sales</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Accounting and financial management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those wishing to work in administrative fields</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those seeking professional qualifications in business administration</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those wishing to move into the administrative field</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> -- -- --</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Comprehensive vocational qualification</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Applied training content</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-certificate"></i> Certification</h4>
-                    <p>Professional Master's degree in Business Administration<br>-- --- --<br></p>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Integrated training bags</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Up-to-date content that keeps up with the market</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Technical and advisory support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_2', 'Professional Master of Business Administration (MBA)', 1200); closeModal('mst_modal_2')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_3" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_3')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Risk Management</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program that focuses on identifying, analyzing, and managing risks within organizations.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understand types of risks</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Support institutional stability</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Improve decision quality</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Risk management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Corporate governance</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Quality management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Strategic planning</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in risk management</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those seeking organizational roles</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Risk analysis tools</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Support strategic decisions</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's Degree in Risk Management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Practical content</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Consulting support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_3', 'Professional Master in Risk Management', 1200); closeModal('mst_modal_3')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_4" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_4')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Accounting and Financial Management</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A professional program focusing on understanding accounting and financial management to support managerial decision-making.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Financial data analysis</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understanding financial management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Financial planning support</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Accounting and financial management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Corporate governance</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Risk management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Strategic planning</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in financial fields</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those looking for financial and administrative roles</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Financial analysis skills</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Administrative decision support</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's Degree in Accounting and Financial Management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Application content</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Analysis tools</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_4', 'Professional Master in Accounting and Financial Management', 1200); closeModal('mst_modal_4')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_5" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_5')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Occupational Safety and Health</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program that focuses on building safe work environments and managing occupational risks.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understand safety systems</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Occupational risk assessment</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Promote safety culture</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Occupational safety and health</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Risk management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Quality management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Project management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Administrative leadership</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in the field of occupational safety</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those wishing to work in the field of HSE</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Risk assessment skills</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Safety systems management</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> A professional master’s degree in occupational safety and health</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Application content</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Technical support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_5', 'Professional Master in Occupational Safety and Health', 1200); closeModal('mst_modal_5')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_6" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_6')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Hotel Management</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A professional program that focuses on managing hotel and service facilities according to modern quality standards.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understanding hotel management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Improve customer experience</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Resource and service management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Hotel management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Marketing and sales</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Human resources</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Quality management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in the hospitality and hotels sector</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those wishing to work in hotel management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Hotel operation skills</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Improving the quality of services</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Application content</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Professional support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_6', 'Professional Master in Hotel Management', 1200); closeModal('mst_modal_6')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_7" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_7')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Health Administration</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program focusing on the organization and management of health services and associated policies.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understanding health management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Planning and organizing services</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Support health decision making</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Health administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Hospital management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Strategic planning</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Quality management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Administrative leadership</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in health services management</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those looking for opportunities in the health sector</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Understanding the health management system</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Readiness to work in health institutions</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's degree in health administration</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Realistic applications</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Training support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_7', 'Professional Master in Health Administration', 1200); closeModal('mst_modal_7')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_8" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_8')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Hospital Administration</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A specialized program focusing on the administrative and operational aspects of hospitals and health facilities. -- --- ---</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understand the operation of hospitals</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Improving the quality of health services</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Managing resources within medical facilities</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Hospital management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Health administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Quality management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Risk management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Administrative leadership</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in health administration</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those wishing to work in medical facilities</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Hospital management skills</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Understand quality and safety standards</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's Degree in Hospital Administration</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> -- --- --</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Application content</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Consulting support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_8', 'Professional Master in Hospital Administration', 1200); closeModal('mst_modal_8')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_9" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_9')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Supply Chain</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program that focuses on managing supply chains efficiently, from planning to distribution, to support business continuity and improve operational performance.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understanding the supply chain system</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Improve efficiency and reduce costs</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Organizing logistics operations</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Supply chains</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Project management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Risk management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Quality management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in procurement and logistics</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those looking for opportunities in operations management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Comprehensive understanding of supply chains</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Improving operational performance</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's Degree in Supply Chain</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Organizing and planning tools</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Application content</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_9', 'Professional Master in Supply Chain', 1200); closeModal('mst_modal_9')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_10" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_10')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Marketing and Sales</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A professional program that focuses on understanding markets and customers and building effective marketing strategies, while linking marketing and sales to achieve practical results that support employment opportunities and professional growth.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understand market and customer behavior</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Develop marketing and sales skills</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Linking marketing activities to business results</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Marketing and sales</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Data analysis</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Innovation and development management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Administrative leadership</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Interested in working in marketing and sales</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those looking for opportunities in commercial fields</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those wishing to develop their marketing skills</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Practical marketing tools</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Understanding the market and making decisions</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's degree in Marketing and Sales</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Practical applications</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Market-aligned content</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Training support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_10', 'Professional Master in Marketing and Sales', 1200); closeModal('mst_modal_10')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_11" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_11')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Human Resources</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program that focuses on qualifying the trainee to understand human capital management and build effective systems for managing individuals within organizations.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understanding HR functions</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Develop people management skills</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Supporting institutional performance</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Human resources</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Administrative leadership</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Strategic planning</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Quality management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in working in human resources</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those who want to build a career in people management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> A comprehensive understanding of human resources management</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Tools for organizing and developing performance</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's degree in Human Resources</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Training bags</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Practical applications</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Technical support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_11', 'Professional Master in Human Resources', 1200); closeModal('mst_modal_11')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_12" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_12')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Data Analysis</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program that focuses on analyzing and using data to support administrative decisions.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understand data analysis</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Convert data into information</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Institutional decision support</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Data analysis</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> artificial intelligence</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Digital transformation and technology management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Strategic planning</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in data and analysis</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in an analytical career path</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Data analysis skills</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Decision support with data</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's degree in data analysis</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Practical applications</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Analysis tools</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_12', 'Professional Master in Data Analysis', 1200); closeModal('mst_modal_12')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_13" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_13')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Cybersecurity</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program focused on protecting systems and information and managing digital risks.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understanding cybersecurity</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Digital risk management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Data protection</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Cyber ​​security</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Risk management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Digital transformation and technology management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Quality management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Corporate governance</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in information security</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those who want to work in cybersecurity</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Systems protection skills</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Digital risk management</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's Degree in Cybersecurity</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Updated content</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Technical support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_13', 'Professional Master in Cybersecurity', 1200); closeModal('mst_modal_13')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_14" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_14')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Artificial Intelligence</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program focused on understanding the applications of artificial intelligence in business environments.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understanding smart technologies</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Employing artificial intelligence in decision-making</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Support innovation</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> artificial intelligence</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Data analysis</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Digital transformation and technology management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Innovation and development management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> -- --- --- -</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in modern technologies</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in a technical career path</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Understanding artificial intelligence</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Its practical applications</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's degree in Artificial Intelligence</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Application content</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Consulting support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_14', 'Professional Master in Artificial Intelligence', 1200); closeModal('mst_modal_14')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_15" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_15')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Digital Transformation and Technology Management</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program focusing on technology management and digital transformation within organizations.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understanding digital transformation</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Technical systems management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Support technological innovation</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Digital transformation and technology management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Data analysis</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Innovation and development management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Cyber ​​security</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Interested in technology from a management perspective</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those who want to work with digital transformation</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Understanding digital transformation</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Technology management within institutions</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's Degree in Digital Transformation and Technology Management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Updated content</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Technical support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_15', 'Professional Master in Digital Transformation and Technology Management', 1200); closeModal('mst_modal_15')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_16" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_16')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Executive Management</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A comprehensive program focusing on management from an integrated executive perspective.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Developing the executive vision</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Improve decision making</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Manage resources effectively</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Executive management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Administrative leadership</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Strategic planning</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Project management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in executive roles</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Interested in comprehensive management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Integrated executive vision</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Advanced decision skills</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master’s Degree in Executive Management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Practical content</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Professional support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_16', 'Professional Master in Executive Management', 1200); closeModal('mst_modal_16')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_17" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_17')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Strategic Planning</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program that focuses on formulating and implementing corporate strategies. -- --- ---</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Analysis of the institutional environment</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Building strategic plans</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Linking vision to implementation</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Strategic planning</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Administrative leadership</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Data analysis</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Risk management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in planning and decision making</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in strategic roles</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Strategic planning skills</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Long-term decision support</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master's Degree in Strategic Planning</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Analysis tools</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Practical applications</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_17', 'Professional Master in Strategic Planning', 1200); closeModal('mst_modal_17')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_18" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_18')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Public Relations and Media</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program that focuses on institutional communication, building mental image, and managing relationships with the public.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Understanding corporate communication</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Media and Public Relations Department</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Building institutional reputation</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Public relations and media</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Marketing and sales</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Strategic planning</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Administrative leadership</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those interested in media and communication</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those looking for opportunities in public relations</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Communication and media skills</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Managing relations with the public</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Application content</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Professional support</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_18', 'Professional Master in Public Relations and Media', 1200); closeModal('mst_modal_18')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_19" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_19')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Administrative Leadership</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program that focuses on developing leadership skills and building the ability to manage teams and make decisions. -- --- ---</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Develop leadership skills</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Improving influence methods</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Manage teams effectively</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Administrative leadership</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Strategic planning</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Project management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Quality management</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Ambitious cadres for leadership</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those who want to develop influencing skills</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Practical leadership skills</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Team management</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Professional Master’s Degree in Administrative Leadership</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Training support</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Realistic applications</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_19', 'Professional Master in Administrative Leadership', 1200); closeModal('mst_modal_19')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_20" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_20')">&times;</span>
-            <div class="modal-header">
-                <h2>Professional Master in Quality Management</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">Price: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> Description</h4>
-                    <p>A program that focuses on quality systems and continuous improvement within institutions.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> Objectives</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Applying quality standards</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Improving processes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Increase performance efficiency</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Program themes</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Quality management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Project management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Risk management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Innovation and development management</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-right:8px;'></i> Business Administration</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> Who is this program for?</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Interested in quality and improvement</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-right:8px;'></i> Those wishing to develop operations</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> Outcomes</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Quality improvement tools</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-right:8px;'></i> Developing institutional performance</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> Additional Features</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Practical applications</li><li><i class='fas fa-star' style='color:#f39c12; margin-right:8px;'></i> Updated content</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_20', 'Professional Master in Quality Management', 1200); closeModal('mst_modal_20')">Add to Cart <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">Checkout <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-<!-- Modals End -->
-<!-- Footer -->
-<footer class="footer">
-<div class="footer-top">
-<div class="container">
-<div class="footer-grid">
-<div class="footer-brand">
+  <!-- Section 03: Programs List with Filter & Search -->
+  <section id="programs-list" class="programs-section" style="padding: 70px 0; background: var(--bg-surface);">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 35px;">
+        <div class="section-badge">Available Master Programs</div>
+        <h2 class="section-title">Select the Discipline Aligned with Your <span class="highlight">Career Goals</span></h2>
+        <p class="section-subtitle">Browse through all certified executive tracks and select the program that best matches your aspirations.</p>
+      </div>
 
-<p>A certified professional training platform aiming to prepare professional cadres capable of dealing with the modern labor market.</p>
-<div class="social-links">
-<a aria-label="Facebook" class="social-link" href="https://www.facebook.com/nibars8883" target="_blank"><i class="fab fa-facebook-f"></i></a>
-<a aria-label="Instagram" class="social-link" href="https://www.instagram.com/nibars8883" target="_blank"><i class="fab fa-instagram"></i></a>
+      <!-- Search & Specialty Filter Controls -->
+      <div style="max-width: 950px; margin: 0 auto 35px; display: flex; flex-direction: column; gap: 15px;">
+        <div style="position: relative;">
+          <input type="text" id="masterSearch" placeholder="Search by program title or specialty..." style="width: 100%; padding: 14px 18px 14px 45px; border: 1px solid var(--border); border-radius: 12px; font-size: 1rem; font-family: inherit; background:#fff;" />
+          <i class="fas fa-search" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;" id="specialtyFilterButtons">
+          <button class="filter-tag active" onclick="filterBySpecialty('all', this)">All</button>
+          <button class="filter-tag" onclick="filterBySpecialty('Business', this)">Business Admin</button>
+          <button class="filter-tag" onclick="filterBySpecialty('Human Resources', this)">HR</button>
+          <button class="filter-tag" onclick="filterBySpecialty('Project', this)">Project Management</button>
+          <button class="filter-tag" onclick="filterBySpecialty('Marketing', this)">Marketing</button>
+          <button class="filter-tag" onclick="filterBySpecialty('Finance', this)">Finance & Accounting</button>
+          <button class="filter-tag" onclick="filterBySpecialty('Cybersecurity', this)">Cybersecurity</button>
+          <button class="filter-tag" onclick="filterBySpecialty('AI', this)">AI</button>
+          <button class="filter-tag" onclick="filterBySpecialty('Quality', this)">Quality</button>
+          <button class="filter-tag" onclick="filterBySpecialty('Healthcare', this)">Healthcare</button>
+        </div>
+      </div>
+
+      <!-- Dynamic Cards Grid -->
+      <div id="mastersGrid" class="programs-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+        <div style="grid-column: 1 / -1; text-align:center; padding: 40px; color: var(--text-muted);">
+          <i class="fas fa-spinner fa-spin fa-2x"></i>
+          <p style="margin-top:10px;">Loading Professional Master programs...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 04: Why Professional Master -->
+  <section style="padding: 70px 0; background: #ffffff;">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 45px;">
+        <div class="section-badge">Why Choose a Master?</div>
+        <h2 class="section-title">An Educational Path Supporting Your <span class="highlight">Career Growth</span></h2>
+      </div>
+      <div class="why-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px;">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-bullseye"></i></div>
+          <h3>Specialized Knowledge</h3>
+          <p>Deepen your expertise in your chosen domain and master real-world executive practices.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-chart-line"></i></div>
+          <h3>Professional Development</h3>
+          <p>Develop leadership competencies to qualify for executive leadership responsibilities.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-th-large"></i></div>
+          <h3>Diverse Disciplines</h3>
+          <p>Choose from an extensive selection of administrative, technical, and digital disciplines.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-laptop-house"></i></div>
+          <h3>Flexible Learning</h3>
+          <p>Balance study effortlessly with your professional commitments via flexible hybrid formats.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 05: Target Audience -->
+  <section style="padding: 60px 0; background: var(--bg-surface);">
+    <div class="container">
+      <div style="max-width: 850px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 16px; border: 1px solid var(--border);">
+        <div class="section-badge" style="margin-bottom: 10px;">Target Audience</div>
+        <h2 style="font-size: 1.8rem; color: var(--primary); margin-bottom: 25px;">Target Profiles</h2>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 15px; font-size: 1.05rem;">
+          <li style="display:flex; align-items:center; gap:12px;"><i class="fas fa-check-circle" style="color:var(--gold); font-size:1.2rem;"></i> Corporate professionals aiming for promotional advancement and leadership roles.</li>
+          <li style="display:flex; align-items:center; gap:12px;"><i class="fas fa-check-circle" style="color:var(--gold); font-size:1.2rem;"></i> Specialists seeking to consolidate modern industry methodologies in their fields.</li>
+          <li style="display:flex; align-items:center; gap:12px;"><i class="fas fa-check-circle" style="color:var(--gold); font-size:1.2rem;"></i> Career changers pivoting into high-demand managerial and technology fields.</li>
+          <li style="display:flex; align-items:center; gap:12px;"><i class="fas fa-check-circle" style="color:var(--gold); font-size:1.2rem;"></i> Entrepreneurs and founders who need comprehensive strategic oversight.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section CTA 08 -->
+  <section style="background: linear-gradient(135deg, #380108 0%, #5a020e 45%, #750a18 100%); color: #fff; padding: 70px 0; text-align: center;">
+    <div class="container">
+      <div class="section-badge" style="background:rgba(200,154,80,0.2); color:var(--gold); border:1px solid var(--gold); margin-bottom:15px;">Next Step</div>
+      <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 15px;">Choose Your Specialty & Take the Next Step</h2>
+      <p style="font-size: 1.15rem; max-width: 650px; margin: 0 auto 30px; opacity: 0.9;">
+        Explore our certified master programs and choose the qualification that propels your career forward.
+      </p>
+      <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
+        <a href="#programs-list" class="btn-primary"><i class="fas fa-graduation-cap"></i> Explore Programs</a>
+        <a href="contact.html" class="btn-outline" style="border-color:#fff; color:#fff;"><i class="fas fa-headset"></i> Contact an Advisor</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="../../assets/img/logo.png" alt="Nibras Academy" style="max-height: 55px; margin-bottom: 15px;">
+            <p><strong>Nibras Academy for Training & Professional Development</strong><br>Building capabilities... Creating impact that extends into the future.</p>
+            <div class="social-links">
+              <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
               <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
-<a aria-label="LinkedIn" class="social-link" href="https://www.linkedin.com/in/nibras-academy-5803a239b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-<a aria-label="WhatsApp" class="social-link" href="https://wa.me/201112220796" target="_blank"><i class="fab fa-whatsapp"></i></a>
-</div>
-</div>
-<div class="footer-links-col">
-<h5>Quick Links</h5>
-<ul>
-<li><a href="../../en/index.html">Home</a></li>
-<li><a href="about.html">About Us</a></li>
-<li><a href="programs.html">Our Programs</a></li>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>Academy</h5>
+            <ul>
+              <li><a href="../../en/index.html">Home</a></li>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="programs.html">Programs & Services</a></li>
+              <li><a href="articles.html">Articles & Media</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Learning Tracks</h5>
+            <ul>
+              <li><a href="pro_courses.html">Training Courses</a></li>
+              <li><a href="diploma.html">Professional Diplomas</a></li>
+              <li><a href="masters.html">Professional Master</a></li>
+              <li><a href="phd.html">Professional Doctorate</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Quick Links</h5>
+            <ul>
+              <li><a href="verify.html">Certificate Verification</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="terms.html">Terms & Conditions</a></li>
+              <li><a href="refund.html">Refund Policy</a></li>
+              <li><a href="accessibility.html">Accessibility</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 Nibras Academy for Training & Professional Development. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
 
-<li><a href="verify.html">Verify Certificates</a></li>
-<li><a href="contact.html">Contact Us</a></li>
-</ul>
-</div>
-<div class="footer-links-col">
-<h5>Programs</h5>
-<ul>
-<li><a href="#programs">Professional PhD</a></li>
-<li><a href="#programs">Professional Masters</a></li>
-<li><a href="#programs">Professional Diploma</a></li>
-</ul>
-</div>
-<div class="footer-links-col">
-<h5>Legal</h5>
-<ul>
-<li><a href="privacy.html">Privacy Policy</a></li>
-<li><a href="terms.html">Terms &amp; Conditions</a></li>
-<li><a href="refund.html">Refund Policy</a></li>
-<li><a href="accessibility.html">Accessibility</a></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="footer-bottom">
-<div class="container">
-<p>© 2026 Nibras. All rights reserved.</p>
-</div>
-</div>
-</footer>
-<!-- Scroll to Top -->
-<button aria-label="العودة للأعلى" class="scroll-top" id="scrollTop">
-<i class="fas fa-arrow-up"></i>
-</button>
-<!-- Toast Notification -->
-<div class="toast" id="toast"></div>
-<script src="../../assets/js/script.js"></script>
+  <button class="scroll-top" id="scrollTop" aria-label="Back to Top"><i class="fas fa-arrow-up"></i></button>
+  <div class="toast" id="toast"></div>
+
+  <script src="../../assets/js/script.js"></script>
+
+  <script>
+    let allMasters = [];
+
+    async function loadMasters() {
+      const container = document.getElementById('mastersGrid');
+      try {
+        const res = await fetch('/api/courses?type=masters');
+        const data = await res.json();
+        allMasters = data.courses || [];
+        renderMasters(allMasters);
+      } catch (err) {
+        console.error('Failed to load courses from API:', err);
+        container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 30px;">Error connecting to server. Please try again.</p>';
+      }
+    }
+
+    function renderMasters(list) {
+      const container = document.getElementById('mastersGrid');
+      if (!list || list.length === 0) {
+        container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px; font-size: 1.1rem;">No matching programs found.</p>';
+        return;
+      }
+
+      container.innerHTML = list.map(item => {
+        const title = item.titleEn || item.title || item.titleAr || 'Professional Master Program';
+        const desc = item.descriptionEn || item.descriptionAr || 'Advanced professional program designed for executive leadership.';
+        const price = item.price || 1200;
+        const slug = item.slug || item._id;
+        const specialty = item.specialty || 'Management';
+        const isAvailable = item.status === 'available' || !item.status;
+        const isComingSoon = item.status === 'coming_soon';
+
+        let actionBtn = '';
+        if (isComingSoon) {
+          actionBtn = `<a href="program-detail.html?slug=${slug}" class="btn-outline" style="width:100%; text-align:center; border-color:var(--gold); color:var(--primary); font-weight:700;"><i class="fas fa-bell"></i> Register Interest</a>`;
+        } else if (isAvailable) {
+          actionBtn = `<button class="btn-primary" style="width:100%;" onclick="addToCart('${item._id}', '${title.replace(/'/g, "\\'")}', ${price})"><i class="fas fa-cart-plus"></i> Add to Cart</button>`;
+        } else {
+          actionBtn = `<button class="btn-outline" style="width:100%; opacity:0.6; cursor:not-allowed;" disabled>Currently Unavailable</button>`;
+        }
+
+        return `
+          <div class="program-card" style="display:flex; flex-direction:column; justify-content:space-between; height:100%;">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 10px; border-radius:12px;">${specialty}</span>
+                <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-award text-gold"></i> Master</span>
+              </div>
+              <h3 style="font-size:1.15rem; color:var(--primary); margin-bottom:10px; line-height:1.4;">${title}</h3>
+              <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:15px;">
+                ${desc}
+              </p>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin:15px 0 12px; border-top:1px solid var(--border); padding-top:12px;">
+                <span style="color:var(--text-muted); font-size:0.85rem;">Tuition:</span>
+                <strong style="color:var(--primary); font-size:1.25rem;">${price}.00 US$</strong>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <a href="program-detail.html?slug=${slug}" class="btn-outline" style="width:100%; text-align:center;"><i class="fas fa-info-circle"></i> Full Curriculum & Details</a>
+                ${actionBtn}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.getElementById('masterSearch').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      const filtered = allMasters.filter(m => 
+        (m.titleEn && m.titleEn.toLowerCase().includes(q)) ||
+        (m.titleAr && m.titleAr.toLowerCase().includes(q)) ||
+        (m.specialty && m.specialty.toLowerCase().includes(q)) ||
+        (m.descriptionEn && m.descriptionEn.toLowerCase().includes(q))
+      );
+      renderMasters(filtered);
+    });
+
+    function filterBySpecialty(specialty, btn) {
+      document.querySelectorAll('#specialtyFilterButtons .filter-tag').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (specialty === 'all') {
+        renderMasters(allMasters);
+      } else {
+        const filtered = allMasters.filter(m => 
+          (m.specialty && m.specialty.toLowerCase().includes(specialty.toLowerCase())) ||
+          (m.titleEn && m.titleEn.toLowerCase().includes(specialty.toLowerCase()))
+        );
+        renderMasters(filtered);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadMasters);
+  </script>
 </body>
 </html>
-
-

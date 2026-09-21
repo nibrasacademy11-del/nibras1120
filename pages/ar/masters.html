@@ -3,59 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>قسم الماجستير المهني | أكاديمية نبراس</title>
-  <meta name="description" content="أكاديمية نبراس - منصة تدريب وتأهيل مهني معتمدة، تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث." />
+  <title>الماجستير المهني | أكاديمية نبراس للتدريب والتأهيل المهني</title>
+  <meta name="description" content="برامج ماجستير مهنية صممت لتمنحك معرفة متخصصة، وتدعم تطوير مهاراتك، وتساعدك على مواكبة متطلبات بيئة العمل الحديثة في المملكة العربية السعودية والخليج." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="../../assets/css/style.css" />
 </head>
 <body>
 
-        <!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>الإجمالي:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
-
-        
-    <!-- Floating Cart Button -->
-    <div class="floating-cart" onclick="toggleCart(event)">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="floating-cart-badge cart-badge">0</span>
+  <!-- Cart Sidebar -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+      <button onclick="toggleCart(event)" class="close-cart">&times;</button>
     </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>الإجمالي:</span>
+        <strong id="cartTotal">0.00 US$</strong>
+      </div>
+      <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+    </div>
+  </div>
+  <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+
+  <!-- Floating Cart Button -->
+  <div class="floating-cart" onclick="toggleCart(event)">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="floating-cart-badge cart-badge">0</span>
+  </div>
 
   <!-- Navbar -->
   <nav id="navbar" class="navbar scrolled">
     <div class="nav-container">
       <a href="../../index.html" class="nav-logo">
-        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
+        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس للتدريب والتأهيل المهني" />
       </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="../en/masters.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+        <li><a href="../en/masters.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> English</a></li>
         <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
-        <li><a href="about.html" class="nav-link">عن الأكاديمية</a></li>
-        <li><a href="programs.html" class="nav-link">البرامج والخدمات</a></li>
-        <li><a href="articles.html" class="nav-link">المقالات</a></li>
-        
+        <li><a href="about.html" class="nav-link">من نحن</a></li>
+        <li><a href="programs.html" class="nav-link active">البرامج والخدمات</a></li>
+        <li><a href="articles.html" class="nav-link">المقالات والإعلام</a></li>
         <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
         <li><a href="verify.html" class="nav-link">التحقق من الشهادات</a></li>
-        
         <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
         <li><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
       </ul>
@@ -68,1292 +62,251 @@
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
     <ul>
-      <li><a href="../en/masters.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+      <li><a href="../en/masters.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> English</a></li>
       <li><a href="../../index.html">الرئيسية</a></li>
-      <li><a href="about.html">عن الأكاديمية</a></li>
+      <li><a href="about.html">من نحن</a></li>
       <li><a href="programs.html">البرامج والخدمات</a></li>
-      <li><a href="articles.html">المقالات</a></li>
-      
+      <li><a href="articles.html">المقالات والإعلام</a></li>
       <li><a href="contact.html">تواصل معنا</a></li>
       <li><a href="verify.html">التحقق من الشهادات</a></li>
-      
-        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
+      <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+      <li><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
     </ul>
   </div>
 
-
-  <!-- Page Header -->
-  <section class="page-header">
+  <!-- Breadcrumb & Hero -->
+  <section class="page-header" style="background: linear-gradient(135deg, #380108 0%, #5a020e 45%, #750a18 100%); padding: 130px 0 70px; text-align: right; color: #fff;">
     <div class="container">
-      <h1>قسم الماجستير المهني</h1>
-      <p>مسار متقدم يجمع بين الدراسة الأكاديمية والخبرة العملية لتطوير قدراتك القيادية.</p>
-    </div>
-  </section>
-
-  <!-- Items Section -->
-  <section class="programs-section" style="padding: 80px 0; background: var(--bg-surface);">
-    <div class="container">
-      <div class="programs-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:30px;">
-
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في إدارة الابتكار والتطوير</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">يهدف البرنامج إلى تأهيل المتدربين لفهم الابتكار المؤسسي وإدارة التطوير، وتحويل الأفكار إلى حلول عملية قابلة للتطبيق في بيئات العمل.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_0')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_0', 'الماجستير المهني في إدارة الابتكار والتطوير', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في إدارة المشروعات</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج مهني يركّز على تأهيل المتدرب لفهم تخطيط وتنفيذ ومتابعة المشروعات باحتراف، مع ربط المشروعات بالأهداف الاستراتيجية للمؤسسات. -- --- --</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_1')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_1', 'الماجستير المهني في إدارة المشروعات', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في إدارة الأعمال (MBA)</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">يُعد هذا البرنامج مسارًا مهنيًا متكاملًا يهدف إلى تأهيل المتدربين على مفاهيم وتطبيقات إدارة الأعمال الحديثة، وبناء فهم شامل لوظائف المؤسسة المختلفة بما يدعم الجاهزية المهنية والتطور الوظيفي.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_2')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_2', 'الماجستير المهني في إدارة الأعمال (MBA)', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في إدارة المخاطر</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على تحديد وتحليل وإدارة المخاطر داخل المؤسسات.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_3')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_3', 'الماجستير المهني في إدارة المخاطر', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في المحاسبة والإدارة المالية</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج مهني يركّز على فهم المحاسبة والإدارة المالية لدعم القرار الإداري.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_4')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_4', 'الماجستير المهني في المحاسبة والإدارة المالية', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في السلامة والصحة المهنية</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على بناء بيئات عمل آمنة وإدارة المخاطر المهنية.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_5')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_5', 'الماجستير المهني في السلامة والصحة المهنية', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في إدارة الفنادق</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج مهني يركّز على إدارة المنشآت الفندقية والخدمية وفق معايير الجودة الحديثة.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_6')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_6', 'الماجستير المهني في إدارة الفنادق', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في الإدارة الصحية</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على تنظيم وإدارة الخدمات الصحية والسياسات المرتبطة بها.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_7')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_7', 'الماجستير المهني في الإدارة الصحية', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في إدارة المستشفيات</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج متخصص يركّز على الجوانب الإدارية والتشغيلية للمستشفيات والمنشآت الصحية. -- --- ---</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_8')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_8', 'الماجستير المهني في إدارة المستشفيات', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في سلاسل الإمداد</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على إدارة سلاسل الإمداد بكفاءة، من التخطيط حتى التوزيع، بما يدعم استمرارية الأعمال وتحسين الأداء التشغيلي.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_9')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_9', 'الماجستير المهني في سلاسل الإمداد', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في التسويق والمبيعات</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج مهني يركّز على فهم الأسواق والعملاء وبناء استراتيجيات تسويقية فعّالة، مع ربط التسويق بالمبيعات لتحقيق نتائج عملية تدعم فرص التوظيف والنمو المهني.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_10')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_10', 'الماجستير المهني في التسويق والمبيعات', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في الموارد البشرية</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على تأهيل المتدرب لفهم إدارة رأس المال البشري وبناء نظم فعالة لإدارة الأفراد داخل المؤسسات.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_11')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_11', 'الماجستير المهني في الموارد البشرية', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في تحليل البيانات</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على تحليل البيانات واستخدامها لدعم القرار الإداري.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_12')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_12', 'الماجستير المهني في تحليل البيانات', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في الأمن السيبراني</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على حماية الأنظمة والمعلومات وإدارة المخاطر الرقمية.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_13')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_13', 'الماجستير المهني في الأمن السيبراني', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في الذكاء الاصطناعي</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على فهم تطبيقات الذكاء الاصطناعي في بيئات الأعمال.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_14')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_14', 'الماجستير المهني في الذكاء الاصطناعي', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في التحول الرقمي وإدارة التكنولوجيا</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على إدارة التكنولوجيا والتحول الرقمي داخل المؤسسات.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_15')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_15', 'الماجستير المهني في التحول الرقمي وإدارة التكنولوجيا', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في الإدارة التنفيذية</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج شامل يركّز على الإدارة من منظور تنفيذي متكامل.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_16')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_16', 'الماجستير المهني في الإدارة التنفيذية', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في التخطيط الاستراتيجي</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على صياغة وتنفيذ الاستراتيجيات المؤسسية. -- --- ---</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_17')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_17', 'الماجستير المهني في التخطيط الاستراتيجي', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في العلاقات العامة والإعلام</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على الاتصال المؤسسي وبناء الصورة الذهنية وإدارة العلاقات مع الجمهور.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_18')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_18', 'الماجستير المهني في العلاقات العامة والإعلام', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في القيادة الإدارية</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على تطوير المهارات القيادية وبناء القدرة على إدارة الفرق واتخاذ القرار. -- --- ---</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_19')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_19', 'الماجستير المهني في القيادة الإدارية', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-book"></i></div>
-          <h3 style="font-size:1.2rem;">الماجستير المهني في إدارة الجودة</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">برنامج يركّز على نظم الجودة والتحسين المستمر داخل المؤسسات.</p>
-          <p style="font-weight:bold; color:var(--primary-color); font-size:1.2rem; margin:15px 0;">1200.00 US$</p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-outline" onclick="openModal('mst_modal_20')">التفاصيل <i class="fas fa-info-circle"></i></button>
-              <button class="btn-primary" onclick="addToCart('mst_20', 'الماجستير المهني في إدارة الجودة', 1200)">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-          </div>
-        </div>
-        
-</div>
-        
+      <div style="font-size: 0.95rem; opacity: 0.8; margin-bottom: 15px;">
+        <a href="../../index.html" style="color: #fff; text-decoration: none;">الرئيسية</a> ← 
+        <a href="programs.html" style="color: #fff; text-decoration: none;">البرامج التي نقدمها</a> ← 
+        <span style="color: var(--gold);">الماجستير المهني</span>
+      </div>
+      <div class="section-badge" style="background: rgba(200,154,80,0.2); color: var(--gold); border: 1px solid var(--gold); display: inline-block; padding: 6px 16px; border-radius: 20px; font-weight: 700; margin-bottom: 15px;">
+        المسار المهني المتقدم
+      </div>
+      <h1 style="font-size: 2.6rem; font-weight: 800; margin-bottom: 15px;">الماجستير المهني</h1>
+      <p style="font-size: 1.35rem; color: var(--gold); font-weight: 700; margin-bottom: 15px;">طّور خبرتك... ووّسع آفاقك المهنية</p>
+      <p style="font-size: 1.1rem; max-width: 800px; line-height: 1.8; opacity: 0.9; margin-bottom: 25px;">
+        برامج ماجستير مهنية ُصممت لتمنحك معرفة متخصصة، وتدعم تطوير مهاراتك، وتساعدك على مواكبة متطلبات بيئة العمل الحديثة.
+      </p>
+      <div style="display:flex; gap:15px; flex-wrap:wrap;">
+        <a href="#programs-list" class="btn-primary"><i class="fas fa-graduation-cap"></i> استكشف برامج الماجستير</a>
+        <a href="contact.html" class="btn-outline" style="border-color:#fff; color:#fff;"><i class="fab fa-whatsapp"></i> تواصل مع مستشار تعليمي</a>
       </div>
     </div>
-  
-    <div class="container" style="margin-top: 40px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-        <h3 style="color: var(--primary-color); margin-bottom: 15px;"><i class="fas fa-check-double"></i> نظام الدراسة والتقييم</h3>
-        <p style="color: var(--text-muted); line-height: 1.8;">تم تصميم نظام الدراسة ليكون مرنًا وسهل المتابعة، مع:</p>
-        <ul style="list-style: none; padding: 0; line-height: 1.8; color: var(--text-muted);">
-            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> محتوى تدريبي منظم</li>
-            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> تقييمات مرحلية لقياس مستوى الاستيعاب</li>
-            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> متابعة تهدف إلى دعم المتدرب وتحسين مستواه</li>
-            <li><i class="fas fa-check-circle" style="color:var(--primary-color); margin-left:8px;"></i> لا يعتمد البرنامج على مبدأ الرسوب، بل على التطوير التدريجي ورفع كفاءة المتدرب.</li>
-        </ul>
-    </div>
-    
   </section>
 
+  <!-- Section 02: Introduction -->
+  <section style="padding: 60px 0; background: #ffffff;">
+    <div class="container">
+      <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+        <div class="section-badge" style="margin-bottom: 12px;">نظرة عامة</div>
+        <h2 style="font-size: 2rem; color: var(--primary); margin-bottom: 20px;">ما هو الماجستير المهني؟</h2>
+        <p style="font-size: 1.15rem; line-height: 1.9; color: var(--text-main); margin-bottom: 15px;">
+          الماجستير المهني هو مسار تعليمي يركز على تطوير المعرفة والمهارات المرتبطة بالمجال المهني، بما يساعد الدارس على تعزيز خبرته والاستعداد لمسؤوليات وفرص مهنية أكثر تقدماً.
+        </p>
+        <p style="font-size: 1.1rem; line-height: 1.9; color: var(--text-muted);">
+          في أكاديمية نبراس، نوفّر برامج ماجستير مهنية في مجموعة متنوعة من التخصصات التي تلبي اهتمامات المهنيين وتواكب احتياجات سوق العمل في المملكة العربية السعودية والخليج العربي.
+        </p>
+      </div>
+    </div>
+  </section>
 
+  <!-- Section 03: Programs List with Filter & Search -->
+  <section id="programs-list" class="programs-section" style="padding: 70px 0; background: var(--bg-surface);">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 35px;">
+        <div class="section-badge">برامج الماجستير المهني</div>
+        <h2 class="section-title">اختر التخصص الذي يناسب <span class="highlight">مسارك المهني</span></h2>
+        <p class="section-subtitle">استكشف برامج الماجستير المهني المتاحة في مختلف المجالات، واختر البرنامج الأقرب إلى أهدافك وطموحاتك.</p>
+      </div>
 
-<!-- Modals Start -->
+      <!-- Search & Specialty Filter Controls -->
+      <div style="max-width: 950px; margin: 0 auto 35px; display: flex; flex-direction: column; gap: 15px;">
+        <div style="position: relative;">
+          <input type="text" id="masterSearch" placeholder="ابحث عن برنامج ماجستير أو تخصص..." style="width: 100%; padding: 14px 45px 14px 18px; border: 1px solid var(--border); border-radius: 12px; font-size: 1rem; font-family: inherit; background:#fff;" />
+          <i class="fas fa-search" style="position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+        </div>
 
-        <div id="mst_modal_0" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_0')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في إدارة الابتكار والتطوير</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>يهدف البرنامج إلى تأهيل المتدربين لفهم الابتكار المؤسسي وإدارة التطوير، وتحويل الأفكار إلى حلول عملية قابلة للتطبيق في بيئات العمل.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تنمية التفكير الابتكاري</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة التغيير والتطوير المؤسسي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم التحسين المستمر</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الابتكار والتطوير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحول الرقمي وإدارة التكنولوجيا</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالتطوير والتحسين المؤسسي</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثين عن مسار مهني في الابتكار</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات الابتكار والتطوير</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم إدارة التغيير</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في إدارة الابتكار والتطوير</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى حديث</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> أمثلة تطبيقية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم استشاري</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_0', 'الماجستير المهني في إدارة الابتكار والتطوير', 1200); closeModal('mst_modal_0')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;" id="specialtyFilterButtons">
+          <button class="filter-tag active" onclick="filterBySpecialty('all', this)">الكل</button>
+          <button class="filter-tag" onclick="filterBySpecialty('إدارة الأعمال', this)">إدارة الأعمال</button>
+          <button class="filter-tag" onclick="filterBySpecialty('الموارد البشرية', this)">الموارد البشرية</button>
+          <button class="filter-tag" onclick="filterBySpecialty('إدارة المشاريع', this)">إدارة المشاريع</button>
+          <button class="filter-tag" onclick="filterBySpecialty('التسويق والمبيعات', this)">التسويق والمبيعات</button>
+          <button class="filter-tag" onclick="filterBySpecialty('المحاسبة والمالية', this)">المحاسبة والمالية</button>
+          <button class="filter-tag" onclick="filterBySpecialty('الأمن السيبراني', this)">الأمن السيبراني</button>
+          <button class="filter-tag" onclick="filterBySpecialty('الذكاء الاصطناعي', this)">الذكاء الاصطناعي</button>
+          <button class="filter-tag" onclick="filterBySpecialty('الجودة', this)">الجودة</button>
+          <button class="filter-tag" onclick="filterBySpecialty('الإدارة الصحية', this)">الإدارة الصحية</button>
         </div>
-        
-        <div id="mst_modal_1" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_1')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في إدارة المشروعات</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج مهني يركّز على تأهيل المتدرب لفهم تخطيط وتنفيذ ومتابعة المشروعات باحتراف، مع ربط المشروعات بالأهداف الاستراتيجية للمؤسسات. -- --- --</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إكساب مهارات إدارة المشروعات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين القدرة على التنظيم والمتابعة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم إدارة الوقت والموارد</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في العمل في بيئات تعتمد على المشاريع</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثين عن فرص في إدارة وتنفيذ المشروعات</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات تخطيط وتنفيذ المشاريع</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم إدارة المخاطر والجودة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في إدارة المشروعات</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> -- --- ---</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات عملية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> أدوات تنظيم ومتابعة</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم تدريبي مستمر</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_1', 'الماجستير المهني في إدارة المشروعات', 1200); closeModal('mst_modal_1')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
+      </div>
+
+      <!-- Dynamic Cards Grid -->
+      <div id="mastersGrid" class="programs-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+        <!-- Program cards dynamically populated via API with fallback -->
+        <div style="grid-column: 1 / -1; text-align:center; padding: 40px; color: var(--text-muted);">
+          <i class="fas fa-spinner fa-spin fa-2x"></i>
+          <p style="margin-top:10px;">جاري تحميل برامج الماجستير المهني...</p>
         </div>
-        
-        <div id="mst_modal_2" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_2')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في إدارة الأعمال (MBA)</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>يُعد هذا البرنامج مسارًا مهنيًا متكاملًا يهدف إلى تأهيل المتدربين على مفاهيم وتطبيقات إدارة الأعمال الحديثة، وبناء فهم شامل لوظائف المؤسسة المختلفة بما يدعم الجاهزية المهنية والتطور الوظيفي.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء قاعدة معرفية قوية في إدارة الأعمال</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير المهارات الإدارية والتنظيمية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم الانتقال أو التطور المهني في المجال الإداري</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التسويق والمبيعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> المحاسبة والإدارة المالية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في العمل بالمجالات الإدارية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثين عن تأهيل مهني في إدارة الأعمال</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في التحول إلى المجال الإداري</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> -- -- --</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تأهيل مهني شامل</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> محتوى تدريبي تطبيقي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادات مهنية مرتبطة بمحاور البرنامج</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في إدارة الأعمال</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> -- --- --</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> حقائب تدريبية متكاملة</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى حديث مواكب للسوق</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم فني واستشاري</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_2', 'الماجستير المهني في إدارة الأعمال (MBA)', 1200); closeModal('mst_modal_2')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 04: Why Professional Master -->
+  <section style="padding: 70px 0; background: #ffffff;">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 45px;">
+        <div class="section-badge">لماذا الماجستير المهني؟</div>
+        <h2 class="section-title">مسار تعليمي يدعم <span class="highlight">تطورك المهني</span></h2>
+      </div>
+      <div class="why-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px;">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-bullseye"></i></div>
+          <h3>معرفة متخصصة</h3>
+          <p>تعمّق معرفتك في المجال الذي اخترته واكتسب أحدث الممارسات العملية.</p>
         </div>
-        
-        <div id="mst_modal_3" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_3')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في إدارة المخاطر</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على تحديد وتحليل وإدارة المخاطر داخل المؤسسات.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم أنواع المخاطر</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم الاستقرار المؤسسي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين جودة القرار</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بإدارة المخاطر</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثين عن أدوار تنظيمية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تحليل المخاطر</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرارات الاستراتيجية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في إدارة المخاطر</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى عملي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم استشاري</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_3', 'الماجستير المهني في إدارة المخاطر', 1200); closeModal('mst_modal_3')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-chart-line"></i></div>
+          <h3>تطوير مهني</h3>
+          <p>طوّر مهاراتك بما يتناسب مع أهدافك المهنية وطموحك للمناصب القيادية.</p>
         </div>
-        
-        <div id="mst_modal_4" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_4')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في المحاسبة والإدارة المالية</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج مهني يركّز على فهم المحاسبة والإدارة المالية لدعم القرار الإداري.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحليل البيانات المالية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم الإدارة المالية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم التخطيط المالي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> المحاسبة والإدارة المالية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالمجالات المالية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثين عن أدوار مالية وإدارية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات تحليل مالي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرار الإداري</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في المحاسبة والإدارة المالية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى تطبيقي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> أدوات تحليل</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_4', 'الماجستير المهني في المحاسبة والإدارة المالية', 1200); closeModal('mst_modal_4')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-th-large"></i></div>
+          <h3>تنوع التخصصات</h3>
+          <p>اختر من مجموعة واسعة من المجالات المهنية والإدارية والتقنية الحديثة.</p>
         </div>
-        
-        <div id="mst_modal_5" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_5')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في السلامة والصحة المهنية</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على بناء بيئات عمل آمنة وإدارة المخاطر المهنية.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم أنظمة السلامة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تقييم المخاطر المهنية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تعزيز ثقافة السلامة</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> السلامة والصحة المهنية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بمجال السلامة المهنية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في العمل في مجال HSE</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات تقييم المخاطر</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة أنظمة السلامة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في السلامة والصحة المهنية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى تطبيقي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم فني</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_5', 'الماجستير المهني في السلامة والصحة المهنية', 1200); closeModal('mst_modal_5')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-laptop-house"></i></div>
+          <h3>مرونة التعلم</h3>
+          <p>تعلّم بما يتناسب مع ظروفك ومسارك المهني والتزاماتك اليومية.</p>
         </div>
-        
-        <div id="mst_modal_6" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_6')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في إدارة الفنادق</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج مهني يركّز على إدارة المنشآت الفندقية والخدمية وفق معايير الجودة الحديثة.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم الإدارة الفندقية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين تجربة العملاء</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة الموارد والخدمات</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة فنادق</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تسويق ومبيعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> موارد بشرية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بقطاع الضيافة والفنادق</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في العمل بالإدارة الفندقية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات تشغيل الفنادق</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين جودة الخدمات</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى تطبيقي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم مهني</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_6', 'الماجستير المهني في إدارة الفنادق', 1200); closeModal('mst_modal_6')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 05: Who is it for? -->
+  <section style="padding: 60px 0; background: var(--bg-surface);">
+    <div class="container">
+      <div style="max-width: 850px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 16px; border: 1px solid var(--border);">
+        <div class="section-badge" style="margin-bottom: 10px;">الفئات المستهدفة</div>
+        <h2 style="font-size: 1.8rem; color: var(--primary); margin-bottom: 25px;">الفئات المستهدفة بالبرنامج</h2>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 15px; font-size: 1.05rem;">
+          <li style="display:flex; align-items:center; gap:12px;"><i class="fas fa-check-circle" style="color:var(--gold); font-size:1.2rem;"></i> الموظفون الراغبون في تطوير مسارهم المهني والارتقاء بأدائهم.</li>
+          <li style="display:flex; align-items:center; gap:12px;"><i class="fas fa-check-circle" style="color:var(--gold); font-size:1.2rem;"></i> المهنيون الساعون إلى تعميق معرفتهم في تخصصهم ومواكبة الجديد.</li>
+          <li style="display:flex; align-items:center; gap:12px;"><i class="fas fa-check-circle" style="color:var(--gold); font-size:1.2rem;"></i> الراغبون في الانتقال إلى مجال مهني جديد بأسس علمية وتطبيقية قوية.</li>
+          <li style="display:flex; align-items:center; gap:12px;"><i class="fas fa-check-circle" style="color:var(--gold); font-size:1.2rem;"></i> من يطمحون إلى تطوير قدراتهم الإدارية والقيادية والتأهل لمناصب عليا.</li>
+          <li style="display:flex; align-items:center; gap:12px;"><i class="fas fa-check-circle" style="color:var(--gold); font-size:1.2rem;"></i> المهتمون بتعزيز مؤهلاتهم المهنية المعتمدة لأسواق العمل الإقليمية.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 06: How to Choose? -->
+  <section style="padding: 70px 0; background: #ffffff;">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 40px;">
+        <div class="section-badge">كيف تختار البرنامج المناسب؟</div>
+        <h2 class="section-title">ابدأ من <span class="highlight">هدفك المهني</span></h2>
+      </div>
+      <div class="steps-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+        <div class="step-card" style="background:var(--bg-surface); padding:25px; border-radius:12px; border:1px solid var(--border);">
+          <div class="step-num" style="font-size:1.8rem; font-weight:800; color:var(--gold); margin-bottom:10px;">01</div>
+          <h3 style="font-size:1.2rem; color:var(--primary); margin-bottom:8px;">حّدد مجالك</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem;">ما المجال الذي ترغب في تطوير نفسك فيه وتعزيز خبرتك به؟</p>
         </div>
-        
-        <div id="mst_modal_7" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_7')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في الإدارة الصحية</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على تنظيم وإدارة الخدمات الصحية والسياسات المرتبطة بها.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم الإدارة الصحية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تخطيط وتنظيم الخدمات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم اتخاذ القرار الصحي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة صحية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة مستشفيات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بإدارة الخدمات الصحية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثين عن فرص في القطاع الصحي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم منظومة الإدارة الصحية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> الجاهزية للعمل في المؤسسات الصحية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في الإدارة الصحية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات واقعية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم تدريبي</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_7', 'الماجستير المهني في الإدارة الصحية', 1200); closeModal('mst_modal_7')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
+        <div class="step-card" style="background:var(--bg-surface); padding:25px; border-radius:12px; border:1px solid var(--border);">
+          <div class="step-num" style="font-size:1.8rem; font-weight:800; color:var(--gold); margin-bottom:10px;">02</div>
+          <h3 style="font-size:1.2rem; color:var(--primary); margin-bottom:8px;">حّدد هدفك</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem;">هل تبحث عن تطوير مهني، تخصص جديد، أو تأهيل لمسؤوليات أكبر؟</p>
         </div>
-        
-        <div id="mst_modal_8" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_8')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في إدارة المستشفيات</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج متخصص يركّز على الجوانب الإدارية والتشغيلية للمستشفيات والمنشآت الصحية. -- --- ---</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم تشغيل المستشفيات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين جودة الخدمات الصحية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة الموارد داخل المنشآت الطبية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة مستشفيات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة صحية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالإدارة الصحية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في العمل في المنشآت الطبية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات إدارة المستشفيات</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم معايير الجودة والسلامة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في إدارة المستشفيات</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> -- --- --</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى تطبيقي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم استشاري</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_8', 'الماجستير المهني في إدارة المستشفيات', 1200); closeModal('mst_modal_8')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
+        <div class="step-card" style="background:var(--bg-surface); padding:25px; border-radius:12px; border:1px solid var(--border);">
+          <div class="step-num" style="font-size:1.8rem; font-weight:800; color:var(--gold); margin-bottom:10px;">03</div>
+          <h3 style="font-size:1.2rem; color:var(--primary); margin-bottom:8px;">استكشف البرامج</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem;">تعّرف على محتوى كل برنامج ومحاوره ومخرجاته التعليمية.</p>
         </div>
-        
-        <div id="mst_modal_9" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_9')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في سلاسل الإمداد</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على إدارة سلاسل الإمداد بكفاءة، من التخطيط حتى التوزيع، بما يدعم استمرارية الأعمال وتحسين الأداء التشغيلي.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم منظومة سلاسل الإمداد</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين الكفاءة وتقليل التكاليف</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تنظيم العمليات اللوجستية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> سلاسل الإمداد</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالمشتريات واللوجستيات</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثين عن فرص في إدارة العمليات</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم شامل لسلاسل الإمداد</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تحسين الأداء التشغيلي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في سلاسل الإمداد</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> أدوات تنظيم وتخطيط</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى تطبيقي</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_9', 'الماجستير المهني في سلاسل الإمداد', 1200); closeModal('mst_modal_9')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
+        <div class="step-card" style="background:var(--bg-surface); padding:25px; border-radius:12px; border:1px solid var(--border);">
+          <div class="step-num" style="font-size:1.8rem; font-weight:800; color:var(--gold); margin-bottom:10px;">04</div>
+          <h3 style="font-size:1.2rem; color:var(--primary); margin-bottom:8px;">اختر برنامجك</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem;">ابدأ الخطوة التالية في مسارك المهني مع فريق أكاديمية نبراس.</p>
         </div>
-        
-        <div id="mst_modal_10" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_10')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في التسويق والمبيعات</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج مهني يركّز على فهم الأسواق والعملاء وبناء استراتيجيات تسويقية فعّالة، مع ربط التسويق بالمبيعات لتحقيق نتائج عملية تدعم فرص التوظيف والنمو المهني.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم سلوك السوق والعملاء</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير مهارات التسويق والمبيعات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> ربط الأنشطة التسويقية بالنتائج التجارية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تسويق ومبيعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الابتكار والتطوير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالعمل في التسويق والمبيعات</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثين عن فرص في المجالات التجارية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير مهاراتهم التسويقية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تسويقية عملية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم السوق واتخاذ القرار</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في التسويق والمبيعات</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات عملية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى مواكب للسوق</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم تدريبي</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_10', 'الماجستير المهني في التسويق والمبيعات', 1200); closeModal('mst_modal_10')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_11" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_11')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في الموارد البشرية</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على تأهيل المتدرب لفهم إدارة رأس المال البشري وبناء نظم فعالة لإدارة الأفراد داخل المؤسسات.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم وظائف الموارد البشرية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير مهارات إدارة الأفراد</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم الأداء المؤسسي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> موارد بشرية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالعمل في الموارد البشرية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في بناء مسار مهني في إدارة الأفراد</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم شامل لإدارة الموارد البشرية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تنظيم وتطوير الأداء</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في الموارد البشرية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> حقائب تدريبية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات عملية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم فني</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_11', 'الماجستير المهني في الموارد البشرية', 1200); closeModal('mst_modal_11')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_12" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_12')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في تحليل البيانات</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على تحليل البيانات واستخدامها لدعم القرار الإداري.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم تحليل البيانات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحويل البيانات إلى معلومات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم القرار المؤسسي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الذكاء الاصطناعي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحول الرقمي وإدارة التكنولوجيا</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالبيانات والتحليل</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في مسار مهني تحليلي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات تحليل البيانات</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرار بالبيانات</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في تحليل البيانات</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات عملية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> أدوات تحليل</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_12', 'الماجستير المهني في تحليل البيانات', 1200); closeModal('mst_modal_12')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_13" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_13')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في الأمن السيبراني</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على حماية الأنظمة والمعلومات وإدارة المخاطر الرقمية.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم الأمن السيبراني</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة المخاطر الرقمية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> حماية البيانات</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الأمن السيبراني</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحول الرقمي وإدارة التكنولوجيا</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> حوكمة الشركات</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بأمن المعلومات</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في العمل بالأمن السيبراني</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات حماية الأنظمة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر الرقمية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في الأمن السيبراني</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى محدث</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم فني</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_13', 'الماجستير المهني في الأمن السيبراني', 1200); closeModal('mst_modal_13')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_14" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_14')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في الذكاء الاصطناعي</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على فهم تطبيقات الذكاء الاصطناعي في بيئات الأعمال.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم التقنيات الذكية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> توظيف الذكاء الاصطناعي في القرار</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم الابتكار</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الذكاء الاصطناعي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحول الرقمي وإدارة التكنولوجيا</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الابتكار والتطوير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> -- --- --- -</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالتقنيات الحديثة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في مسار مهني تقني</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم الذكاء الاصطناعي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تطبيقاته العملية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في الذكاء الاصطناعي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى تطبيقي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم استشاري</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_14', 'الماجستير المهني في الذكاء الاصطناعي', 1200); closeModal('mst_modal_14')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_15" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_15')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في التحول الرقمي وإدارة التكنولوجيا</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على إدارة التكنولوجيا والتحول الرقمي داخل المؤسسات.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم التحول الرقمي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة الأنظمة التقنية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> دعم الابتكار التكنولوجي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التحول الرقمي وإدارة التكنولوجيا</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الابتكار والتطوير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> الأمن السيبراني</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالتكنولوجيا من منظور إداري</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في العمل بالتحول الرقمي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> فهم التحول الرقمي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة التقنية داخل المؤسسات</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في التحول الرقمي وإدارة التكنولوجيا</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى محدث</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم فني</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_15', 'الماجستير المهني في التحول الرقمي وإدارة التكنولوجيا', 1200); closeModal('mst_modal_15')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_16" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_16')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في الإدارة التنفيذية</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج شامل يركّز على الإدارة من منظور تنفيذي متكامل.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير الرؤية التنفيذية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين اتخاذ القرار</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة الموارد بفعالية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة تنفيذية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار تنفيذية</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالإدارة الشاملة</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> رؤية تنفيذية متكاملة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات قرار متقدم</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في الإدارة التنفيذية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى عملي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم مهني</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_16', 'الماجستير المهني في الإدارة التنفيذية', 1200); closeModal('mst_modal_16')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_17" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_17')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في التخطيط الاستراتيجي</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على صياغة وتنفيذ الاستراتيجيات المؤسسية. -- --- ---</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحليل البيئة المؤسسية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء الخطط الاستراتيجية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> ربط الرؤية بالتنفيذ</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تحليل البيانات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالتخطيط وصناعة القرار</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في أدوار استراتيجية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات التخطيط الاستراتيجي</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> دعم القرار طويل المدى</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في التخطيط الاستراتيجي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> أدوات تحليل</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات عملية</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_17', 'الماجستير المهني في التخطيط الاستراتيجي', 1200); closeModal('mst_modal_17')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_18" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_18')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في العلاقات العامة والإعلام</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على الاتصال المؤسسي وبناء الصورة الذهنية وإدارة العلاقات مع الجمهور.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> فهم الاتصال المؤسسي</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة الإعلام والعلاقات العامة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> بناء السمعة المؤسسية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> علاقات عامة والإعلام</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> تسويق ومبيعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالإعلام والاتصال</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الباحثين عن فرص في العلاقات العامة</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات اتصال وإعلام</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة العلاقات مع الجمهور</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى تطبيقي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم مهني</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_18', 'الماجستير المهني في العلاقات العامة والإعلام', 1200); closeModal('mst_modal_18')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_19" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_19')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في القيادة الإدارية</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على تطوير المهارات القيادية وبناء القدرة على إدارة الفرق واتخاذ القرار. -- --- ---</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطوير المهارات القيادية</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين أساليب التأثير</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> إدارة الفرق بفعالية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> القيادة الإدارية</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> التخطيط الاستراتيجي</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الكوادر الطموحة للقيادة</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير مهارات التأثير</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> مهارات قيادة عملية</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الفرق</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> شهادة ماجستير مهني في القيادة الإدارية</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> دعم تدريبي</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات واقعية</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_19', 'الماجستير المهني في القيادة الإدارية', 1200); closeModal('mst_modal_19')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="mst_modal_20" class="nibras-modal">
-          <div class="nibras-modal-content">
-            <span class="nibras-modal-close" onclick="closeModal('mst_modal_20')">&times;</span>
-            <div class="modal-header">
-                <h2>الماجستير المهني في إدارة الجودة</h2>
-                <p style="margin-top:10px; font-weight:bold; font-size:1.2rem;">السعر: 1200.00 US$</p>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4><i class="fas fa-info-circle"></i> الوصف</h4>
-                    <p>برنامج يركّز على نظم الجودة والتحسين المستمر داخل المؤسسات.</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h4><i class="fas fa-bullseye"></i> الأهداف</h4>
-                    <ul class="modal-list"><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تطبيق معايير الجودة</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> تحسين العمليات</li><li><i class='fas fa-check' style='color:var(--primary-color); margin-left:8px;'></i> رفع كفاءة الأداء</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-list-ul"></i> المحاور</h4>
-                    <ul class="modal-list"><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الجودة</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المشروعات</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة المخاطر</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الابتكار والتطوير</li><li><i class='fas fa-bullseye' style='color:var(--secondary-color); margin-left:8px;'></i> إدارة الأعمال</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-users"></i> لمن هذا البرنامج؟</h4>
-                    <ul class="modal-list"><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> المهتمين بالجودة والتحسين</li><li><i class='fas fa-user-check' style='color:var(--primary-color); margin-left:8px;'></i> الراغبين في تطوير العمليات</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-gift"></i> المخرجات</h4>
-                    <ul class="modal-list"><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> أدوات تحسين الجودة</li><li><i class='fas fa-award' style='color:var(--secondary-color); margin-left:8px;'></i> تطوير الأداء المؤسسي</li></ul>
-                </div>
-            
-                <div class="modal-section">
-                    <h4><i class="fas fa-plus-circle"></i> مميزات إضافية</h4>
-                    <ul class="modal-list"><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> تطبيقات عملية</li><li><i class='fas fa-star' style='color:#f39c12; margin-left:8px;'></i> محتوى محدث</li></ul>
-                </div>
-            
-                <div class="modal-footer" style="display:flex; justify-content:center; gap:15px;">
-                    <button class="btn-primary" onclick="addToCart('mst_20', 'الماجستير المهني في إدارة الجودة', 1200); closeModal('mst_modal_20')">إضافة الي العربة <i class="fas fa-cart-plus"></i></button>
-                    <a href="checkout.html" class="btn-outline">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-                </div>
-            </div>
-          </div>
-        </div>
-        
-<!-- Modals End -->
-<!-- Footer -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 07: Learning Experience -->
+  <section style="padding: 60px 0; background: var(--bg-surface);">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 35px;">
+        <div class="section-badge">تجربة التعلم في نبراس</div>
+        <h2 class="section-title">بيئة تعليمية تجمع بين المعرفة والتطبيق</h2>
+        <p class="section-subtitle">في نبراس، نحرص على تقديم تجربة تعليمية تجمع بين المعرفة المتخصصة والتطبيق العملي والتطوير المستمر.</p>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px; max-width:850px; margin:0 auto;">
+        <div style="background:#fff; border:1px solid var(--border); padding:12px 24px; border-radius:30px; font-weight:600;"><i class="fas fa-check text-gold"></i> محتوى متخصص</div>
+        <div style="background:#fff; border:1px solid var(--border); padding:12px 24px; border-radius:30px; font-weight:600;"><i class="fas fa-check text-gold"></i> تعلم مرن وعن بُعد</div>
+        <div style="background:#fff; border:1px solid var(--border); padding:12px 24px; border-radius:30px; font-weight:600;"><i class="fas fa-check text-gold"></i> تطبيق عملي ومحاكاة</div>
+        <div style="background:#fff; border:1px solid var(--border); padding:12px 24px; border-radius:30px; font-weight:600;"><i class="fas fa-check text-gold"></i> متابعة وتقييم دوري</div>
+        <div style="background:#fff; border:1px solid var(--border); padding:12px 24px; border-radius:30px; font-weight:600;"><i class="fas fa-check text-gold"></i> تطوير مستمر وشبكة علاقات</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section CTA 08 -->
+  <section style="background: linear-gradient(135deg, #380108 0%, #5a020e 45%, #750a18 100%); color: #fff; padding: 70px 0; text-align: center;">
+    <div class="container">
+      <div class="section-badge" style="background:rgba(200,154,80,0.2); color:var(--gold); border:1px solid var(--gold); margin-bottom:15px;">ابدأ خطوتك القادمة</div>
+      <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 15px;">اختر تخصصك... وابدأ خطوتك القادمة</h2>
+      <p style="font-size: 1.15rem; max-width: 650px; margin: 0 auto 30px; opacity: 0.9;">
+        استكشف برامج الماجستير المهني واختر البرنامج الذي يتناسب مع أهدافك المهنية، ونحن معك في كل خطوة.
+      </p>
+      <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
+        <a href="#programs-list" class="btn-primary"><i class="fas fa-graduation-cap"></i> استكشف البرامج</a>
+        <a href="contact.html" class="btn-outline" style="border-color:#fff; color:#fff;"><i class="fas fa-headset"></i> تواصل مع نبراس</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
   <footer class="footer">
     <div class="footer-top">
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            
-            <p>منصة تدريب وتأهيل مهني معتمدة تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث.</p>
+            <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" style="max-height: 55px; margin-bottom: 15px;">
+            <p><strong>أكاديمية نبراس للتدريب والتأهيل المهني</strong><br>نبني الكفاءات... ونصنع أثراً يمتد إلى المستقبل.</p>
             <div class="social-links">
               <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
               <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
               <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
-              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
               <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
             </div>
           </div>
           <div class="footer-links-col">
-            <h5>روابط سريعة</h5>
+            <h5>الأكاديمية</h5>
             <ul>
               <li><a href="../../index.html">الرئيسية</a></li>
-              <li><a href="about.html">عن الأكاديمية</a></li>
-              <li><a href="programs.html">برامجنا</a></li>
-              
-              <li><a href="verify.html">التحقق من الشهادات</a></li>
+              <li><a href="about.html">من نحن</a></li>
+              <li><a href="programs.html">البرامج والخدمات</a></li>
+              <li><a href="articles.html">المقالات والإعلام</a></li>
               <li><a href="contact.html">تواصل معنا</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
-            <h5>البرامج</h5>
+            <h5>المسارات التعليمية</h5>
             <ul>
-              <li><a href="#programs">الدكتوراة المهنية</a></li>
-              <li><a href="#programs">الماجستير المهني</a></li>
-              <li><a href="#programs">الدبلوم المهني</a></li>
+              <li><a href="pro_courses.html">الدورات التدريبية</a></li>
+              <li><a href="diploma.html">الدبلومات المهنية</a></li>
+              <li><a href="masters.html">الماجستير المهني</a></li>
+              <li><a href="phd.html">الدكتوراه المهنية</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
-            <h5>قانوني</h5>
+            <h5>روابط هامة</h5>
             <ul>
+              <li><a href="verify.html">التحقق من الشهادات</a></li>
               <li><a href="privacy.html">سياسة الخصوصية</a></li>
               <li><a href="terms.html">الشروط والأحكام</a></li>
               <li><a href="refund.html">سياسة الاسترداد</a></li>
@@ -1365,84 +318,109 @@
     </div>
     <div class="footer-bottom">
       <div class="container">
-        <p>© 2026 أكاديمية نبراس. جميع الحقوق محفوظة.</p>
+        <p>© 2026 أكاديمية نبراس للتدريب والتأهيل المهني. جميع الحقوق محفوظة.</p>
       </div>
     </div>
   </footer>
 
-  <!-- Scroll to Top -->
-  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
-    <i class="fas fa-arrow-up"></i>
-  </button>
-
-  <!-- Toast Notification -->
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
   <div class="toast" id="toast"></div>
 
   <script src="../../assets/js/script.js"></script>
 
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-        
-        </div>
-        
-  </body>
-</html>
+  <script>
+    let allMasters = [];
 
+    async function loadMasters() {
+      const container = document.getElementById('mastersGrid');
+      try {
+        const res = await fetch('/api/courses?type=masters');
+        const data = await res.json();
+        allMasters = data.courses || [];
+        renderMasters(allMasters);
+      } catch (err) {
+        console.error('Failed to load courses from API:', err);
+        container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 30px;">فشل الاتصال بالخادم. يرجى إعادة المحاولة.</p>';
+      }
+    }
+
+    function renderMasters(list) {
+      const container = document.getElementById('mastersGrid');
+      if (!list || list.length === 0) {
+        container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px; font-size: 1.1rem;">لا توجد برامج مطابقة لمعايير البحث.</p>';
+        return;
+      }
+
+      container.innerHTML = list.map(item => {
+        const title = item.titleAr || item.title || 'برنامج ماجستير مهني';
+        const desc = item.descriptionAr || item.description || 'برنامج مهني متقدم لإعداد الكفاءات والقيادات.';
+        const price = item.price || 1200;
+        const slug = item.slug || item._id;
+        const specialty = item.specialty || 'إدارة وتطوير';
+        const isAvailable = item.status === 'available' || !item.status;
+        const isComingSoon = item.status === 'coming_soon';
+
+        let actionBtn = '';
+        if (isComingSoon) {
+          actionBtn = `<a href="program-detail.html?slug=${slug}" class="btn-outline" style="width:100%; text-align:center; border-color:var(--gold); color:var(--primary); font-weight:700;"><i class="fas fa-bell"></i> سجل اهتمامك بالبرنامج</a>`;
+        } else if (isAvailable) {
+          actionBtn = `<button class="btn-primary" style="width:100%;" onclick="addToCart('${item._id}', '${title.replace(/'/g, "\\'")}', ${price})"><i class="fas fa-cart-plus"></i> إضافة إلى السلة</button>`;
+        } else {
+          actionBtn = `<button class="btn-outline" style="width:100%; opacity:0.6; cursor:not-allowed;" disabled>غير متاح حالياً</button>`;
+        }
+
+        return `
+          <div class="program-card" style="display:flex; flex-direction:column; justify-content:space-between; height:100%;">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 10px; border-radius:12px;">${specialty}</span>
+                <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-award text-gold"></i> ماجستير مهني</span>
+              </div>
+              <h3 style="font-size:1.15rem; color:var(--primary); margin-bottom:10px; line-height:1.4;">${title}</h3>
+              <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:15px;">
+                ${desc}
+              </p>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin:15px 0 12px; border-top:1px solid var(--border); padding-top:12px;">
+                <span style="color:var(--text-muted); font-size:0.85rem;">رسوم البرنامج:</span>
+                <strong style="color:var(--primary); font-size:1.25rem;">${price}.00 US$</strong>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <a href="program-detail.html?slug=${slug}" class="btn-outline" style="width:100%; text-align:center;"><i class="fas fa-info-circle"></i> التفاصيل الكاملة والمحاور</a>
+                ${actionBtn}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Search and filter handlers
+    document.getElementById('masterSearch').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      const filtered = allMasters.filter(m => 
+        (m.titleAr && m.titleAr.toLowerCase().includes(q)) ||
+        (m.titleEn && m.titleEn.toLowerCase().includes(q)) ||
+        (m.specialty && m.specialty.toLowerCase().includes(q)) ||
+        (m.descriptionAr && m.descriptionAr.toLowerCase().includes(q))
+      );
+      renderMasters(filtered);
+    });
+
+    function filterBySpecialty(specialty, btn) {
+      document.querySelectorAll('#specialtyFilterButtons .filter-tag').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (specialty === 'all') {
+        renderMasters(allMasters);
+      } else {
+        const filtered = allMasters.filter(m => m.specialty && m.specialty.includes(specialty));
+        renderMasters(filtered);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadMasters);
+  </script>
+</body>
+</html>

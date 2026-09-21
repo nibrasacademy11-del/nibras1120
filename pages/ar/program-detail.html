@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="pageTitle">تفاصيل البرنامج | أكاديمية نبراس للتدريب والتأهيل المهني</title>
+  <meta name="description" id="pageDescription" content="تفاصيل البرنامج التدريبي والأهداف والمحاور المعتمدة لدى أكاديمية نبراس للتدريب والتأهيل المهني." />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
+</head>
+
+<body>
+
+  <!-- Cart Sidebar -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+      <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>الإجمالي:</span>
+        <strong id="cartTotal">0.00 US$</strong>
+      </div>
+      <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+    </div>
+  </div>
+  <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+
+  <!-- Floating Cart Button -->
+  <div class="floating-cart" onclick="toggleCart(event)">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="floating-cart-badge cart-badge">0</span>
+  </div>
+
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar scrolled">
+    <div class="nav-container">
+      <a href="../../index.html" class="nav-logo">
+        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
+        <li><a href="about.html" class="nav-link">عن نبراس</a></li>
+        <li><a href="programs.html" class="nav-link">البرامج والخدمات</a></li>
+        <li><a href="articles.html" class="nav-link">المقالات والإعلام</a></li>
+        <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
+        <li><a href="verify.html" class="nav-link">التحقق من الشهادات</a></li>
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
+        <li id="navAuth"><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="القائمة">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Detail Header -->
+  <section class="program-detail-header" id="progHeader">
+    <div class="container">
+      <div style="font-size: 0.95rem; opacity: 0.85; margin-bottom: 15px;">
+        <a href="../../index.html" style="color:#ffffff;">الرئيسية</a> &gt; 
+        <a href="programs.html" style="color:#ffffff;">البرامج</a> &gt; 
+        <span id="breadcrumbTitle">تفاصيل البرنامج</span>
+      </div>
+      
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;" id="progBadges">
+        <span class="badge" style="background:var(--gold); color:#fff; font-weight:700; padding:6px 16px; border-radius:20px;" id="progTypeBadge">برنامج مهني</span>
+        <span class="badge" style="background:rgba(255,255,255,0.2); color:#fff; padding:6px 16px; border-radius:20px;" id="progSpecialtyBadge">التخصص</span>
+      </div>
+
+      <h1 id="progTitle" style="font-size: 2.4rem; color: #ffffff; margin-bottom: 20px; line-height: 1.3;">
+        جاري تحميل بيانات البرنامج...
+      </h1>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 25px; font-size: 1rem; opacity: 0.95;">
+        <span><i class="fas fa-clock" style="color:var(--gold);"></i> المدة: <strong id="progDuration">—</strong></span>
+        <span><i class="fas fa-laptop-house" style="color:var(--gold);"></i> طريقة الدراسة: <strong id="progDelivery">عن بُعد (محاضرات مباشرة ومسجلة)</strong></span>
+        <span><i class="fas fa-award" style="color:var(--gold);"></i> الشهادة: <strong id="progCertType">شهادة مهنية معتمدة</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Layout -->
+  <section style="padding: 60px 0; background: var(--bg-main);">
+    <div class="container">
+      <div class="program-detail-layout">
+        
+        <!-- Right: Program Content -->
+        <div class="program-detail-content">
+          
+          <!-- Overview -->
+          <div style="margin-bottom: 35px;">
+            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+              <i class="fas fa-info-circle"></i> نبذة عن البرنامج
+            </h3>
+            <p id="progDesc" style="font-size:1.05rem; line-height:1.9; color:var(--text-muted);">
+              جاري التحميل...
+            </p>
+          </div>
+
+          <!-- Objectives -->
+          <div style="margin-bottom: 35px;" id="objectivesSec">
+            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+              <i class="fas fa-bullseye"></i> أهداف البرنامج
+            </h3>
+            <ul id="progObjectives" style="display:flex; flex-direction:column; gap:10px; font-size:1rem; color:var(--text-main);">
+            </ul>
+          </div>
+
+          <!-- Topics / Modules -->
+          <div style="margin-bottom: 35px;" id="topicsSec">
+            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+              <i class="fas fa-list-ul"></i> المحاور والموضوعات الرئيسية
+            </h3>
+            <ul id="progTopics" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:12px; font-size:0.95rem;">
+            </ul>
+          </div>
+
+          <!-- Audience -->
+          <div style="margin-bottom: 35px;" id="audienceSec">
+            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+              <i class="fas fa-users"></i> لمن هذا البرنامج؟
+            </h3>
+            <ul id="progAudience" style="display:flex; flex-direction:column; gap:10px; font-size:1rem; color:var(--text-main);">
+            </ul>
+          </div>
+
+          <!-- Outcomes -->
+          <div style="margin-bottom: 35px;" id="outcomesSec">
+            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+              <i class="fas fa-gift"></i> المخرجات والشهادات
+            </h3>
+            <ul id="progOutcomes" style="display:flex; flex-direction:column; gap:10px; font-size:1rem; color:var(--text-main);">
+            </ul>
+          </div>
+
+          <!-- Features -->
+          <div style="background:#fdf2f4; border:1px solid rgba(90,2,14,0.15); border-radius:12px; padding:25px;">
+            <h4 style="color:var(--primary); margin-bottom:10px;"><i class="fas fa-star" style="color:var(--gold);"></i> مميزات تجربة التعلم في نبراس</h4>
+            <ul style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.92rem; color:var(--text-muted);">
+              <li><i class="fas fa-check-circle" style="color:var(--primary); margin-left:6px;"></i> محاضرات مرنة مسجلة ومباشرة</li>
+              <li><i class="fas fa-check-circle" style="color:var(--primary); margin-left:6px;"></i> حساب متدرب خاص لمتابعة التقدم</li>
+              <li><i class="fas fa-check-circle" style="color:var(--primary); margin-left:6px;"></i> شهادة رقمية برقم تحقق إلكتروني موثق</li>
+              <li><i class="fas fa-check-circle" style="color:var(--primary); margin-left:6px;"></i> نخبة من الخبراء والمدربين الممارسين</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Left: Sticky Action Sidebar -->
+        <div class="program-detail-sidebar">
+          <div class="program-checkout-card">
+            <div style="text-align:center; border-bottom:1px solid #eee; padding-bottom:18px; margin-bottom:20px;">
+              <span style="display:block; font-size:0.95rem; color:var(--text-muted); margin-bottom:5px;">رسوم الاستثمار المهني</span>
+              <div style="font-size:2.3rem; font-weight:800; color:var(--primary);" id="progPrice">0.00 US$</div>
+              <span id="progStatusTag" class="status-badge status-available" style="margin-top:8px;">متاح للتسجيل</span>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:12px;" id="actionButtons">
+              <button id="btnAddToCart" class="btn-primary" style="width:100%; justify-content:center; font-size:1.05rem; padding:14px;">
+                إضافة إلى السلة <i class="fas fa-cart-plus"></i>
+              </button>
+              <a href="checkout.html" id="btnCheckout" class="btn-outline" style="width:100%; text-align:center; font-size:1.05rem; padding:12px;">
+                إتمام الدفع مباشرة <i class="fas fa-credit-card"></i>
+              </a>
+              <a href="#" id="btnWhatsApp" target="_blank" class="btn-outline" style="width:100%; text-align:center; background:#f0fdf4; border-color:#86efac; color:#166534; padding:12px;">
+                استفسار عبر واتساب <i class="fab fa-whatsapp"></i>
+              </a>
+            </div>
+
+            <div style="margin-top:25px; padding-top:20px; border-top:1px solid #eee; font-size:0.88rem; color:var(--text-muted); display:flex; flex-direction:column; gap:10px;">
+              <div><i class="fas fa-shield-alt" style="color:var(--primary); margin-left:6px;"></i> تسجيل فوري وتأكيد آمن للبيانات</div>
+              <div><i class="fas fa-headset" style="color:var(--primary); margin-left:6px;"></i> دعم استشاري طوال فترة البرنامج</div>
+              <div><i class="fas fa-certificate" style="color:var(--gold); margin-left:6px;"></i> توثيق رسمي في منصة التحقق بالأكاديمية</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 أكاديمية نبراس للتدريب والتأهيل المهني. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="../../assets/js/script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id') || urlParams.get('slug');
+
+      if (!id) {
+        document.getElementById('progTitle').textContent = 'يرجى تحديد البرنامج المطلوب';
+        return;
+      }
+
+      try {
+        const data = await apiFetch(`/api/courses/${encodeURIComponent(id)}`);
+        const p = data.course;
+        if (!p) throw new Error('البرنامج غير موجود');
+
+        // Document Titles
+        document.title = `${p.titleAr || p.title} | أكاديمية نبراس`;
+        document.getElementById('pageTitle').textContent = `${p.titleAr || p.title} | أكاديمية نبراس`;
+        document.getElementById('breadcrumbTitle').textContent = p.titleAr || p.title;
+        document.getElementById('progTitle').textContent = p.titleAr || p.title;
+
+        // Meta
+        const typeLabels = {
+          'course': 'دورة مهنية',
+          'diploma': 'دبلوم مهني',
+          'master': 'ماجستير مهني',
+          'phd': 'دكتوراه مهنية'
+        };
+        document.getElementById('progTypeBadge').textContent = typeLabels[p.type] || p.type || 'برنامج مهني';
+        document.getElementById('progSpecialtyBadge').textContent = p.specialty || 'تخصص مهني';
+        document.getElementById('progDuration').textContent = p.duration || 'مرن';
+        document.getElementById('progDelivery').textContent = p.deliveryMethod || 'عن بُعد (محاضرات مباشرة ومسجلة)';
+        document.getElementById('progCertType').textContent = p.certificateType || 'شهادة مهنية معتمدة';
+
+        // Content
+        document.getElementById('progDesc').textContent = p.descriptionAr || p.description || 'محتوى متكامل مصمم لتطوير الكفاءات المهنية.';
+        
+        // Objectives
+        const objEl = document.getElementById('progObjectives');
+        if (p.objectivesAr && p.objectivesAr.length) {
+          objEl.innerHTML = p.objectivesAr.map(item => `<li><i class="fas fa-check" style="color:var(--primary); margin-left:8px;"></i> ${item}</li>`).join('');
+        } else {
+          document.getElementById('objectivesSec').style.display = 'none';
+        }
+
+        // Topics
+        const topicsEl = document.getElementById('progTopics');
+        if (p.topicsAr && p.topicsAr.length) {
+          topicsEl.innerHTML = p.topicsAr.map(t => `<li style="background:#f8fafc; border:1px solid var(--border); padding:10px 14px; border-radius:8px;"><i class="fas fa-layer-group" style="color:var(--gold); margin-left:6px;"></i> ${t}</li>`).join('');
+        } else {
+          document.getElementById('topicsSec').style.display = 'none';
+        }
+
+        // Audience
+        const audEl = document.getElementById('progAudience');
+        if (p.audienceAr && p.audienceAr.length) {
+          audEl.innerHTML = p.audienceAr.map(a => `<li><i class="fas fa-user-check" style="color:var(--primary); margin-left:8px;"></i> ${a}</li>`).join('');
+        } else {
+          document.getElementById('audienceSec').style.display = 'none';
+        }
+
+        // Outcomes
+        const outEl = document.getElementById('progOutcomes');
+        if (p.outcomesAr && p.outcomesAr.length) {
+          outEl.innerHTML = p.outcomesAr.map(o => `<li><i class="fas fa-award" style="color:var(--secondary); margin-left:8px;"></i> ${o}</li>`).join('');
+        } else {
+          document.getElementById('outcomesSec').style.display = 'none';
+        }
+
+        // Pricing & Status
+        const price = p.price || 0;
+        document.getElementById('progPrice').textContent = `${price.toFixed(2)} US$`;
+
+        const statusTag = document.getElementById('progStatusTag');
+        const btnCart = document.getElementById('btnAddToCart');
+        const btnCheckout = document.getElementById('btnCheckout');
+        const actionsBox = document.getElementById('actionButtons');
+
+        if (p.status === 'coming_soon') {
+          statusTag.className = 'status-badge status-coming-soon';
+          statusTag.textContent = 'قريباً';
+          btnCart.outerHTML = `<a href="contact.html?subject=سجل+اهتمامك+في+${encodeURIComponent(p.titleAr)}" class="btn-primary" style="width:100%; justify-content:center; padding:14px; background:var(--gold); color:#ffffff;"><i class="fas fa-bell"></i> سجل اهتمامك بالبرنامج</a>`;
+          if (btnCheckout) btnCheckout.style.display = 'none';
+        } else if (p.status === 'unavailable') {
+          statusTag.className = 'status-badge status-unavailable';
+          statusTag.textContent = 'غير متاح حالياً';
+          btnCart.style.display = 'none';
+          if (btnCheckout) btnCheckout.style.display = 'none';
+        } else {
+          statusTag.className = 'status-badge status-available';
+          statusTag.textContent = 'متاح للتسجيل';
+          btnCart.onclick = () => addToCart(p._id, p.titleAr, price);
+        }
+
+        // WhatsApp Link
+        const waMsg = encodeURIComponent(`مرحباً، أود الاستفسار عن تفاصيل والتسجيل في: ${p.titleAr || p.title}`);
+        document.getElementById('btnWhatsApp').href = `https://wa.me/201112220796?text=${waMsg}`;
+
+      } catch (err) {
+        document.getElementById('progTitle').textContent = 'تعذر العثور على البرنامج المطلوب';
+        document.getElementById('progDesc').textContent = 'يرجى مراجعة قائمة البرامج أو التواصل مع الدعم.';
+      }
+    });
+  </script>
+</body>
+</html>

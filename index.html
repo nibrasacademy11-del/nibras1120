@@ -3,15 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>الرئيسية | أكاديمية نبراس</title>
-  <meta name="description" content="أكاديمية نبراس - منصة تدريب وتأهيل مهني معتمدة، تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث." />
+  <title>أكاديمية نبراس للتدريب والتأهيل المهني | نبني الكفاءات... ونصنع أثراً يمتد إلى المستقبل</title>
+  <meta name="description" content="أكاديمية نبراس للتدريب والتأهيل المهني - نبني الكفاءات ونصنع أثراً يمتد إلى المستقبل. برامج تدريبية وتأهيلية معتمدة في المملكة العربية السعودية والخليج." />
+  <link rel="canonical" href="https://nibras-ac.com/" />
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="أكاديمية نبراس للتدريب والتأهيل المهني" />
+  <meta property="og:description" content="نبني الكفاءات... ونصنع أثراً يمتد إلى المستقبل. استكشف برامج الماجستير المهني، الدكتوراه، الدبلومات، والدورات التخصصية." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nibras-ac.com/" />
+  <meta property="og:image" content="assets/img/logo.png" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;700&family=Tajawal:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
+
   <!-- Cart Sidebar -->
   <div id="cartSidebar" class="cart-sidebar">
     <div class="cart-header">
@@ -19,7 +29,7 @@
       <button onclick="toggleCart(event)" class="close-cart">&times;</button>
     </div>
     <div id="cartItems" class="cart-items">
-      <!-- Items will be injected here -->
+      <!-- Injected by script.js -->
     </div>
     <div class="cart-footer">
       <div class="cart-total">
@@ -41,18 +51,17 @@
   <nav id="navbar" class="navbar">
     <div class="nav-container">
       <a href="index.html" class="nav-logo">
-        <img src="assets/img/logo.png" alt="أكاديمية نبراس" />
+        <img src="assets/img/logo.png" alt="أكاديمية نبراس للتدريب والتأهيل المهني" />
       </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="en/index.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+        <li><a href="en/index.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> English</a></li>
         <li><a href="index.html" class="nav-link active">الرئيسية</a></li>
-        <li><a href="pages/ar/about.html" class="nav-link">عن الأكاديمية</a></li>
+        <li><a href="pages/ar/about.html" class="nav-link">عن نبراس</a></li>
         <li><a href="pages/ar/programs.html" class="nav-link">البرامج والخدمات</a></li>
-        <li><a href="pages/ar/articles.html" class="nav-link">المقالات</a></li>
-        
+        <li><a href="pages/ar/articles.html" class="nav-link">المقالات والإعلام</a></li>
         <li><a href="pages/ar/contact.html" class="nav-link">تواصل معنا</a></li>
         <li><a href="pages/ar/verify.html" class="nav-link">التحقق من الشهادات</a></li>
-        
+        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
         <li id="navAuth"><a href="pages/ar/login.html" class="nav-btn">تسجيل الدخول</a></li>
       </ul>
       <button class="hamburger" id="hamburger" aria-label="القائمة">
@@ -64,26 +73,20 @@
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
     <ul>
-      <li><a href="en/index.html" class="nav-btn" style="background:transparent; color:var(--primary-color); border:1px solid var(--primary-color);"><i class="fas fa-globe"></i> English</a></li>
+      <li><a href="en/index.html" class="nav-btn" style="background:transparent; color:var(--primary); border:1px solid var(--primary);"><i class="fas fa-globe"></i> English</a></li>
       <li><a href="index.html">الرئيسية</a></li>
-      <li><a href="pages/ar/about.html">عن الأكاديمية</a></li>
+      <li><a href="pages/ar/about.html">عن نبراس</a></li>
       <li><a href="pages/ar/programs.html">البرامج والخدمات</a></li>
-      <li><a href="pages/ar/articles.html">المقالات</a></li>
-      
+      <li><a href="pages/ar/articles.html">المقالات والإعلام</a></li>
       <li><a href="pages/ar/contact.html">تواصل معنا</a></li>
       <li><a href="pages/ar/verify.html">التحقق من الشهادات</a></li>
       <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li id="mobileNavAuth"><a href="pages/ar/login.html" class="mobile-btn">تسجيل الدخول</a></li>
+      <li id="mobileNavAuth"><a href="pages/ar/login.html" class="mobile-btn">تسجيل الدخول</a></li>
     </ul>
   </div>
 
-  
-  
-  
-  
-  <!-- Hero Section (Aura Design) -->
+  <!-- Hero Section -->
   <section id="home" class="hero-aura">
-    <!-- Animated Background Auras -->
     <div class="aura-bg">
       <div class="aura-blob aura-1"></div>
       <div class="aura-blob aura-2"></div>
@@ -91,173 +94,508 @@
       <div class="aura-blob aura-4"></div>
     </div>
 
-    <div class="hero-aura-content">
-      <div class="glass-badge reveal active">
-        <i class="fas fa-certificate"></i> تميز مهني واعتماد دولي موثق
-      </div>
-      <h1 class="aura-title reveal active">
-        انطلق نحو القمة مع<br />
-        <span>نِبْرَاسّ</span>
-      </h1>
-      <p class="aura-desc reveal active">
-        اكتشف إمكانياتك الحقيقية وحوّل طموحك إلى واقع ملموس! نحن نضع بين يديك أقوى البرامج المهنية والدرجات الأكاديمية المعتمدة دولياً.
-      </p>
-      <div class="aura-actions reveal active">
-        <a href="pages/ar/programs.html" class="btn-primary">
-          ابدأ رحلتك الآن <i class="fas fa-arrow-left"></i>
-        </a>
-        <a href="#programs" class="btn-outline">
-          تصفح البرامج
-        </a>
-      </div>
-    </div>
-
-    <!-- Decorative Bottom Wave -->
-    <div class="hero-decorative-svg">
-      <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,250.7C960,235,1056,181,1152,165.3C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" fill="#f4f6f9" fill-opacity="1"></path>
-      </svg>
-    </div>
-  </section>
-
-
-
-
-
-  <!-- Stats Section -->
-  <section class="stats-section">
     <div class="container">
-      <div class="stats-grid">
-        <div class="stat-item" data-target="26">
-          <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-          <div class="stat-number"><span class="counter">0</span>+</div>
-          <div class="stat-label">مدرب معتمد</div>
+      <div class="hero-grid">
+        
+        <!-- Right Column: Content & Pitch -->
+        <div class="hero-text-content reveal active">
+          <div class="hero-brand-pill">
+            <span class="pill-dot"></span>
+            <span class="pill-text">أكاديمية نبراس للتدريب والتأهيل المهني</span>
+            <span class="pill-badge"><i class="fas fa-certificate"></i> برامج مهنية متقدمة</span>
+          </div>
+
+          <h1 class="hero-heading">
+            نبني الكفاءات...<br />
+            <span>ونصنع أثراً يمتد إلى المستقبل</span>
+          </h1>
+
+          <p class="hero-lead">
+            في نبراس، نؤمن أن التطور المهني يبدأ بالمعرفة، ويتحول إلى مهارة، ويصنع أثراً حقيقياً عندما يصبح جزءاً من مسيرتك المهنية. نقدم برامج تدريبية وتأهيلية متخصصة تواكب متطلبات سوق العمل المتغيرة في المملكة العربية السعودية ودول الخليج.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="pages/ar/programs.html" class="btn-hero-primary">
+              <span>استكشف برامجنا</span>
+              <i class="fas fa-arrow-left"></i>
+            </a>
+            <a href="pages/ar/about.html" class="btn-hero-secondary">
+              <span>تعرّف على نبراس</span>
+              <i class="fas fa-info-circle"></i>
+            </a>
+          </div>
+
+          <!-- Features Strip -->
+          <div class="hero-features-strip">
+            <div class="hero-feature-item">
+              <i class="fas fa-check-circle"></i>
+              <span>تدريب متخصص</span>
+            </div>
+            <div class="hero-feature-item">
+              <i class="fas fa-laptop-code"></i>
+              <span>تعلم مرن</span>
+            </div>
+            <div class="hero-feature-item">
+              <i class="fas fa-tools"></i>
+              <span>مهارات عملية</span>
+            </div>
+            <div class="hero-feature-item">
+              <i class="fas fa-chart-line"></i>
+              <span>تطور مهني</span>
+            </div>
+          </div>
         </div>
-        <div class="stat-item" data-target="66">
-          <div class="stat-icon"><i class="fas fa-certificate"></i></div>
-          <div class="stat-number"><span class="counter">0</span>+</div>
-          <div class="stat-label">اعتماد مهني</div>
+
+        <!-- Left Column: Visual Showcase Card -->
+        <div class="hero-visual-wrapper reveal active">
+          <div class="hero-aura-ring"></div>
+          
+          <div class="hero-emblem-card">
+            <img src="assets/img/logo.png" alt="أكاديمية نبراس للتدريب والتأهيل المهني" />
+          </div>
+
+          <!-- Floating Badges -->
+          <div class="hero-float-chip chip-top">
+            <div class="chip-icon chip-gold"><i class="fas fa-graduation-cap"></i></div>
+            <div class="chip-text">
+              <strong>ماجستير ودكتوراه</strong>
+              <span>مسارات مهنية متقدمة</span>
+            </div>
+          </div>
+
+          <div class="hero-float-chip chip-bottom">
+            <div class="chip-icon chip-green"><i class="fas fa-award"></i></div>
+            <div class="chip-text">
+              <strong>توثيق رقمي فوري</strong>
+              <span>شهادات مهنية معتمدة</span>
+            </div>
+          </div>
         </div>
-        <div class="stat-item" data-target="500">
-          <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
-          <div class="stat-number"><span class="counter">0</span>+</div>
-          <div class="stat-label">طالب وخريج</div>
-        </div>
-        <div class="stat-item" data-target="5">
-          <div class="stat-icon"><i class="fas fa-star"></i></div>
-          <div class="stat-number"><span class="counter">0</span></div>
-          <div class="stat-label">تقييم الطلاب</div>
-        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- Programs Section -->
-  <section id="programs" class="programs-section">
+  <!-- Section: من المعرفة... إلى الأثر -->
+  <section class="impact-intro-section">
+    <div class="container">
+      <div class="impact-card">
+        <div class="section-badge" style="margin-bottom: 15px;">من المعرفة... إلى الأثر</div>
+        <h2>لم يعد التطور المهني خطوة إضافية</h2>
+        <p>
+          بل أصبح جزءاً أساسياً من بناء مستقبل مهني أكثر جاهزية. في <strong>أكاديمية نبراس للتدريب والتأهيل المهني</strong>، نعمل على تقديم تجربة تعليمية تجمع بين المعرفة المتخصصة، والتطبيق العملي، والمرونة، والتوجه نحو احتياجات سوق العمل.
+        </p>
+        <p>
+          سواء كنت تبحث عن مهارة جديدة، أو ترغب في تطوير خبرتك، أو تستعد لخطوة مهنية أكبر، ستجد في نبراس مسارات تعليمية تساعدك على اختيار الخطوة المناسبة لك.
+        </p>
+        <div style="font-weight: 700; color: var(--primary); font-size: 1.2rem; margin-bottom: 25px;">
+          نبراس... شريكك في رحلة التطور المهني.
+        </div>
+        <a href="pages/ar/about.html" class="btn-primary">
+          اعرف المزيد عن نبراس <i class="fas fa-arrow-left"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: لماذا نبراس؟ (6 Features from PDF) -->
+  <section class="why-section" style="padding: 90px 0; background: #ffffff;">
     <div class="container">
       <div class="section-header">
-        <div class="section-badge">برامجنا</div>
-        <h2 class="section-title">مسارات <span class="highlight">التعلم والتأهيل</span></h2>
-        <p class="section-subtitle">برامج تدريبية احترافية في مجالات متعددة تهدف إلى إعداد الكوادر وتطوير المهارات</p>
+        <div class="section-badge">لماذا نبراس؟</div>
+        <h2 class="section-title">لأن طموحك المهني <span class="highlight">يستحق أكثر من مجرد شهادة</span></h2>
+        <p class="section-subtitle">صممنا تجربة نبراس لتساعدك على التعلم والتطور بطريقة تتناسب مع أهدافك المهنية واحتياجاتك.</p>
       </div>
-      <div class="programs-grid">
 
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-graduation-cap"></i></div>
-          <h3>الدكتوراة المهنية</h3>
-          <p>برنامج متقدم يركز على التطبيق العملي والقيادة الاستراتيجية، لتمكين القيادات من حل التحديات المعقدة وصناعة القرار بثقة.</p>
-          <ul class="program-features">
-            <li><i class="fas fa-check"></i> قيادة استراتيجية متقدمة</li>
-            <li><i class="fas fa-check"></i> بحث وتطبيق عملي</li>
-            <li><i class="fas fa-check"></i> شهادة دولية معتمدة</li>
-          </ul>
-          <a href="pages/ar/phd.html" class="btn-outline">عرض التفاصيل <i class="fas fa-arrow-left"></i></a>
+      <div class="why-grid-6">
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-layer-group"></i></div>
+          <h3>برامج ومسارات متنوعة</h3>
+          <p>من الدورات التدريبية إلى الدبلومات والبرامج المهنية المتقدمة، خيارات تناسب مراحل مختلفة من رحلتك المهنية.</p>
         </div>
 
-        <div class="program-card featured">
-          <div class="program-badge">الأكثر تميزًا</div>
-          <div class="program-icon"><i class="fas fa-user-tie"></i></div>
-          <h3>الماجستير المهني</h3>
-          <p>تأهيل احترافي يربط بين المعرفة الأكاديمية والتطبيق العملي، لبناء مهارات قيادية وتنفيذية تناسب متطلبات سوق العمل.</p>
-          <ul class="program-features">
-            <li><i class="fas fa-check"></i> مهارات قيادية وتنفيذية</li>
-            <li><i class="fas fa-check"></i> ربط نظري بتطبيق عملي</li>
-            <li><i class="fas fa-check"></i> شبكة علاقات مهنية</li>
-          </ul>
-          <a href="pages/ar/masters.html" class="btn-primary">عرض التفاصيل <i class="fas fa-arrow-left"></i></a>
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-th-large"></i></div>
+          <h3>تخصصات مهنية متعددة</h3>
+          <p>مجموعة من المجالات الإدارية والتقنية والمهنية التي تواكب احتياجات بيئة العمل الحديثة وتحدياتها.</p>
         </div>
 
-        <div class="program-card">
-          <div class="program-icon"><i class="fas fa-award"></i></div>
-          <h3>الدبلوم المهني</h3>
-          <p>برنامج تطبيقي يركز على المهارات الأساسية والتخصصية، للانطلاق السريع في المجال المهني أو تطوير المسار الوظيفي.</p>
-          <ul class="program-features">
-            <li><i class="fas fa-check"></i> انطلاق سريع في المجال</li>
-            <li><i class="fas fa-check"></i> مهارات تخصصية عملية</li>
-            <li><i class="fas fa-check"></i> شهادة معتمدة</li>
-          </ul>
-          <a href="pages/ar/diploma.html" class="btn-outline">عرض التفاصيل <i class="fas fa-arrow-left"></i></a>
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-clock"></i></div>
+          <h3>تعلم مرن</h3>
+          <p>طوّر نفسك واكتسب المعرفة بطريقة تتناسب مع عملك والتزاماتك اليومية عبر بيئة تعليمية ذكية وميسرة.</p>
         </div>
 
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-book-reader"></i></div>
+          <h3>محتوى متخصص</h3>
+          <p>معرفة ومهارات مرتبطة بالتخصص مباشرة، مع التركيز التام على الجانب العملي والاستفادة المهنية الواقعية.</p>
+        </div>
+
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-route"></i></div>
+          <h3>تجربة تعليمية متكاملة</h3>
+          <p>رحلة منظمة تبدأ باختيار البرنامج المناسب وتستمر خلال التعلم والتفاعل والمتابعة والتقييم المستمر.</p>
+        </div>
+
+        <div class="why-feature-card">
+          <div class="why-feature-icon"><i class="fas fa-rocket"></i></div>
+          <h3>توجه نحو المستقبل</h3>
+          <p>نواكب التحولات المتسارعة في قطاعات الأعمال والتقنية والمهارات، لنساعدك على الاستعداد لما هو قادم بثقة.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- Section: مسارات تعليمية تناسب طموحك (4 Tracks from PDF) -->
+  <section id="pathways" class="programs-section" style="padding: 90px 0; background: var(--bg-main);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">مسارات التعلم</div>
+        <h2 class="section-title">مسارات تعليمية <span class="highlight">تناسب طموحك المهني</span></h2>
+        <p class="section-subtitle">من تطوير مهارة محددة إلى بناء مسار مهني أكثر تقدماً، توفر نبراس مجموعة من المسارات التعليمية التي تساعدك على اختيار ما يناسب مرحلتك وهدفك.</p>
+      </div>
+
+      <div class="pathways-grid">
+        <!-- 01 الدورات التدريبية -->
+        <div class="pathway-card">
+          <div>
+            <span class="pathway-badge">مسار 01</span>
+            <h3 class="pathway-title">الدورات التدريبية</h3>
+            <div class="pathway-tagline">مهارة جديدة اليوم... فرصة أكبر غداً</div>
+            <p class="pathway-desc">دورات تدريبية متخصصة تساعدك على اكتساب مهارات جديدة وتطوير معرفتك في مجالات مهنية متنوعة ترفع كفاءتك العملية.</p>
+            <div class="pathway-audience">
+              <strong>مناسبة لـ:</strong>
+              <ul>
+                <li>الموظفين والمهنيين</li>
+                <li>الباحثين عن تطوير مهاراتهم</li>
+                <li>أصحاب الأعمال ورواد الأعمال</li>
+                <li>الراغبين في تعلم مهارة جديدة</li>
+              </ul>
+            </div>
+          </div>
+          <a href="pages/ar/pro_courses.html" class="btn-outline" style="width:100%; text-align:center;">استكشف الدورات <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <!-- 02 الدبلومات المهنية -->
+        <div class="pathway-card">
+          <div>
+            <span class="pathway-badge">مسار 02</span>
+            <h3 class="pathway-title">الدبلومات المهنية</h3>
+            <div class="pathway-tagline">تخصص أعمق... وخبرة أكثر</div>
+            <p class="pathway-desc">برامج مهنية متخصصة تساعدك على التعمق في مجال محدد، وبناء قاعدة معرفية ومهارية أكثر شمولاً تدعم تطورك أو انتقالك لمجال جديد.</p>
+            <div class="pathway-audience">
+              <strong>مناسبة لـ:</strong>
+              <ul>
+                <li>الخريجين والمهنيين</li>
+                <li>الراغبين في التخصص المهني</li>
+                <li>الساعين لتغيير أو تطوير مسارهم</li>
+              </ul>
+            </div>
+          </div>
+          <a href="pages/ar/diploma.html" class="btn-outline" style="width:100%; text-align:center;">استكشف الدبلومات <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <!-- 03 الماجستير المهني -->
+        <div class="pathway-card featured">
+          <div>
+            <span class="pathway-badge" style="background:var(--primary); color:#ffffff;">المسار الأكثر طلباً</span>
+            <h3 class="pathway-title">الماجستير المهني</h3>
+            <div class="pathway-tagline">ارتِق بخبرتك... ووسّع آفاقك</div>
+            <p class="pathway-desc">برامج مهنية متقدمة تجمع بين المعرفة المتخصصة والتطبيق، وتساعد المهنيين على تطوير قدراتهم الإدارية والقيادية والتنفيذية.</p>
+            <div class="pathway-audience" style="background:#ffffff;">
+              <strong>مناسبة لـ:</strong>
+              <ul>
+                <li>الموظفين الراغبين في ترقية مسارهم</li>
+                <li>المهنيين الساعين لتعميق تخصصهم</li>
+                <li>الطامحين للمناصب القيادية والتنفيذية</li>
+              </ul>
+            </div>
+          </div>
+          <a href="pages/ar/masters.html" class="btn-primary" style="width:100%; text-align:center;">استكشف برامج الماجستير <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <!-- 04 الدكتوراه المهنية -->
+        <div class="pathway-card">
+          <div>
+            <span class="pathway-badge">مسار 04</span>
+            <h3 class="pathway-title">الدكتوراه المهنية</h3>
+            <div class="pathway-tagline">للمهنيين والخبراء والقيادات الطموحة</div>
+            <p class="pathway-desc">مسارات مهنية متقدمة تركز على المعرفة التخصصية العميقة، والتفكير الاستراتيجي، وتطوير القدرات القيادية وصناعة القرار المؤسسي.</p>
+            <div class="pathway-audience">
+              <strong>مناسبة لـ:</strong>
+              <ul>
+                <li>أصحاب الخبرات الممتدة والمستشارين</li>
+                <li>المديرين والقيادات وصناع القرار</li>
+                <li>من يسعون لتوسيع أثرهم المهني</li>
+              </ul>
+            </div>
+          </div>
+          <a href="pages/ar/phd.html" class="btn-outline" style="width:100%; text-align:center;">استكشف برامج الدكتوراه <i class="fas fa-arrow-left"></i></a>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top: 45px;">
+        <p style="font-size:1.15rem; color:var(--text-muted); margin-bottom:18px;">أيًا كانت مرحلتك المهنية... لدى نبراس مسار يساعدك على الوصول إلى الخطوة التالية.</p>
+        <a href="pages/ar/programs.html" class="btn-primary" style="padding:14px 35px; font-size:1.1rem;">
+          استكشف جميع البرامج <i class="fas fa-th"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: تخصصات تواكب مستقبل الأعمال -->
+  <section class="specialties-section" style="padding: 90px 0; background: #ffffff;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">التخصصات المهنية</div>
+        <h2 class="section-title">تخصصات تواكب <span class="highlight">مستقبل الأعمال</span></h2>
+        <p class="section-subtitle">اختر المجال الأقرب إلى طموحك، وطوّر معرفتك ومهاراتك في تخصصات مرتبطة باحتياجات بيئة العمل الحديثة.</p>
+      </div>
+
+      <div class="specialties-container">
+        <!-- Search and Filter Pills -->
+        <div class="specialties-tags">
+          <a href="pages/ar/programs.html?specialty=إدارة+الأعمال" class="specialty-tag"><i class="fas fa-briefcase"></i> إدارة الأعمال</a>
+          <a href="pages/ar/programs.html?specialty=الموارد+البشرية" class="specialty-tag"><i class="fas fa-users"></i> الموارد البشرية</a>
+          <a href="pages/ar/programs.html?specialty=إدارة+المشاريع" class="specialty-tag"><i class="fas fa-project-diagram"></i> إدارة المشاريع</a>
+          <a href="pages/ar/programs.html?specialty=التسويق+والمبيعات" class="specialty-tag"><i class="fas fa-bullhorn"></i> التسويق والمبيعات</a>
+          <a href="pages/ar/programs.html?specialty=المالية+والمحاسبة" class="specialty-tag"><i class="fas fa-coins"></i> الإدارة المالية والمحاسبة</a>
+          <a href="pages/ar/programs.html?specialty=التخطيط+الاستراتيجي" class="specialty-tag"><i class="fas fa-chess"></i> التخطيط الاستراتيجي</a>
+          <a href="pages/ar/programs.html?specialty=إدارة+المخاطر" class="specialty-tag"><i class="fas fa-shield-alt"></i> إدارة المخاطر</a>
+          <a href="pages/ar/programs.html?specialty=الجودة" class="specialty-tag"><i class="fas fa-medal"></i> الجودة والتحسين المستمر</a>
+          <a href="pages/ar/programs.html?specialty=القيادة" class="specialty-tag"><i class="fas fa-user-tie"></i> القيادة والإدارة</a>
+          <a href="pages/ar/programs.html?specialty=العلاقات+العامة" class="specialty-tag"><i class="fas fa-newspaper"></i> العلاقات العامة والإعلام</a>
+          <a href="pages/ar/programs.html?specialty=الصحية" class="specialty-tag"><i class="fas fa-hospital"></i> الإدارة الصحية والمستشفيات</a>
+          <a href="pages/ar/programs.html?specialty=سلاسل+الإمداد" class="specialty-tag"><i class="fas fa-truck-moving"></i> سلاسل الإمداد واللوجستيات</a>
+          <a href="pages/ar/programs.html?specialty=الأمن+السيبراني" class="specialty-tag"><i class="fas fa-lock"></i> الأمن السيبراني</a>
+          <a href="pages/ar/programs.html?specialty=الذكاء+الاصطناعي" class="specialty-tag"><i class="fas fa-robot"></i> الذكاء الاصطناعي</a>
+          <a href="pages/ar/programs.html?specialty=تحليل+البيانات" class="specialty-tag"><i class="fas fa-chart-pie"></i> تحليل البيانات</a>
+          <a href="pages/ar/programs.html?specialty=التحول+الرقمي" class="specialty-tag"><i class="fas fa-network-wired"></i> التحول الرقمي والتكنولوجيا</a>
+          <a href="pages/ar/programs.html?specialty=السلامة" class="specialty-tag"><i class="fas fa-hard-hat"></i> السلامة والصحة المهنية</a>
+          <a href="pages/ar/programs.html?specialty=الفنادق" class="specialty-tag"><i class="fas fa-hotel"></i> الفنادق والضيافة</a>
+          <a href="pages/ar/programs.html?specialty=الحوكمة" class="specialty-tag"><i class="fas fa-balance-scale"></i> الحوكمة المؤسسية</a>
+        </div>
+
+        <div style="text-align:center;">
+          <a href="pages/ar/programs.html" class="btn-outline">
+            استكشف جميع التخصصات <i class="fas fa-arrow-left"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: نواكب التحول... ونستعد للمستقبل -->
+  <section style="padding: 80px 0; background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); color: #ffffff; text-align: center;">
+    <div class="container">
+      <div style="max-width: 850px; margin: 0 auto;">
+        <div style="display:inline-block; background:rgba(212,175,55,0.25); color:var(--gold); border:1px solid var(--gold); padding:6px 20px; border-radius:30px; font-weight:700; margin-bottom:20px;">
+          سوق العمل السعودي والخليجي
+        </div>
+        <h2 style="font-size: 2.2rem; margin-bottom: 20px; color:#ffffff;">نواكب التحول... ونستعد للمستقبل</h2>
+        <p style="font-size: 1.15rem; line-height: 1.9; opacity: 0.92; margin-bottom: 25px;">
+          يشهد سوق العمل في المملكة العربية السعودية ودول الخليج تحولات متسارعة في مجالات الأعمال، والتقنية، والإدارة، والمهارات المهنية. ومع هذه التحولات، تزداد أهمية امتلاك المعرفة المتخصصة، والمهارات العملية، والقدرة على التعلم والتكيف المستمر.
+        </p>
+        <p style="font-size: 1.25rem; font-weight: 700; color: var(--gold); margin-bottom: 30px;">
+          كفاءات اليوم... تصنع اقتصاد الغد.
+        </p>
+        <a href="pages/ar/about.html" class="btn-primary" style="background:#ffffff; color:var(--primary); font-weight:700;">
+          تعرّف على رؤيتنا وسوق العمل <i class="fas fa-arrow-left"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: تجربة تعلم صُممت للمهنيين -->
+  <section style="padding: 90px 0; background: #ffffff;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">منهجيتنا</div>
+        <h2 class="section-title">تجربة تعلم <span class="highlight">صُممت للمهنيين</span></h2>
+        <p class="section-subtitle">نعرف أن التطوير المهني يجب أن يتناسب مع واقع حياتك، لذلك نركز على تجربة تجمع بين المرونة، والتفاعل، والمعرفة التطبيقية.</p>
+      </div>
+
+      <div class="experience-pillars-grid">
+        <div class="experience-pillar">
+          <i class="fas fa-calendar-check"></i>
+          <h4>تعلم بمرونة</h4>
+          <p>طوّر نفسك بطريقة تتناسب مع جدولك والتزاماتك اليومية.</p>
+        </div>
+
+        <div class="experience-pillar">
+          <i class="fas fa-comments"></i>
+          <h4>تعلم تفاعلي</h4>
+          <p>تجربة تعليمية تشجع على الفهم والمشاركة وطرح الأسئلة.</p>
+        </div>
+
+        <div class="experience-pillar">
+          <i class="fas fa-bullseye"></i>
+          <h4>محتوى متخصص</h4>
+          <p>محتوى يركز على المعرفة والمهارات المرتبطة بالتخصص العملي.</p>
+        </div>
+
+        <div class="experience-pillar">
+          <i class="fas fa-laptop-code"></i>
+          <h4>تطبيق عملي</h4>
+          <p>حوّل ما تتعلمه إلى معرفة ومهارات قابلة للاستفادة في بيئة العمل.</p>
+        </div>
+
+        <div class="experience-pillar">
+          <i class="fas fa-tasks"></i>
+          <h4>تقييم ومتابعة</h4>
+          <p>تابع تقدمك واستفد من أدوات التقييم والمتابعة المستمرة.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: رحلتك مع نبراس تبدأ في 4 خطوات -->
+  <section style="padding: 90px 0; background: var(--bg-main);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">خطوات الانطلاق</div>
+        <h2 class="section-title">رحلتك مع نبراس <span class="highlight">تبدأ في 4 خطوات</span></h2>
+        <p class="section-subtitle">خطوات بسيطة وواضحة ترسم لك مسار التعلم من البداية وحتى تحقيق الأثر المهني المنشود.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <h4>اكتشف</h4>
+          <p>استكشف البرامج والتخصصات وحدد المجال الأقرب إلى أهدافك ومسارك المهني.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <h4>اختر</h4>
+          <p>اختر البرنامج والمستوى التعليمي الذي يتناسب مع احتياجاتك وطموحك.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <h4>تعلّم</h4>
+          <p>ابدأ رحلتك التعليمية واستفد من المحتوى والتجربة والمدربين المتخصصين.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">04</div>
+          <h4>تطوّر</h4>
+          <p>حوّل ما تعلمته إلى قيمة مهنية ملموسة، وواصل بناء مستقبلك بثقة.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: مستواك القادم يبدأ من هنا + طموحك أكبر -->
+  <section style="padding: 90px 0; background: #ffffff; text-align:center;">
+    <div class="container">
+      <div style="max-width: 800px; margin: 0 auto;">
+        <h2 style="font-size: 2.3rem; color: var(--primary); margin-bottom: 20px;">مستواك القادم يبدأ من هنا</h2>
+        <p style="font-size: 1.15rem; color: var(--text-muted); line-height: 1.9; margin-bottom: 25px;">
+          مهما كان موقعك الحالي في مسارك المهني، هناك دائماً خطوة جديدة يمكنك الوصول إليها. سواء كنت تبحث عن مهارة جديدة، أو تخصص مهني، أو تطوير وظيفي، أو مسار أكثر تقدماً، صممت نبراس خياراتها التعليمية لتساعدك على اتخاذ الخطوة المناسبة.
+        </p>
+        <div style="font-size: 1.3rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 35px;">
+          لا تتوقف عند ما تعرفه... اكتشف ما يمكنك أن تصبح عليه.
+        </div>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px;">
+          <a href="pages/ar/programs.html" class="btn-primary" style="padding:14px 36px; font-size:1.1rem;">
+            استكشف البرامج <i class="fas fa-arrow-left"></i>
+          </a>
+          <a href="pages/ar/contact.html" class="btn-outline" style="padding:14px 36px; font-size:1.1rem;">
+            تواصل مع مستشار تعليمي <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer (Detailed 4-Column Footer as specified in PDF) -->
   <footer class="footer">
     <div class="footer-top">
       <div class="container">
         <div class="footer-grid">
+          
+          <!-- Col 1: Brand -->
           <div class="footer-brand">
-            
-            <p>منصة تدريب وتأهيل مهني معتمدة تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث.</p>
+            <a href="index.html" class="nav-logo" style="margin-bottom:15px; display:inline-block;">
+              <img src="assets/img/logo.png" alt="أكاديمية نبراس" style="max-height:60px;" />
+            </a>
+            <h4 style="color:#ffffff; font-size:1.1rem; margin-bottom:8px;">نبراس للتدريب والتأهيل المهني</h4>
+            <p style="color:#cbd5e1; font-size:0.95rem; line-height:1.7; margin-bottom:18px;">
+              معرفة تُطوّر. مهارات تُمكّن. مستقبل نصنعه معاً.
+            </p>
             <div class="social-links">
               <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
               <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
               <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
-              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
               <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
             </div>
           </div>
+
+          <!-- Col 2: الأكاديمية -->
           <div class="footer-links-col">
-            <h5>روابط سريعة</h5>
+            <h5>الأكاديمية</h5>
             <ul>
               <li><a href="index.html">الرئيسية</a></li>
-              <li><a href="pages/ar/about.html">عن الأكاديمية</a></li>
-              <li><a href="pages/ar/programs.html">برامجنا</a></li>
-              
-              <li><a href="pages/ar/verify.html">التحقق من الشهادات</a></li>
+              <li><a href="pages/ar/about.html">عن نبراس</a></li>
+              <li><a href="pages/ar/programs.html">البرامج المهنية</a></li>
+              <li><a href="pages/ar/programs.html">التخصصات</a></li>
+              <li><a href="pages/ar/about.html#why">لماذا نبراس؟</a></li>
+              <li><a href="pages/ar/articles.html">المقالات والإعلام</a></li>
               <li><a href="pages/ar/contact.html">تواصل معنا</a></li>
             </ul>
           </div>
+
+          <!-- Col 3: البرامج والخدمات -->
           <div class="footer-links-col">
-            <h5>البرامج</h5>
+            <h5>البرامج والمسارات</h5>
             <ul>
-              <li><a href="#programs">الدكتوراة المهنية</a></li>
-              <li><a href="#programs">الماجستير المهني</a></li>
-              <li><a href="#programs">الدبلوم المهني</a></li>
+              <li><a href="pages/ar/pro_courses.html">الدورات التدريبية</a></li>
+              <li><a href="pages/ar/diploma.html">الدبلومات المهنية</a></li>
+              <li><a href="pages/ar/masters.html">الماجستير المهني</a></li>
+              <li><a href="pages/ar/phd.html">الدكتوراه المهنية</a></li>
+              <li><a href="pages/ar/programs.html#services">خدمات الأفراد</a></li>
+              <li><a href="pages/ar/programs.html#services">تدريب الشركات</a></li>
+              <li><a href="pages/ar/programs.html#services">الحقائب التدريبية</a></li>
             </ul>
           </div>
+
+          <!-- Col 4: روابط مهمة وقانونية -->
           <div class="footer-links-col">
-            <h5>قانوني</h5>
+            <h5>روابط مهمة</h5>
             <ul>
+              <li><a href="pages/ar/verify.html">التحقق من الشهادات</a></li>
+              <li><a href="pages/ar/about.html#faq">الأسئلة الشائعة</a></li>
               <li><a href="pages/ar/privacy.html">سياسة الخصوصية</a></li>
               <li><a href="pages/ar/terms.html">الشروط والأحكام</a></li>
               <li><a href="pages/ar/refund.html">سياسة الاسترداد</a></li>
               <li><a href="pages/ar/accessibility.html">إمكانية الوصول</a></li>
             </ul>
           </div>
+
+        </div>
+
+        <!-- Help Box from PDF -->
+        <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px 25px; margin-top: 40px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px;">
+          <div>
+            <h5 style="color:var(--gold); font-size:1.05rem; margin-bottom:4px;">هل تحتاج إلى مساعدة في اختيار البرنامج المناسب؟</h5>
+            <p style="color:#cbd5e1; font-size:0.9rem; margin:0;">تواصل مع فريق نبراس وسنساعدك في التعرف على الخيارات التعليمية التي تتناسب مع أهدافك المهنية.</p>
+          </div>
+          <a href="pages/ar/contact.html" class="btn-primary" style="padding:10px 24px; font-size:0.95rem;">تواصل معنا الآن <i class="fas fa-headset"></i></a>
         </div>
       </div>
     </div>
+
     <div class="footer-bottom">
       <div class="container">
-        <p>© 2026 أكاديمية نبراس. جميع الحقوق محفوظة.</p>
+        <p>© 2026 أكاديمية نبراس للتدريب والتأهيل المهني. جميع الحقوق محفوظة.</p>
       </div>
     </div>
   </footer>
 
-  <!-- Scroll to Top -->
+  <!-- Scroll to Top Button -->
   <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
     <i class="fas fa-arrow-up"></i>
   </button>
@@ -268,4 +606,3 @@
   <script src="assets/js/script.js" defer></script>
 </body>
 </html>
-

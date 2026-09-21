@@ -27,6 +27,7 @@ router.get('/certificates/download/:id', certificateController.downloadPdf);
 router.get('/certificates/:code', certificateController.getCertificate);
 router.get('/admin/certificates', authRequired, adminRequired, certificateController.getAllCertificates);
 router.post('/admin/certificates', authRequired, adminRequired, uploadPdf, certificateController.addCertificate);
+router.put('/admin/certificates/:id', authRequired, adminRequired, uploadPdf, certificateController.updateCertificate);
 router.delete('/admin/certificates/:id', authRequired, adminRequired, certificateController.deleteCertificate);
 
 module.exports = router;
