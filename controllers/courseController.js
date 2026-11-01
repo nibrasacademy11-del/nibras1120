@@ -1,38 +1,88 @@
 const Course = require('../models/Course');
 const mongoose = require('mongoose');
+const specialties = require('../assets/js/specialties');
+
+const escapeRegex = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+// Only these fields can be written through the API
+const EDITABLE_FIELDS = [
+    'titleAr', 'titleEn', 'slug', 'type', 'specialty', 'descriptionAr', 'descriptionEn',
+    'objectivesAr', 'objectivesEn', 'topicsAr', 'topicsEn', 'audienceAr', 'audienceEn',
+    'outcomesAr', 'outcomesEn', 'duration', 'deliveryMethod', 'price', 'currency', 'image',
+    'status', 'featured', 'certificateType', 'seoTitleAr', 'seoTitleEn', 'seoDescriptionAr',
+    'seoDescriptionEn'
+];
+
+function pickEditable(body) {
+    const data = {};
+    for (const field of EDITABLE_FIELDS) {
+        if (body[field] !== undefined) data[field] = body[field];
+    }
+    return data;
+}
+
+function makeSlug(text) {
+    return String(text)
+        .toLowerCase()
+        .replace(/[^ء-ي0-9a-zA-Z]+/g, '-')
+        .replace(/^-|-$/g, '');
+}
+
+function saveError(res, error, fallback) {
+    if (error.code === 11000) {
+        return res.status(409).json({ message: 'يوجد برنامج آخر بنفس الاسم أو الرابط.' });
+    }
+    if (error.name === 'ValidationError' || error.name === 'CastError') {
+        return res.status(400).json({ message: error.message });
+    }
+    console.error(fallback, error);
+    res.status(500).json({ message: fallback });
+}
 
 exports.getAllCourses = async (req, res) => {
     try {
         const { type, specialty, status, search, featured, limit, page } = req.query;
+        const isAdmin = !!req.user && req.user.role === 'admin';
         const query = {};
 
         if (type) {
-            const t = type.toLowerCase().trim();
+            const t = String(type).toLowerCase().trim();
             if (t === 'masters' || t === 'master') {
-                query.type = { $in: ['master', 'masters'] };
+                query.type = 'master';
             } else if (t === 'courses' || t === 'course') {
-                query.type = { $in: ['course', 'courses'] };
+                query.type = 'course';
             } else if (t === 'diplomas' || t === 'diploma') {
-                query.type = { $in: ['diploma', 'diplomas'] };
+                query.type = 'diploma';
             } else if (t === 'phd' || t === 'doctorate') {
-                query.type = { $in: ['phd', 'doctorate'] };
+                query.type = 'phd';
             } else {
-                query.type = type;
+                return res.json({ courses: [], total: 0, page: 1, totalPages: 0 });
             }
         }
-        if (specialty) query.specialty = specialty;
-        
-        // Non-admin queries default to available / coming_soon unless status specified
-        if (status) {
-            query.status = status;
-        } else if (!req.user || req.user.role !== 'admin') {
+        if (specialty) {
+            const key = String(specialty).trim();
+            const spec = specialties.byKey(specialties.some((s) => s.key === key) ? key : specialties.keyFor('', key));
+            // Programs saved before specialtyKey existed are matched by name and title
+            query.$and = [{
+                $or: [
+                    { specialtyKey: spec.key },
+                    { specialty: spec.ar },
+                    ...spec.match.map((term) => ({ titleAr: new RegExp(escapeRegex(term)) }))
+                ]
+            }];
+        }
+
+        // Hidden programs are visible to admins only
+        if (status && (isAdmin || String(status) !== 'hidden')) {
+            query.status = String(status);
+        } else if (!isAdmin) {
             query.status = { $ne: 'hidden' };
         }
 
         if (featured === 'true') query.featured = true;
 
-        if (search && search.trim()) {
-            const regex = new RegExp(search.trim(), 'i');
+        if (search && String(search).trim()) {
+            const regex = new RegExp(escapeRegex(String(search).trim()), 'i');
             query.$or = [
                 { titleAr: regex },
                 { titleEn: regex },
@@ -43,8 +93,8 @@ exports.getAllCourses = async (req, res) => {
             ];
         }
 
-        const lim = parseInt(limit, 10) || 100;
-        const p = parseInt(page, 10) || 1;
+        const lim = Math.min(parseInt(limit, 10) || 100, 500);
+        const p = Math.max(parseInt(page, 10) || 1, 1);
         const skip = (p - 1) * lim;
 
         const total = await Course.countDocuments(query);
@@ -68,12 +118,15 @@ exports.getCourseById = async (req, res) => {
         if (mongoose.Types.ObjectId.isValid(identifier)) {
             course = await Course.findById(identifier);
         }
-        
+
         if (!course) {
             course = await Course.findOne({ slug: identifier });
         }
 
-        if (!course) return res.status(404).json({ message: 'Program not found.' });
+        const isAdmin = !!req.user && req.user.role === 'admin';
+        if (!course || (course.status === 'hidden' && !isAdmin)) {
+            return res.status(404).json({ message: 'Program not found.' });
+        }
         res.json({ course });
     } catch (error) {
         res.status(500).json({ message: 'Server error.' });
@@ -82,29 +135,27 @@ exports.getCourseById = async (req, res) => {
 
 exports.createCourse = async (req, res) => {
     try {
-        const data = { ...req.body };
+        const data = pickEditable(req.body);
         if (!data.slug && data.titleAr) {
-            data.slug = data.titleAr
-                .toLowerCase()
-                .replace(/[^\u0621-\u064A0-9a-zA-Z]+/g, '-')
-                .replace(/^-|-$/g, '') || ('prog-' + Date.now());
+            data.slug = makeSlug(data.titleAr) || ('prog-' + Date.now());
         }
         const course = new Course(data);
         await course.save();
         res.status(201).json({ message: 'Program created successfully.', course });
     } catch (error) {
-        console.error('Error creating program:', error);
-        res.status(500).json({ message: error.message || 'Server error while creating program.' });
+        saveError(res, error, 'Server error while creating program.');
     }
 };
 
 exports.updateCourse = async (req, res) => {
     try {
-        const course = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        const course = await Course.findById(req.params.id);
         if (!course) return res.status(404).json({ message: 'Program not found.' });
+        course.set(pickEditable(req.body));
+        await course.save();
         res.json({ message: 'Program updated successfully.', course });
     } catch (error) {
-        res.status(500).json({ message: error.message || 'Server error while updating program.' });
+        saveError(res, error, 'Server error while updating program.');
     }
 };
 

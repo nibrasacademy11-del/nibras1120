@@ -15,7 +15,7 @@ exports.getCertificate = async (req, res) => {
 exports.getAllCertificates = async (req, res) => {
     try {
         // Don't return pdf_data in listings (it's huge binary)
-        const certificates = await Certificate.find().select('-pdf_data').sort({ createdAt: -1 }).limit(100);
+        const certificates = await Certificate.find().select('-pdf_data').sort({ createdAt: -1 }).limit(1000);
         res.json({ certificates });
     } catch (error) {
         res.status(500).json({ message: 'Server error.' });
@@ -78,12 +78,16 @@ exports.addCertificate = async (req, res) => {
 
 exports.updateCertificate = async (req, res) => {
     try {
-        const updateData = { ...req.body };
-        if (updateData.certNum) updateData.cert_num = updateData.certNum.trim();
-        if (updateData.traineeName) updateData.trainee_name = updateData.traineeName.trim();
-        if (updateData.programName) updateData.program_name = updateData.programName.trim();
-        if (updateData.programType) updateData.program_type = updateData.programType.trim();
-        if (updateData.issueDate) updateData.issue_date = updateData.issueDate;
+        const { certNum, traineeName, programName, programType, field, issueDate, status, userId } = req.body;
+        const updateData = {};
+        if (certNum) updateData.cert_num = certNum.trim();
+        if (traineeName) updateData.trainee_name = traineeName.trim();
+        if (programName) updateData.program_name = programName.trim();
+        if (programType) updateData.program_type = programType.trim();
+        if (field !== undefined) updateData.field = field.trim();
+        if (issueDate) updateData.issue_date = issueDate;
+        if (status) updateData.status = status;
+        if (userId !== undefined) updateData.userId = userId || null;
 
         if (req.file && req.file.buffer) {
             updateData.pdf_data = req.file.buffer;
@@ -91,10 +95,11 @@ exports.updateCertificate = async (req, res) => {
             updateData.pdf_url = `/api/certificates/download/${req.params.id}`;
         }
 
-        const cert = await Certificate.findByIdAndUpdate(req.params.id, updateData, { new: true });
+        const cert = await Certificate.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true }).select('-pdf_data');
         if (!cert) return res.status(404).json({ message: 'Certificate not found.' });
         res.json({ message: 'Certificate updated successfully.', certificate: cert });
     } catch (error) {
+        if (error.code === 11000) return res.status(400).json({ message: 'Certificate number already exists.' });
         res.status(500).json({ message: 'Error updating certificate.' });
     }
 };
@@ -106,7 +111,7 @@ exports.downloadPdf = async (req, res) => {
             return res.status(404).json({ message: 'PDF file not found.' });
         }
 
-        const filename = `certificate-${cert.cert_num}.pdf`;
+        const filename = `certificate-${cert.cert_num.replace(/[^\w.-]+/g, '_')}.pdf`;
         res.setHeader('Content-Type', cert.pdf_mimetype || 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
         res.setHeader('Content-Length', cert.pdf_data.length);

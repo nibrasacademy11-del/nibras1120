@@ -1,9 +1,5 @@
 const mongoose = require('mongoose');
 
-// Fallback direct replica set URI:
-// Avoids SRV lookup issues on restricted networks and cloud serverless (AWS Lambda / Vercel)
-const FALLBACK_DIRECT_URI = 'mongodb://admin:MCFFg12%405@ac-7z7fw4e-shard-00-00.nvpvivt.mongodb.net:27017,ac-7z7fw4e-shard-00-01.nvpvivt.mongodb.net:27017,ac-7z7fw4e-shard-00-02.nvpvivt.mongodb.net:27017/nibras?ssl=true&replicaSet=atlas-pedhjq-shard-0&authSource=admin&retryWrites=true&w=majority';
-
 // ONLY set custom DNS servers when running locally on Windows/Node where ISP blocks SRV records.
 // DO NOT set on Vercel or production: AWS Lambda blocks outbound UDP port 53 to external DNS, causing all queries to hang and time out.
 if (!process.env.VERCEL && process.env.NODE_ENV !== 'production') {
@@ -29,7 +25,13 @@ const connectDB = async () => {
         return cachedPromise;
     }
 
-    const primaryUri = process.env.MONGO_URI || FALLBACK_DIRECT_URI;
+    const primaryUri = process.env.MONGO_URI;
+    // Optional direct replica set URI: avoids SRV lookup issues on restricted networks and serverless
+    const fallbackUri = process.env.MONGO_URI_FALLBACK;
+    if (!primaryUri) {
+        throw new Error('MONGO_URI environment variable is not set.');
+    }
+
     const connectOptions = {
         serverSelectionTimeoutMS: 5000,
         connectTimeoutMS: 10000,
@@ -42,15 +44,14 @@ const connectDB = async () => {
             return mongoose.connection;
         } catch (err) {
             console.warn('Primary MongoDB connection failed:', err.message);
-            // If primary was an SRV URI and failed (e.g. DNS resolution), try direct fallback
-            if (primaryUri !== FALLBACK_DIRECT_URI) {
-                console.log('Retrying with direct replica set fallback URI...');
+            if (fallbackUri && fallbackUri !== primaryUri) {
+                console.log('Retrying with fallback URI...');
                 try {
-                    await mongoose.connect(FALLBACK_DIRECT_URI, connectOptions);
-                    console.log('MongoDB Connected via direct replica set URI...');
+                    await mongoose.connect(fallbackUri, connectOptions);
+                    console.log('MongoDB Connected via fallback URI...');
                     return mongoose.connection;
                 } catch (fallbackErr) {
-                    console.error('Direct fallback connection error:', fallbackErr.message);
+                    console.error('Fallback connection error:', fallbackErr.message);
                     cachedPromise = null;
                     throw fallbackErr;
                 }

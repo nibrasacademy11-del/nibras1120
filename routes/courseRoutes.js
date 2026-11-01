@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const courseController = require('../controllers/courseController');
-const { authRequired, adminRequired } = require('../middleware/auth');
+const { authRequired, adminRequired, attachUser } = require('../middleware/auth');
 
-router.get('/', courseController.getAllCourses);
-router.get('/:id', courseController.getCourseById);
+router.get('/', attachUser, courseController.getAllCourses);
+router.get('/:id', attachUser, courseController.getCourseById);
 
 // Admin only
 router.post('/', authRequired, adminRequired, courseController.createCourse);

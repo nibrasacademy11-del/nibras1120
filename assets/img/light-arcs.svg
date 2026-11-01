@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" aria-hidden="true">
+  <g fill="none" stroke="#b98a35" stroke-width="1">
+    <circle cx="800" cy="760" r="210" stroke-opacity=".3"/>
+    <circle cx="800" cy="760" r="320" stroke-opacity=".24"/>
+    <circle cx="800" cy="760" r="440" stroke-opacity=".19"/>
+    <circle cx="800" cy="760" r="570" stroke-opacity=".14"/>
+    <circle cx="800" cy="760" r="710" stroke-opacity=".1"/>
+    <circle cx="800" cy="760" r="860" stroke-opacity=".06"/>
+  </g>
+</svg>

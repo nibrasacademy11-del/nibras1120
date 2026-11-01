@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /api/
+Disallow: /pages/ar/admin.html
+Disallow: /pages/ar/profile.html
+Disallow: /pages/en/profile.html
+Disallow: /pages/ar/checkout.html
+Disallow: /pages/en/checkout.html

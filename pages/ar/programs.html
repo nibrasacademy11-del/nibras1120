@@ -1,99 +1,95 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>البرامج والخدمات المهنية | أكاديمية نبراس للتدريب والتأهيل المهني</title>
-  <meta name="description"
-    content="استكشف البرامج والمسارات المهنية المعتمدة في أكاديمية نبراس: الدورات التدريبية، الدبلومات المهنية، الماجستير المهني، الدكتوراه المهنية، والحلول التدريبية المخصصة للمؤسسات." />
-  <link rel="canonical" href="https://nibras-ac.com/pages/ar/programs.html" />
-
+  <meta name="description" content="استكشف البرامج والمسارات المهنية المعتمدة في أكاديمية نبراس: الدورات التدريبية، الدبلومات المهنية، الماجستير المهني، الدكتوراه المهنية، والحلول التدريبية المخصصة للمؤسسات." />
+  <meta name="theme-color" content="#5a020e" />
+  <link rel="canonical" href="https://www.nibras-ac.com/pages/ar/programs.html" />
+  <meta property="og:title" content="البرامج والخدمات المهنية | أكاديمية نبراس للتدريب والتأهيل المهني" />
+  <meta property="og:description" content="استكشف البرامج والمسارات المهنية المعتمدة في أكاديمية نبراس: الدورات التدريبية، الدبلومات المهنية، الماجستير المهني، الدكتوراه المهنية، والحلول التدريبية المخصصة للمؤسسات." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.nibras-ac.com/pages/ar/programs.html" />
+  <meta property="og:image" content="https://www.nibras-ac.com/assets/img/logo.png" />
+  <link rel="icon" type="image/png" href="/assets/img/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="../../assets/css/style.css" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261108" />
 </head>
-
 <body>
 
-  <!-- Cart Sidebar -->
+  <!-- Cart -->
   <div id="cartSidebar" class="cart-sidebar">
     <div class="cart-header">
       <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
-      <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+      <button onclick="toggleCart(event)" class="close-cart" aria-label="إغلاق">&times;</button>
     </div>
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-footer">
-      <div class="cart-total">
-        <span>الإجمالي:</span>
-        <strong id="cartTotal">0.00 US$</strong>
-      </div>
-      <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+      <div class="cart-total"><span>الإجمالي:</span><strong id="cartTotal">0.00 US$</strong></div>
+      <a href="/pages/ar/checkout.html" class="btn-primary">إتمام الدفع <i class="fas fa-credit-card"></i></a>
     </div>
   </div>
   <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-
-  <!-- Floating Cart Button -->
-  <div class="floating-cart" onclick="toggleCart(event)">
+  <button class="floating-cart" onclick="toggleCart(event)" aria-label="السلة">
     <i class="fas fa-shopping-cart"></i>
     <span class="floating-cart-badge cart-badge">0</span>
-  </div>
+  </button>
 
   <!-- Navbar -->
   <nav id="navbar" class="navbar">
     <div class="nav-container">
-      <a href="../../index.html" class="nav-logo">
-        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
+      <a href="/index.html" class="nav-logo">
+        <img src="/assets/img/logo.png" alt="أكاديمية نبراس للتدريب والتأهيل المهني" width="54" height="54" />
+        <span>أكاديمية نبراس</span>
       </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="../en/programs.html" class="lang-switch-btn"><i class="fas fa-globe"></i> English</a></li>
-        <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
-        <li><a href="about.html" class="nav-link">عن نبراس</a></li>
-        <li><a href="programs.html" class="nav-link active">البرامج والخدمات</a></li>
-        <li><a href="articles.html" class="nav-link">المقالات والإعلام</a></li>
-        <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
-        <li><a href="verify.html" class="nav-link">التحقق من الشهادات</a></li>
-        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li id="navAuth"><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
+        <li><a href="/index.html" class="nav-link">الرئيسية</a></li>
+        <li><a href="/pages/ar/about.html" class="nav-link">عن نبراس</a></li>
+        <li><a href="/pages/ar/programs.html" class="nav-link active">البرامج والخدمات</a></li>
+        <li><a href="/pages/ar/articles.html" class="nav-link">المقالات والإعلام</a></li>
+        <li><a href="/pages/ar/contact.html" class="nav-link">تواصل معنا</a></li>
+        <li><a href="/pages/ar/verify.html" class="nav-link">التحقق من الشهادات</a></li>
       </ul>
-      <button class="hamburger" id="hamburger" aria-label="القائمة">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="nav-actions">
+        <a href="/pages/en/programs.html" class="lang-switch-btn"><i class="fas fa-globe"></i> English</a>
+        <button class="nav-cart" onclick="toggleCart(event)" aria-label="السلة"><i class="fas fa-shopping-cart"></i><span id="cartBadge" class="cart-badge">0</span></button>
+        <div id="navAuth"><a href="/pages/ar/login.html" class="nav-btn">تسجيل الدخول</a></div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="القائمة"><span></span><span></span><span></span></button>
     </div>
   </nav>
 
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
     <ul>
-      <li><a href="../en/programs.html" class="lang-switch-btn"><i class="fas fa-globe"></i> English</a></li>
-      <li><a href="../../index.html">الرئيسية</a></li>
-      <li><a href="about.html">عن نبراس</a></li>
-      <li><a href="programs.html">البرامج والخدمات</a></li>
-      <li><a href="articles.html">المقالات والإعلام</a></li>
-      <li><a href="contact.html">تواصل معنا</a></li>
-      <li><a href="verify.html">التحقق من الشهادات</a></li>
-      <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
-      <li id="mobileNavAuth"><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
+      <li><a href="/index.html">الرئيسية</a></li>
+      <li><a href="/pages/ar/about.html">عن نبراس</a></li>
+      <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
+      <li><a href="/pages/ar/articles.html">المقالات والإعلام</a></li>
+      <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
+      <li><a href="/pages/ar/verify.html">التحقق من الشهادات</a></li>
+      <li id="mobileNavAuth"><a href="/pages/ar/login.html" class="mobile-btn">تسجيل الدخول</a></li>
     </ul>
   </div>
 
-  <!-- Page Header -->
-  <section class="page-header" style="background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); color: #ffffff; padding: 130px 0 60px; text-align: center;">
+  <section class="page-header" style="text-align: center">
     <div class="container">
-      <div class="section-badge" style="background: rgba(255,255,255,0.15); color: #ffffff; margin-bottom: 12px;">منظومة التعلم والتأهيل</div>
-      <h1 style="font-size: 2.6rem; color: #ffffff; margin-bottom: 15px;">البرامج والخدمات المهنية</h1>
-      <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto; opacity: 0.95;">
+      <div class="section-badge">منظومة التعلم والتأهيل</div>
+      <h1 style="margin-bottom: 15px">البرامج والخدمات المهنية</h1>
+      <p class="lead" style="max-width: 800px; margin: 0 auto">
         برامج مهنية... صُممت لتواكب طموحك وتدعم مستقبلك المهني في بيئات الأعمال الحديثة
       </p>
     </div>
   </section>
 
   <!-- Section: محرك البحث واكتشاف التخصصات والبرامج -->
-  <section id="search-section" style="padding: 55px 0 45px; background: #ffffff; border-bottom: 1px solid var(--border);">
+  <section class="band" id="search-section">
     <div class="container">
-      <div class="section-header" style="text-align: center; margin-bottom: 25px;">
+      <div class="section-header" style="text-align: center; margin-bottom: 25px">
         <div class="section-badge"><i class="fas fa-compass"></i> دليل البرامج والتخصصات</div>
         <h2 class="section-title">ابحث في <span class="highlight">كافة التخصصات والبرامج</span></h2>
         <p class="section-subtitle">استكشف البرامج المعتمدة في الأكاديمية (ماجستير، دكتوراه، دبلومات، دورات تدريبية) واختر مجالك المهني</p>
@@ -106,37 +102,23 @@
       </div>
 
       <!-- Specialty Keyword Filter Tags with Icons -->
-      <div class="filter-tags-wrapper" id="catalogFilterButtons">
-        <button class="filter-tag active" onclick="filterCatalog('all', this)"><i class="fas fa-th-large"></i> الكل</button>
-        <button class="filter-tag" onclick="filterCatalog('business', this)"><i class="fas fa-briefcase"></i> إدارة الأعمال</button>
-        <button class="filter-tag" onclick="filterCatalog('projects', this)"><i class="fas fa-tasks"></i> إدارة المشاريع</button>
-        <button class="filter-tag" onclick="filterCatalog('hr', this)"><i class="fas fa-users-cog"></i> الموارد البشرية</button>
-        <button class="filter-tag" onclick="filterCatalog('finance', this)"><i class="fas fa-coins"></i> المالية والمحاسبة</button>
-        <button class="filter-tag" onclick="filterCatalog('marketing', this)"><i class="fas fa-bullhorn"></i> التسويق والمبيعات</button>
-        <button class="filter-tag" onclick="filterCatalog('cyber', this)"><i class="fas fa-shield-alt"></i> الأمن السيبراني</button>
-        <button class="filter-tag" onclick="filterCatalog('ai', this)"><i class="fas fa-robot"></i> الذكاء الاصطناعي</button>
-        <button class="filter-tag" onclick="filterCatalog('quality', this)"><i class="fas fa-award"></i> الجودة والتحسين</button>
-        <button class="filter-tag" onclick="filterCatalog('health', this)"><i class="fas fa-hospital-user"></i> الإدارة الصحية</button>
-        <button class="filter-tag" onclick="filterCatalog('safety', this)"><i class="fas fa-hard-hat"></i> السلامة المهنية</button>
-        <button class="filter-tag" onclick="filterCatalog('strategy', this)"><i class="fas fa-chess"></i> التخطيط الاستراتيجي</button>
-        <button class="filter-tag" onclick="filterCatalog('leadership', this)"><i class="fas fa-user-tie"></i> القيادة الإدارية</button>
-      </div>
+      <div class="filter-tags-wrapper" id="catalogFilterButtons"></div>
 
       <!-- Interactive Search Results Grid -->
-      <div id="catalogResultsArea" style="margin-top: 35px; display: none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; padding: 0 5px;">
-          <h3 style="font-size: 1.25rem; color: var(--primary); margin:0;">
+      <div id="catalogResultsArea" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px">
+          <h3 style="margin: 0">
             <i class="fas fa-filter text-gold"></i> نتائج البحث والتخصصات (<span id="catalogCount">0</span>)
           </h3>
-          <button onclick="resetCatalog()" class="btn-outline" style="font-size: 0.85rem; padding: 6px 14px;"><i class="fas fa-times"></i> مسح التصفية</button>
+          <button class="btn-outline" onclick="resetCatalog()"><i class="fas fa-times"></i> مسح التصفية</button>
         </div>
-        <div id="catalogGrid" class="programs-grid" style="grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 25px;"></div>
+        <div class="programs-grid" id="catalogGrid"></div>
       </div>
     </div>
   </section>
 
   <!-- Section: المسارات التعليمية الأربعة -->
-  <section id="pathways" style="padding: 90px 0; background: var(--bg-main);">
+  <section class="band band--tint" id="pathways">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">اختر مسارك المهني</div>
@@ -144,81 +126,56 @@
         <p class="section-subtitle">صممنا مساراتنا التعليمية لتناسب مراحل مختلفة من التطور المهني، بحيث يمكنك اختيار البرنامج الأقرب إلى هدفك ومرحلتك الحالية.</p>
       </div>
 
-      <div class="pathways-grid">
+      <div class="tracks">
         <!-- 01 الدورات التدريبية -->
-        <div class="pathway-card">
-          <div>
-            <span class="pathway-badge">01</span>
-            <h3 class="pathway-title">الدورات التدريبية</h3>
-            <div class="pathway-tagline">مهارة جديدة... تبدأ بخطوة</div>
-            <p class="pathway-desc">برامج تدريبية متخصصة تركز على تطوير المهارات العملية والمعارف المهنية في مجالات متنوعة، وتساعدك على رفع كفاءتك ومواكبة متطلبات بيئة العمل.</p>
-            <div class="pathway-audience">
-              <strong>مناسبة لـ:</strong>
-              <ul>
-                <li>الموظفين والمهنيين</li>
-                <li>حديثي التخرج</li>
-                <li>الباحثين عن تطوير مهاراتهم</li>
-                <li>الراغبين في اكتساب معرفة مهنية جديدة</li>
-              </ul>
-            </div>
+        <a class="track" href="pro_courses.html">
+          <span class="track-num">01</span>
+          <div class="track-head">
+            <h3>الدورات التدريبية</h3>
+            <p class="track-tag">مهارة جديدة... تبدأ بخطوة</p>
           </div>
-          <a href="pro_courses.html" class="btn-outline" style="width:100%; text-align:center;">استكشف الدورات <i class="fas fa-arrow-left"></i></a>
-        </div>
+          <p class="track-desc">برامج تدريبية متخصصة تركز على تطوير المهارات العملية والمعارف المهنية في مجالات متنوعة، وتساعدك على رفع كفاءتك ومواكبة متطلبات بيئة العمل.</p>
+          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
+        </a>
 
         <!-- 02 الدبلومات المهنية -->
-        <div class="pathway-card">
-          <div>
-            <span class="pathway-badge">02</span>
-            <h3 class="pathway-title">الدبلومات المهنية</h3>
-            <div class="pathway-tagline">تخصص أعمق... وخبرة أكثر</div>
-            <p class="pathway-desc">برامج مهنية تساعدك على التعمق في مجال تخصص محدد، وبناء قاعدة معرفية ومهارية أكثر شمولاً، بما يدعم تطورك المهني أو انتقالك إلى مجال جديد.</p>
-            <div class="pathway-audience">
-              <strong>مناسبة لـ:</strong>
-              <ul>
-                <li>الخريجين والمهنيين</li>
-                <li>الراغبين في التخصص العميق</li>
-                <li>من يبحثون عن تطور مهني موثق</li>
-              </ul>
-            </div>
+        <a class="track" href="diploma.html">
+          <span class="track-num">02</span>
+          <div class="track-head">
+            <h3>الدبلومات المهنية</h3>
+            <p class="track-tag">تخصص أعمق... وخبرة أكثر</p>
           </div>
-          <a href="diploma.html" class="btn-outline" style="width:100%; text-align:center;">استكشف الدبلومات <i class="fas fa-arrow-left"></i></a>
-        </div>
+          <p class="track-desc">برامج مهنية تساعدك على التعمق في مجال تخصص محدد، وبناء قاعدة معرفية ومهارية أكثر شمولاً، بما يدعم تطورك المهني أو انتقالك إلى مجال جديد.</p>
+          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
+        </a>
 
         <!-- 03 الماجستير المهني -->
-        <div class="pathway-card featured">
-          <div>
-            <span class="pathway-badge" style="background:var(--primary); color:#ffffff;">03 — الأكثر إقبالاً</span>
-            <h3 class="pathway-title">الماجستير المهني</h3>
-            <div class="pathway-tagline">ارتِق بخبرتك... ووسّع آفاقك</div>
-            <p class="pathway-desc">برامج مهنية متقدمة تجمع بين المعرفة المتخصصة والتطبيق العملي، وتهدف إلى تطوير القدرات المهنية والإدارية والقيادية ودعم النمو الوظيفي.</p>
-            <div class="pathway-audience" style="background:#ffffff;">
-              <strong>تتوفر في:</strong>
-              <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">18 تخصصاً مهنياً معتمداً تلائم مجالات وقطاعات الأعمال المختلفة.</p>
-            </div>
+        <a class="track" href="masters.html">
+          <span class="track-num">03</span>
+          <div class="track-head">
+            <h3>الماجستير المهني</h3>
+            <p class="track-tag">ارتِق بخبرتك... ووسّع آفاقك</p>
           </div>
-          <a href="masters.html" class="btn-primary" style="width:100%; text-align:center;">استكشف برامج الماجستير <i class="fas fa-arrow-left"></i></a>
-        </div>
+          <p class="track-desc">برامج مهنية متقدمة تجمع بين المعرفة المتخصصة والتطبيق العملي، وتهدف إلى تطوير القدرات المهنية والإدارية والقيادية ودعم النمو الوظيفي.</p>
+          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
+        </a>
 
         <!-- 04 الدكتوراه المهنية -->
-        <div class="pathway-card">
-          <div>
-            <span class="pathway-badge">04</span>
-            <h3 class="pathway-title">الدكتوراه المهنية</h3>
-            <div class="pathway-tagline">مستوى متقدم من المعرفة والخبرة</div>
-            <p class="pathway-desc">برامج مهنية متقدمة تستهدف المهنيين والخبراء والقيادات الراغبين في تعميق معرفتهم وتطوير قدراتهم التحليلية والاستراتيجية والقيادية وصناعة القرار.</p>
-            <div class="pathway-audience">
-              <strong>تتوفر في:</strong>
-              <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">10 تخصصات قيادية واستراتيجية معتمدة وموجهة لبيئات العمل الحديثة.</p>
-            </div>
+        <a class="track" href="phd.html">
+          <span class="track-num">04</span>
+          <div class="track-head">
+            <h3>الدكتوراه المهنية</h3>
+            <p class="track-tag">مستوى متقدم من المعرفة والخبرة</p>
           </div>
-          <a href="phd.html" class="btn-outline" style="width:100%; text-align:center;">استكشف برامج الدكتوراه <i class="fas fa-arrow-left"></i></a>
-        </div>
+          <p class="track-desc">برامج مهنية متقدمة تستهدف المهنيين والخبراء والقيادات الراغبين في تعميق معرفتهم وتطوير قدراتهم التحليلية والاستراتيجية والقيادية وصناعة القرار.</p>
+          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
+        </a>
       </div>
     </div>
   </section>
 
   <!-- Section: كيف تختار البرنامج المناسب؟ (Interactive Guide from PDF) -->
-  <section style="padding: 90px 0; background: #ffffff;">
+  <section class="band">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">دليل الاختيار</div>
@@ -226,40 +183,40 @@
         <p class="section-subtitle">ابدأ من هدفك... وحدد خطوتك القادمة بكل وضوح وثقة.</p>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-top: 40px;">
-        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:var(--radius-sm); padding:30px 25px; text-align:right;">
-          <div style="font-size:1.8rem; color:var(--primary); margin-bottom:12px;"><i class="fas fa-bullseye"></i></div>
-          <h4 style="font-size:1.25rem; color:var(--primary-dark); margin-bottom:8px;">أريد تطوير مهارة محددة</h4>
-          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.7; margin-bottom:20px;">ابدأ من الدورات التدريبية واكتسب معرفة ومهارات مركزة في وقت قياسي.</p>
-          <a href="pro_courses.html" class="btn-outline" style="font-size:0.9rem; padding:8px 18px;">استكشف الدورات <i class="fas fa-arrow-left"></i></a>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 25px; margin-top: 40px">
+        <div class="panel">
+          <div style="margin-bottom: 12px"><i class="fas fa-bullseye"></i></div>
+          <h4 style="margin-bottom: 8px">أريد تطوير مهارة محددة</h4>
+          <p style="margin-bottom: 20px">ابدأ من الدورات التدريبية واكتسب معرفة ومهارات مركزة في وقت قياسي.</p>
+          <a class="btn-outline" href="pro_courses.html">استكشف الدورات <i class="fas fa-arrow-left"></i></a>
         </div>
 
-        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:var(--radius-sm); padding:30px 25px; text-align:right;">
-          <div style="font-size:1.8rem; color:var(--primary); margin-bottom:12px;"><i class="fas fa-award"></i></div>
-          <h4 style="font-size:1.25rem; color:var(--primary-dark); margin-bottom:8px;">أريد التخصص في مجال مهني</h4>
-          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.7; margin-bottom:20px;">استكشف الدبلومات المهنية وابنِ قاعدة معرفية وتطبيقية أكثر تخصصاً.</p>
-          <a href="diploma.html" class="btn-outline" style="font-size:0.9rem; padding:8px 18px;">استكشف الدبلومات <i class="fas fa-arrow-left"></i></a>
+        <div class="panel">
+          <div style="margin-bottom: 12px"><i class="fas fa-award"></i></div>
+          <h4 style="margin-bottom: 8px">أريد التخصص في مجال مهني</h4>
+          <p style="margin-bottom: 20px">استكشف الدبلومات المهنية وابنِ قاعدة معرفية وتطبيقية أكثر تخصصاً.</p>
+          <a class="btn-outline" href="diploma.html">استكشف الدبلومات <i class="fas fa-arrow-left"></i></a>
         </div>
 
-        <div style="background:#fdf2f4; border:1px solid rgba(90,2,14,0.2); border-radius:var(--radius-sm); padding:30px 25px; text-align:right;">
-          <div style="font-size:1.8rem; color:var(--primary); margin-bottom:12px;"><i class="fas fa-user-tie"></i></div>
-          <h4 style="font-size:1.25rem; color:var(--primary); margin-bottom:8px;">أريد تطوير مساري الوظيفي</h4>
-          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.7; margin-bottom:20px;">تعرف على برامج الماجستير المهني التي تساعدك على توسيع معارفك وقدراتك الإدارية.</p>
-          <a href="masters.html" class="btn-primary" style="font-size:0.9rem; padding:8px 18px;">استكشف الماجستير <i class="fas fa-arrow-left"></i></a>
+        <div class="panel">
+          <div style="margin-bottom: 12px"><i class="fas fa-user-tie"></i></div>
+          <h4 style="margin-bottom: 8px">أريد تطوير مساري الوظيفي</h4>
+          <p style="margin-bottom: 20px">تعرف على برامج الماجستير المهني التي تساعدك على توسيع معارفك وقدراتك الإدارية.</p>
+          <a class="btn-primary" href="masters.html">استكشف الماجستير <i class="fas fa-arrow-left"></i></a>
         </div>
 
-        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:var(--radius-sm); padding:30px 25px; text-align:right;">
-          <div style="font-size:1.8rem; color:var(--primary); margin-bottom:12px;"><i class="fas fa-chess-king"></i></div>
-          <h4 style="font-size:1.25rem; color:var(--primary-dark); margin-bottom:8px;">أطمح لمستوى قيادي متقدم</h4>
-          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.7; margin-bottom:20px;">استكشف برامج الدكتوراه المهنية لتعميق التفكير الاستراتيجي والقيادة المؤسسية.</p>
-          <a href="phd.html" class="btn-outline" style="font-size:0.9rem; padding:8px 18px;">استكشف الدكتوراه <i class="fas fa-arrow-left"></i></a>
+        <div class="panel">
+          <div style="margin-bottom: 12px"><i class="fas fa-chess-king"></i></div>
+          <h4 style="margin-bottom: 8px">أطمح لمستوى قيادي متقدم</h4>
+          <p style="margin-bottom: 20px">استكشف برامج الدكتوراه المهنية لتعميق التفكير الاستراتيجي والقيادة المؤسسية.</p>
+          <a class="btn-outline" href="phd.html">استكشف الدكتوراه <i class="fas fa-arrow-left"></i></a>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Section: خدماتنا المهنية (Page 30-34 in PDF) -->
-  <section id="services" style="padding: 90px 0; background: var(--bg-main);">
+  <section class="band band--tint" id="services">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">خدماتنا المهنية</div>
@@ -267,110 +224,110 @@
         <p class="section-subtitle">في أكاديمية نبراس للتدريب والتأهيل المهني، نؤمن بأن احتياجات التطوير تختلف باختلاف الفرد، وطبيعة المؤسسة، والأهداف المطلوب تحقيقها.</p>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 40px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 30px; margin-top: 40px">
         
         <!-- للأفراد والمهنيين -->
-        <div style="background:#ffffff; border-radius:var(--radius); border:1px solid var(--border); padding:35px; box-shadow:var(--shadow);">
-          <div style="width:50px; height:50px; border-radius:12px; background:#fef1f2; color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:18px;">
+        <div class="panel">
+          <div class="tile">
             <i class="fas fa-user-check"></i>
           </div>
-          <h3 style="font-size:1.5rem; color:var(--primary-dark); margin-bottom:12px;">للأفراد والمهنيين</h3>
-          <h5 style="color:var(--gold); font-size:1rem; margin-bottom:15px;">طوّر مهاراتك... وابنِ مسارك المهني</h5>
-          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.8; margin-bottom:18px;">
+          <h3 style="margin-bottom: 12px">للأفراد والمهنيين</h3>
+          <h5 class="text-gold" style="margin-bottom: 15px">طوّر مهاراتك... وابنِ مسارك المهني</h5>
+          <p style="margin-bottom: 18px">
             نوفر للأفراد والمهنيين برامج وخدمات متكاملة تساعدهم على تطوير المعرفة، وبناء المهارات، واختيار المسار الأقرب لأهدافهم.
           </p>
-          <ul style="display:flex; flex-direction:column; gap:8px; font-size:0.9rem; color:var(--text-main); margin-bottom:25px;">
-            <li><i class="fas fa-check" style="color:var(--primary); margin-left:8px;"></i> دورات وبرامج في تخصصات متنوعة</li>
-            <li><i class="fas fa-check" style="color:var(--primary); margin-left:8px;"></i> محتوى يجمع بين المعرفة والتطبيق</li>
-            <li><i class="fas fa-check" style="color:var(--primary); margin-left:8px;"></i> خيارات تعلم تراعي التزاماتك اليومية</li>
-            <li><i class="fas fa-check" style="color:var(--primary); margin-left:8px;"></i> متابعة وتقييم خلال الرحلة التدريبية</li>
+          <ul style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 25px">
+            <li><i class="fas fa-check" style="margin-inline-end: 6px"></i> دورات وبرامج في تخصصات متنوعة</li>
+            <li><i class="fas fa-check" style="margin-inline-end: 6px"></i> محتوى يجمع بين المعرفة والتطبيق</li>
+            <li><i class="fas fa-check" style="margin-inline-end: 6px"></i> خيارات تعلم تراعي التزاماتك اليومية</li>
+            <li><i class="fas fa-check" style="margin-inline-end: 6px"></i> متابعة وتقييم خلال الرحلة التدريبية</li>
           </ul>
-          <a href="#pathways" class="btn-primary" style="width:100%; text-align:center;">استكشف برامج الأفراد <i class="fas fa-arrow-down"></i></a>
+          <a class="btn-primary" href="#pathways" style="width: 100%">استكشف برامج الأفراد <i class="fas fa-arrow-down"></i></a>
         </div>
 
         <!-- للشركات والمؤسسات -->
-        <div style="background:#ffffff; border-radius:var(--radius); border:2px solid var(--primary); padding:35px; box-shadow:var(--shadow-hover);">
-          <div style="width:50px; height:50px; border-radius:12px; background:var(--primary); color:#ffffff; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:18px;">
+        <div class="panel panel--accent">
+          <div class="tile">
             <i class="fas fa-building"></i>
           </div>
-          <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:12px;">للشركات والمؤسسات</h3>
-          <h5 style="color:var(--gold); font-size:1rem; margin-bottom:15px;">التدريب الذي يبدأ من احتياج المؤسسة</h5>
-          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.8; margin-bottom:18px;">
+          <h3 style="margin-bottom: 12px">للشركات والمؤسسات</h3>
+          <h5 class="text-gold" style="margin-bottom: 15px">التدريب الذي يبدأ من احتياج المؤسسة</h5>
+          <p style="margin-bottom: 18px">
             نعمل مع الشركات والمؤسسات على تطوير حلول تدريبية مخصصة ترتبط بأهدافها وتواكب التحول في بيئات العمل:
           </p>
-          <ul style="display:flex; flex-direction:column; gap:8px; font-size:0.9rem; color:var(--text-main); margin-bottom:25px;">
-            <li><i class="fas fa-check-circle" style="color:var(--gold); margin-left:8px;"></i> <strong>تحليل الاحتياجات:</strong> تحديد الفجوات والمهارات المستهدفة</li>
-            <li><i class="fas fa-check-circle" style="color:var(--gold); margin-left:8px;"></i> <strong>تصميم برامج مخصصة:</strong> إعداد برامج تلائم بيئة المؤسسة</li>
-            <li><i class="fas fa-check-circle" style="color:var(--gold); margin-left:8px;"></i> <strong>تنفيذ مرن:</strong> تدريب عن بُعد أو وفق النموذج المتفق عليه</li>
-            <li><i class="fas fa-check-circle" style="color:var(--gold); margin-left:8px;"></i> <strong>تقارير تدريبية:</strong> قياس الأثر ومستوى المشاركة والتقدم</li>
+          <ul style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 25px">
+            <li><i class="fas fa-check-circle text-gold" style="margin-inline-end: 6px"></i> <strong>تحليل الاحتياجات:</strong> تحديد الفجوات والمهارات المستهدفة</li>
+            <li><i class="fas fa-check-circle text-gold" style="margin-inline-end: 6px"></i> <strong>تصميم برامج مخصصة:</strong> إعداد برامج تلائم بيئة المؤسسة</li>
+            <li><i class="fas fa-check-circle text-gold" style="margin-inline-end: 6px"></i> <strong>تنفيذ مرن:</strong> تدريب عن بُعد أو وفق النموذج المتفق عليه</li>
+            <li><i class="fas fa-check-circle text-gold" style="margin-inline-end: 6px"></i> <strong>تقارير تدريبية:</strong> قياس الأثر ومستوى المشاركة والتقدم</li>
           </ul>
-          <a href="#customInquiry" class="btn-primary" style="width:100%; text-align:center;">اطلب حلاً تدريبياً لمؤسستك <i class="fas fa-briefcase"></i></a>
+          <a class="btn-primary" href="#customInquiry" style="width: 100%">اطلب حلاً تدريبياً لمؤسستك <i class="fas fa-briefcase"></i></a>
         </div>
 
         <!-- لمراكز التدريب والمعاهد -->
-        <div style="background:#ffffff; border-radius:var(--radius); border:1px solid var(--border); padding:35px; box-shadow:var(--shadow);">
-          <div style="width:50px; height:50px; border-radius:12px; background:#fffcf0; color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:18px;">
+        <div class="panel">
+          <div class="tile">
             <i class="fas fa-book-open"></i>
           </div>
-          <h3 style="font-size:1.5rem; color:var(--primary-dark); margin-bottom:12px;">لمراكز التدريب والمعاهد</h3>
-          <h5 style="color:var(--gold); font-size:1rem; margin-bottom:15px;">محتوى تدريبي احترافي يدعم برامجك</h5>
-          <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.8; margin-bottom:18px;">
+          <h3 style="margin-bottom: 12px">لمراكز التدريب والمعاهد</h3>
+          <h5 class="text-gold" style="margin-bottom: 15px">محتوى تدريبي احترافي يدعم برامجك</h5>
+          <p style="margin-bottom: 18px">
             نقدم حلولاً لتطوير وإعداد الحقائب التدريبية والمحتوى المتخصص لمراكز التدريب والجهات التعليمية:
           </p>
-          <ul style="display:flex; flex-direction:column; gap:8px; font-size:0.9rem; color:var(--text-main); margin-bottom:25px;">
-            <li><i class="fas fa-folder-open" style="color:var(--primary); margin-left:8px;"></i> <strong>الحقائب التدريبية:</strong> دليل مدرب، دليل متدرب، عروض</li>
-            <li><i class="fas fa-tasks" style="color:var(--primary); margin-left:8px;"></i> <strong>أدوات التقييم:</strong> أنشطة وتطبيقات ومواد مساندة</li>
-            <li><i class="fas fa-paint-brush" style="color:var(--primary); margin-left:8px;"></i> <strong>تطوير وتخصيص:</strong> صياغة وفق هوية وأهداف المركز</li>
-            <li><i class="fas fa-sync" style="color:var(--primary); margin-left:8px;"></i> <strong>تحديث المحتوى:</strong> مواكبة التغيرات في المجال التخصصي</li>
+          <ul style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 25px">
+            <li><i class="fas fa-folder-open" style="margin-inline-end: 6px"></i> <strong>الحقائب التدريبية:</strong> دليل مدرب، دليل متدرب، عروض</li>
+            <li><i class="fas fa-tasks" style="margin-inline-end: 6px"></i> <strong>أدوات التقييم:</strong> أنشطة وتطبيقات ومواد مساندة</li>
+            <li><i class="fas fa-paint-brush" style="margin-inline-end: 6px"></i> <strong>تطوير وتخصيص:</strong> صياغة وفق هوية وأهداف المركز</li>
+            <li><i class="fas fa-sync" style="margin-inline-end: 6px"></i> <strong>تحديث المحتوى:</strong> مواكبة التغيرات في المجال التخصصي</li>
           </ul>
-          <a href="#customInquiry" class="btn-outline" style="width:100%; text-align:center;">تحدث مع فريقنا <i class="fas fa-comments"></i></a>
+          <a class="btn-outline" href="#customInquiry" style="width: 100%">تحدث مع فريقنا <i class="fas fa-comments"></i></a>
         </div>
 
       </div>
 
       <!-- Form: طلب احتياج تدريبي خاص (Page 33-34 in PDF) -->
-      <div id="customInquiry" style="background:#ffffff; border:1px solid var(--border); border-radius:var(--radius); padding:40px 30px; margin-top:60px; box-shadow:var(--shadow);">
-        <div style="max-width:700px; margin:0 auto; text-align:center;">
-          <div class="section-badge" style="margin-bottom:10px;">نموذج مخصص</div>
-          <h3 style="font-size:1.8rem; color:var(--primary); margin-bottom:12px;">هل لديك احتياج تدريبي خاص؟</h3>
-          <p style="color:var(--text-muted); font-size:1rem; line-height:1.7; margin-bottom:30px;">
+      <div class="panel" id="customInquiry" style="margin-top: 60px">
+        <div style="max-width: 700px; margin: 0 auto; text-align: center">
+          <div class="section-badge">نموذج مخصص</div>
+          <h3 style="margin-bottom: 12px">هل لديك احتياج تدريبي خاص؟</h3>
+          <p style="margin-bottom: 30px">
             إذا لم تجد الخدمة التي تبحث عنها، أخبرنا باحتياجك وسيساعدك فريق نبراس في فهم المتطلبات وتحديد الحل الأنسب.
           </p>
           
-          <form onsubmit="handleContact(event)" style="display:flex; flex-direction:column; gap:16px; text-align:right;">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+          <form onsubmit="handleContact(event)" style="display: flex; flex-direction: column; gap: 16px; text-align: right">
+            <div class="two-col">
               <div>
-                <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">الاسم الكامل *</label>
-                <input type="text" placeholder="الاسم الكامل" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:inherit;">
+                <label>الاسم الكامل *</label>
+                <input type="text" placeholder="الاسم الكامل" required>
               </div>
               <div>
-                <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">رقم التواصل (واتساب) *</label>
-                <input type="tel" placeholder="رقم الهاتف" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:inherit;">
-              </div>
-            </div>
-
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-              <div>
-                <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">البريد الإلكتروني</label>
-                <input type="email" placeholder="البريد الإلكتروني" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:inherit;">
-              </div>
-              <div>
-                <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">نوع الجهة</label>
-                <input type="text" placeholder="فرد / شركة / مركز تدريب" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:inherit;">
+                <label>رقم التواصل (واتساب) *</label>
+                <input type="tel" placeholder="رقم الهاتف" required>
               </div>
             </div>
 
-            <div>
-              <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">الخدمة المطلوبة</label>
-              <input type="text" placeholder="موضوع الرسالة أو الخدمة المطلوبة" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:inherit;">
+            <div class="two-col">
+              <div>
+                <label>البريد الإلكتروني</label>
+                <input type="email" placeholder="البريد الإلكتروني">
+              </div>
+              <div>
+                <label>نوع الجهة</label>
+                <input type="text" placeholder="فرد / شركة / مركز تدريب">
+              </div>
             </div>
 
             <div>
-              <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">رسالتك / احتياجك التدريبي *</label>
-              <textarea placeholder="اشرح تفاصيل احتياجك التدريبي..." rows="4" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:inherit;"></textarea>
+              <label>الخدمة المطلوبة</label>
+              <input type="text" placeholder="موضوع الرسالة أو الخدمة المطلوبة">
             </div>
 
-            <button type="submit" class="btn-primary" style="padding:14px; font-size:1.05rem; justify-content:center;">
+            <div>
+              <label>رسالتك / احتياجك التدريبي *</label>
+              <textarea placeholder="اشرح تفاصيل احتياجك التدريبي..." rows="4" required></textarea>
+            </div>
+
+            <button class="btn-primary" type="submit">
               إرسال الطلب <i class="fas fa-paper-plane"></i>
             </button>
           </form>
@@ -385,233 +342,67 @@
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            <a href="../../index.html" class="nav-logo" style="margin-bottom:15px; display:inline-block;">
-              <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" style="max-height:60px;" />
-            </a>
-            <h4 style="color:#ffffff; font-size:1.1rem; margin-bottom:8px;">نبراس للتدريب والتأهيل المهني</h4>
-            <p style="color:#cbd5e1; font-size:0.95rem; line-height:1.7; margin-bottom:18px;">معرفة تُطوّر. مهارات تُمكّن. مستقبل نصنعه معاً.</p>
+            <img src="/assets/img/logo.png" alt="أكاديمية نبراس" width="72" height="72" loading="lazy" />
+            <h4>نبراس للتدريب والتأهيل المهني</h4>
+            <p>معرفة تُطوّر. مهارات تُمكّن. مستقبل نصنعه معاً.</p>
             <div class="social-links">
-              <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-              <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-              <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
-              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-              <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+              <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+              <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
             </div>
           </div>
           <div class="footer-links-col">
             <h5>الأكاديمية</h5>
             <ul>
-              <li><a href="../../index.html">الرئيسية</a></li>
-              <li><a href="about.html">عن نبراس</a></li>
-              <li><a href="programs.html">البرامج المهنية</a></li>
-              <li><a href="articles.html">المقالات والإعلام</a></li>
-              <li><a href="contact.html">تواصل معنا</a></li>
+              <li><a href="/index.html">الرئيسية</a></li>
+              <li><a href="/pages/ar/about.html">عن نبراس</a></li>
+              <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
+              <li><a href="/pages/ar/articles.html">المقالات والإعلام</a></li>
+              <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
             <h5>البرامج والمسارات</h5>
             <ul>
-              <li><a href="pro_courses.html">الدورات التدريبية</a></li>
-              <li><a href="diploma.html">الدبلومات المهنية</a></li>
-              <li><a href="masters.html">الماجستير المهني</a></li>
-              <li><a href="phd.html">الدكتوراه المهنية</a></li>
+              <li><a href="/pages/ar/pro_courses.html">الدورات التدريبية</a></li>
+              <li><a href="/pages/ar/diploma.html">الدبلومات المهنية</a></li>
+              <li><a href="/pages/ar/masters.html">الماجستير المهني</a></li>
+              <li><a href="/pages/ar/phd.html">الدكتوراه المهنية</a></li>
+              <li><a href="/pages/ar/programs.html#services">تدريب الشركات</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
             <h5>روابط مهمة</h5>
             <ul>
-              <li><a href="verify.html">التحقق من الشهادات</a></li>
-              <li><a href="privacy.html">سياسة الخصوصية</a></li>
-              <li><a href="terms.html">الشروط والأحكام</a></li>
-              <li><a href="refund.html">سياسة الاسترداد</a></li>
-              <li><a href="accessibility.html">إمكانية الوصول</a></li>
+              <li><a href="/pages/ar/verify.html">التحقق من الشهادات</a></li>
+              <li><a href="/pages/ar/privacy.html">سياسة الخصوصية</a></li>
+              <li><a href="/pages/ar/terms.html">الشروط والأحكام</a></li>
+              <li><a href="/pages/ar/refund.html">سياسة الاسترداد</a></li>
+              <li><a href="/pages/ar/accessibility.html">إمكانية الوصول</a></li>
             </ul>
           </div>
         </div>
+        <div class="footer-help">
+          <div>
+            <h5>هل تحتاج إلى مساعدة في اختيار البرنامج المناسب؟</h5>
+            <p>تواصل مع فريق نبراس وسنساعدك في التعرف على الخيارات التي تناسب أهدافك المهنية.</p>
+          </div>
+          <a href="/pages/ar/contact.html" class="btn-primary">تواصل معنا الآن <i class="fas fa-headset"></i></a>
+        </div>
       </div>
     </div>
-    <div class="footer-bottom">
-      <div class="container">
-        <p>© 2026 أكاديمية نبراس للتدريب والتأهيل المهني. جميع الحقوق محفوظة.</p>
-      </div>
-    </div>
+    <div class="footer-bottom"><div class="container"><p>© 2026 أكاديمية نبراس للتدريب والتأهيل المهني. جميع الحقوق محفوظة.</p></div></div>
   </footer>
 
-  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
-    <i class="fas fa-arrow-up"></i>
-  </button>
-  <div class="toast" id="toast"></div>
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="../../assets/js/script.js"></script>
+  <script src="/assets/js/specialties.js?v=20261101"></script>
+  <script src="/assets/js/script.js?v=20261109"></script>
   <script>
-    let allCatalogCourses = [];
-    let currentCatalogKey = 'all';
-
-    const specialtyTerms = {
-      'all': [],
-      'business': ['إدارة الأعمال', 'الإدارة التنفيذية', 'الابتكار', 'حوكمة الشركات', 'Business'],
-      'projects': ['المشروعات', 'المشاريع', 'Project', 'PMP', 'CAPM'],
-      'hr': ['الموارد البشرية', 'HR', 'SHRM'],
-      'finance': ['المالية', 'المحاسبة', 'Finance', 'Accounting', 'CMA', 'FMAA'],
-      'marketing': ['التسويق', 'المبيعات', 'Marketing', 'Sales'],
-      'cyber': ['الأمن السيبراني', 'السيبراني', 'Cybersecurity'],
-      'ai': ['الذكاء الاصطناعي', 'AI'],
-      'quality': ['الجودة', 'Quality', 'Six Sigma'],
-      'health': ['الصحية', 'المستشفيات', 'Healthcare', 'Hospital'],
-      'safety': ['السلامة والصحة المهنية', 'السلامة', 'Safety'],
-      'strategy': ['التخطيط الاستراتيجي', 'الاستراتيجي', 'Strategic'],
-      'leadership': ['القيادة', 'Leadership']
-    };
-
-    async function ensureCoursesLoaded() {
-      if (allCatalogCourses.length > 0) return allCatalogCourses;
-      try {
-        const res = await fetch('/api/courses');
-        const data = await res.json();
-        allCatalogCourses = data.courses || [];
-      } catch (err) {
-        console.error('Error fetching catalog courses:', err);
-      }
-      return allCatalogCourses;
-    }
-
-    function getLevelLabel(type) {
-      switch(type) {
-        case 'master': case 'masters': return { label: 'ماجستير مهني', icon: 'fa-graduation-cap' };
-        case 'phd': case 'doctorate': return { label: 'دكتوراه مهنية', icon: 'fa-user-graduate' };
-        case 'diploma': case 'diplomas': return { label: 'دبلوم مهني', icon: 'fa-award' };
-        default: return { label: 'دورة تدريبية', icon: 'fa-book-reader' };
-      }
-    }
-
-    function renderCatalogGrid(list) {
-      const grid = document.getElementById('catalogGrid');
-      const countEl = document.getElementById('catalogCount');
-      if (countEl) countEl.textContent = list.length;
-
-      if (!list || list.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px; font-size: 1.1rem;"><i class="fas fa-search" style="font-size:2rem; color:var(--gold); display:block; margin-bottom:12px;"></i> لا توجد برامج مطابقة لمعايير البحث في هذا التخصص حالياً.</p>';
-        return;
-      }
-
-      grid.innerHTML = list.map(item => {
-        const title = item.titleAr || item.title || 'برنامج مهني معتمد';
-        const desc = item.descriptionAr || item.description || 'برنامج مهني متكامل ومصمم لتطوير الكفاءات وسوق العمل.';
-        const price = item.price || 0;
-        const slug = item.slug || item._id;
-        const specialty = item.specialty || 'تخصص مهني';
-        const levelInfo = getLevelLabel(item.type);
-        const isComingSoon = item.status === 'coming_soon';
-
-        let actionBtn = '';
-        if (isComingSoon) {
-          actionBtn = `<a href="program-detail.html?slug=${slug}" class="btn-outline" style="width:100%; text-align:center; border-color:var(--gold); color:var(--primary); font-weight:700;"><i class="fas fa-bell"></i> سجل اهتمامك بالبرنامج</a>`;
-        } else {
-          actionBtn = `<button class="btn-primary" style="width:100%;" onclick="addToCart('${item._id}', '${title.replace(/'/g, "\\'")}', ${price})"><i class="fas fa-cart-plus"></i> إضافة إلى السلة</button>`;
-        }
-
-        return `
-          <div class="program-card" style="display:flex; flex-direction:column; justify-content:space-between; height:100%;">
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:8px;">
-                <span class="badge" style="background:#fdf2f4; color:var(--primary); font-size:0.8rem; padding:4px 10px; border-radius:12px; font-weight:600;">
-                  <i class="fas fa-tag" style="color:var(--gold);"></i> ${specialty}
-                </span>
-                <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">
-                  <i class="fas ${levelInfo.icon} text-gold"></i> ${levelInfo.label}
-                </span>
-              </div>
-              <h3 style="font-size:1.12rem; color:var(--primary); margin-bottom:10px; line-height:1.45;">${title}</h3>
-              <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:15px;">
-                ${desc}
-              </p>
-            </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin:15px 0 12px; border-top:1px solid var(--border); padding-top:12px;">
-                <span style="color:var(--text-muted); font-size:0.85rem;">رسوم البرنامج:</span>
-                <strong style="color:var(--primary); font-size:1.25rem;">${price}.00 US$</strong>
-              </div>
-              <div style="display:flex; flex-direction:column; gap:8px;">
-                <a href="program-detail.html?slug=${slug}" class="btn-outline" style="width:100%; text-align:center;"><i class="fas fa-info-circle"></i> التفاصيل الكاملة والمحاور</a>
-                ${actionBtn}
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    async function applyCatalogFilter() {
-      const searchInput = document.getElementById('catalogSearch');
-      const q = (searchInput ? searchInput.value : '').toLowerCase().trim();
-      const resultsArea = document.getElementById('catalogResultsArea');
-
-      // If key is 'all' and no search query, hide results area to show normal pathways
-      if (currentCatalogKey === 'all' && !q) {
-        resultsArea.style.display = 'none';
-        return;
-      }
-
-      resultsArea.style.display = 'block';
-      const courses = await ensureCoursesLoaded();
-
-      const filtered = courses.filter(c => {
-        // Specialty match
-        let matchesSpecialty = true;
-        if (currentCatalogKey !== 'all') {
-          const terms = specialtyTerms[currentCatalogKey] || [];
-          matchesSpecialty = terms.some(term => {
-            const t = term.toLowerCase();
-            return (c.specialty && c.specialty.toLowerCase().includes(t)) ||
-                   (c.titleAr && c.titleAr.toLowerCase().includes(t)) ||
-                   (c.titleEn && c.titleEn.toLowerCase().includes(t));
-          });
-        }
-
-        // Query match
-        let matchesQuery = true;
-        if (q) {
-          matchesQuery = (c.titleAr && c.titleAr.toLowerCase().includes(q)) ||
-                         (c.titleEn && c.titleEn.toLowerCase().includes(q)) ||
-                         (c.specialty && c.specialty.toLowerCase().includes(q)) ||
-                         (c.descriptionAr && c.descriptionAr.toLowerCase().includes(q));
-        }
-
-        return matchesSpecialty && matchesQuery;
-      });
-
-      renderCatalogGrid(filtered);
-    }
-
-    async function filterCatalog(key, btn) {
-      currentCatalogKey = key;
-      document.querySelectorAll('#catalogFilterButtons .filter-tag').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      await applyCatalogFilter();
-
-      if (key !== 'all') {
-        const resultsArea = document.getElementById('catalogResultsArea');
-        resultsArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }
-
-    function resetCatalog() {
-      currentCatalogKey = 'all';
-      const searchInput = document.getElementById('catalogSearch');
-      if (searchInput) searchInput.value = '';
-      document.querySelectorAll('#catalogFilterButtons .filter-tag').forEach(b => b.classList.remove('active'));
-      const allBtn = document.querySelector('#catalogFilterButtons .filter-tag');
-      if (allBtn) allBtn.classList.add('active');
-      document.getElementById('catalogResultsArea').style.display = 'none';
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const searchInput = document.getElementById('catalogSearch');
-      if (searchInput) {
-        searchInput.addEventListener('input', applyCatalogFilter);
-      }
-      ensureCoursesLoaded();
-    });
+    document.addEventListener('DOMContentLoaded', () => initCatalogPage({ gridId: 'catalogGrid', searchId: 'catalogSearch', filterId: 'catalogFilterButtons', areaId: 'catalogResultsArea', countId: 'catalogCount' }));
   </script>
 </body>
 </html>

@@ -8,9 +8,9 @@
     <link rel="icon" type="image/png" href="../../assets/img/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link rel="stylesheet" href="../../assets/css/admin.css" />
+    <link rel="stylesheet" href="../../assets/css/admin.css?v=20261104" />
 </head>
 
 <body class="admin-body">
@@ -23,11 +23,11 @@
             <form id="loginForm">
                 <div class="input-group">
                     <label>البريد الإلكتروني</label>
-                    <input type="email" id="loginEmail" placeholder="admin@nibras.com" required>
+                    <input type="email" id="loginEmail" autocomplete="username" required>
                 </div>
                 <div class="input-group">
                     <label>كلمة المرور</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                    <input type="password" id="loginPassword" autocomplete="current-password" required>
                 </div>
                 <button type="submit" class="login-btn">دخول للنظام</button>
             </form>
@@ -170,15 +170,15 @@
                             <div class="form-group">
                                 <label>نوع المسار *</label>
                                 <select id="progType" required>
-                                    <option value="masters">الماجستير المهني (masters)</option>
-                                    <option value="phd">الدكتوراه المهنية (phd)</option>
-                                    <option value="diploma">الدبلومات المهنية (diploma)</option>
-                                    <option value="course">الدورات التدريبية (course)</option>
+                                    <option value="master">الماجستير المهني</option>
+                                    <option value="phd">الدكتوراه المهنية</option>
+                                    <option value="diploma">الدبلومات المهنية</option>
+                                    <option value="course">الدورات التدريبية</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>المجال / التخصص *</label>
-                                <input type="text" id="progSpecialty" required placeholder="مثلاً: إدارة الأعمال، الأمن السيبراني...">
+                                <select id="progSpecialty" required></select>
                             </div>
                         </div>
 
@@ -210,6 +210,11 @@
                         </div>
 
                         <div class="form-group">
+                            <label>رابط صورة البرنامج (اتركه فارغاً لاستخدام صورة التخصص)</label>
+                            <input type="text" id="progImage" dir="ltr" placeholder="/assets/img/specialties/business.svg">
+                        </div>
+
+                        <div class="form-group">
                             <label>وصف البرنامج (عربي) *</label>
                             <textarea id="progDescAr" rows="3" required placeholder="نبذة توضيحية عن البرنامج وأهدافه..."></textarea>
                         </div>
@@ -232,7 +237,7 @@
                         <div style="display:flex; gap:10px; flex-wrap:wrap;">
                             <select id="adminProgTypeFilter" onchange="filterAdminPrograms()" style="padding:8px 12px; border-radius:8px; border:1px solid var(--border); font-family:inherit;">
                                 <option value="all">جميع المسارات</option>
-                                <option value="masters">ماجستير مهني</option>
+                                <option value="master">ماجستير مهني</option>
                                 <option value="phd">دكتوراه مهنية</option>
                                 <option value="diploma">دبلوم مهني</option>
                                 <option value="course">دورة تدريبية</option>
@@ -265,9 +270,9 @@
                             <div class="form-group">
                                 <label>التصنيف *</label>
                                 <select id="artCategory" required>
-                                    <option value="media">تغطية إعلامية (Media)</option>
-                                    <option value="article">مقال متخصص (Article)</option>
-                                    <option value="news">خبر صحفي (News)</option>
+                                    <option value="media_coverage">تغطية إعلامية</option>
+                                    <option value="article">مقال متخصص</option>
+                                    <option value="news">خبر صحفي</option>
                                 </select>
                             </div>
                         </div>
@@ -281,6 +286,11 @@
                                 <label>الكاتب أو الجهة الإعلامية</label>
                                 <input type="text" id="artAuthor" placeholder="مثلاً: صحيفة الرياض / إدارة الأكاديمية">
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>رابط الصورة (اختياري)</label>
+                            <input type="text" id="artImage" dir="ltr" placeholder="/assets/img/...">
                         </div>
 
                         <div class="form-group">
@@ -343,6 +353,7 @@
                         <h2><i class="fas fa-plus-circle"></i> إضافة شهادة جديدة</h2>
                     </div>
                     <form id="adminCertForm" class="admin-form">
+                        <input type="hidden" id="certEditId" value="">
                         <div class="form-grid-2">
                             <div class="form-group">
                                 <label>رقم الشهادة *</label>
@@ -400,12 +411,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label>ملف الشهادة PDF (اختياري)</label>
+                            <label>ملف الشهادة PDF (اختياري، بحد أقصى 4 ميجابايت)</label>
                             <input type="file" id="adminPdfFile" accept="application/pdf">
                         </div>
 
-                        <div class="form-submit">
-                            <button type="submit" class="btn-save">حفظ بيانات الشهادة</button>
+                        <div class="form-submit" style="display:flex; gap:10px;">
+                            <button type="submit" class="btn-save" id="btnSaveCert">حفظ بيانات الشهادة</button>
+                            <button type="button" class="btn-save" id="btnCancelCertEdit" style="background:#f2f4f7; color:#475467; display:none;" onclick="cancelCertEdit()">إلغاء التعديل</button>
                         </div>
                     </form>
                 </div>
@@ -481,7 +493,7 @@
         </div>
     </div>
 
-    <div id="toast"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
 
     <script>
         function showSection(sectionId, element) {
@@ -535,7 +547,12 @@
     </script>
 
     <!-- Main Script -->
-    <script src="../../assets/js/script.js"></script>
+    <script src="../../assets/js/specialties.js?v=20261101"></script>
+    <script>
+        document.getElementById('progSpecialty').innerHTML = NIBRAS_SPECIALTIES
+            .map((s) => `<option value="${s.ar}">${s.ar}</option>`).join('');
+    </script>
+    <script src="../../assets/js/script.js?v=20261109"></script>
 </body>
 
 </html>

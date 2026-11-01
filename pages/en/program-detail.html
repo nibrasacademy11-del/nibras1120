@@ -1,163 +1,161 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="pageTitle">Program Details | Nibras Academy</title>
-  <meta name="description" id="pageDescription" content="Professional program details and certified curricula at Nibras Academy for Training & Professional Qualification." />
-  
+  <title>Program Details | Nibras Academy</title>
+  <meta name="description" content="Professional program details and certified curricula at Nibras Academy for Training & Professional Qualification." />
+  <meta name="theme-color" content="#5a020e" />
+  <link rel="canonical" href="https://www.nibras-ac.com/pages/en/program-detail.html" />
+  <meta property="og:title" content="Program Details | Nibras Academy" />
+  <meta property="og:description" content="Professional program details and certified curricula at Nibras Academy for Training & Professional Qualification." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.nibras-ac.com/pages/en/program-detail.html" />
+  <meta property="og:image" content="https://www.nibras-ac.com/assets/img/logo.png" />
+  <link rel="icon" type="image/png" href="/assets/img/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="../../assets/css/style.css" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261108" />
 </head>
-
 <body>
 
-  <!-- Cart Sidebar -->
+  <!-- Cart -->
   <div id="cartSidebar" class="cart-sidebar">
     <div class="cart-header">
       <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-      <button onclick="toggleCart(event)" class="close-cart">&times;</button>
+      <button onclick="toggleCart(event)" class="close-cart" aria-label="Close">&times;</button>
     </div>
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-footer">
-      <div class="cart-total">
-        <span>Total:</span>
-        <strong id="cartTotal">0.00 US$</strong>
-      </div>
-      <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
+      <div class="cart-total"><span>Total:</span><strong id="cartTotal">0.00 US$</strong></div>
+      <a href="/pages/en/checkout.html" class="btn-primary">Proceed to Checkout <i class="fas fa-credit-card"></i></a>
     </div>
   </div>
   <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-
-  <!-- Floating Cart Button -->
-  <div class="floating-cart" onclick="toggleCart(event)">
+  <button class="floating-cart" onclick="toggleCart(event)" aria-label="Cart">
     <i class="fas fa-shopping-cart"></i>
     <span class="floating-cart-badge cart-badge">0</span>
-  </div>
+  </button>
 
   <!-- Navbar -->
   <nav id="navbar" class="navbar">
     <div class="nav-container">
-      <a href="../../en/index.html" class="nav-logo">
-        <img src="../../assets/img/logo.png" alt="Nibras Academy" />
+      <a href="/en/index.html" class="nav-logo">
+        <img src="/assets/img/logo.png" alt="Nibras Academy for Training & Professional Qualification" width="54" height="54" />
+        <span>Nibras Academy</span>
       </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="../ar/program-detail.html" id="langSwitchBtn" class="lang-switch-btn"><i class="fas fa-globe"></i> العربية</a></li>
-        <li><a href="../../en/index.html" class="nav-link">Home</a></li>
-        <li><a href="about.html" class="nav-link">About Us</a></li>
-        <li><a href="programs.html" class="nav-link">Programs & Services</a></li>
-        <li><a href="articles.html" class="nav-link">Articles & Media</a></li>
-        <li><a href="contact.html" class="nav-link">Contact Us</a></li>
-        <li><a href="verify.html" class="nav-link">Verify Certificate</a></li>
-        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li id="navAuth"><a href="login.html" class="nav-btn">Login</a></li>
+        <li><a href="/en/index.html" class="nav-link">Home</a></li>
+        <li><a href="/pages/en/about.html" class="nav-link">About</a></li>
+        <li><a href="/pages/en/programs.html" class="nav-link active">Programs & Services</a></li>
+        <li><a href="/pages/en/articles.html" class="nav-link">Articles & Media</a></li>
+        <li><a href="/pages/en/contact.html" class="nav-link">Contact</a></li>
+        <li><a href="/pages/en/verify.html" class="nav-link">Verify Certificate</a></li>
       </ul>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="nav-actions">
+        <a href="/pages/ar/program-detail.html" class="lang-switch-btn"><i class="fas fa-globe"></i> العربية</a>
+        <button class="nav-cart" onclick="toggleCart(event)" aria-label="Cart"><i class="fas fa-shopping-cart"></i><span id="cartBadge" class="cart-badge">0</span></button>
+        <div id="navAuth"><a href="/pages/en/login.html" class="nav-btn">Login</a></div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </nav>
 
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
     <ul>
-      <li><a href="../ar/program-detail.html" id="mobileLangSwitchBtn" class="lang-switch-btn"><i class="fas fa-globe"></i> العربية</a></li>
-      <li><a href="../../en/index.html">Home</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="programs.html">Programs & Services</a></li>
-      <li><a href="articles.html">Articles & Media</a></li>
-      <li><a href="contact.html">Contact Us</a></li>
-      <li><a href="verify.html">Verify Certificate</a></li>
-      <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-      <li id="mobileNavAuth"><a href="login.html" class="mobile-btn">Login</a></li>
+      <li><a href="/en/index.html">Home</a></li>
+      <li><a href="/pages/en/about.html">About</a></li>
+      <li><a href="/pages/en/programs.html">Programs & Services</a></li>
+      <li><a href="/pages/en/articles.html">Articles & Media</a></li>
+      <li><a href="/pages/en/contact.html">Contact</a></li>
+      <li><a href="/pages/en/verify.html">Verify Certificate</a></li>
+      <li id="mobileNavAuth"><a href="/pages/en/login.html" class="mobile-btn">Login</a></li>
     </ul>
   </div>
 
-  <!-- Detail Header -->
   <section class="program-detail-header" id="progHeader">
     <div class="container">
-      <div style="font-size: 0.95rem; opacity: 0.85; margin-bottom: 15px;">
-        <a href="../../en/index.html" style="color:#ffffff;">Home</a> &gt; 
-        <a href="programs.html" style="color:#ffffff;">Programs</a> &gt; 
+      <div style="margin-bottom: 15px">
+        <a href="../../en/index.html">Home</a> &gt; 
+        <a href="programs.html">Programs</a> &gt; 
         <span id="breadcrumbTitle">Program Details</span>
       </div>
       
-      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;" id="progBadges">
-        <span class="badge" style="background:var(--gold); color:#fff; font-weight:700; padding:6px 16px; border-radius:20px;" id="progTypeBadge">Professional Track</span>
-        <span class="badge" style="background:rgba(255,255,255,0.2); color:#fff; padding:6px 16px; border-radius:20px;" id="progSpecialtyBadge">Discipline</span>
+      <div id="progBadges" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px">
+        <span class="badge" id="progTypeBadge">Professional Track</span>
+        <span class="badge" id="progSpecialtyBadge">Discipline</span>
       </div>
 
-      <h1 id="progTitle" style="font-size: 2.4rem; color: #ffffff; margin-bottom: 20px; line-height: 1.3;">
+      <h1 id="progTitle" style="margin-bottom: 20px">
         Loading Program Details...
       </h1>
 
-      <div style="display: flex; flex-wrap: wrap; gap: 25px; font-size: 1rem; opacity: 0.95;">
-        <span><i class="fas fa-clock" style="color:var(--gold);"></i> Duration: <strong id="progDuration">—</strong></span>
-        <span><i class="fas fa-laptop-house" style="color:var(--gold);"></i> Delivery: <strong id="progDelivery">Online (Live & Recorded)</strong></span>
-        <span><i class="fas fa-award" style="color:var(--gold);"></i> Credential: <strong id="progCertType">Certified Professional Credential</strong></span>
+      <div style="display: flex; flex-wrap: wrap; gap: 25px">
+        <span><i class="fas fa-clock text-gold"></i> Duration: <strong id="progDuration">—</strong></span>
+        <span><i class="fas fa-laptop-house text-gold"></i> Delivery: <strong id="progDelivery">Online (Live & Recorded)</strong></span>
+        <span><i class="fas fa-award text-gold"></i> Credential: <strong id="progCertType">Certified Professional Credential</strong></span>
       </div>
     </div>
   </section>
 
   <!-- Main Content Layout -->
-  <section style="padding: 60px 0; background: var(--bg-main);">
+  <section class="band band--tint">
     <div class="container">
       <div class="program-detail-layout">
         
         <!-- Right: Content -->
         <div class="program-detail-content">
-          <div style="margin-bottom: 35px;">
-            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+          <div style="margin-bottom: 35px">
+            <h3 style="margin-bottom: 15px">
               <i class="fas fa-info-circle"></i> Program Overview
             </h3>
-            <p id="progDesc" style="font-size:1.05rem; line-height:1.8; color:var(--text-muted);">
+            <p id="progDesc">
               Loading...
             </p>
           </div>
 
-          <div style="margin-bottom: 35px;" id="objectivesSec">
-            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+          <div id="objectivesSec" class="detail-section">
+            <h3 style="margin-bottom: 15px">
               <i class="fas fa-bullseye"></i> Learning Objectives
             </h3>
-            <ul id="progObjectives" style="display:flex; flex-direction:column; gap:10px; font-size:1rem; color:var(--text-main);">
+            <ul id="progObjectives" class="detail-list">
             </ul>
           </div>
 
-          <div style="margin-bottom: 35px;" id="topicsSec">
-            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+          <div id="topicsSec" class="detail-section">
+            <h3 style="margin-bottom: 15px">
               <i class="fas fa-list-ul"></i> Key Modules & Topics
             </h3>
-            <ul id="progTopics" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:12px; font-size:0.95rem;">
+            <ul id="progTopics" class="topic-grid">
             </ul>
           </div>
 
-          <div style="margin-bottom: 35px;" id="audienceSec">
-            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+          <div id="audienceSec" class="detail-section">
+            <h3 style="margin-bottom: 15px">
               <i class="fas fa-users"></i> Target Audience
             </h3>
-            <ul id="progAudience" style="display:flex; flex-direction:column; gap:10px; font-size:1rem; color:var(--text-main);">
+            <ul id="progAudience" class="detail-list">
             </ul>
           </div>
 
-          <div style="margin-bottom: 35px;" id="outcomesSec">
-            <h3 style="font-size:1.5rem; color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--border); padding-bottom:10px;">
+          <div id="outcomesSec" class="detail-section">
+            <h3 style="margin-bottom: 15px">
               <i class="fas fa-gift"></i> Career Outcomes & Certifications
             </h3>
-            <ul id="progOutcomes" style="display:flex; flex-direction:column; gap:10px; font-size:1rem; color:var(--text-main);">
+            <ul id="progOutcomes" class="detail-list">
             </ul>
           </div>
 
-          <div style="background:#fdf2f4; border:1px solid rgba(90,2,14,0.15); border-radius:12px; padding:25px;">
-            <h4 style="color:var(--primary); margin-bottom:10px;"><i class="fas fa-star" style="color:var(--gold);"></i> The Nibras Advantage</h4>
-            <ul style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.92rem; color:var(--text-muted);">
-              <li><i class="fas fa-check-circle" style="color:var(--primary); margin-right:6px;"></i> Live and on-demand interactive lectures</li>
-              <li><i class="fas fa-check-circle" style="color:var(--primary); margin-right:6px;"></i> Personalized trainee dashboard</li>
-              <li><i class="fas fa-check-circle" style="color:var(--primary); margin-right:6px;"></i> Digitally verifiable certificate with QR code</li>
-              <li><i class="fas fa-check-circle" style="color:var(--primary); margin-right:6px;"></i> High-caliber industry practitioners</li>
+          <div class="panel">
+            <h4 style="margin-bottom: 10px"><i class="fas fa-star text-gold"></i> The Nibras Advantage</h4>
+            <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+              <li><i class="fas fa-check-circle" style="margin-inline-end: 6px"></i> Live and on-demand interactive lectures</li>
+              <li><i class="fas fa-check-circle" style="margin-inline-end: 6px"></i> Personalized trainee dashboard</li>
+              <li><i class="fas fa-check-circle" style="margin-inline-end: 6px"></i> Digitally verifiable certificate with QR code</li>
+              <li><i class="fas fa-check-circle" style="margin-inline-end: 6px"></i> High-caliber industry practitioners</li>
             </ul>
           </div>
         </div>
@@ -165,28 +163,31 @@
         <!-- Left: Sidebar -->
         <div class="program-detail-sidebar">
           <div class="program-checkout-card">
-            <div style="text-align:center; border-bottom:1px solid #eee; padding-bottom:18px; margin-bottom:20px;">
-              <span style="display:block; font-size:0.95rem; color:var(--text-muted); margin-bottom:5px;">Tuition & Investment</span>
-              <div style="font-size:2.3rem; font-weight:800; color:var(--primary);" id="progPrice">0.00 US$</div>
-              <span id="progStatusTag" class="status-badge status-available" style="margin-top:8px;">Available for Enrollment</span>
+            <img id="progCover" src="/assets/img/specialties/professional.svg" alt="" width="800" height="500" />
+            <div class="checkout-card-body">
+            <div style="text-align: center; margin-bottom: 20px">
+              <span style="margin-bottom: 5px">Tuition & Investment</span>
+              <div class="tagline" id="progPrice">0.00 US$</div>
+              <span class="status-badge status-available" id="progStatusTag">Available for Enrollment</span>
             </div>
 
-            <div style="display:flex; flex-direction:column; gap:12px;" id="actionButtons">
-              <button id="btnAddToCart" class="btn-primary" style="width:100%; justify-content:center; font-size:1.05rem; padding:14px;">
+            <div id="actionButtons" style="display: flex; flex-direction: column; gap: 12px">
+              <button class="btn-primary" id="btnAddToCart" style="width: 100%">
                 Add to Cart <i class="fas fa-cart-plus"></i>
               </button>
-              <a href="checkout.html" id="btnCheckout" class="btn-outline" style="width:100%; text-align:center; font-size:1.05rem; padding:12px;">
+              <a class="btn-outline" href="checkout.html" id="btnCheckout" style="width: 100%">
                 Quick Checkout <i class="fas fa-credit-card"></i>
               </a>
-              <a href="#" id="btnWhatsApp" target="_blank" class="btn-outline" style="width:100%; text-align:center; background:#f0fdf4; border-color:#86efac; color:#166534; padding:12px;">
+              <a class="btn-outline" href="#" id="btnWhatsApp" target="_blank" style="width: 100%">
                 WhatsApp Inquiry <i class="fab fa-whatsapp"></i>
               </a>
             </div>
 
-            <div style="margin-top:25px; padding-top:20px; border-top:1px solid #eee; font-size:0.88rem; color:var(--text-muted); display:flex; flex-direction:column; gap:10px;">
-              <div><i class="fas fa-shield-alt" style="color:var(--primary); margin-right:6px;"></i> Instant Registration & Secure Verification</div>
-              <div><i class="fas fa-headset" style="color:var(--primary); margin-right:6px;"></i> Academic Advisory Support Throughout</div>
-              <div><i class="fas fa-certificate" style="color:var(--gold); margin-right:6px;"></i> Official Verification via Online Portal</div>
+            <div class="rule-top" style="margin-top: 25px; display: flex; flex-direction: column; gap: 10px">
+              <div><i class="fas fa-shield-alt" style="margin-inline-end: 6px"></i> Instant Registration & Secure Verification</div>
+              <div><i class="fas fa-headset" style="margin-inline-end: 6px"></i> Academic Advisory Support Throughout</div>
+              <div><i class="fas fa-certificate text-gold" style="margin-inline-end: 6px"></i> Official Verification via Online Portal</div>
+            </div>
             </div>
           </div>
         </div>
@@ -197,16 +198,69 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="footer-bottom">
+    <div class="footer-top">
       <div class="container">
-        <p>© 2026 Nibras Academy for Training & Professional Qualification. All rights reserved.</p>
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="/assets/img/logo.png" alt="Nibras Academy" width="72" height="72" loading="lazy" />
+            <h4>Nibras Training & Professional Qualification</h4>
+            <p>Knowledge that develops. Skills that empower. A future we build together.</p>
+            <div class="social-links">
+              <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+              <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>Academy</h5>
+            <ul>
+              <li><a href="/en/index.html">Home</a></li>
+              <li><a href="/pages/en/about.html">About</a></li>
+              <li><a href="/pages/en/programs.html">Programs & Services</a></li>
+              <li><a href="/pages/en/articles.html">Articles & Media</a></li>
+              <li><a href="/pages/en/contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Programs & Tracks</h5>
+            <ul>
+              <li><a href="/pages/en/pro_courses.html">Training Courses</a></li>
+              <li><a href="/pages/en/diploma.html">Professional Diplomas</a></li>
+              <li><a href="/pages/en/masters.html">Professional Master</a></li>
+              <li><a href="/pages/en/phd.html">Professional Doctorate</a></li>
+              <li><a href="/pages/en/programs.html#services">Corporate Training</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Useful Links</h5>
+            <ul>
+              <li><a href="/pages/en/verify.html">Verify Certificate</a></li>
+              <li><a href="/pages/en/privacy.html">Privacy Policy</a></li>
+              <li><a href="/pages/en/terms.html">Terms & Conditions</a></li>
+              <li><a href="/pages/en/refund.html">Refund Policy</a></li>
+              <li><a href="/pages/en/accessibility.html">Accessibility</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-help">
+          <div>
+            <h5>Need help choosing the right program?</h5>
+            <p>Talk to the Nibras team and we will help you find the options that fit your career goals.</p>
+          </div>
+          <a href="/pages/en/contact.html" class="btn-primary">Contact Us <i class="fas fa-headset"></i></a>
+        </div>
       </div>
     </div>
+    <div class="footer-bottom"><div class="container"><p>© 2026 Nibras Academy for Training & Professional Qualification. All rights reserved.</p></div></div>
   </footer>
 
-  <div class="toast" id="toast"></div>
+  <button class="scroll-top" id="scrollTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="../../assets/js/script.js"></script>
+  <script src="/assets/js/specialties.js?v=20261101"></script>
+  <script src="/assets/js/script.js?v=20261109"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -237,7 +291,6 @@
 
         const title = p.titleEn || p.titleAr || p.title;
         document.title = `${title} | Nibras Academy`;
-        document.getElementById('pageTitle').textContent = `${title} | Nibras Academy`;
         document.getElementById('breadcrumbTitle').textContent = title;
         document.getElementById('progTitle').textContent = title;
 
@@ -248,7 +301,8 @@
           'phd': 'Professional Doctorate'
         };
         document.getElementById('progTypeBadge').textContent = typeLabels[p.type] || p.type || 'Professional Track';
-        document.getElementById('progSpecialtyBadge').textContent = p.specialty || 'General';
+        document.getElementById('progSpecialtyBadge').textContent = specialtyOf(p).en;
+        document.getElementById('progCover').src = coverOf(p);
         document.getElementById('progDuration').textContent = p.duration || 'Flexible';
         document.getElementById('progDelivery').textContent = p.deliveryMethod || 'Online (Live & Recorded)';
         document.getElementById('progCertType').textContent = p.certificateType || 'Certified Professional Credential';
@@ -258,7 +312,7 @@
         const objEl = document.getElementById('progObjectives');
         const objs = (p.objectivesEn && p.objectivesEn.length) ? p.objectivesEn : p.objectivesAr;
         if (objs && objs.length) {
-          objEl.innerHTML = objs.map(item => `<li><i class="fas fa-check" style="color:var(--primary); margin-right:8px;"></i> ${item}</li>`).join('');
+          objEl.innerHTML = objs.map(item => `<li>${esc(item)}</li>`).join('');
         } else {
           document.getElementById('objectivesSec').style.display = 'none';
         }
@@ -266,7 +320,7 @@
         const topicsEl = document.getElementById('progTopics');
         const topics = (p.topicsEn && p.topicsEn.length) ? p.topicsEn : p.topicsAr;
         if (topics && topics.length) {
-          topicsEl.innerHTML = topics.map(t => `<li style="background:#f8fafc; border:1px solid var(--border); padding:10px 14px; border-radius:8px;"><i class="fas fa-layer-group" style="color:var(--gold); margin-right:6px;"></i> ${t}</li>`).join('');
+          topicsEl.innerHTML = topics.map(t => `<li>${esc(t)}</li>`).join('');
         } else {
           document.getElementById('topicsSec').style.display = 'none';
         }
@@ -274,7 +328,7 @@
         const audEl = document.getElementById('progAudience');
         const aud = (p.audienceEn && p.audienceEn.length) ? p.audienceEn : p.audienceAr;
         if (aud && aud.length) {
-          audEl.innerHTML = aud.map(a => `<li><i class="fas fa-user-check" style="color:var(--primary); margin-right:8px;"></i> ${a}</li>`).join('');
+          audEl.innerHTML = aud.map(a => `<li>${esc(a)}</li>`).join('');
         } else {
           document.getElementById('audienceSec').style.display = 'none';
         }
@@ -282,7 +336,7 @@
         const outEl = document.getElementById('progOutcomes');
         const outs = (p.outcomesEn && p.outcomesEn.length) ? p.outcomesEn : p.outcomesAr;
         if (outs && outs.length) {
-          outEl.innerHTML = outs.map(o => `<li><i class="fas fa-award" style="color:var(--secondary); margin-right:8px;"></i> ${o}</li>`).join('');
+          outEl.innerHTML = outs.map(o => `<li>${esc(o)}</li>`).join('');
         } else {
           document.getElementById('outcomesSec').style.display = 'none';
         }

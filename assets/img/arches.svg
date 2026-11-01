@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+  <g fill="none" stroke="#e0bc72">
+    <circle cx="800" cy="760" r="240" stroke-opacity=".3"/>
+    <circle cx="800" cy="760" r="340" stroke-opacity=".26"/>
+    <circle cx="800" cy="760" r="450" stroke-opacity=".22"/>
+    <circle cx="800" cy="760" r="570" stroke-opacity=".18"/>
+    <circle cx="800" cy="760" r="700" stroke-opacity=".14"/>
+    <circle cx="800" cy="760" r="840" stroke-opacity=".1"/>
+    <circle cx="800" cy="760" r="990" stroke-opacity=".07"/>
+  </g>
+  <g fill="#e0bc72">
+    <rect x="1180" y="90" width="16" height="16" opacity=".3"/>
+    <rect x="1230" y="44" width="10" height="10" opacity=".22"/>
+    <rect x="1120" y="40" width="8" height="8" opacity=".16"/>
+    <rect x="1320" y="120" width="12" height="12" opacity=".14"/>
+    <rect x="410" y="74" width="14" height="14" opacity=".24"/>
+    <rect x="352" y="130" width="9" height="9" opacity=".18"/>
+    <rect x="470" y="34" width="8" height="8" opacity=".16"/>
+    <rect x="240" y="60" width="11" height="11" opacity=".12"/>
+  </g>
+</svg>

@@ -11,7 +11,7 @@ const upload = multer({
         if (file.mimetype !== 'application/pdf') return cb(new Error('Only PDF files are allowed.'));
         cb(null, true);
     },
-    limits: { fileSize: 10 * 1024 * 1024 } // 10MB max
+    limits: { fileSize: 4 * 1024 * 1024 } // 4MB max: Vercel rejects request bodies above 4.5MB
 });
 
 // Wrap multer to forward errors to Express error handler

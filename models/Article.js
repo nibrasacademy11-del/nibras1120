@@ -6,7 +6,7 @@ const articleSchema = new mongoose.Schema({
     slug: { type: String, required: true, unique: true, index: true },
     category: { 
         type: String, 
-        enum: ['article', 'media_coverage'], 
+        enum: ['article', 'media_coverage', 'news'],
         default: 'article',
         index: true 
     },

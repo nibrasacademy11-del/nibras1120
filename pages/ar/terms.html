@@ -5,108 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>الشروط والأحكام | أكاديمية نبراس</title>
   <meta name="description" content="أكاديمية نبراس - منصة تدريب وتأهيل مهني معتمدة، تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث." />
+  <meta name="theme-color" content="#5a020e" />
+  <link rel="canonical" href="https://www.nibras-ac.com/pages/ar/terms.html" />
+  <meta property="og:title" content="الشروط والأحكام | أكاديمية نبراس" />
+  <meta property="og:description" content="أكاديمية نبراس - منصة تدريب وتأهيل مهني معتمدة، تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.nibras-ac.com/pages/ar/terms.html" />
+  <meta property="og:image" content="https://www.nibras-ac.com/assets/img/logo.png" />
+  <link rel="icon" type="image/png" href="/assets/img/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="../../assets/css/style.css" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261108" />
 </head>
 <body>
 
-        <!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>الإجمالي:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
-
-        
-    <!-- Floating Cart Button -->
-    <div class="floating-cart" onclick="toggleCart(event)">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="floating-cart-badge cart-badge">0</span>
+  <!-- Cart -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+      <button onclick="toggleCart(event)" class="close-cart" aria-label="إغلاق">&times;</button>
     </div>
-            
-<!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>الإجمالي:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">إتمام الدفع <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
-
-  
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total"><span>الإجمالي:</span><strong id="cartTotal">0.00 US$</strong></div>
+      <a href="/pages/ar/checkout.html" class="btn-primary">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+    </div>
   </div>
+  <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+  <button class="floating-cart" onclick="toggleCart(event)" aria-label="السلة">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="floating-cart-badge cart-badge">0</span>
+  </button>
 
   <!-- Navbar -->
   <nav id="navbar" class="navbar">
     <div class="nav-container">
-      <a href="../../index.html" class="nav-logo">
-        <img src="../../assets/img/logo.png" alt="أكاديمية نبراس" />
+      <a href="/index.html" class="nav-logo">
+        <img src="/assets/img/logo.png" alt="أكاديمية نبراس للتدريب والتأهيل المهني" width="54" height="54" />
+        <span>أكاديمية نبراس</span>
       </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="../en/terms.html" class="lang-switch-btn"><i class="fas fa-globe"></i> English</a></li>
-        <li><a href="../../index.html" class="nav-link">الرئيسية</a></li>
-        <li><a href="about.html" class="nav-link">عن الأكاديمية</a></li>
-        <li><a href="programs.html" class="nav-link">البرامج والخدمات</a></li>
-        <li><a href="articles.html" class="nav-link">المقالات</a></li>
-        
-        <li><a href="contact.html" class="nav-link">تواصل معنا</a></li>
-        <li><a href="verify.html" class="nav-link">التحقق من الشهادات</a></li>
-        
-        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li id="navAuth"><a href="login.html" class="nav-btn">تسجيل الدخول</a></li>
+        <li><a href="/index.html" class="nav-link">الرئيسية</a></li>
+        <li><a href="/pages/ar/about.html" class="nav-link">عن نبراس</a></li>
+        <li><a href="/pages/ar/programs.html" class="nav-link">البرامج والخدمات</a></li>
+        <li><a href="/pages/ar/articles.html" class="nav-link">المقالات والإعلام</a></li>
+        <li><a href="/pages/ar/contact.html" class="nav-link">تواصل معنا</a></li>
+        <li><a href="/pages/ar/verify.html" class="nav-link">التحقق من الشهادات</a></li>
       </ul>
-      <button class="hamburger" id="hamburger" aria-label="القائمة">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="nav-actions">
+        <a href="/pages/en/terms.html" class="lang-switch-btn"><i class="fas fa-globe"></i> English</a>
+        <button class="nav-cart" onclick="toggleCart(event)" aria-label="السلة"><i class="fas fa-shopping-cart"></i><span id="cartBadge" class="cart-badge">0</span></button>
+        <div id="navAuth"><a href="/pages/ar/login.html" class="nav-btn">تسجيل الدخول</a></div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="القائمة"><span></span><span></span><span></span></button>
     </div>
   </nav>
 
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
     <ul>
-      <li><a href="../en/terms.html" class="lang-switch-btn"><i class="fas fa-globe"></i> English</a></li>
-      <li><a href="../../index.html">الرئيسية</a></li>
-      <li><a href="about.html">عن الأكاديمية</a></li>
-      <li><a href="programs.html">البرامج والخدمات</a></li>
-      <li><a href="articles.html">المقالات</a></li>
-      
-      <li><a href="contact.html">تواصل معنا</a></li>
-      <li><a href="verify.html">التحقق من الشهادات</a></li>
-      
-        <li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> السلة <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li id="mobileNavAuth"><a href="login.html" class="mobile-btn">تسجيل الدخول</a></li>
+      <li><a href="/index.html">الرئيسية</a></li>
+      <li><a href="/pages/ar/about.html">عن نبراس</a></li>
+      <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
+      <li><a href="/pages/ar/articles.html">المقالات والإعلام</a></li>
+      <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
+      <li><a href="/pages/ar/verify.html">التحقق من الشهادات</a></li>
+      <li id="mobileNavAuth"><a href="/pages/ar/login.html" class="mobile-btn">تسجيل الدخول</a></li>
     </ul>
   </div>
 
-
-  <!-- Page Header -->
   <section class="page-header">
     <div class="container">
       <h1>الشروط والأحكام</h1>
@@ -114,90 +83,90 @@
     </div>
   </section>
 
-  <section class="programs-section" style="padding: 60px 0;">
-    <div class="container" style="max-width: 800px;">
-      <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border); line-height: 1.8;">
-        <h3 style="color: var(--primary-color); margin-bottom: 15px;">1. قبول الشروط</h3>
-        <p style="margin-bottom: 25px; color: var(--text-muted);">باستخدامك لموقع وخدمات أكاديمية نبراس، فإنك توافق صراحة على الالتزام بكافة الشروط والأحكام المذكورة هنا. إذا كنت لا توافق على أي من هذه الشروط، يُرجى عدم استخدام الموقع.</p>
+  <section class="programs-section band band--tint">
+    <div class="container" style="max-width: 800px">
+      <div class="panel">
+        <h3 style="margin-bottom: 15px">1. قبول الشروط</h3>
+        <p style="margin-bottom: 25px">باستخدامك لموقع وخدمات أكاديمية نبراس، فإنك توافق صراحة على الالتزام بكافة الشروط والأحكام المذكورة هنا. إذا كنت لا توافق على أي من هذه الشروط، يُرجى عدم استخدام الموقع.</p>
         
-        <h3 style="color: var(--primary-color); margin-bottom: 15px;">2. حقوق الملكية الفكرية</h3>
-        <p style="margin-bottom: 25px; color: var(--text-muted);">جميع المحتويات التدريبية، الفيديوهات، المواد المكتوبة، والشعارات الموجودة على المنصة هي ملكية فكرية حصرية لأكاديمية نبراس. يُمنع منعاً باتاً نسخها أو توزيعها أو استخدامها لأغراض تجارية دون إذن كتابي مسبق.</p>
+        <h3 style="margin-bottom: 15px">2. حقوق الملكية الفكرية</h3>
+        <p style="margin-bottom: 25px">جميع المحتويات التدريبية، الفيديوهات، المواد المكتوبة، والشعارات الموجودة على المنصة هي ملكية فكرية حصرية لأكاديمية نبراس. يُمنع منعاً باتاً نسخها أو توزيعها أو استخدامها لأغراض تجارية دون إذن كتابي مسبق.</p>
         
-        <h3 style="color: var(--primary-color); margin-bottom: 15px;">3. السلوكيات المحظورة</h3>
-        <p style="margin-bottom: 25px; color: var(--text-muted);">يُمنع استخدام المنصة لأي أغراض غير قانونية، أو محاولة اختراق الأنظمة، أو مشاركة حسابك مع أشخاص آخرين. تحتفظ الأكاديمية بالحق في إلغاء حساب أي مستخدم يخالف هذه القواعد دون سابق إنذار.</p>
+        <h3 style="margin-bottom: 15px">3. السلوكيات المحظورة</h3>
+        <p style="margin-bottom: 25px">يُمنع استخدام المنصة لأي أغراض غير قانونية، أو محاولة اختراق الأنظمة، أو مشاركة حسابك مع أشخاص آخرين. تحتفظ الأكاديمية بالحق في إلغاء حساب أي مستخدم يخالف هذه القواعد دون سابق إنذار.</p>
         
-        <h3 style="color: var(--primary-color); margin-bottom: 15px;">4. التعديلات على الشروط</h3>
-        <p style="margin-bottom: 25px; color: var(--text-muted);">تحتفظ الأكاديمية بالحق في تعديل هذه الشروط في أي وقت. سيتم إشعار المستخدمين بالتغييرات الجوهرية، ويُعتبر استمرارك في استخدام المنصة قبولاً لتلك التعديلات.</p>
+        <h3 style="margin-bottom: 15px">4. التعديلات على الشروط</h3>
+        <p style="margin-bottom: 25px">تحتفظ الأكاديمية بالحق في تعديل هذه الشروط في أي وقت. سيتم إشعار المستخدمين بالتغييرات الجوهرية، ويُعتبر استمرارك في استخدام المنصة قبولاً لتلك التعديلات.</p>
         
-        <p style="font-weight: bold; margin-top: 40px;">آخر تحديث: أبريل 2026</p>
+        <p style="margin-top: 40px">آخر تحديث: أبريل 2026</p>
       </div>
     </div>
   </section>
 
-
-<!-- Footer -->
+  <!-- Footer -->
   <footer class="footer">
     <div class="footer-top">
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            
-            <p>منصة تدريب وتأهيل مهني معتمدة تهدف إلى إعداد كوادر مهنية قادرة على التعامل مع متطلبات سوق العمل الحديث.</p>
+            <img src="/assets/img/logo.png" alt="أكاديمية نبراس" width="72" height="72" loading="lazy" />
+            <h4>نبراس للتدريب والتأهيل المهني</h4>
+            <p>معرفة تُطوّر. مهارات تُمكّن. مستقبل نصنعه معاً.</p>
             <div class="social-links">
-              <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-              <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-              <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
-              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" class="social-link" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-              <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+              <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+              <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
             </div>
           </div>
           <div class="footer-links-col">
-            <h5>روابط سريعة</h5>
+            <h5>الأكاديمية</h5>
             <ul>
-              <li><a href="../../index.html">الرئيسية</a></li>
-              <li><a href="about.html">عن الأكاديمية</a></li>
-              <li><a href="programs.html">برامجنا</a></li>
-              
-              <li><a href="verify.html">التحقق من الشهادات</a></li>
-              <li><a href="contact.html">تواصل معنا</a></li>
+              <li><a href="/index.html">الرئيسية</a></li>
+              <li><a href="/pages/ar/about.html">عن نبراس</a></li>
+              <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
+              <li><a href="/pages/ar/articles.html">المقالات والإعلام</a></li>
+              <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
-            <h5>البرامج</h5>
+            <h5>البرامج والمسارات</h5>
             <ul>
-              <li><a href="#programs">الدكتوراة المهنية</a></li>
-              <li><a href="#programs">الماجستير المهني</a></li>
-              <li><a href="#programs">الدبلوم المهني</a></li>
+              <li><a href="/pages/ar/pro_courses.html">الدورات التدريبية</a></li>
+              <li><a href="/pages/ar/diploma.html">الدبلومات المهنية</a></li>
+              <li><a href="/pages/ar/masters.html">الماجستير المهني</a></li>
+              <li><a href="/pages/ar/phd.html">الدكتوراه المهنية</a></li>
+              <li><a href="/pages/ar/programs.html#services">تدريب الشركات</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
-            <h5>قانوني</h5>
+            <h5>روابط مهمة</h5>
             <ul>
-              <li><a href="privacy.html">سياسة الخصوصية</a></li>
-              <li><a href="terms.html">الشروط والأحكام</a></li>
-              <li><a href="refund.html">سياسة الاسترداد</a></li>
-              <li><a href="accessibility.html">إمكانية الوصول</a></li>
+              <li><a href="/pages/ar/verify.html">التحقق من الشهادات</a></li>
+              <li><a href="/pages/ar/privacy.html">سياسة الخصوصية</a></li>
+              <li><a href="/pages/ar/terms.html">الشروط والأحكام</a></li>
+              <li><a href="/pages/ar/refund.html">سياسة الاسترداد</a></li>
+              <li><a href="/pages/ar/accessibility.html">إمكانية الوصول</a></li>
             </ul>
           </div>
         </div>
+        <div class="footer-help">
+          <div>
+            <h5>هل تحتاج إلى مساعدة في اختيار البرنامج المناسب؟</h5>
+            <p>تواصل مع فريق نبراس وسنساعدك في التعرف على الخيارات التي تناسب أهدافك المهنية.</p>
+          </div>
+          <a href="/pages/ar/contact.html" class="btn-primary">تواصل معنا الآن <i class="fas fa-headset"></i></a>
+        </div>
       </div>
     </div>
-    <div class="footer-bottom">
-      <div class="container">
-        <p>© 2026 أكاديمية نبراس. جميع الحقوق محفوظة.</p>
-      </div>
-    </div>
+    <div class="footer-bottom"><div class="container"><p>© 2026 أكاديمية نبراس للتدريب والتأهيل المهني. جميع الحقوق محفوظة.</p></div></div>
   </footer>
 
-  <!-- Scroll to Top -->
-  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
-    <i class="fas fa-arrow-up"></i>
-  </button>
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <!-- Toast Notification -->
-  <div class="toast" id="toast"></div>
-
-  <script src="../../assets/js/script.js"></script>
+  <script src="/assets/js/specialties.js?v=20261101"></script>
+  <script src="/assets/js/script.js?v=20261109"></script>
 </body>
 </html>
-

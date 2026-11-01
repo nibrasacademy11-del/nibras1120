@@ -4,17 +4,17 @@
 */
 
 :root {
-    --primary: #7a1c28;
-    --primary-light: #9a2b3a;
-    --primary-dark: #5a141d;
-    --accent: #d4af37;
-    --accent-light: #e6c567;
-    --bg-main: #f0f2f5;
-    --bg-card: #ffffff;
-    --text-main: #2d3436;
-    --text-muted: #636e72;
+    --primary: #5a020e;
+    --primary-light: #7a0f20;
+    --primary-dark: #2f0108;
+    --accent: #e0bc72;
+    --accent-light: #f3d999;
+    --bg-main: #f6f0e6;
+    --bg-card: #fffdf9;
+    --text-main: #2a2023;
+    --text-muted: #62555a;
     --glass: rgba(255, 255, 255, 0.85);
-    --border: rgba(0, 0, 0, 0.05);
+    --border: #e6dccd;
     --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     --radius-lg: 24px;
@@ -29,7 +29,7 @@
 }
 
 body {
-    font-family: 'Cairo', sans-serif;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
     background-color: var(--bg-main);
     color: var(--text-main);
     line-height: 1.6;
@@ -691,3 +691,15 @@ body {
     }
 }
 
+
+/* Brand details */
+h1, h2, h3, .page-title h1, .sidebar-header h2 { font-family: 'El Messiri', 'IBM Plex Sans Arabic', serif; }
+.badge-status { display: inline-block; padding: 2px 12px; border-radius: 999px; font-size: .82rem; font-weight: 600; }
+.badge-status.available, .badge-status.valid { color: #1d7a4f; background: #e0f3e8; }
+.badge-status.coming_soon, .badge-status.suspended, .badge-status.expired { color: #a4650a; background: #fdf1dc; }
+.badge-status.unavailable, .badge-status.cancelled { color: #b3261e; background: #fbe9e7; }
+.badge-status.hidden-status { color: #475467; background: #eef0f3; }
+#toast { position: fixed; z-index: 3000; top: auto; bottom: 24px; left: 50%; transform: translate(-50%, 20px); max-width: 90vw; padding: 12px 22px; border-radius: 12px; color: #fff; background: #1d7a4f; font-weight: 600; opacity: 0; visibility: hidden; transition: opacity .25s, transform .25s, visibility .25s; }
+#toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+#toast.error { background: #b3261e; }
+.hidden { display: none !important; }

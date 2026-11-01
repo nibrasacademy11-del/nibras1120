@@ -2,12 +2,16 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const { authRequired, adminRequired } = require('../middleware/auth');
+const rateLimit = require('../middleware/rateLimit');
 
-router.post('/register', authController.register);
-router.post('/login', authController.login);
+const tooMany = 'عدد كبير من المحاولات، يرجى المحاولة لاحقاً. / Too many attempts, please try again later.';
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20, message: tooMany });
+
+router.post('/register', authLimiter, authController.register);
+router.post('/login', authLimiter, authController.login);
 router.post('/logout', authController.logout);
-router.post('/forgot-password', authController.forgotPassword);
-router.post('/reset-password', authController.resetPassword);
+router.post('/forgot-password', authLimiter, authController.forgotPassword);
+router.post('/reset-password', authLimiter, authController.resetPassword);
 router.get('/me', authRequired, authController.getMe);
 router.get('/profile', authRequired, authController.getUserProfile);
 router.get('/users', authRequired, adminRequired, authController.getAllUsers);

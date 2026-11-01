@@ -1,41 +1,39 @@
 const Inquiry = require('../models/Inquiry');
-const nodemailer = require('nodemailer');
+const { isMailConfigured, createTransporter } = require('../config/mailer');
+
+const escapeRegex = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const clean = (value, maxLength) => (typeof value === 'string' ? value.trim().slice(0, maxLength) : '');
 
 exports.createInquiry = async (req, res) => {
     try {
-        const { name, email, phone, inquiryType, programOrService, subject, message } = req.body;
-        
+        const name = clean(req.body.name, 120);
+        const email = clean(req.body.email, 160).toLowerCase();
+        const phone = clean(req.body.phone, 30);
+        const inquiryType = clean(req.body.inquiryType, 80);
+        const programOrService = clean(req.body.programOrService, 200);
+        const subject = clean(req.body.subject, 200);
+        const message = clean(req.body.message, 4000);
+
         if (!name || !phone || !message) {
             return res.status(400).json({ message: 'الاسم ورقم الجوال والرسالة حقول مطلوبة.' });
         }
 
-        const inquiry = new Inquiry({ 
-            name: name.trim(), 
-            email: (email || '').trim().toLowerCase(), 
-            phone: phone.trim(), 
+        const inquiry = new Inquiry({
+            name,
+            email,
+            phone,
             inquiryType: inquiryType || 'استفسار عام',
-            programOrService: programOrService || '',
-            subject: subject || (inquiryType ? `استفسار: ${inquiryType}` : 'استفسار من الموقع'), 
-            message: message.trim(),
+            programOrService,
+            subject: subject || (inquiryType ? `استفسار: ${inquiryType}` : 'استفسار من الموقع'),
+            message,
             status: 'New'
         });
         await inquiry.save();
 
         // Send Email Notification if SMTP configured
-        if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+        if (isMailConfigured()) {
             try {
-                const transporter = nodemailer.createTransport({
-                    host: process.env.EMAIL_HOST || 'smtp.hostinger.com',
-                    port: parseInt(process.env.EMAIL_PORT, 10) || 587,
-                    secure: process.env.EMAIL_SECURE === 'true',
-                    auth: {
-                        user: process.env.EMAIL_USER,
-                        pass: process.env.EMAIL_PASS
-                    },
-                    tls: {
-                        rejectUnauthorized: process.env.NODE_ENV === 'production'
-                    }
-                });
+                const transporter = createTransporter();
 
                 const mailOptions = {
                     from: `"Nibras Contact Form" <${process.env.EMAIL_USER}>`,
@@ -73,7 +71,7 @@ exports.getAllInquiries = async (req, res) => {
         const query = {};
         if (status) query.status = status;
         if (search) {
-            const regex = new RegExp(search.trim(), 'i');
+            const regex = new RegExp(escapeRegex(String(search).trim()), 'i');
             query.$or = [{ name: regex }, { phone: regex }, { email: regex }, { message: regex }];
         }
         const inquiries = await Inquiry.find(query).sort({ createdAt: -1 });
@@ -86,7 +84,7 @@ exports.getAllInquiries = async (req, res) => {
 exports.updateInquiryStatus = async (req, res) => {
     try {
         const { status } = req.body;
-        const inquiry = await Inquiry.findByIdAndUpdate(req.params.id, { status }, { new: true });
+        const inquiry = await Inquiry.findByIdAndUpdate(req.params.id, { status }, { new: true, runValidators: true });
         if (!inquiry) return res.status(404).json({ message: 'Inquiry not found.' });
         res.json({ message: 'Inquiry status updated successfully.', inquiry });
     } catch (error) {

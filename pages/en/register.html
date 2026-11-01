@@ -1,85 +1,82 @@
 <!DOCTYPE html>
-
-<html dir="ltr" lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Create an account | Nibras</title>
-<meta content="Nibras - an accredited vocational training and qualification platform, which aims to prepare professional cadres capable of dealing with the requirements of the modern labor market." name="description"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-<link href="../../assets/css/style.css" rel="stylesheet"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create an account | Nibras</title>
+  <meta name="description" content="Create an account | Nibras" />
+  <meta name="theme-color" content="#5a020e" />
+  <link rel="canonical" href="https://www.nibras-ac.com/pages/en/register.html" />
+  <meta property="og:title" content="Create an account | Nibras" />
+  <meta property="og:description" content="Create an account | Nibras" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.nibras-ac.com/pages/en/register.html" />
+  <meta property="og:image" content="https://www.nibras-ac.com/assets/img/logo.png" />
+  <link rel="icon" type="image/png" href="/assets/img/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261108" />
 </head>
 <body>
 
-        <!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-                <button onclick="toggleCart(event)" class="close-cart">&times;</button>
-            </div>
-            <div id="cartItems" class="cart-items">
-                <!-- Items will be injected here -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <strong id="cartTotal">0.00 US$</strong>
-                </div>
-                <a href="checkout.html" class="btn-primary" style="width:100%; text-align:center; margin-top:15px; text-decoration:none;">Checkout <i class="fas fa-credit-card"></i></a>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
-        
-
-        
-    <!-- Floating Cart Button -->
-    <div class="floating-cart" onclick="toggleCart(event)">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="floating-cart-badge cart-badge">0</span>
+  <!-- Cart -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+      <button onclick="toggleCart(event)" class="close-cart" aria-label="Close">&times;</button>
     </div>
-            
-<!-- Navbar -->
-<nav class="navbar" id="navbar">
-<div class="nav-container">
-<a class="nav-logo" href="../../en/index.html">
-<img alt="Nibras" src="../../assets/img/logo.png"/>
-</a>
-<ul class="nav-links" id="navLinks">
-<li><a href="../ar/register.html" class="lang-switch-btn"><i class="fas fa-globe"></i> Arabic</a></li>
-<li><a class="nav-link" href="../../en/index.html">Home</a></li>
-<li><a class="nav-link" href="about.html">About Us</a></li>
-<li><a class="nav-link" href="programs.html">Services</a></li>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total"><span>Total:</span><strong id="cartTotal">0.00 US$</strong></div>
+      <a href="/pages/en/checkout.html" class="btn-primary">Proceed to Checkout <i class="fas fa-credit-card"></i></a>
+    </div>
+  </div>
+  <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+  <button class="floating-cart" onclick="toggleCart(event)" aria-label="Cart">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="floating-cart-badge cart-badge">0</span>
+  </button>
 
-<li><a class="nav-link" href="contact.html">Contact Us</a></li>
-<li><a class="nav-link" href="verify.html">Verify Certificates</a></li>
-<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li id="navAuth"><a class="nav-btn" href="login.html">Login</a></li>
-</ul>
-<button aria-label="القائمة" class="hamburger" id="hamburger">
-<span></span><span></span><span></span>
-</button>
-</div>
-</nav>
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-<ul>
-<li><a href="../ar/register.html" class="lang-switch-btn"><i class="fas fa-globe"></i> Arabic</a></li>
-<li><a href="../../en/index.html">Home</a></li>
-<li><a href="about.html">About Us</a></li>
-<li><a href="programs.html">Services</a></li>
-      <li><a href="articles.html">Articles</a></li>
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar">
+    <div class="nav-container">
+      <a href="/en/index.html" class="nav-logo">
+        <img src="/assets/img/logo.png" alt="Nibras Academy for Training & Professional Qualification" width="54" height="54" />
+        <span>Nibras Academy</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/en/index.html" class="nav-link">Home</a></li>
+        <li><a href="/pages/en/about.html" class="nav-link">About</a></li>
+        <li><a href="/pages/en/programs.html" class="nav-link">Programs & Services</a></li>
+        <li><a href="/pages/en/articles.html" class="nav-link">Articles & Media</a></li>
+        <li><a href="/pages/en/contact.html" class="nav-link">Contact</a></li>
+        <li><a href="/pages/en/verify.html" class="nav-link">Verify Certificate</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="/pages/ar/register.html" class="lang-switch-btn"><i class="fas fa-globe"></i> العربية</a>
+        <button class="nav-cart" onclick="toggleCart(event)" aria-label="Cart"><i class="fas fa-shopping-cart"></i><span id="cartBadge" class="cart-badge">0</span></button>
+        <div id="navAuth"><a href="/pages/en/login.html" class="nav-btn">Login</a></div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
 
-<li><a href="contact.html">Contact Us</a></li>
-<li><a href="verify.html">Verify Certificates</a></li>
-<li class="cart-nav-item"><a href="#" class="nav-link" onclick="toggleCart(event)"><i class="fas fa-shopping-cart"></i> Cart <span id="cartBadge" class="cart-badge">0</span></a></li>
-        <li id="mobileNavAuth"><a class="mobile-btn" href="login.html">Login</a></li>
-</ul>
-</div>
-<!-- Register Section -->
-<section class="auth-section">
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="/en/index.html">Home</a></li>
+      <li><a href="/pages/en/about.html">About</a></li>
+      <li><a href="/pages/en/programs.html">Programs & Services</a></li>
+      <li><a href="/pages/en/articles.html">Articles & Media</a></li>
+      <li><a href="/pages/en/contact.html">Contact</a></li>
+      <li><a href="/pages/en/verify.html">Verify Certificate</a></li>
+      <li id="mobileNavAuth"><a href="/pages/en/login.html" class="mobile-btn">Login</a></li>
+    </ul>
+  </div>
+
+  <section class="auth-section">
 <div class="auth-container">
 <div class="auth-card">
 <div class="auth-logo"><img alt="Nibras" src="../../assets/img/logo.png"/></div>
@@ -106,77 +103,79 @@
 <label>Confirm password</label>
 <input id="regConfirmPassword" placeholder="••••••••" required="" type="password"/>
 </div>
-<button class="btn-primary auth-btn" style="margin-top: 15px;" type="submit">Register a new account</button>
+<button class="btn-primary auth-btn" type="submit" style="margin-top: 15px">Register a new account</button>
 </form>
-<div class="auth-footer" style="text-align: center; margin-top: 25px; color: var(--text-muted); font-size: 0.95rem;">
-          Already have an account? <a href="login.html" style="color: var(--primary-color); font-weight: 700; text-decoration: none;">Log in here</a>
+<div class="auth-footer" style="text-align: center; margin-top: 25px">
+          Already have an account? <a href="login.html">Log in here</a>
 </div>
 </div>
 </div>
 </section>
-<!-- Footer -->
-<footer class="footer">
-<div class="footer-top">
-<div class="container">
-<div class="footer-grid">
-<div class="footer-brand">
-<div class="footer-logo">
-<img alt="Nibras" src="../../assets/img/logo.png">
-</img></div>
-<p>A certified professional training platform aiming to prepare professional cadres capable of dealing with the modern labor market.</p>
-<div class="social-links">
-<a aria-label="Facebook" class="social-link" href="https://www.facebook.com/nibars8883" target="_blank"><i class="fab fa-facebook-f"></i></a>
-<a aria-label="Instagram" class="social-link" href="https://www.instagram.com/nibars8883" target="_blank"><i class="fab fa-instagram"></i></a>
-              <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank"><i class="fab fa-x-twitter"></i></a>
-<a aria-label="LinkedIn" class="social-link" href="https://www.linkedin.com/in/nibras-academy-5803a239b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-<a aria-label="WhatsApp" class="social-link" href="https://wa.me/201112220796" target="_blank"><i class="fab fa-whatsapp"></i></a>
-</div>
-</div>
-<div class="footer-links-col">
-<h5>Quick Links</h5>
-<ul>
-<li><a href="../../en/index.html">Home</a></li>
-<li><a href="about.html">About Us</a></li>
-<li><a href="programs.html">Our Programs</a></li>
 
-<li><a href="verify.html">Verify Certificates</a></li>
-<li><a href="contact.html">Contact Us</a></li>
-</ul>
-</div>
-<div class="footer-links-col">
-<h5>Programs</h5>
-<ul>
-<li><a href="#programs">Professional PhD</a></li>
-<li><a href="#programs">Professional Masters</a></li>
-<li><a href="#programs">Professional Diploma</a></li>
-</ul>
-</div>
-<div class="footer-links-col">
-<h5>Legal</h5>
-<ul>
-<li><a href="privacy.html">Privacy Policy</a></li>
-<li><a href="terms.html">Terms &amp; Conditions</a></li>
-<li><a href="refund.html">Refund Policy</a></li>
-<li><a href="accessibility.html">Accessibility</a></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="footer-bottom">
-<div class="container">
-<p>© 2026 Nibras. All rights reserved.</p>
-</div>
-</div>
-</footer>
-<!-- Scroll to Top -->
-<button aria-label="العودة للأعلى" class="scroll-top" id="scrollTop">
-<i class="fas fa-arrow-up"></i>
-</button>
-<!-- Toast Notification -->
-<div class="toast" id="toast"></div>
-<script src="../../assets/js/script.js"></script>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="/assets/img/logo.png" alt="Nibras Academy" width="72" height="72" loading="lazy" />
+            <h4>Nibras Training & Professional Qualification</h4>
+            <p>Knowledge that develops. Skills that empower. A future we build together.</p>
+            <div class="social-links">
+              <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+              <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>Academy</h5>
+            <ul>
+              <li><a href="/en/index.html">Home</a></li>
+              <li><a href="/pages/en/about.html">About</a></li>
+              <li><a href="/pages/en/programs.html">Programs & Services</a></li>
+              <li><a href="/pages/en/articles.html">Articles & Media</a></li>
+              <li><a href="/pages/en/contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Programs & Tracks</h5>
+            <ul>
+              <li><a href="/pages/en/pro_courses.html">Training Courses</a></li>
+              <li><a href="/pages/en/diploma.html">Professional Diplomas</a></li>
+              <li><a href="/pages/en/masters.html">Professional Master</a></li>
+              <li><a href="/pages/en/phd.html">Professional Doctorate</a></li>
+              <li><a href="/pages/en/programs.html#services">Corporate Training</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>Useful Links</h5>
+            <ul>
+              <li><a href="/pages/en/verify.html">Verify Certificate</a></li>
+              <li><a href="/pages/en/privacy.html">Privacy Policy</a></li>
+              <li><a href="/pages/en/terms.html">Terms & Conditions</a></li>
+              <li><a href="/pages/en/refund.html">Refund Policy</a></li>
+              <li><a href="/pages/en/accessibility.html">Accessibility</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-help">
+          <div>
+            <h5>Need help choosing the right program?</h5>
+            <p>Talk to the Nibras team and we will help you find the options that fit your career goals.</p>
+          </div>
+          <a href="/pages/en/contact.html" class="btn-primary">Contact Us <i class="fas fa-headset"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom"><div class="container"><p>© 2026 Nibras Academy for Training & Professional Qualification. All rights reserved.</p></div></div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/assets/js/specialties.js?v=20261101"></script>
+  <script src="/assets/js/script.js?v=20261109"></script>
 </body>
 </html>
-
-

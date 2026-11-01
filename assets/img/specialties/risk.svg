@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-hidden="true">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff5ec"/><stop offset="1" stop-color="#fde6d3"/></linearGradient>
+<linearGradient id="w" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c2485e"/><stop offset="1" stop-color="#8c1c30"/></linearGradient>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbe7b4"/><stop offset="1" stop-color="#deb05a"/></linearGradient>
+<linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#f4ece1"/></linearGradient>
+<linearGradient id="t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fcd2b3"/><stop offset="1" stop-color="#f2a577"/></linearGradient>
+<filter id="s" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="12" stdDeviation="13" flood-color="#c47c4a" flood-opacity=".3"/></filter>
+<filter id="b" x="-30%" y="-200%" width="160%" height="500%"><feGaussianBlur stdDeviation="12"/></filter>
+</defs>
+<rect width="800" height="500" fill="url(#bg)"/>
+<circle cx="400" cy="250" r="196" fill="#fbd6b8" opacity=".62"/>
+<circle cx="400" cy="250" r="232" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="2"/>
+<circle cx="110" cy="96" r="44" fill="#fff" opacity=".55"/><circle cx="706" cy="396" r="62" fill="#fff" opacity=".5"/>
+<rect x="628" y="82" width="20" height="20" rx="5" fill="#deb05a" opacity=".75"/><rect x="664" y="122" width="12" height="12" rx="3" fill="#c2485e" opacity=".55"/><rect x="600" y="48" width="11" height="11" rx="3" fill="#f2a577"/>
+<rect x="140" y="372" width="16" height="16" rx="4" fill="#f2a577" opacity=".8"/><rect x="108" y="336" width="10" height="10" rx="3" fill="#deb05a" opacity=".7"/>
+<ellipse cx="400" cy="424" rx="196" ry="13" fill="#c47c4a" opacity=".22" filter="url(#b)"/>
+<g filter="url(#s)">
+<path d="M400 72l168 58v122c0 106-74 158-168 196-94-38-168-90-168-196V130z" fill="url(#w)"/>
+<path d="M400 72l168 58v122c0 106-74 158-168 196z" fill="#a52b42"/>
+<path d="M400 142l112 38v76c0 72-48 106-112 132-64-26-112-60-112-132v-76z" fill="url(#p)"/>
+<path d="M400 182l76 136a14 14 0 0 1-12 21H336a14 14 0 0 1-12-21z" fill="url(#g)"/>
+<rect x="389" y="232" width="22" height="58" rx="11" fill="#8c1c30"/><circle cx="400" cy="314" r="13" fill="#8c1c30"/></g>
+</svg>

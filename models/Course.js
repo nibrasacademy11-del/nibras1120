@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const specialties = require('../assets/js/specialties');
 
 const courseSchema = new mongoose.Schema({
     // Core Bilingual Titles
@@ -14,7 +15,8 @@ const courseSchema = new mongoose.Schema({
         index: true 
     },
     specialty: { type: String, required: true, index: true },
-    
+    specialtyKey: { type: String, index: true },
+
     // Descriptions
     descriptionAr: { type: String, default: '' },
     descriptionEn: { type: String, default: '' },
@@ -60,6 +62,7 @@ const courseSchema = new mongoose.Schema({
 
 // Auto-fill legacy fields if missing
 courseSchema.pre('save', function() {
+    this.specialtyKey = specialties.keyFor(this.titleAr, this.specialty);
     if (!this.title && this.titleAr) this.title = this.titleAr;
     if (!this.description && this.descriptionAr) this.description = this.descriptionAr;
     if (!this.content && this.topicsAr) this.content = this.topicsAr.join(', ');

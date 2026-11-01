@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const articleController = require('../controllers/articleController');
-const { authRequired, adminRequired } = require('../middleware/auth');
+const { authRequired, adminRequired, attachUser } = require('../middleware/auth');
 
 // Public routes
-router.get('/', articleController.getAllArticles);
-router.get('/:slug', articleController.getArticleBySlug);
+router.get('/', attachUser, articleController.getAllArticles);
+router.get('/:slug', attachUser, articleController.getArticleBySlug);
 
 // Admin routes
 router.post('/', authRequired, adminRequired, articleController.createArticle);
