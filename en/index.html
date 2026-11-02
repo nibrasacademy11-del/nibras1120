@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261108" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261113" />
 </head>
 <body>
 
@@ -79,35 +79,72 @@
   <section id="home" class="hero">
     <div class="container">
       <div class="hero-inner">
-        <p class="hero-kicker">Advanced professional programs</p>
-        <h1 class="hero-heading">Building Competencies...<br />
-            <span>Making an Impact that Extends to the Future</span></h1>
-        <p class="hero-lead">Specialized training and qualification programs built for the evolving workplace in Saudi Arabia and the Gulf.</p>
-        <div class="hero-cta-group">
-          <a href="/pages/en/programs.html" class="btn-primary">Explore Our Programs <i class="fas fa-arrow-right"></i></a>
-          <a href="/pages/en/about.html" class="hero-link">Learn About Nibras</a>
+        <div class="hero-copy">
+          <p class="hero-kicker">Advanced professional programs</p>
+          <h1 class="hero-heading">Building Competencies...<br />
+              <span>Making an Impact that Extends to the Future</span></h1>
+          <p class="hero-lead">Specialized training and qualification programs built for the evolving workplace in Saudi Arabia and the Gulf.</p>
+          <div class="hero-cta-group">
+            <a href="/pages/en/programs.html" class="btn-primary">Explore Our Programs <i class="fas fa-arrow-right"></i></a>
+            <a href="/pages/en/about.html" class="hero-link">Learn About Nibras</a>
+          </div>
+          <ul class="hero-stats">
+            <li><strong>4</strong> learning tracks</li>
+            <li><strong>21</strong> specialties</li>
+            <li><strong data-stat="programs">77</strong> programs</li>
+          </ul>
         </div>
-        <ul class="hero-facts">
-          <li>4 learning tracks</li>
-          <li>21 specialties</li>
-          <li>77 programs</li>
-        </ul>
+        <div class="hero-visual">
+          <div class="cert-card" aria-hidden="true">
+            <div class="cert-brand"><img src="/assets/img/logo.png" alt="" width="44" height="44" /><span>Nibras Academy<small>Training &amp; Professional Qualification</small></span></div>
+            <p class="cert-kicker">Certificate of Program Completion</p>
+            <span class="cert-line cert-line--name"></span>
+            <span class="cert-line"></span>
+            <span class="cert-line cert-line--short"></span>
+            <div class="cert-foot">
+              <span class="cert-code"><i class="fas fa-qrcode"></i> Unique verification code</span>
+              <span class="cert-seal"><i class="fas fa-award"></i></span>
+            </div>
+          </div>
+          <p class="hero-note hero-note--mode"><i class="fas fa-video" aria-hidden="true"></i><span><strong>Fully online</strong>Live and recorded lectures</span></p>
+          <a class="hero-note hero-note--verify" href="/pages/en/verify.html"><i class="fas fa-circle-check" aria-hidden="true"></i><span><strong>Verifiable certificates</strong>Check any certificate by its code</span></a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="band">
+  <section class="press" aria-labelledby="pressTitle">
+    <div class="container press-inner">
+      <h2 class="press-title" id="pressTitle">Nibras in the media</h2>
+      <ul class="press-logos">
+        <li><a href="https://okaznews.net/mix/0702/44015/" target="_blank" rel="noopener noreferrer"><img src="/assets/img/عكاظ-اليوم-1.webp" alt="Okaz News" loading="lazy" width="2498" height="1165" /></a></li>
+        <li><a href="https://alsaudi.news/technology/0702/53533/" target="_blank" rel="noopener noreferrer"><img src="/assets/img/السعودية-الاخبارية.webp" alt="Saudi News" loading="lazy" width="2173" height="870" /></a></li>
+        <li><a href="https://alriyadhnews.net/mix/0702/47160/" target="_blank" rel="noopener noreferrer"><img src="/assets/img/الرياض.webp" alt="Riyadh News" loading="lazy" width="1079" height="432" /></a></li>
+        <li><a href="https://jeddah24.net/mix/0702/46636/" target="_blank" rel="noopener noreferrer"><img src="/assets/img/جدة-24-.webp" alt="Jeddah 24" loading="lazy" width="300" height="148" /></a></li>
+      </ul>
+      <a class="hero-link" href="/pages/en/articles.html">All coverage</a>
+    </div>
+  </section>
+
+  <section class="band band--tint" id="featured">
     <div class="container">
-      <div class="statement">
-        <div class="section-badge">From Knowledge to Impact</div>
-        <h2>Professional Development is No Longer Optional</h2>
-        <p class="lead">It has become an essential pillar for building a future-ready career. At <strong>Nibras Academy for Training & Professional Qualification</strong>, we deliver an educational journey combining specialized expertise, practical application, flexibility, and direct alignment with job market demands.</p>
-        <a href="../pages/en/about.html" class="hero-link">Discover More About Nibras</a>
+      <div class="section-header">
+        <div class="section-badge">Selected Programs</div>
+        <h2 class="section-title">Start With a Program <span class="highlight">That Fits Your Goal</span></h2>
+        <p class="section-subtitle">Every Nibras program is delivered online with live and recorded lectures, so you can learn without stepping away from work.</p>
+      </div>
+      <div class="programs-grid" id="featuredPrograms">
+        <div class="program-card is-loading"></div>
+        <div class="program-card is-loading"></div>
+        <div class="program-card is-loading"></div>
+      </div>
+      <div class="btn-row btn-row--center" style="margin-top: 36px">
+        <a class="btn-outline" href="/pages/en/programs.html">View All Programs <i class="fas fa-arrow-right"></i></a>
       </div>
     </div>
   </section>
 
-  <section class="programs-section band band--tint" id="pathways">
+  <section class="band" id="pathways">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">Learning Pathways</div>
@@ -160,17 +197,10 @@
           <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
         </a>
       </div>
-
-      <div style="text-align: center; margin-top: 45px">
-        <p class="lead" style="margin-bottom: 18px">Whatever your professional stage, Nibras has a track to help you reach the next level.</p>
-        <a class="btn-primary" href="../pages/en/programs.html">
-          View All Programs <i class="fas fa-th"></i>
-        </a>
-      </div>
     </div>
   </section>
 
-  <section class="band">
+  <section class="band band--tint">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">Why Nibras?</div>
@@ -212,7 +242,7 @@
     </div>
   </section>
 
-  <section class="band band--tint">
+  <section class="band">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">Disciplines</div>
@@ -220,12 +250,12 @@
         <p class="section-subtitle">Choose the domain closest to your goals and build expertise aligned with modern labor market needs.</p>
       </div>
       <div class="specialty-gallery">
-        <a class="specialty-card" href="/pages/en/programs.html?specialty=business"><img src="/assets/img/specialties/business.svg?v=2" alt="" loading="lazy" width="800" height="500" /><span>Business Administration</span></a>
-        <a class="specialty-card" href="/pages/en/programs.html?specialty=leadership"><img src="/assets/img/specialties/leadership.svg?v=2" alt="" loading="lazy" width="800" height="500" /><span>Leadership & Management</span></a>
-        <a class="specialty-card" href="/pages/en/programs.html?specialty=projects"><img src="/assets/img/specialties/projects.svg?v=2" alt="" loading="lazy" width="800" height="500" /><span>Project Management</span></a>
-        <a class="specialty-card" href="/pages/en/programs.html?specialty=finance"><img src="/assets/img/specialties/finance.svg?v=2" alt="" loading="lazy" width="800" height="500" /><span>Finance & Accounting</span></a>
-        <a class="specialty-card" href="/pages/en/programs.html?specialty=ai"><img src="/assets/img/specialties/ai.svg?v=2" alt="" loading="lazy" width="800" height="500" /><span>Artificial Intelligence</span></a>
-        <a class="specialty-card" href="/pages/en/programs.html?specialty=health"><img src="/assets/img/specialties/health.svg?v=2" alt="" loading="lazy" width="800" height="500" /><span>Healthcare & Hospital Management</span></a>
+        <a class="specialty-card" href="/pages/en/programs.html?specialty=business"><img src="/assets/img/covers/en/business.webp?v=1" alt="" loading="lazy" width="800" height="500" /><span>Business Administration</span></a>
+        <a class="specialty-card" href="/pages/en/programs.html?specialty=leadership"><img src="/assets/img/covers/en/leadership.webp?v=1" alt="" loading="lazy" width="800" height="500" /><span>Leadership & Management</span></a>
+        <a class="specialty-card" href="/pages/en/programs.html?specialty=projects"><img src="/assets/img/covers/en/projects.webp?v=1" alt="" loading="lazy" width="800" height="500" /><span>Project Management</span></a>
+        <a class="specialty-card" href="/pages/en/programs.html?specialty=finance"><img src="/assets/img/covers/en/finance.webp?v=1" alt="" loading="lazy" width="800" height="500" /><span>Finance & Accounting</span></a>
+        <a class="specialty-card" href="/pages/en/programs.html?specialty=ai"><img src="/assets/img/covers/en/ai.webp?v=1" alt="" loading="lazy" width="800" height="500" /><span>Artificial Intelligence</span></a>
+        <a class="specialty-card" href="/pages/en/programs.html?specialty=health"><img src="/assets/img/covers/en/health.webp?v=1" alt="" loading="lazy" width="800" height="500" /><span>Healthcare & Hospital Management</span></a>
       </div>
       <div class="btn-row btn-row--center" style="margin-top: 32px">
           <a href="../pages/en/programs.html" class="btn-outline">
@@ -235,24 +265,31 @@
     </div>
   </section>
 
-  <section class="band band--wine band--center">
+  <!-- Testimonials: add real quotes with their authors' permission, then remove the hidden attribute -->
+  <section class="band band--wine" id="testimonials" hidden>
     <div class="container">
-      <div style="max-width: 850px; margin: 0 auto">
-        <h2 style="margin-bottom: 20px">Embracing Transformation... Preparing for the Future</h2>
-        <p class="lead" style="margin-bottom: 25px">
-          Workplace environments in Saudi Arabia and the Gulf are undergoing accelerated transformations across business, technology, and management. Possessing practical, specialized competencies is key to thriving.
-        </p>
-        <p class="text-gold lead tagline" style="margin-bottom: 30px">
-          Today's Competencies... Shape Tomorrow's Economy.
-        </p>
-        <a class="btn-primary" href="../pages/en/about.html">
-          Read Our Vision <i class="fas fa-arrow-right"></i>
-        </a>
+      <div class="section-header">
+        <div class="section-badge">Learner Stories</div>
+        <h2 class="section-title">What Our Learners Say</h2>
+      </div>
+      <div class="quotes">
+        <figure class="quote">
+          <blockquote>The learner's quote, in their own words.</blockquote>
+          <figcaption><strong>Learner name</strong><span>Program · City</span></figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote>The learner's quote, in their own words.</blockquote>
+          <figcaption><strong>Learner name</strong><span>Program · City</span></figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote>The learner's quote, in their own words.</blockquote>
+          <figcaption><strong>Learner name</strong><span>Program · City</span></figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
-  <section class="band">
+  <section class="band band--tint">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">Your Journey</div>
@@ -363,6 +400,6 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="/assets/js/specialties.js?v=20261101"></script>
-  <script src="/assets/js/script.js?v=20261109"></script>
+  <script src="/assets/js/script.js?v=20261113"></script>
 </body>
 </html>

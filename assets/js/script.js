@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initReveal();
     updateCartBadge();
     initContactPrefill();
+    initFeaturedPrograms(isEN);
     initCheckout(isEN);
     initVerifyForm(isEN);
     initPublicAuth(isEN, isAdminPagePath);
@@ -1558,8 +1559,14 @@ function specialtyOf(item) {
     return NIBRAS_SPECIALTIES.byKey(item.specialtyKey || NIBRAS_SPECIALTIES.keyFor(item.titleAr, item.specialty));
 }
 
+// Bump after re-rendering covers with tools/specialty-covers/render.py
+const COVER_VERSION = 1;
+
 function coverOf(item) {
-    return item.image || `/assets/img/specialties/${specialtyOf(item).key}.svg?v=2`;
+    // The old specialty illustrations count as no image, so they give way to the covers
+    if (item.image && !item.image.startsWith('/assets/img/specialties/')) return item.image;
+    const lang = document.documentElement.lang === 'en' ? 'en' : 'ar';
+    return `/assets/img/covers/${lang}/${specialtyOf(item).key}.webp?v=${COVER_VERSION}`;
 }
 
 function programCard(item, isEN) {
@@ -1568,7 +1575,7 @@ function programCard(item, isEN) {
     const lang = isEN ? 'en' : 'ar';
     const spec = specialtyOf(item);
     const level = LEVELS[item.type] ? LEVELS[item.type][lang] : '';
-    const url = `program-detail.html?slug=${encodeURIComponent(item.slug || item._id)}`;
+    const url = `/pages/${lang}/program-detail.html?slug=${encodeURIComponent(item.slug || item._id)}`;
     const price = `${Number(item.price || 0).toLocaleString('en-US')} US$`;
     const canBuy = !item.status || item.status === 'available';
     const notAvailable = item.status === 'coming_soon' ? (isEN ? 'Coming soon' : 'قريباً') : (isEN ? 'Unavailable' : 'غير متاح');
@@ -1668,6 +1675,50 @@ window.initCatalogPage = async ({ type, gridId, searchId, filterId, areaId, coun
     apply();
     if (area && activeKey !== 'all') area.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
+
+// --- Home page: featured programs ---
+async function initFeaturedPrograms(isEN) {
+    const grid = document.getElementById('featuredPrograms');
+    if (!grid) return;
+    const section = grid.closest('section');
+    const types = ['course', 'diploma', 'master', 'phd'];
+    let featured;
+    let byType;
+
+    try {
+        [featured, ...byType] = await Promise.all([
+            apiFetch('/api/courses?featured=true&status=available&limit=3'),
+            ...types.map((t) => apiFetch(`/api/courses?type=${t}&status=available&limit=6`))
+        ]);
+    } catch (err) {
+        section.remove();
+        return;
+    }
+
+    // Programs marked as featured lead; one per track fills the rest, each from a different specialty
+    const picks = [...(featured.courses || [])];
+    byType.forEach(({ courses = [] }) => {
+        if (picks.length >= 3) return;
+        const fresh = courses.filter((c) => !picks.some((p) => p._id === c._id));
+        const course = fresh.find((c) => !picks.some((p) => specialtyOf(p).key === specialtyOf(c).key)) || fresh[0];
+        if (course) picks.push(course);
+    });
+    if (!picks.length) {
+        section.remove();
+        return;
+    }
+
+    grid.innerHTML = picks.map((c) => programCard(c, isEN)).join('');
+    grid.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-add]');
+        if (!btn) return;
+        const course = picks.find((c) => c._id === btn.dataset.add);
+        if (course) window.addToCart(course._id, (isEN && course.titleEn) || course.titleAr, course.price);
+    });
+
+    const total = byType.reduce((sum, d) => sum + (d.total || 0), 0);
+    if (total) document.querySelectorAll('[data-stat="programs"]').forEach((el) => { el.textContent = total; });
+}
 
 function initContactPrefill() {
     const subject = new URLSearchParams(window.location.search).get('subject');

@@ -121,7 +121,7 @@ async function run() {
         };
         if (titleEn && !course.titleEn) set.titleEn = titleEn;
         if (titleEn && !course.descriptionEn) set.descriptionEn = englishDescription(course.type, titleEn);
-        if (!course.image) set.image = `/assets/img/specialties/${key}.svg`;
+        // No image is stored: the site picks the specialty cover in the visitor's language
 
         if (!dryRun) await db.collection('courses').updateOne({ _id: course._id }, { $set: set });
         changed += 1;
