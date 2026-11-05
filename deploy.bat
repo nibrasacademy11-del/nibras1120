@@ -1,84 +1,79 @@
 @echo off
-chcp 65001 > nul
-title Nibras Academy - Deploy Helper
+title Nibras Academy - Deployment Helper
 cd /d "%~dp0"
 
 echo ========================================================
-echo          أكاديمية نبراس - مساعد الرفع والنشر
-echo          Nibras Academy - Deployment Helper
+echo        Nibras Academy - Deploy Helper
 echo ========================================================
 echo.
-echo اختر العملية التي تريد القيام بها:
-echo [1] رفع التعديلات إلى GitHub (git push origin main)
-echo [2] رفع التعديلات إلى GitHub باستخدام Personal Access Token (PAT)
-echo [3] حذف بيانات GitHub القديمة المحفوظة في ويندوز (لإتاحة تسجيل حساب جديد)
-echo [4] النشر على Vercel (vercel --prod)
-echo [5] الخروج
+echo Choose an option:
+echo [1] Push to GitHub (git push origin main)
+echo [2] Push to GitHub using Personal Access Token (PAT)
+echo [3] Clear old GitHub credentials from Windows
+echo [4] Deploy to Vercel (vercel --prod)
+echo [5] Exit
 echo.
 
-set /p choice="أدخل رقم الاختيار (1-5): "
+set /p choice="Enter your choice (1-5): "
 
 if "%choice%"=="1" goto PUSH_NORMAL
 if "%choice%"=="2" goto PUSH_TOKEN
 if "%choice%"=="3" goto CLEAR_CREDS
 if "%choice%"=="4" goto VERCEL_DEPLOY
 if "%choice%"=="5" goto EXIT
-goto INVALID
+echo Invalid choice.
+goto END
 
 :PUSH_NORMAL
 echo.
-echo جاري الرفع إلى فرع main على GitHub...
+echo Pushing to GitHub main branch...
 git push origin main
-if %errorlevel% neq 0 (
+if errorlevel 1 (
     echo.
-    echo [تنبيه] فشل الرفع. إذا كان الخطأ 403 Permission Denied،
-    echo يرجى اختيار الرقم [2] لاستخدام Token أو الرقم [3] لتحديث حسابك المسجل.
+    echo [ERROR] Push failed.
+    echo If you see 403 Permission Denied, choose option 2 to use a Token or option 3 to update your GitHub account.
 ) else (
     echo.
-    echo [نجاح] تم الرفع إلى GitHub بنجاح!
+    echo [SUCCESS] Pushed to GitHub successfully!
 )
 goto END
 
 :PUSH_TOKEN
 echo.
-echo يرجى لصق الـ GitHub Personal Access Token (PAT) الخاص بحسابك:
+echo Paste your GitHub Personal Access Token:
 set /p gtoken="Token: "
 if "%gtoken%"=="" (
-    echo تم إلغاء العملية، لم يتم إدخال Token.
+    echo No token entered. Cancelled.
     goto END
 )
-echo جاري الرفع باستخدام الـ Token...
+echo Pushing with Token...
 git push https://%gtoken%@github.com/nibrasacademy11-del/nibras1120.git main
-if %errorlevel% neq 0 (
+if errorlevel 1 (
     echo.
-    echo [خطأ] فشل الرفع، يرجى التأكد من صلاحيات الـ Token (صلاحية repo).
+    echo [ERROR] Push failed. Make sure your Token has the "repo" scope.
 ) else (
     echo.
-    echo [نجاح] تم الرفع إلى GitHub بنجاح!
+    echo [SUCCESS] Pushed to GitHub successfully!
 )
 goto END
 
 :CLEAR_CREDS
 echo.
-echo جاري حذف بيانات الاعتماد القديمة من Windows Credential Manager...
-cmdkey /delete:LegacyGeneric:target=git:https://github.com 2>nul
-echo [تم] تم مسح الاعتماد المحفوظ. عند تشغيل أمر git push الآن سيطلب منك تسجيل الدخول بالمتصفح للحساب الجديد.
+echo Removing old GitHub credentials from Windows Credential Manager...
+cmdkey /delete:LegacyGeneric:target=git:https://github.com >nul 2>nul
+echo [OK] Saved credentials removed. Run option 1 to sign in with your new account.
 goto END
 
 :VERCEL_DEPLOY
 echo.
-echo فحص تسجيل الدخول في Vercel...
+echo Checking Vercel login...
 call vercel whoami >nul 2>nul
-if %errorlevel% neq 0 (
-    echo تسجيل الدخول إلى Vercel أولاً...
+if errorlevel 1 (
+    echo Please log in to Vercel first...
     call vercel login
 )
-echo جاري النشر إلى الإنتاج في Vercel (Production Deployment)...
+echo Deploying to Vercel production...
 call vercel --prod
-goto END
-
-:INVALID
-echo اختيار غير صحيح.
 goto END
 
 :END
