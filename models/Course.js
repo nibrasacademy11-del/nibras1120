@@ -34,7 +34,8 @@ const courseSchema = new mongoose.Schema({
     // Meta & Delivery
     duration: { type: String, default: '' },
     deliveryMethod: { type: String, default: 'عن بُعد (أونلاين)' },
-    price: { type: Number, required: true, default: 0 },
+    price: { type: Number, required: true, default: 0, min: 0 },
+    discountPercent: { type: Number, default: 0, min: 0, max: 90 },
     currency: { type: String, default: 'US$' },
     image: { type: String, default: '' },
     
@@ -58,7 +59,13 @@ const courseSchema = new mongoose.Schema({
     title: { type: String },
     description: { type: String },
     content: { type: String }
-}, { timestamps: true });
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
+
+// The price a learner pays. Every total is computed from this on the server, never taken from the browser.
+courseSchema.virtual('finalPrice').get(function () {
+    const discount = Math.min(Math.max(this.discountPercent || 0, 0), 90);
+    return Math.round((this.price || 0) * (100 - discount)) / 100;
+});
 
 // Auto-fill legacy fields if missing
 courseSchema.pre('save', function() {

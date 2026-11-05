@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261108" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261116" />
 </head>
 <body>
 
@@ -30,7 +30,7 @@
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-footer">
       <div class="cart-total"><span>الإجمالي:</span><strong id="cartTotal">0.00 US$</strong></div>
-      <a href="/pages/ar/checkout.html" class="btn-primary">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+      <a href="/pages/ar/checkout.html" class="btn-primary">إرسال طلب التسجيل <i class="fab fa-whatsapp"></i></a>
     </div>
   </div>
   <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
@@ -50,7 +50,7 @@
         <li><a href="/index.html" class="nav-link">الرئيسية</a></li>
         <li><a href="/pages/ar/about.html" class="nav-link">عن نبراس</a></li>
         <li><a href="/pages/ar/programs.html" class="nav-link active">البرامج والخدمات</a></li>
-        <li><a href="/pages/ar/articles.html" class="nav-link">المقالات والإعلام</a></li>
+        <li><a href="/pages/ar/corporate.html" class="nav-link">حلول الشركات</a></li>
         <li><a href="/pages/ar/contact.html" class="nav-link">تواصل معنا</a></li>
         <li><a href="/pages/ar/verify.html" class="nav-link">التحقق من الشهادات</a></li>
       </ul>
@@ -69,14 +69,14 @@
       <li><a href="/index.html">الرئيسية</a></li>
       <li><a href="/pages/ar/about.html">عن نبراس</a></li>
       <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
-      <li><a href="/pages/ar/articles.html">المقالات والإعلام</a></li>
+      <li><a href="/pages/ar/corporate.html">حلول الشركات</a></li>
       <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
       <li><a href="/pages/ar/verify.html">التحقق من الشهادات</a></li>
       <li id="mobileNavAuth"><a href="/pages/ar/login.html" class="mobile-btn">تسجيل الدخول</a></li>
     </ul>
   </div>
 
-  <section class="program-detail-header" id="progHeader">
+  <section class="program-detail-header" data-hero="program" id="progHeader">
     <div class="container">
       <div style="margin-bottom: 15px">
         <a href="../../index.html">الرئيسية</a> &gt; 
@@ -184,7 +184,7 @@
                 إضافة إلى السلة <i class="fas fa-cart-plus"></i>
               </button>
               <a class="btn-outline" href="checkout.html" id="btnCheckout" style="width: 100%">
-                إتمام الدفع مباشرة <i class="fas fa-credit-card"></i>
+                اطلب التسجيل الآن <i class="fas fa-paper-plane"></i>
               </a>
               <a class="btn-outline" href="#" id="btnWhatsApp" target="_blank" style="width: 100%">
                 استفسار عبر واتساب <i class="fab fa-whatsapp"></i>
@@ -227,7 +227,7 @@
               <li><a href="/index.html">الرئيسية</a></li>
               <li><a href="/pages/ar/about.html">عن نبراس</a></li>
               <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
-              <li><a href="/pages/ar/articles.html">المقالات والإعلام</a></li>
+              <li><a href="/pages/ar/corporate.html">حلول الشركات</a></li>
               <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
             </ul>
           </div>
@@ -238,7 +238,7 @@
               <li><a href="/pages/ar/diploma.html">الدبلومات المهنية</a></li>
               <li><a href="/pages/ar/masters.html">الماجستير المهني</a></li>
               <li><a href="/pages/ar/phd.html">الدكتوراه المهنية</a></li>
-              <li><a href="/pages/ar/programs.html#services">تدريب الشركات</a></li>
+              <li><a href="/pages/ar/corporate.html">تدريب الشركات</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
@@ -267,8 +267,10 @@
   <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="/assets/js/site-content.js?v=20261116"></script>
+
   <script src="/assets/js/specialties.js?v=20261101"></script>
-  <script src="/assets/js/script.js?v=20261113"></script>
+  <script src="/assets/js/script.js?v=20261116"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -352,8 +354,7 @@
         }
 
         // Pricing & Status
-        const price = p.price || 0;
-        document.getElementById('progPrice').textContent = `${price.toFixed(2)} US$`;
+        document.getElementById('progPrice').innerHTML = priceHtml(p);
 
         const statusTag = document.getElementById('progStatusTag');
         const btnCart = document.getElementById('btnAddToCart');
@@ -373,12 +374,13 @@
         } else {
           statusTag.className = 'status-badge status-available';
           statusTag.textContent = 'متاح للتسجيل';
-          btnCart.onclick = () => addToCart(p._id, p.titleAr, price);
+          btnCart.onclick = () => addCourseToCart(p);
+          // Ordering directly puts the program in the cart first, so checkout has something to send
+          btnCheckout.onclick = () => { if (!getCart().some((item) => item.id === p._id)) addCourseToCart(p); };
         }
 
         // WhatsApp Link
-        const waMsg = encodeURIComponent(`مرحباً، أود الاستفسار عن تفاصيل والتسجيل في: ${p.titleAr || p.title}`);
-        document.getElementById('btnWhatsApp').href = `https://wa.me/201112220796?text=${waMsg}`;
+        document.getElementById('btnWhatsApp').href = whatsappLink(`مرحباً، أود الاستفسار عن تفاصيل والتسجيل في: ${p.titleAr || p.title}`);
 
       } catch (err) {
         document.getElementById('progTitle').textContent = 'تعذر العثور على البرنامج المطلوب';

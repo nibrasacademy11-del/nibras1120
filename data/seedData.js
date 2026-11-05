@@ -9,7 +9,6 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const Course = require('../models/Course');
-const Article = require('../models/Article');
 const SiteSettings = require('../models/SiteSettings');
 
 // Helper to extract program details from HTML files
@@ -122,65 +121,6 @@ function extractProgramsFromHtml(filePath, type, defaultSpecialty) {
     return programs;
 }
 
-const mediaCoverages = [
-    {
-        titleAr: 'تغطية جدة 24 عن أكاديمية نبراس للتدريب والتأهيل المهني',
-        titleEn: 'Jeddah 24 Coverage on Nibras Academy',
-        slug: 'jeddah-24-nibras-coverage',
-        category: 'media_coverage',
-        mediaSource: 'جدة 24',
-        sourceUrl: 'https://jeddah24.net/mix/0702/46636/',
-        author: 'جدة 24',
-        image: '/assets/img/جدة-24-.webp',
-        summaryAr: 'تغطية تناولت أكاديمية نبراس وبرامجها ومساراتها المهنية، مع استعراض جانب من تجربتها في مجال التدريب والتأهيل المهني.',
-        contentAr: 'تقرير شامل عن برامج ومسارات أكاديمية نبراس ودورها في تعزيز المهارات المهنية وإعداد الكفاءات لسوق العمل السعودي والخليجي.',
-        status: 'published',
-        publishDate: new Date('2024-07-02')
-    },
-    {
-        titleAr: 'صحيفة أخبار السعودية: تغطية حول برامج ومسارات نبراس',
-        titleEn: 'Saudi News: Coverage on Nibras Programs and Tracks',
-        slug: 'saudi-news-nibras-coverage',
-        category: 'media_coverage',
-        mediaSource: 'صحيفة أخبار السعودية',
-        sourceUrl: 'https://alsaudi.news/technology/0702/53533/',
-        author: 'صحيفة أخبار السعودية',
-        image: '/assets/img/السعودية-الاخبارية.webp',
-        summaryAr: 'تقرير تناول جانباً من البرامج والمسارات المهنية التي تقدمها أكاديمية نبراس، وما توفره من خيارات للتطوير والتأهيل المهني.',
-        contentAr: 'إشادة بالبرامج التقنية والمهنية التي تقدمها أكاديمية نبراس للمهنيين ورواد الأعمال في مختلف القطاعات الحديثة.',
-        status: 'published',
-        publishDate: new Date('2024-07-02')
-    },
-    {
-        titleAr: 'أخبار الرياض: تغطية إعلامية عن أكاديمية نبراس',
-        titleEn: 'Al-Riyadh News: Media Coverage on Nibras Academy',
-        slug: 'alriyadh-news-nibras-coverage',
-        category: 'media_coverage',
-        mediaSource: 'أخبار الرياض',
-        sourceUrl: 'https://alriyadhnews.net/mix/0702/47160/',
-        author: 'أخبار الرياض',
-        image: '/assets/img/الرياض.webp',
-        summaryAr: 'تغطية تستعرض جانباً من تجربة الأكاديمية وبرامجها، وحضورها في مجال التدريب والتطوير المهني.',
-        contentAr: 'تغطية مميزة توضح مسارات التعليم والتأهيل المهني وكيف تسهم نبراس في إعداد كوادر مؤهلة بأساليب تعليمية مرنة.',
-        status: 'published',
-        publishDate: new Date('2024-07-02')
-    },
-    {
-        titleAr: 'أخبار عكاظ: تغطية حول التعليم والتأهيل المهني في نبراس',
-        titleEn: 'Okaz News: Professional Training and Qualification at Nibras',
-        slug: 'okaz-news-nibras-coverage',
-        category: 'media_coverage',
-        mediaSource: 'أخبار عكاظ',
-        sourceUrl: 'https://okaznews.net/mix/0702/44015/',
-        author: 'أخبار عكاظ',
-        image: '/assets/img/عكاظ-اليوم-1.webp',
-        summaryAr: 'تقرير تناول جانباً من مسارات التعليم والتأهيل المهني التي تقدمها أكاديمية نبراس، وبرامجها المتخصصة في عدد من المجالات.',
-        contentAr: 'نظرة متعمقة حول معايير الجودة والبرامج المهنية التي تتيح للمتدربين مواكبة متطلبات التحول وبيئات العمل التنافسية.',
-        status: 'published',
-        publishDate: new Date('2024-07-02')
-    }
-];
-
 async function runSeed() {
     try {
         if (!process.env.MONGO_URI) {
@@ -199,16 +139,7 @@ async function runSeed() {
             console.log('SiteSettings already exists.');
         }
 
-        // 2. Seed Media Coverages
-        for (const item of mediaCoverages) {
-            const exists = await Article.findOne({ slug: item.slug });
-            if (!exists) {
-                await Article.create(item);
-                console.log(`Inserted media coverage: ${item.titleAr}`);
-            }
-        }
-
-        // 3. Extract & Seed Programs from HTML
+        // 2. Extract & Seed Programs from HTML
         const basePath = path.join(__dirname, '..');
         const masterPrograms = extractProgramsFromHtml(path.join(basePath, 'pages/ar/masters.html'), 'master', 'إدارة الأعمال');
         const phdPrograms = extractProgramsFromHtml(path.join(basePath, 'pages/ar/phd.html'), 'phd', 'إدارة الأعمال');

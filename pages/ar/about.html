@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261108" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261116" />
 </head>
 <body>
 
@@ -30,7 +30,7 @@
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-footer">
       <div class="cart-total"><span>الإجمالي:</span><strong id="cartTotal">0.00 US$</strong></div>
-      <a href="/pages/ar/checkout.html" class="btn-primary">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+      <a href="/pages/ar/checkout.html" class="btn-primary">إرسال طلب التسجيل <i class="fab fa-whatsapp"></i></a>
     </div>
   </div>
   <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
@@ -50,7 +50,7 @@
         <li><a href="/index.html" class="nav-link">الرئيسية</a></li>
         <li><a href="/pages/ar/about.html" class="nav-link active">عن نبراس</a></li>
         <li><a href="/pages/ar/programs.html" class="nav-link">البرامج والخدمات</a></li>
-        <li><a href="/pages/ar/articles.html" class="nav-link">المقالات والإعلام</a></li>
+        <li><a href="/pages/ar/corporate.html" class="nav-link">حلول الشركات</a></li>
         <li><a href="/pages/ar/contact.html" class="nav-link">تواصل معنا</a></li>
         <li><a href="/pages/ar/verify.html" class="nav-link">التحقق من الشهادات</a></li>
       </ul>
@@ -69,14 +69,14 @@
       <li><a href="/index.html">الرئيسية</a></li>
       <li><a href="/pages/ar/about.html">عن نبراس</a></li>
       <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
-      <li><a href="/pages/ar/articles.html">المقالات والإعلام</a></li>
+      <li><a href="/pages/ar/corporate.html">حلول الشركات</a></li>
       <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
       <li><a href="/pages/ar/verify.html">التحقق من الشهادات</a></li>
       <li id="mobileNavAuth"><a href="/pages/ar/login.html" class="mobile-btn">تسجيل الدخول</a></li>
     </ul>
   </div>
 
-  <section class="page-header" style="text-align: center">
+  <section class="page-header" data-hero="about" style="text-align: center">
     <div class="container">
       <div class="section-badge">عن الأكاديمية</div>
       <h1 style="margin-bottom: 15px">عن أكاديمية نبراس</h1>
@@ -107,35 +107,14 @@
   </section>
 
   <!-- Section: نبراس في أرقام -->
-  <section class="stats-section band band--tint">
+  <section class="band band--wine stats-band" aria-labelledby="statsTitle">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">أثر يُقاس</div>
-        <h2 class="section-title">نبراس في أرقام... <span class="highlight">وتجربة تتحدث عن نفسها</span></h2>
+        <h2 class="section-title" id="statsTitle">نبراس في أرقام... <span class="highlight">وتجربة تتحدث عن نفسها</span></h2>
         <p class="section-subtitle">تطورت نبراس من خلال تجربة متراكمة في مجال التدريب والتأهيل المهني، وتقديم مجموعة متنوعة من البرامج والتخصصات للمتدربين والمهنيين.</p>
       </div>
-      <div class="stats-grid">
-        <div class="stat-item" data-target="500">
-          <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
-          <div class="stat-number"><span class="counter">0</span>+</div>
-          <div class="stat-label">متدرب وخريج</div>
-        </div>
-        <div class="stat-item" data-target="26">
-          <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-          <div class="stat-number"><span class="counter">0</span>+</div>
-          <div class="stat-label">مدرب وخبير</div>
-        </div>
-        <div class="stat-item" data-target="66">
-          <div class="stat-icon"><i class="fas fa-certificate"></i></div>
-          <div class="stat-number"><span class="counter">0</span>+</div>
-          <div class="stat-label">برنامج وتخصص مهني</div>
-        </div>
-        <div class="stat-item" data-target="5">
-          <div class="stat-icon"><i class="fas fa-history"></i></div>
-          <div class="stat-number"><span class="counter">0</span>+</div>
-          <div class="stat-label">سنوات من الخبرة المهنية</div>
-        </div>
-      </div>
+      <div class="stats-row" data-stats></div>
     </div>
   </section>
 
@@ -385,7 +364,7 @@
               <li><a href="/index.html">الرئيسية</a></li>
               <li><a href="/pages/ar/about.html">عن نبراس</a></li>
               <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
-              <li><a href="/pages/ar/articles.html">المقالات والإعلام</a></li>
+              <li><a href="/pages/ar/corporate.html">حلول الشركات</a></li>
               <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
             </ul>
           </div>
@@ -396,7 +375,7 @@
               <li><a href="/pages/ar/diploma.html">الدبلومات المهنية</a></li>
               <li><a href="/pages/ar/masters.html">الماجستير المهني</a></li>
               <li><a href="/pages/ar/phd.html">الدكتوراه المهنية</a></li>
-              <li><a href="/pages/ar/programs.html#services">تدريب الشركات</a></li>
+              <li><a href="/pages/ar/corporate.html">تدريب الشركات</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
@@ -425,7 +404,9 @@
   <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="/assets/js/site-content.js?v=20261116"></script>
+
   <script src="/assets/js/specialties.js?v=20261101"></script>
-  <script src="/assets/js/script.js?v=20261113"></script>
+  <script src="/assets/js/script.js?v=20261116"></script>
 </body>
 </html>

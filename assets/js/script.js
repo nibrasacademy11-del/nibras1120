@@ -15,13 +15,21 @@ function safeUrl(url) {
     return /^(https?:\/\/|\/)/i.test(value) ? esc(value) : '#';
 }
 
+// Contact details for links the script builds; static pages carry the same values
+const NIBRAS_CONTACT = { whatsapp: '201112220796', phone: '01112220796', email: 'info@nibras-ac.com' };
+
+function whatsappLink(text) {
+    return `https://wa.me/${NIBRAS_CONTACT.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const isEN = document.documentElement.lang === 'en';
-    const path = window.location.pathname.toLowerCase();
-    const isAdminPagePath = path.endsWith('/admin.html');
+    // The admin panel loads this file for its helpers and runs its own setup (admin.js)
+    if (document.body.classList.contains('admin-body')) return;
 
     cleanupDuplicateIds(['cartSidebar', 'cartOverlay', 'cartItems', 'cartTotal', 'cartBadge']);
     initLayout();
+    initSiteContent(isEN);
     initCounters();
     initReveal();
     updateCartBadge();
@@ -29,8 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFeaturedPrograms(isEN);
     initCheckout(isEN);
     initVerifyForm(isEN);
-    initPublicAuth(isEN, isAdminPagePath);
-    if (isAdminPagePath) initAdminPanel(isEN);
+    initPublicAuth(isEN);
     updateNavAuth(isEN);
 });
 
@@ -159,21 +166,24 @@ function initLayout() {
     }
 }
 
-function initCounters() {
-    const statNumbers = document.querySelectorAll('.stat-number, .counter');
+// Counts each .counter up to its data-target once it scrolls into view
+function initCounters(root = document) {
+    const statNumbers = root.querySelectorAll('.counter');
+    const format = (n) => n.toLocaleString('en-US');
     const animateCounter = (el) => {
-        const targetSource = el.getAttribute('data-target')
-            || el.closest('[data-target]')?.getAttribute('data-target')
-            || el.textContent;
-        const target = parseInt(targetSource, 10);
+        const target = parseInt(el.getAttribute('data-target'), 10);
         if (Number.isNaN(target)) return;
-        const duration = 2000;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            el.textContent = format(target);
+            return;
+        }
+        const duration = 1600;
         const startTime = performance.now();
         function update(now) {
             const progress = Math.min((now - startTime) / duration, 1);
-            el.textContent = Math.floor(progress * target);
+            // Ease out so the last digits settle gently
+            el.textContent = format(Math.round((1 - (1 - progress) ** 3) * target));
             if (progress < 1) requestAnimationFrame(update);
-            else el.textContent = target;
         }
         requestAnimationFrame(update);
     };
@@ -190,7 +200,7 @@ function initCounters() {
 }
 
 function initReveal() {
-    const items = document.querySelectorAll('.why-feature-card, .why-card, .track, .step-card, .experience-pillar, .feature, .step, .specialty-card');
+    const items = document.querySelectorAll('.why-feature-card, .why-card, .step-card, .experience-pillar, .feature, .step, .specialty-card');
     if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -228,7 +238,10 @@ async function apiFetch(url, options = {}) {
         payload = {};
     }
     if (!response.ok) {
-        throw new Error(payload.message || 'Request failed');
+        const error = new Error(payload.message || 'Request failed');
+        error.status = response.status;
+        error.payload = payload;
+        throw error;
     }
     return payload;
 }
@@ -248,12 +261,19 @@ function formatAuthError(msg, isEN) {
     return msg;
 }
 
-function initPublicAuth(isEN, isAdminPagePath) {
-    if (isAdminPagePath) return;
+// Where to go after signing in: a same-site ?next= link if one was given, otherwise the
+// student's profile, or the home page for an admin (the nav then shows the control panel button)
+function afterLoginUrl(user, isEN) {
+    const next = new URLSearchParams(window.location.search).get('next') || '';
+    if (next.startsWith('/') && !next.startsWith('//')) return next;
+    if (user && user.role === 'admin') return isEN ? '/en/index.html' : '/index.html';
+    return isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html';
+}
+
+function initPublicAuth(isEN) {
     const registerForm = document.getElementById('registerForm');
     const loginForm = document.getElementById('loginForm');
     const homeUrl = isEN ? '/en/index.html' : '/index.html';
-    const langPath = isEN ? '/pages/en/' : '/pages/ar/';
 
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
@@ -306,13 +326,7 @@ function initPublicAuth(isEN, isAdminPagePath) {
                     localStorage.setItem('nibras_user_name', data.user.name);
                 }
                 setTimeout(() => {
-                    if (data.user && data.user.role === 'admin') {
-                        // Admin is Arabic only as requested - always redirect to Arabic admin
-                        window.location.href = '/pages/ar/admin.html';
-                    } else {
-                        // Redirect student to their profile
-                        window.location.href = `${langPath}profile.html`;
-                    }
+                    window.location.href = afterLoginUrl(data.user, isEN);
                 }, 500);
             } catch (error) {
                 showToast(formatAuthError(error.message, isEN), true);
@@ -450,872 +464,43 @@ function initVerifyForm(isEN) {
                 <div class="verify-head">
                     <i class="fas fa-circle-xmark"></i>
                     <h3>${isEN ? 'Certificate Not Found' : 'لم يتم العثور على سجل مطابق لرقم الشهادة'}</h3>
-                    <p>${isEN ? 'Please verify the certificate number as printed on your document. If you require further assistance, contact us at 01112220796 or info@nibras-ac.com' : 'يرجى التأكد من كتابة رقم الشهادة كما هو موضح في الوثيقة بدون فراغات زائدة. إذا استمرت المشكلة، يرجى التواصل مع فريق الأكاديمية عبر هاتف: 01112220796 أو info@nibras-ac.com'}</p>
+                    <p>${error.status === 429
+                        ? esc(error.message)
+                        : (isEN
+                            ? `Please verify the certificate number as printed on your document. If you require further assistance, contact us at ${NIBRAS_CONTACT.phone} or ${NIBRAS_CONTACT.email}`
+                            : `يرجى التأكد من كتابة رقم الشهادة كما هو موضح في الوثيقة بدون فراغات زائدة. إذا استمرت المشكلة، يرجى التواصل مع فريق الأكاديمية عبر هاتف: ${NIBRAS_CONTACT.phone} أو ${NIBRAS_CONTACT.email}`)}</p>
                 </div>
             `;
         }
     });
 }
 
-// Global state for Admin Panel
-let adminAllPrograms = [];
-let adminAllArticles = [];
-let adminAllInquiries = [];
-let adminAllCertificates = [];
-let allAdminUsers = [];
-
-async function initAdminPanel(isEN) {
-    const loginForm = document.getElementById('loginForm');
-    const loginPage = document.getElementById('loginPage');
-    const dashboard = document.getElementById('dashboard');
-
-    try {
-        const data = await apiFetch('/api/auth/me');
-        if (data.user && data.user.role === 'admin') {
-            if (loginPage) loginPage.style.display = 'none';
-            if (dashboard) dashboard.style.display = 'flex';
-            const adminUserEl = document.getElementById('adminUser');
-            if (adminUserEl) adminUserEl.textContent = data.user.name || 'المسؤول';
-            
-            // Load all sections
-            await Promise.allSettled([
-                renderAdminPrograms(isEN),
-                renderAdminArticles(isEN),
-                renderAdminInquiries(isEN),
-                renderAdminCerts(isEN),
-                renderAdminUsers(isEN)
-            ]);
-        }
-    } catch (error) {
-        if (loginPage) loginPage.style.display = 'flex';
-    }
-
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            try {
-                const data = await apiFetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                if (!data.user || data.user.role !== 'admin') {
-                    showToast(isEN ? 'Unauthorized: Admin privileges required.' : 'ليس لديك صلاحيات الأدمن للدخول.', true);
-                    return;
-                }
-                window.location.reload();
-            } catch (error) {
-                showToast(formatAuthError(error.message, isEN), true);
-            }
-        });
-    }
-
-    // 1. Program Form Submit
-    const adminProgramForm = document.getElementById('adminProgramForm');
-    if (adminProgramForm) {
-        adminProgramForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnSaveProg');
-            const orig = btn.innerHTML;
-            const editId = document.getElementById('progEditId').value;
-            
-            const payload = {
-                titleAr: document.getElementById('progTitleAr').value.trim(),
-                titleEn: document.getElementById('progTitleEn').value.trim(),
-                type: document.getElementById('progType').value,
-                specialty: document.getElementById('progSpecialty').value.trim(),
-                image: document.getElementById('progImage').value.trim(),
-                price: parseFloat(document.getElementById('progPrice').value) || 0,
-                status: document.getElementById('progStatus').value,
-                duration: document.getElementById('progDuration').value.trim(),
-                deliveryMethod: document.getElementById('progDelivery').value.trim(),
-                descriptionAr: document.getElementById('progDescAr').value.trim(),
-                topicsAr: document.getElementById('progTopicsAr').value.split(/[;\n]+/).map(s => s.trim()).filter(Boolean)
-            };
-
-            try {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
-
-                if (editId) {
-                    await apiFetch(`/api/courses/${editId}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    showToast(isEN ? 'Program updated successfully.' : 'تم تحديث البرنامج بنجاح.');
-                } else {
-                    await apiFetch('/api/courses', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    showToast(isEN ? 'Program added successfully.' : 'تمت إضافة البرنامج بنجاح.');
-                }
-
-                cancelProgEdit();
-                await renderAdminPrograms(isEN);
-            } catch (err) {
-                showToast(err.message, true);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = orig;
-            }
-        });
-    }
-
-    // 2. Article Form Submit
-    const adminArticleForm = document.getElementById('adminArticleForm');
-    if (adminArticleForm) {
-        adminArticleForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnSaveArt');
-            const orig = btn.innerHTML;
-            const editId = document.getElementById('artEditId').value;
-
-            const payload = {
-                titleAr: document.getElementById('artTitleAr').value.trim(),
-                category: document.getElementById('artCategory').value,
-                sourceUrl: document.getElementById('artSourceUrl').value.trim(),
-                author: document.getElementById('artAuthor').value.trim(),
-                image: document.getElementById('artImage').value.trim(),
-                contentAr: document.getElementById('artContentAr').value.trim(),
-                summaryAr: document.getElementById('artContentAr').value.trim().slice(0, 240),
-                status: document.getElementById('artPublished').checked ? 'published' : 'draft'
-            };
-
-            try {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
-
-                if (editId) {
-                    await apiFetch(`/api/articles/${editId}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    showToast(isEN ? 'Article updated successfully.' : 'تم تحديث المقال بنجاح.');
-                } else {
-                    await apiFetch('/api/articles', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    showToast(isEN ? 'Article created successfully.' : 'تمت إضافة المقال بنجاح.');
-                }
-
-                cancelArtEdit();
-                await renderAdminArticles(isEN);
-            } catch (err) {
-                showToast(err.message, true);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = orig;
-            }
-        });
-    }
-
-    // 3. Certificate Form Submit
-    const adminCertForm = document.getElementById('adminCertForm');
-    if (adminCertForm) {
-        adminCertForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData();
-            formData.append('certNum', document.getElementById('adminCertNum').value.trim());
-            formData.append('traineeName', document.getElementById('adminTraineeName').value.trim());
-            formData.append('programType', document.getElementById('adminProgramType').value);
-            formData.append('status', document.getElementById('adminCertStatus').value);
-            formData.append('programName', document.getElementById('adminProgramName').value.trim());
-            formData.append('field', document.getElementById('adminField').value.trim());
-            formData.append('issueDate', document.getElementById('adminIssueDate').value);
-            
-            const pdfInput = document.getElementById('adminPdfFile');
-            if (pdfInput && pdfInput.files && pdfInput.files[0]) {
-                formData.append('pdf', pdfInput.files[0]);
-            }
-            formData.append('userId', document.getElementById('adminCertUserId')?.value || '');
-
-            const editId = document.getElementById('certEditId').value;
-            try {
-                await apiFetch(editId ? `/api/admin/certificates/${editId}` : '/api/admin/certificates', {
-                    method: editId ? 'PUT' : 'POST',
-                    body: formData
-                });
-                window.cancelCertEdit();
-                showToast(editId ? 'تم تحديث بيانات الشهادة.' : 'تمت إضافة بيانات الشهادة بنجاح.');
-                await renderAdminCerts(isEN);
-                await renderAdminUsers(isEN);
-            } catch (error) {
-                showToast(error.message, true);
-            }
-        });
-    }
-
-    // 4. Edit User Form Submit
-    const editUserForm = document.getElementById('editUserForm');
-    if (editUserForm) {
-        editUserForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitBtn = editUserForm.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.innerHTML;
-            
-            const id = document.getElementById('editUserId').value;
-            const payload = {
-                name: document.getElementById('editUserName').value.trim(),
-                email: document.getElementById('editUserEmail').value.trim(),
-                phone: document.getElementById('editUserPhone').value.trim(),
-                role: document.getElementById('editUserRole').value,
-                enrolledCourses: document.getElementById('editUserCourses').value.split(',').map(s => s.trim()).filter(Boolean)
-            };
-
-            try {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
-                
-                await apiFetch(`/api/auth/users/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
-                showToast(isEN ? 'User updated successfully.' : 'تم تحديث بيانات العميل بنجاح.');
-                if (window.closeEditModal) window.closeEditModal();
-                await renderAdminUsers(isEN);
-            } catch (error) {
-                showToast(error.message, true);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
-            }
-        });
-    }
-
-    // Event Delegation for Users Table
-    const usersContainer = document.getElementById('usersTableContainer');
-    if (usersContainer) {
-        usersContainer.addEventListener('click', async (e) => {
-            const editBtn = e.target.closest('.edit-user-btn');
-            const deleteBtn = e.target.closest('.delete-user-btn');
-            if (editBtn) {
-                const id = editBtn.getAttribute('data-id');
-                window.editUser(id);
-            } else if (deleteBtn) {
-                const id = deleteBtn.getAttribute('data-id');
-                window.deleteUser(id);
-            }
-        });
-    }
-}
-
-// -------------------------------------------------------------
-// Admin Programs Management
-// -------------------------------------------------------------
-async function renderAdminPrograms(isEN) {
-    const container = document.getElementById('programsTableContainer');
-    if (!container) return;
-    try {
-        const data = await apiFetch('/api/courses?limit=500');
-        adminAllPrograms = data.courses || [];
-        const countEl = document.getElementById('totalProgramsCount');
-        if (countEl) countEl.textContent = adminAllPrograms.length;
-        displayAdminPrograms(adminAllPrograms, isEN);
-    } catch (err) {
-        container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${esc(err.message)}</p>`;
-    }
-}
-
-function displayAdminPrograms(list, isEN) {
-    const container = document.getElementById('programsTableContainer');
-    if (!container) return;
-
-    if (!list.length) {
-        container.innerHTML = `<p style="text-align:center; padding:30px;">${isEN ? 'No programs found.' : 'لا توجد برامج مسجلة.'}</p>`;
-        return;
-    }
-
-    const typeNames = {
-        master: 'ماجستير مهني',
-        phd: 'دكتوراه مهنية',
-        diploma: 'دبلوم مهني',
-        course: 'دورة تدريبية'
-    };
-
-    const rows = list.map(p => {
-        const title = p.titleAr || p.title || p.titleEn;
-        const typeName = typeNames[p.type] || p.type;
-        const status = p.status || 'available';
-        const statusBadgeClass = status === 'coming_soon' ? 'coming_soon' : (status === 'unavailable' ? 'unavailable' : (status === 'hidden' ? 'hidden-status' : 'available'));
-        const statusLabel = status === 'coming_soon' ? 'قريباً' : (status === 'unavailable' ? 'غير متاح' : (status === 'hidden' ? 'مخفي' : 'متاح'));
-
-        return `
-            <tr>
-                <td data-label="اسم البرنامج" style="font-weight:600; color:var(--primary);">${esc(title)}</td>
-                <td data-label="المسار"><span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 8px; border-radius:8px;">${esc(typeName)}</span></td>
-                <td data-label="التخصص">${esc(p.specialty || '—')}</td>
-                <td data-label="السعر" style="font-weight:700;">${esc(p.price || 0)} US$</td>
-                <td data-label="الحالة"><span class="badge-status ${statusBadgeClass}">${statusLabel}</span></td>
-                <td data-label="إدارة" style="white-space:nowrap;">
-                    <button onclick="window.editProgram('${p._id}')" class="btn-save" style="padding:5px 10px; font-size:0.8rem; background:var(--accent); color:var(--primary-dark);" title="تعديل"><i class="fas fa-edit"></i></button>
-                    <button onclick="window.toggleProgramStatus('${p._id}', '${status === 'available' ? 'hidden' : 'available'}')" class="btn-save" style="padding:5px 10px; font-size:0.8rem; background:#f2f4f7; color:#475467;" title="تغيير الظهور"><i class="fas fa-eye${status === 'hidden' ? '-slash' : ''}"></i></button>
-                    <button onclick="window.deleteProgram('${p._id}')" class="btn-save" style="padding:5px 10px; font-size:0.8rem; background:#fff0f0; color:#b42318; border:1px solid #ffd6d6;" title="حذف"><i class="fas fa-trash-alt"></i></button>
-                </td>
-            </tr>
-        `;
-    }).join('');
-
-    container.innerHTML = `
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>اسم البرنامج</th>
-                    <th>المسار</th>
-                    <th>التخصص</th>
-                    <th>السعر</th>
-                    <th>الحالة</th>
-                    <th>إدارة</th>
-                </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-        </table>
-    `;
-}
-
-window.filterAdminPrograms = () => {
-    const type = document.getElementById('adminProgTypeFilter')?.value || 'all';
-    const query = document.getElementById('adminProgSearch')?.value.toLowerCase().trim() || '';
-
-    let filtered = adminAllPrograms;
-    if (type !== 'all') {
-        filtered = filtered.filter(p => p.type === type);
-    }
-    if (query) {
-        filtered = filtered.filter(p => 
-            (p.titleAr && p.titleAr.toLowerCase().includes(query)) ||
-            (p.titleEn && p.titleEn.toLowerCase().includes(query)) ||
-            (p.specialty && p.specialty.toLowerCase().includes(query))
-        );
-    }
-    displayAdminPrograms(filtered, false);
-};
-
-window.editProgram = (id) => {
-    const prog = adminAllPrograms.find(p => p._id === id);
-    if (!prog) return;
-
-    document.getElementById('progEditId').value = prog._id;
-    document.getElementById('progTitleAr').value = prog.titleAr || prog.title || '';
-    document.getElementById('progTitleEn').value = prog.titleEn || '';
-    document.getElementById('progType').value = prog.type || 'master';
-    const specialtyKey = prog.specialtyKey || NIBRAS_SPECIALTIES.keyFor(prog.titleAr, prog.specialty);
-    document.getElementById('progSpecialty').value = NIBRAS_SPECIALTIES.byKey(specialtyKey).ar;
-    document.getElementById('progImage').value = prog.image || '';
-    document.getElementById('progPrice').value = prog.price || 0;
-    document.getElementById('progStatus').value = prog.status || 'available';
-    document.getElementById('progDuration').value = prog.duration || '';
-    document.getElementById('progDelivery').value = prog.deliveryMethod || '';
-    document.getElementById('progDescAr').value = prog.descriptionAr || prog.description || '';
-    document.getElementById('progTopicsAr').value = Array.isArray(prog.topicsAr) ? prog.topicsAr.join(';\n') : '';
-
-    document.getElementById('btnSaveProg').textContent = 'تحديث بيانات البرنامج';
-    document.getElementById('btnCancelProgEdit').style.display = 'inline-block';
-
-    window.scrollTo({ top: document.getElementById('adminProgramForm').offsetTop - 80, behavior: 'smooth' });
-};
-
-window.cancelProgEdit = () => {
-    document.getElementById('progEditId').value = '';
-    document.getElementById('adminProgramForm').reset();
-    document.getElementById('btnSaveProg').textContent = 'حفظ البرنامج';
-    document.getElementById('btnCancelProgEdit').style.display = 'none';
-};
-
-window.deleteProgram = async (id) => {
-    if (!confirm('هل أنت متأكد من حذف هذا البرنامج؟')) return;
-    try {
-        await apiFetch(`/api/courses/${id}`, { method: 'DELETE' });
-        showToast('تم حذف البرنامج بنجاح.');
-        await renderAdminPrograms(false);
-    } catch (err) {
-        showToast(err.message, true);
-    }
-};
-
-window.toggleProgramStatus = async (id, newStatus) => {
-    try {
-        await apiFetch(`/api/courses/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: newStatus })
-        });
-        showToast(newStatus === 'hidden' ? 'تم إخفاء البرنامج من الموقع.' : 'تم إظهار البرنامج في الموقع.');
-        await renderAdminPrograms(false);
-    } catch (err) {
-        showToast(err.message, true);
-    }
-};
-
-// -------------------------------------------------------------
-// Admin Articles & Media Management
-// -------------------------------------------------------------
-async function renderAdminArticles(isEN) {
-    const container = document.getElementById('articlesTableContainer');
-    if (!container) return;
-    try {
-        const data = await apiFetch('/api/articles?limit=200');
-        adminAllArticles = data.articles || [];
-        const countEl = document.getElementById('totalArticlesCount');
-        if (countEl) countEl.textContent = adminAllArticles.length;
-        displayAdminArticles(adminAllArticles, isEN);
-    } catch (err) {
-        container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${esc(err.message)}</p>`;
-    }
-}
-
-function displayAdminArticles(list, isEN) {
-    const container = document.getElementById('articlesTableContainer');
-    if (!container) return;
-
-    if (!list.length) {
-        container.innerHTML = `<p style="text-align:center; padding:30px;">${isEN ? 'No articles found.' : 'لا توجد مقالات أو تغطيات منشورة.'}</p>`;
-        return;
-    }
-
-    const rows = list.map(a => `
-        <tr>
-            <td data-label="العنوان" style="font-weight:600; color:var(--primary);">${esc(a.titleAr || a.title)}</td>
-            <td data-label="التصنيف"><span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 8px; border-radius:8px;">${{ media_coverage: 'تغطية إعلامية', article: 'مقال', news: 'خبر' }[a.category] || esc(a.category)}</span></td>
-            <td data-label="المصدر">${a.sourceUrl ? `<a href="${safeUrl(a.sourceUrl)}" target="_blank" rel="noopener" style="color:var(--primary); text-decoration:underline;">رابط المصدر <i class="fas fa-external-link-alt"></i></a>` : esc(a.author || 'نبراس')}</td>
-            <td data-label="الحالة"><span class="badge-status ${a.status === 'published' ? 'available' : 'hidden-status'}">${a.status === 'published' ? 'منشور' : (a.status === 'archived' ? 'مؤرشف' : 'مسودة')}</span></td>
-            <td data-label="إدارة" style="white-space:nowrap;">
-                <button onclick="window.editArticle('${a._id}')" class="btn-save" style="padding:5px 10px; font-size:0.8rem; background:var(--accent); color:var(--primary-dark);"><i class="fas fa-edit"></i></button>
-                <button onclick="window.deleteArticle('${a._id}')" class="btn-save" style="padding:5px 10px; font-size:0.8rem; background:#fff0f0; color:#b42318; border:1px solid #ffd6d6;"><i class="fas fa-trash-alt"></i></button>
-            </td>
-        </tr>
-    `).join('');
-
-    container.innerHTML = `
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>العنوان</th>
-                    <th>التصنيف</th>
-                    <th>المصدر / الكاتب</th>
-                    <th>الحالة</th>
-                    <th>إدارة</th>
-                </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-        </table>
-    `;
-}
-
-window.editArticle = (id) => {
-    const art = adminAllArticles.find(a => a._id === id);
-    if (!art) return;
-
-    document.getElementById('artEditId').value = art._id;
-    document.getElementById('artTitleAr').value = art.titleAr || art.title || '';
-    document.getElementById('artCategory').value = art.category || 'media_coverage';
-    document.getElementById('artImage').value = art.image || '';
-    document.getElementById('artSourceUrl').value = art.sourceUrl || '';
-    document.getElementById('artAuthor').value = art.author || '';
-    document.getElementById('artContentAr').value = art.contentAr || art.content || '';
-    document.getElementById('artPublished').checked = art.status === 'published';
-
-    document.getElementById('btnSaveArt').textContent = 'تحديث المقال';
-    document.getElementById('btnCancelArtEdit').style.display = 'inline-block';
-    window.scrollTo({ top: document.getElementById('adminArticleForm').offsetTop - 80, behavior: 'smooth' });
-};
-
-window.cancelArtEdit = () => {
-    document.getElementById('artEditId').value = '';
-    document.getElementById('adminArticleForm').reset();
-    document.getElementById('btnSaveArt').textContent = 'حفظ المقال';
-    document.getElementById('btnCancelArtEdit').style.display = 'none';
-};
-
-window.deleteArticle = async (id) => {
-    if (!confirm('هل أنت متأكد من حذف هذا المقال؟')) return;
-    try {
-        await apiFetch(`/api/articles/${id}`, { method: 'DELETE' });
-        showToast('تم حذف المقال بنجاح.');
-        await renderAdminArticles(false);
-    } catch (err) {
-        showToast(err.message, true);
-    }
-};
-
-// -------------------------------------------------------------
-// Admin Inquiries Management
-// -------------------------------------------------------------
-async function renderAdminInquiries(isEN) {
-    const container = document.getElementById('inquiriesTableContainer');
-    if (!container) return;
-    try {
-        const data = await apiFetch('/api/inquiries');
-        adminAllInquiries = data.inquiries || [];
-        const countEl = document.getElementById('totalInquiriesCount');
-        if (countEl) countEl.textContent = adminAllInquiries.length;
-        displayAdminInquiries(adminAllInquiries, isEN);
-    } catch (err) {
-        container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${esc(err.message)}</p>`;
-    }
-}
-
-function displayAdminInquiries(list, isEN) {
-    const container = document.getElementById('inquiriesTableContainer');
-    if (!container) return;
-
-    if (!list.length) {
-        container.innerHTML = `<p style="text-align:center; padding:30px;">${isEN ? 'No messages found.' : 'لا توجد رسائل تواصل جديدة.'}</p>`;
-        return;
-    }
-
-    const rows = list.map(m => {
-        const dateStr = m.createdAt ? new Date(m.createdAt).toLocaleDateString('ar-SA') : '—';
-        const status = m.status || 'New';
-        const badgeClass = status === 'New' ? 'new' : (status === 'In Progress' ? 'in_progress' : (status === 'Replied' ? 'replied' : 'closed'));
-
-        return `
-            <tr>
-                <td data-label="المرسل">
-                    <strong>${esc(m.name)}</strong><br>
-                    <small dir="ltr" style="color:var(--text-muted);">${esc(m.phone)}</small>
-                    ${m.email ? `<br><small style="color:var(--text-muted);">${esc(m.email)}</small>` : ''}
-                </td>
-                <td data-label="نوع الاستفسار">
-                    <span class="badge" style="background:#eef4fb; color:var(--primary); font-size:0.8rem; padding:4px 8px; border-radius:8px;">${esc(m.inquiryType || 'عام')}</span>
-                    ${m.programOrService ? `<br><small style="color:var(--text-muted);">${esc(m.programOrService)}</small>` : ''}
-                </td>
-                <td data-label="الرسالة" style="max-width:300px; font-size:0.9rem; line-height:1.5; white-space:pre-line;">${esc(m.message)}</td>
-                <td data-label="التاريخ"><small>${dateStr}</small></td>
-                <td data-label="الحالة">
-                    <select onchange="window.updateInquiryStatus('${m._id}', this.value)" style="padding:4px 8px; border-radius:8px; border:1px solid var(--border); font-family:inherit; font-size:0.85rem;">
-                        <option value="New" ${status === 'New' ? 'selected' : ''}>جديدة (New)</option>
-                        <option value="In Progress" ${status === 'In Progress' ? 'selected' : ''}>قيد المتابعة</option>
-                        <option value="Replied" ${status === 'Replied' ? 'selected' : ''}>تم الرد</option>
-                        <option value="Closed" ${status === 'Closed' ? 'selected' : ''}>مغلقة</option>
-                    </select>
-                </td>
-                <td data-label="إدارة">
-                    <a href="https://wa.me/${(m.phone || '').replace(/[^0-9]/g, '')}" target="_blank" class="btn-save" style="background:#e6f9ed; color:#12b76a; border:1px solid #a6f4c5; padding:5px 8px; font-size:0.8rem; text-decoration:none; display:inline-block;" title="مراسلة واتساب"><i class="fab fa-whatsapp"></i></a>
-                    <button onclick="window.deleteInquiry('${m._id}')" class="btn-save" style="padding:5px 8px; font-size:0.8rem; background:#fff0f0; color:#b42318; border:1px solid #ffd6d6;" title="حذف"><i class="fas fa-trash-alt"></i></button>
-                </td>
-            </tr>
-        `;
-    }).join('');
-
-    container.innerHTML = `
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>المرسل</th>
-                    <th>نوع الاستفسار</th>
-                    <th>الرسالة</th>
-                    <th>التاريخ</th>
-                    <th>الحالة</th>
-                    <th>إدارة</th>
-                </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-        </table>
-    `;
-}
-
-window.filterAdminInquiries = () => {
-    const status = document.getElementById('inquiryStatusFilter')?.value || 'all';
-    if (status === 'all') {
-        displayAdminInquiries(adminAllInquiries, false);
-    } else {
-        displayAdminInquiries(adminAllInquiries.filter(m => m.status === status), false);
-    }
-};
-
-window.updateInquiryStatus = async (id, newStatus) => {
-    try {
-        await apiFetch(`/api/inquiries/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: newStatus })
-        });
-        showToast('تم تحديث حالة الرسالة.');
-    } catch (err) {
-        showToast(err.message, true);
-    }
-};
-
-window.deleteInquiry = async (id) => {
-    if (!confirm('هل أنت متأكد من حذف هذه الرسالة؟')) return;
-    try {
-        await apiFetch(`/api/inquiries/${id}`, { method: 'DELETE' });
-        showToast('تم حذف الرسالة بنجاح.');
-        await renderAdminInquiries(false);
-    } catch (err) {
-        showToast(err.message, true);
-    }
-};
-
-// -------------------------------------------------------------
-// Admin Certificates Management
-// -------------------------------------------------------------
-async function renderAdminCerts(isEN) {
-    const container = document.getElementById('certsTableContainer') || document.getElementById('addedCertsContainer');
-    if (!container) return;
-    try {
-        const data = await apiFetch('/api/admin/certificates');
-        adminAllCertificates = data.certificates || [];
-    } catch (error) {
-        container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${esc(error.message)}</p>`;
-        return;
-    }
-
-    const totalCertsEl = document.getElementById('totalCertsCount');
-    if (totalCertsEl) totalCertsEl.textContent = adminAllCertificates.length;
-
-    if (!adminAllCertificates.length) {
-        container.innerHTML = `<p style="text-align:center; padding:20px;">${isEN ? 'No certificates found.' : 'لا توجد شهادات مسجلة حالياً.'}</p>`;
-        return;
-    }
-
-    const rows = adminAllCertificates.map((c) => {
-        const statusKey = (c.status || 'Valid').toLowerCase();
-        const badgeClass = statusKey === 'suspended' ? 'suspended' : (statusKey === 'cancelled' ? 'cancelled' : (statusKey === 'expired' ? 'expired' : 'valid'));
-        const statusLabel = statusKey === 'suspended' ? 'معلقة' : (statusKey === 'cancelled' ? 'ملغاة' : (statusKey === 'expired' ? 'منتهية' : 'معتمدة'));
-
-        return `
-            <tr>
-                <td data-label="اسم المتدرب" style="font-weight:600; color:var(--primary);">${esc(c.trainee_name)}</td>
-                <td data-label="البرنامج">${esc(c.program_name)}</td>
-                <td data-label="رقم الشهادة" style="font-weight:700; color:#7a1c28;" dir="ltr">${esc(c.cert_num)}</td>
-                <td data-label="الحالة"><span class="badge-status ${badgeClass}">${statusLabel}</span></td>
-                <td data-label="التاريخ">${esc(c.issue_date)}</td>
-                <td data-label="PDF">${c.pdf_url ? `<a href="${safeUrl(c.pdf_url)}" target="_blank" download style="color:#0f766e; text-decoration:none; font-weight:600;"><i class="fas fa-file-pdf"></i> ${isEN ? 'Download' : 'تحميل'}</a>` : `<span style="color:#999;">${isEN ? 'N/A' : 'غير مرفق'}</span>`}</td>
-                <td data-label="إدارة">
-                    <button onclick="window.editCert('${c._id}')" class="btn-save" style="background:var(--accent); color:var(--primary-dark); padding:6px 12px; font-size:0.85rem;"><i class="fas fa-edit"></i></button>
-                    <button onclick="window.deleteCert('${c._id}')" class="btn-save" style="background:#fff0f0; color:#b42318; border:1px solid #ffd6d6; padding:6px 12px; font-size:0.85rem;">
-                        <i class="fas fa-trash-alt"></i> ${isEN ? 'Delete' : 'حذف'}
-                    </button>
-                </td>
-            </tr>
-        `;
-    }).join('');
-
-    container.innerHTML = `
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>اسم المتدرب</th>
-                    <th>البرنامج</th>
-                    <th>رقم الشهادة</th>
-                    <th>الحالة</th>
-                    <th>التاريخ</th>
-                    <th>PDF</th>
-                    <th>إدارة</th>
-                </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-        </table>
-    `;
-}
-
-window.editCert = (id) => {
-    const cert = adminAllCertificates.find((c) => c._id === id);
-    if (!cert) return;
-    document.getElementById('certEditId').value = cert._id;
-    document.getElementById('adminCertNum').value = cert.cert_num || '';
-    document.getElementById('adminTraineeName').value = cert.trainee_name || '';
-    document.getElementById('adminProgramType').value = cert.program_type || 'دورة تدريبية';
-    document.getElementById('adminCertStatus').value = cert.status || 'Valid';
-    document.getElementById('adminProgramName').value = cert.program_name || '';
-    document.getElementById('adminField').value = cert.field || '';
-    document.getElementById('adminCertUserId').value = cert.userId || '';
-    document.getElementById('adminIssueDate').value = cert.issue_date || '';
-    document.getElementById('btnSaveCert').textContent = 'تحديث بيانات الشهادة';
-    document.getElementById('btnCancelCertEdit').style.display = 'inline-block';
-    document.getElementById('adminCertForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
-};
-
-window.cancelCertEdit = () => {
-    document.getElementById('certEditId').value = '';
-    document.getElementById('adminCertForm').reset();
-    document.getElementById('btnSaveCert').textContent = 'حفظ بيانات الشهادة';
-    document.getElementById('btnCancelCertEdit').style.display = 'none';
-};
-
-// Global refresh hooks
-window.refreshAdminPrograms = () => renderAdminPrograms(false);
-window.refreshAdminArticles = () => renderAdminArticles(false);
-window.refreshAdminInquiries = () => renderAdminInquiries(false);
-window.refreshAdminCerts = () => renderAdminCerts(false);
-
-
-// allAdminUsers declared in global admin state
-
-
-async function renderAdminUsers(isEN) {
-    const container = document.getElementById('usersTableContainer');
-    if (!container) return;
-
-    try {
-        const data = await apiFetch('/api/auth/users');
-        allAdminUsers = data.users || [];
-        displayUsers(allAdminUsers, isEN);
-    } catch (error) {
-        container.innerHTML = `<p style="text-align:center; padding:20px; color:#b42318;">${esc(error.message)}</p>`;
-    }
-}
-
-function displayUsers(users, isEN) {
-    const container = document.getElementById('usersTableContainer');
-    if (!container) return;
-
-    // Populate User Dropdown in Cert Form (always use full list)
-    const certUserSelect = document.getElementById('adminCertUserId');
-    if (certUserSelect && allAdminUsers.length > 0) {
-        const currentVal = certUserSelect.value;
-        certUserSelect.innerHTML = '<option value="">--- اختر مستخدم ---</option>' + 
-            allAdminUsers.map(u => `<option value="${esc(u._id)}">${esc(u.name)} (${esc(u.email)})</option>`).join('');
-        certUserSelect.value = currentVal;
-    }
-
-    if (!users.length) {
-        container.innerHTML = `<p style="text-align:center; padding:20px;">${isEN ? 'No matching users.' : 'لا يوجد عملاء مطابقين للبحث.'}</p>`;
-        return;
-    }
-
-    const rows = users.map(u => {
-        const roleClass = u.role === 'admin' ? 'admin' : 'user';
-        const roleName = u.role === 'admin' ? (isEN ? 'Admin' : 'مدير') : (isEN ? 'Student' : 'طالب');
-        return `
-            <tr>
-                <td data-label="${isEN ? 'Name' : 'الاسم'}">${esc(u.name)}</td>
-                <td data-label="${isEN ? 'Email' : 'البريد'}">${esc(u.email)}</td>
-                <td data-label="${isEN ? 'Phone' : 'الهاتف'}">${esc(u.phone || '—')}</td>
-                <td data-label="${isEN ? 'Role' : 'الدور'}"><span class="badge ${roleClass}">${roleName}</span></td>
-                <td data-label="${isEN ? 'Actions' : 'إدارة'}">
-                    <button class="btn-save edit-user-btn" data-id="${u._id}" style="padding:6px 10px; font-size:0.8rem; background: var(--accent); color: var(--primary-dark);"><i class="fas fa-edit"></i></button>
-                    <button class="btn-save delete-user-btn" data-id="${u._id}" style="padding:6px 10px; font-size:0.8rem; background: #fff0f0; color: #b42318; border:1px solid #ffd6d6;"><i class="fas fa-trash-alt"></i></button>
-                </td>
-            </tr>
-        `;
-    }).join('');
-
-    const totalUsersEl = document.getElementById('totalUsersCount');
-    if (totalUsersEl) totalUsersEl.textContent = allAdminUsers.length;
-
-    container.innerHTML = `
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>${isEN ? 'Name' : 'الاسم'}</th>
-                    <th>${isEN ? 'Email' : 'البريد'}</th>
-                    <th>${isEN ? 'Phone' : 'الهاتف'}</th>
-                    <th>${isEN ? 'Role' : 'الدور'}</th>
-                    <th>${isEN ? 'Actions' : 'إدارة'}</th>
-                </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-        </table>
-    `;
-}
-
-window.editUser = async (id) => {
-    try {
-        // Direct fetch to be 100% sure we have fresh, correct data
-        const data = await apiFetch(`/api/auth/users/${id}`);
-        const user = (data && data.user) ? data.user : data;
-
-        if (!user || !user._id) {
-            throw new Error("بيانات العميل غير مكتملة");
-        }
-
-        document.getElementById('editUserId').value = user._id;
-        document.getElementById('editUserName').value = user.name || '';
-        document.getElementById('editUserEmail').value = user.email || '';
-        document.getElementById('editUserPhone').value = user.phone || '';
-        document.getElementById('editUserRole').value = user.role || 'student';
-        
-        let courses = '';
-        if (Array.isArray(user.enrolledCourses)) {
-            courses = user.enrolledCourses.join(', ');
-        } else if (typeof user.enrolledCourses === 'string') {
-            courses = user.enrolledCourses;
-        }
-        
-        document.getElementById('editUserCourses').value = courses;
-        
-        const modal = document.getElementById('editUserModal');
-        modal.style.display = 'flex';
-        modal.style.visibility = 'visible';
-        modal.style.opacity = '1';
-        
-    } catch (err) {
-        console.error("Critical Edit Error:", err);
-        showToast(document.documentElement.lang === 'en' ? 'Failed to load user data.' : 'فشل تحميل بيانات العميل.', true);
-    }
-};
-
-window.deleteUser = async (id) => {
-    const isEN = document.documentElement.lang === 'en';
-    if (!confirm(isEN ? 'Delete user?' : 'هل تريد حذف المستخدم؟')) return;
-    try {
-        await apiFetch(`/api/auth/users/${id}`, { method: 'DELETE' });
-        showToast(isEN ? 'User deleted.' : 'تم حذف المستخدم.');
-        await renderAdminUsers(isEN);
-    } catch (error) {
-        showToast(error.message, true);
-    }
-};
-
-window.filterUsers = () => {
-    const isEN = document.documentElement.lang === 'en';
-    const query = document.getElementById('userSearchInput').value.toLowerCase().trim();
-    if (!query) {
-        displayUsers(allAdminUsers, isEN);
-        return;
-    }
-    const filtered = allAdminUsers.filter(u => 
-        u.email.toLowerCase().includes(query) || 
-        u.name.toLowerCase().includes(query)
-    );
-    displayUsers(filtered, isEN);
-};
-
-window.refreshUsers = async () => {
-    const isEN = document.documentElement.lang === 'en';
-    await renderAdminUsers(isEN);
-};
-
 window.logout = async () => {
     try {
         await apiFetch('/api/auth/logout', { method: 'POST' });
-    } catch(err) {}
+    } catch (err) {}
     localStorage.removeItem('nibras_user_name');
-    // Admin logout → go back to admin login
-    const path = window.location.pathname.toLowerCase();
-    if (path.endsWith('/admin.html')) {
-        window.location.reload();
-    } else {
-        window.location.href = document.documentElement.lang === 'en' ? '/pages/en/login.html' : '/pages/ar/login.html';
-    }
+    window.location.href = document.documentElement.lang === 'en' ? '/pages/en/login.html' : '/pages/ar/login.html';
 };
 
+// Signed-in visitors see their name in the nav; an admin sees the way into the control panel
 async function updateNavAuth(isEN) {
     if (!localStorage.getItem('nibras_user_name')) return;
-    let userName = '';
+    let user;
     try {
-        const data = await apiFetch('/api/auth/me');
-        userName = data.user.name;
+        user = (await apiFetch('/api/auth/me')).user;
     } catch (e) {
         localStorage.removeItem('nibras_user_name');
         return;
     }
 
-    const firstName = userName.split(' ')[0];
-    const profileUrl = isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html';
-    
+    const isAdmin = user.role === 'admin';
+    const firstName = String(user.name || '').split(' ')[0];
+    const profileUrl = isAdmin ? '/pages/ar/admin.html' : (isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html');
+    const label = isAdmin
+        ? `<i class="fas fa-gauge-high"></i> ${isEN ? 'Control Panel' : 'لوحة التحكم'}`
+        : `<i class="fas fa-user-circle"></i> ${esc(firstName)}`;
+
     // 1. Desktop Nav Auth
     let navAuth = document.getElementById('navAuth');
     if (!navAuth) {
@@ -1334,23 +519,12 @@ async function updateNavAuth(isEN) {
 
     // Safeguard: NEVER overwrite a language switcher button!
     if (navAuth && !navAuth.querySelector('.lang-switch-btn') && !navAuth.classList.contains('lang-switch-btn')) {
-        navAuth.innerHTML = `<a href="${profileUrl}" class="nav-btn"><i class="fas fa-user-circle"></i> ${esc(firstName)}</a>`;
+        navAuth.innerHTML = `<a href="${profileUrl}" class="nav-btn${isAdmin ? ' nav-btn--admin' : ''}">${label}</a>`;
     }
     if (mobileNavAuth && !mobileNavAuth.querySelector('.lang-switch-btn') && !mobileNavAuth.classList.contains('lang-switch-btn')) {
-        mobileNavAuth.innerHTML = `<a href="${profileUrl}" class="mobile-btn"><i class="fas fa-user-circle"></i> ${esc(firstName)}</a>`;
+        mobileNavAuth.innerHTML = `<a href="${profileUrl}" class="mobile-btn">${label}</a>`;
     }
 }
-
-window.deleteCert = async (id) => {
-    const isEN = document.documentElement.lang === 'en';
-    if (!confirm(isEN ? 'Delete this certificate?' : 'هل تريد حذف هذه الشهادة؟')) return;
-    try {
-        await apiFetch(`/api/admin/certificates/${id}`, { method: 'DELETE' });
-        await renderAdminCerts(isEN);
-    } catch (error) {
-        showToast(error.message, true);
-    }
-};
 
 function showToast(message, isError = false) {
     const toast = document.getElementById('toast');
@@ -1381,6 +555,30 @@ function saveCart(cart) {
 
 function formatPrice(amount) {
     return `${Number(amount).toFixed(2)} US$`;
+}
+
+// The cart only remembers which programs were chosen. Names and prices are refreshed from
+// the server, and programs that were removed or closed drop out.
+async function refreshCart() {
+    const cart = getCart();
+    if (!cart.length) return cart;
+    const isEN = document.documentElement.lang === 'en';
+    try {
+        const data = await apiFetch(`/api/courses?status=available&limit=50&ids=${cart.map((item) => encodeURIComponent(item.id)).join(',')}`);
+        const byId = new Map((data.courses || []).map((c) => [c._id, c]));
+        const fresh = cart.filter((item) => byId.has(item.id)).map((item) => {
+            const course = byId.get(item.id);
+            return { id: item.id, name: (isEN && course.titleEn) || course.titleAr, price: course.finalPrice, qty: 1 };
+        });
+        if (fresh.length < cart.length) {
+            showToast(isEN ? 'Programs that are no longer available were removed from your cart.' : 'تمت إزالة برامج لم تعد متاحة من السلة.');
+        }
+        saveCart(fresh);
+        updateCartBadge();
+        return fresh;
+    } catch (err) {
+        return cart;
+    }
 }
 
 function updateCartBadge() {
@@ -1432,7 +630,14 @@ window.toggleCart = (event) => {
 
     if (shouldOpen) {
         renderCart();
+        refreshCart().then(renderCart);
     }
+};
+
+// Adds a program as the API returned it, at the price after any discount
+window.addCourseToCart = (course) => {
+    const isEN = document.documentElement.lang === 'en';
+    window.addToCart(course._id, (isEN && course.titleEn) || course.titleAr, course.finalPrice ?? course.price);
 };
 
 window.addToCart = (id, name, price) => {
@@ -1569,6 +774,18 @@ function coverOf(item) {
     return `/assets/img/covers/${lang}/${specialtyOf(item).key}.webp?v=${COVER_VERSION}`;
 }
 
+function formatAmount(amount) {
+    return `${Number(amount || 0).toLocaleString('en-US', { maximumFractionDigits: 2 })} US$`;
+}
+
+// Price with the original struck through when a discount applies
+function priceHtml(item) {
+    const final = item.finalPrice ?? item.price;
+    return item.discountPercent > 0
+        ? `<span class="program-price"><del>${formatAmount(item.price)}</del> ${formatAmount(final)}</span>`
+        : `<span class="program-price">${formatAmount(final)}</span>`;
+}
+
 function programCard(item, isEN) {
     const title = (isEN && item.titleEn) || item.titleAr || item.title || '';
     const desc = (isEN && item.descriptionEn) || item.descriptionAr || item.description || '';
@@ -1576,7 +793,6 @@ function programCard(item, isEN) {
     const spec = specialtyOf(item);
     const level = LEVELS[item.type] ? LEVELS[item.type][lang] : '';
     const url = `/pages/${lang}/program-detail.html?slug=${encodeURIComponent(item.slug || item._id)}`;
-    const price = `${Number(item.price || 0).toLocaleString('en-US')} US$`;
     const canBuy = !item.status || item.status === 'available';
     const notAvailable = item.status === 'coming_soon' ? (isEN ? 'Coming soon' : 'قريباً') : (isEN ? 'Unavailable' : 'غير متاح');
 
@@ -1585,13 +801,14 @@ function programCard(item, isEN) {
             <a class="program-cover" href="${url}" tabindex="-1" aria-hidden="true">
                 <img src="${safeUrl(coverOf(item))}" alt="" loading="lazy" width="800" height="500" />
                 <span class="program-level">${esc(level)}</span>
+                ${item.discountPercent > 0 ? `<span class="program-discount">${isEN ? `${item.discountPercent}% off` : `خصم ${item.discountPercent}%`}</span>` : ''}
             </a>
             <div class="program-body">
                 <div class="program-specialty">${esc(spec[lang])}</div>
                 <h3><a href="${url}">${esc(title)}</a></h3>
                 <p class="program-desc">${esc(desc)}</p>
                 <div class="program-foot">
-                    <span class="program-price">${price}</span>
+                    ${priceHtml(item)}
                     <div class="program-actions">
                         <a class="program-link" href="${url}">${isEN ? 'Details' : 'التفاصيل'}</a>
                         ${canBuy
@@ -1604,16 +821,17 @@ function programCard(item, isEN) {
     `;
 }
 
-window.initCatalogPage = async ({ type, gridId, searchId, filterId, areaId, countId }) => {
+// Catalog pages: a search box over the programs of one track (or all of them).
+// A specialty can still arrive from a specialty card's link and shows as a removable chip.
+window.initCatalogPage = async ({ type, gridId, searchId, areaId, countId }) => {
     const isEN = document.documentElement.lang === 'en';
     const grid = document.getElementById(gridId);
     const search = document.getElementById(searchId);
-    const filters = document.getElementById(filterId);
     const area = areaId ? document.getElementById(areaId) : null;
     const count = countId ? document.getElementById(countId) : null;
-    const params = new URLSearchParams(window.location.search);
+    const requested = new URLSearchParams(window.location.search).get('specialty');
+    let specialty = NIBRAS_SPECIALTIES.find((s) => s.key === requested) || null;
     let courses = [];
-    let activeKey = params.get('specialty') || 'all';
 
     try {
         const data = await apiFetch(`/api/courses?limit=500${type ? `&type=${type}` : ''}`);
@@ -1623,27 +841,25 @@ window.initCatalogPage = async ({ type, gridId, searchId, filterId, areaId, coun
         return;
     }
 
-    if (!NIBRAS_SPECIALTIES.some((s) => s.key === activeKey)) {
-        activeKey = 'all';
-    }
+    const chip = document.createElement('div');
+    chip.className = 'specialty-chip-row';
+    search.closest('.search-box-wrapper').after(chip);
 
-    const counts = {};
-    courses.forEach((c) => {
-        const key = specialtyOf(c).key;
-        counts[key] = (counts[key] || 0) + 1;
-    });
-    const label = (s) => (isEN ? s.en : s.ar);
-    const tag = (key, icon, text, n) => `<button type="button" class="filter-tag${key === activeKey ? ' active' : ''}" data-key="${key}"><i class="fas ${icon}"></i> ${esc(text)} <small>${n}</small></button>`;
-    filters.innerHTML = tag('all', 'fa-table-cells-large', isEN ? 'All' : 'الكل', courses.length)
-        + NIBRAS_SPECIALTIES.filter((s) => counts[s.key]).map((s) => tag(s.key, s.icon, label(s), counts[s.key])).join('');
+    function renderChip() {
+        chip.innerHTML = specialty
+            ? `<button type="button" class="specialty-chip" aria-label="${isEN ? 'Remove specialty filter' : 'إزالة تصفية التخصص'}">
+                   <i class="fas ${specialty.icon}"></i> ${esc(isEN ? specialty.en : specialty.ar)} <i class="fas fa-xmark"></i>
+               </button>`
+            : '';
+    }
 
     function apply() {
         const q = search.value.toLowerCase().trim();
-        if (area) area.classList.toggle('hidden', activeKey === 'all' && !q);
+        if (area) area.classList.toggle('hidden', !specialty && !q);
         const list = courses.filter((c) => {
-            const inSpecialty = activeKey === 'all' || specialtyOf(c).key === activeKey;
-            const text = [c.titleAr, c.titleEn, c.specialty, c.descriptionAr, c.descriptionEn, label(specialtyOf(c))].join(' ').toLowerCase();
-            return inSpecialty && (!q || text.includes(q));
+            const spec = specialtyOf(c);
+            const text = [c.titleAr, c.titleEn, c.specialty, c.descriptionAr, c.descriptionEn, spec.ar, spec.en].join(' ').toLowerCase();
+            return (!specialty || spec.key === specialty.key) && (!q || text.includes(q));
         });
         if (count) count.textContent = list.length;
         grid.innerHTML = list.length
@@ -1651,11 +867,11 @@ window.initCatalogPage = async ({ type, gridId, searchId, filterId, areaId, coun
             : `<p class="empty-state"><i class="fas fa-magnifying-glass"></i>${isEN ? 'No programs match your search.' : 'لا توجد برامج مطابقة لبحثك.'}</p>`;
     }
 
-    filters.addEventListener('click', (e) => {
-        const btn = e.target.closest('.filter-tag');
-        if (!btn) return;
-        activeKey = btn.dataset.key;
-        filters.querySelectorAll('.filter-tag').forEach((b) => b.classList.toggle('active', b === btn));
+    chip.addEventListener('click', (e) => {
+        if (!e.target.closest('.specialty-chip')) return;
+        specialty = null;
+        history.replaceState(null, '', window.location.pathname);
+        renderChip();
         apply();
     });
     search.addEventListener('input', apply);
@@ -1663,46 +879,159 @@ window.initCatalogPage = async ({ type, gridId, searchId, filterId, areaId, coun
         const btn = e.target.closest('[data-add]');
         if (!btn) return;
         const course = courses.find((c) => c._id === btn.dataset.add);
-        if (course) window.addToCart(course._id, (isEN && course.titleEn) || course.titleAr, course.price);
+        if (course) window.addCourseToCart(course);
     });
     window.resetCatalog = () => {
-        activeKey = 'all';
+        specialty = null;
         search.value = '';
-        filters.querySelectorAll('.filter-tag').forEach((b) => b.classList.toggle('active', b.dataset.key === 'all'));
+        history.replaceState(null, '', window.location.pathname);
+        renderChip();
         apply();
     };
 
+    renderChip();
     apply();
-    if (area && activeKey !== 'all') area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (area && specialty) area.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
+// --- Admin-managed content (page images, pathways, numbers, cards, testimonials) ---
+const SITE_CACHE_KEY = 'nibras_site_v1';
+
+function readCachedSite() {
+    try {
+        return JSON.parse(localStorage.getItem(SITE_CACHE_KEY) || 'null');
+    } catch (e) {
+        return null;
+    }
+}
+
+// Pages paint at once from the last copy seen (or the built-in defaults), then refresh from the server
+function initSiteContent(isEN) {
+    const selector = '[data-hero], [data-pathways], [data-stats], [data-guide-cards], [data-service-cards], [data-testimonials]';
+    if (typeof NIBRAS_CONTENT === 'undefined' || !document.querySelector(selector)) return;
+    const cached = readCachedSite();
+    renderSiteContent(cached || NIBRAS_CONTENT, isEN);
+    apiFetch('/api/site').then((data) => {
+        const fresh = JSON.stringify(data);
+        if (cached && JSON.stringify(cached) === fresh) return;
+        try { localStorage.setItem(SITE_CACHE_KEY, fresh); } catch (e) {}
+        renderSiteContent(data, isEN);
+    }).catch(() => {});
+}
+
+function renderSiteContent(data, isEN) {
+    const lang = isEN ? 'en' : 'ar';
+    const pick = (item, field) => (isEN && item[`${field}En`]) || item[`${field}Ar`] || '';
+    const trackUrl = (key) => `/pages/${lang}/${NIBRAS_CONTENT.trackPages[key]}`;
+    const media = (item, cls) => item.image
+        ? `<div class="${cls}"><img src="${safeUrl(item.image)}" alt="" loading="lazy" /></div>`
+        : `<div class="${cls} ${cls}--icon"><i class="fas ${esc(item.icon || 'fa-star')}" aria-hidden="true"></i></div>`;
+    // "Label: text" shows its label in bold
+    const point = (text) => {
+        const i = text.indexOf(':');
+        return i > 0 && i < 40 ? `<strong>${esc(text.slice(0, i))}:</strong>${esc(text.slice(i + 1))}` : esc(text);
+    };
+    const arrow = `<i class="fas fa-arrow-left" aria-hidden="true"></i>`;
+
+    document.querySelectorAll('[data-hero]').forEach((el) => {
+        const url = data.heroes && data.heroes[el.dataset.hero];
+        el.classList.toggle('has-image', !!url);
+        if (url) el.style.setProperty('--hero-image', `url("${safeUrl(url)}")`);
+        else el.style.removeProperty('--hero-image');
+    });
+
+    document.querySelectorAll('[data-pathways]').forEach((el) => {
+        el.innerHTML = (data.pathways || []).map((p, i) => `
+            <a class="path-card" href="${trackUrl(p.key)}">
+                ${media(p, 'path-media')}
+                <div class="path-body">
+                    <span class="path-num">0${i + 1}</span>
+                    <h3>${esc(pick(p, 'title'))}</h3>
+                    <p class="path-tag">${esc(pick(p, 'tagline'))}</p>
+                    <p class="path-desc">${esc(pick(p, 'desc'))}</p>
+                    <span class="path-link">${isEN ? 'Explore this track' : 'استكشف المسار'} ${arrow}</span>
+                </div>
+            </a>`).join('');
+    });
+
+    document.querySelectorAll('[data-stats]').forEach((el) => {
+        const stats = data.stats || [];
+        const section = el.closest('section');
+        if (section) section.hidden = !stats.length;
+        el.innerHTML = stats.map((s) => `
+            <div class="stat">
+                <i class="fas ${esc(s.icon)}" aria-hidden="true"></i>
+                <span class="stat-value"><span class="counter" data-target="${Number(s.value) || 0}">0</span>${s.suffix ? `<em>${esc(s.suffix)}</em>` : ''}</span>
+                <span class="stat-label">${esc(pick(s, 'label'))}</span>
+            </div>`).join('');
+        initCounters(el);
+    });
+
+    document.querySelectorAll('[data-guide-cards]').forEach((el) => {
+        el.innerHTML = (data.guideCards || []).map((c) => `
+            <a class="guide-card" href="${trackUrl(c.key)}">
+                ${media(c, 'guide-media')}
+                <div class="guide-body">
+                    <h3>${esc(pick(c, 'title'))}</h3>
+                    <p>${esc(pick(c, 'text'))}</p>
+                    <span class="path-link">${esc(pick(c, 'link'))} ${arrow}</span>
+                </div>
+            </a>`).join('');
+    });
+
+    document.querySelectorAll('[data-service-cards]').forEach((el) => {
+        el.innerHTML = (data.serviceCards || []).map((c) => `
+            <article class="service-card${c.key === 'companies' ? ' service-card--accent' : ''}">
+                ${media(c, 'service-media')}
+                <div class="service-body">
+                    <h3>${esc(pick(c, 'title'))}</h3>
+                    <h5 class="text-gold">${esc(pick(c, 'subtitle'))}</h5>
+                    <p>${esc(pick(c, 'text'))}</p>
+                    <ul class="check-list">${(isEN && c.pointsEn && c.pointsEn.length ? c.pointsEn : c.pointsAr || []).map((p) => `<li>${point(p)}</li>`).join('')}</ul>
+                    <a class="${c.key === 'companies' ? 'btn-primary' : 'btn-outline'}" href="${esc(c.href.startsWith('#') ? c.href : `/pages/${lang}/${c.href}`)}">${esc(pick(c, 'link'))} ${arrow}</a>
+                </div>
+            </article>`).join('');
+    });
+
+    document.querySelectorAll('[data-testimonials]').forEach((section) => {
+        const list = data.testimonials || [];
+        section.hidden = !list.length;
+        section.querySelector('.quotes').innerHTML = list.map((t) => `
+            <figure class="quote">
+                <blockquote>${esc(pick(t, 'quote'))}</blockquote>
+                <figcaption>
+                    ${t.image ? `<img src="${safeUrl(t.image)}" alt="" loading="lazy" />` : `<span class="quote-avatar" aria-hidden="true">${esc(pick(t, 'name').charAt(0))}</span>`}
+                    <span><strong>${esc(pick(t, 'name'))}</strong>${pick(t, 'role') ? `<span>${esc(pick(t, 'role'))}</span>` : ''}</span>
+                </figcaption>
+            </figure>`).join('');
+    });
+}
+
 // --- Home page: featured programs ---
+// Programs the admin marks as featured come first. Without any, one program per track stands in.
 async function initFeaturedPrograms(isEN) {
     const grid = document.getElementById('featuredPrograms');
     if (!grid) return;
     const section = grid.closest('section');
     const types = ['course', 'diploma', 'master', 'phd'];
-    let featured;
-    let byType;
+    let picks = [];
 
     try {
-        [featured, ...byType] = await Promise.all([
-            apiFetch('/api/courses?featured=true&status=available&limit=3'),
-            ...types.map((t) => apiFetch(`/api/courses?type=${t}&status=available&limit=6`))
-        ]);
+        const featured = await apiFetch('/api/courses?featured=true&status=available&limit=6');
+        picks = featured.courses || [];
+        if (!picks.length) {
+            const byType = await Promise.all(types.map((t) => apiFetch(`/api/courses?type=${t}&status=available&limit=6`)));
+            byType.forEach(({ courses = [] }) => {
+                if (picks.length >= 3) return;
+                const fresh = courses.filter((c) => !picks.some((p) => p._id === c._id));
+                const course = fresh.find((c) => !picks.some((p) => specialtyOf(p).key === specialtyOf(c).key)) || fresh[0];
+                if (course) picks.push(course);
+            });
+        }
     } catch (err) {
         section.remove();
         return;
     }
-
-    // Programs marked as featured lead; one per track fills the rest, each from a different specialty
-    const picks = [...(featured.courses || [])];
-    byType.forEach(({ courses = [] }) => {
-        if (picks.length >= 3) return;
-        const fresh = courses.filter((c) => !picks.some((p) => p._id === c._id));
-        const course = fresh.find((c) => !picks.some((p) => specialtyOf(p).key === specialtyOf(c).key)) || fresh[0];
-        if (course) picks.push(course);
-    });
     if (!picks.length) {
         section.remove();
         return;
@@ -1713,11 +1042,8 @@ async function initFeaturedPrograms(isEN) {
         const btn = e.target.closest('[data-add]');
         if (!btn) return;
         const course = picks.find((c) => c._id === btn.dataset.add);
-        if (course) window.addToCart(course._id, (isEN && course.titleEn) || course.titleAr, course.price);
+        if (course) window.addCourseToCart(course);
     });
-
-    const total = byType.reduce((sum, d) => sum + (d.total || 0), 0);
-    if (total) document.querySelectorAll('[data-stat="programs"]').forEach((el) => { el.textContent = total; });
 }
 
 function initContactPrefill() {
@@ -1726,55 +1052,59 @@ function initContactPrefill() {
     if (subject && field) field.value = subject.slice(0, 200);
 }
 
-function initCheckout(isEN) {
+// Checkout shows current prices from the server and sends program ids only.
+// The server prices the order, saves it for the admin and returns the WhatsApp message.
+async function initCheckout(isEN) {
     const form = document.getElementById('checkoutForm');
     if (!form) return;
     const list = document.getElementById('checkoutItems');
     const totalEl = document.getElementById('checkoutTotal');
     const button = form.querySelector('button[type="submit"]');
-    const cart = getCart();
-    const total = cart.reduce((sum, item) => sum + item.price * (item.qty || 1), 0);
 
-    totalEl.textContent = formatPrice(total);
-    if (!cart.length) {
-        list.innerHTML = `<p class="cart-empty">${isEN ? 'Your cart is empty. Please add a program first.' : 'السلة فارغة. يرجى إضافة برنامج أولاً.'}</p>`;
-        button.disabled = true;
-        return;
+    function render(cart) {
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        totalEl.textContent = formatPrice(total);
+        button.disabled = !cart.length;
+        list.innerHTML = cart.length
+            ? cart.map((item) => `
+                <div class="order-summary-item">
+                    <strong>${esc(item.name)}</strong>
+                    <span>${formatPrice(item.price)}</span>
+                </div>`).join('')
+            : `<p class="cart-empty">${isEN ? 'Your cart is empty. Please add a program first.' : 'السلة فارغة. يرجى إضافة برنامج أولاً.'}</p>`;
     }
-    list.innerHTML = cart.map((item) => `
-        <div class="order-summary-item">
-            <strong>${esc(item.name)}</strong>
-            <span>${formatPrice(item.price * (item.qty || 1))}</span>
-        </div>
-    `).join('');
+
+    render(getCart());
+    render(await refreshCart());
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const value = (id) => document.getElementById(id).value.trim();
-        const programs = cart.map((item, i) => `${i + 1}- ${item.name} (${formatPrice(item.price * (item.qty || 1))})`).join('\n');
-        const message = isEN
-            ? `New enrollment request:\n\n*Trainee details:*\n- Name: ${value('chkName')}\n- Email: ${value('chkEmail')}\n- Phone: ${value('chkPhone')}\n- Country: ${value('chkCountry')}\n\n*Selected programs:*\n${programs}\n\n*Total: ${formatPrice(total)}*`
-            : `طلب اشتراك جديد من الأكاديمية:\n\n*بيانات المتدرب:*\n- الاسم: ${value('chkName')}\n- البريد: ${value('chkEmail')}\n- الهاتف: ${value('chkPhone')}\n- الدولة: ${value('chkCountry')}\n\n*البرامج المختارة:*\n${programs}\n\n*الإجمالي الكلي: ${formatPrice(total)}*`;
-
+        const original = button.innerHTML;
         button.disabled = true;
+        button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${isEN ? 'Sending...' : 'جاري الإرسال...'}`;
         try {
-            // Keep a copy in the admin panel in case the visitor never sends the WhatsApp message
-            await apiFetch('/api/inquiries', {
+            const data = await apiFetch('/api/inquiries/enrollment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: value('chkName'),
                     email: value('chkEmail'),
                     phone: value('chkPhone'),
-                    inquiryType: 'طلب تسجيل',
-                    programOrService: cart.map((item) => item.name).join('، '),
-                    subject: 'طلب تسجيل من صفحة الدفع',
-                    message
+                    country: value('chkCountry'),
+                    courseIds: getCart().map((item) => item.id),
+                    lang: isEN ? 'en' : 'ar'
                 })
             });
+            saveCart([]);
+            updateCartBadge();
+            window.location.href = whatsappLink(data.whatsappText);
         } catch (err) {
-            console.error('Could not save the order:', err);
+            showToast(err.message, true);
+            // The cart held programs that closed in the meantime: show what is left
+            if (err.status === 409) render(await refreshCart());
+            button.disabled = !getCart().length;
+            button.innerHTML = original;
         }
-        window.location.href = `https://wa.me/201112220796?text=${encodeURIComponent(message)}`;
     });
 }

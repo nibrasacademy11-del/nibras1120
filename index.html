@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261113" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261116" />
 </head>
 <body>
 
@@ -30,7 +30,7 @@
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-footer">
       <div class="cart-total"><span>الإجمالي:</span><strong id="cartTotal">0.00 US$</strong></div>
-      <a href="/pages/ar/checkout.html" class="btn-primary">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+      <a href="/pages/ar/checkout.html" class="btn-primary">إرسال طلب التسجيل <i class="fab fa-whatsapp"></i></a>
     </div>
   </div>
   <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
@@ -50,7 +50,7 @@
         <li><a href="/index.html" class="nav-link active">الرئيسية</a></li>
         <li><a href="/pages/ar/about.html" class="nav-link">عن نبراس</a></li>
         <li><a href="/pages/ar/programs.html" class="nav-link">البرامج والخدمات</a></li>
-        <li><a href="/pages/ar/articles.html" class="nav-link">المقالات والإعلام</a></li>
+        <li><a href="/pages/ar/corporate.html" class="nav-link">حلول الشركات</a></li>
         <li><a href="/pages/ar/contact.html" class="nav-link">تواصل معنا</a></li>
         <li><a href="/pages/ar/verify.html" class="nav-link">التحقق من الشهادات</a></li>
       </ul>
@@ -69,7 +69,7 @@
       <li><a href="/index.html">الرئيسية</a></li>
       <li><a href="/pages/ar/about.html">عن نبراس</a></li>
       <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
-      <li><a href="/pages/ar/articles.html">المقالات والإعلام</a></li>
+      <li><a href="/pages/ar/corporate.html">حلول الشركات</a></li>
       <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
       <li><a href="/pages/ar/verify.html">التحقق من الشهادات</a></li>
       <li id="mobileNavAuth"><a href="/pages/ar/login.html" class="mobile-btn">تسجيل الدخول</a></li>
@@ -88,11 +88,6 @@
             <a href="/pages/ar/programs.html" class="btn-primary">استكشف برامجنا <i class="fas fa-arrow-left"></i></a>
             <a href="/pages/ar/about.html" class="hero-link">تعرّف على نبراس</a>
           </div>
-          <ul class="hero-stats">
-            <li><strong>4</strong> مسارات تعليمية</li>
-            <li><strong>21</strong> تخصصاً مهنياً</li>
-            <li><strong data-stat="programs">77</strong> برنامجاً</li>
-          </ul>
         </div>
         <div class="hero-visual">
           <div class="cert-card" aria-hidden="true">
@@ -113,16 +108,25 @@
     </div>
   </section>
 
-  <section class="press" aria-labelledby="pressTitle">
-    <div class="container press-inner">
-      <h2 class="press-title" id="pressTitle">نبراس في وسائل الإعلام</h2>
-      <ul class="press-logos">
-        <li><a href="https://okaznews.net/mix/0702/44015/" target="_blank" rel="noopener noreferrer"><img src="/assets/img/عكاظ-اليوم-1.webp" alt="أخبار عكاظ" loading="lazy" width="2498" height="1165" /></a></li>
-        <li><a href="https://alsaudi.news/technology/0702/53533/" target="_blank" rel="noopener noreferrer"><img src="/assets/img/السعودية-الاخبارية.webp" alt="صحيفة أخبار السعودية" loading="lazy" width="2173" height="870" /></a></li>
-        <li><a href="https://alriyadhnews.net/mix/0702/47160/" target="_blank" rel="noopener noreferrer"><img src="/assets/img/الرياض.webp" alt="أخبار الرياض" loading="lazy" width="1079" height="432" /></a></li>
-        <li><a href="https://jeddah24.net/mix/0702/46636/" target="_blank" rel="noopener noreferrer"><img src="/assets/img/جدة-24-.webp" alt="جدة 24" loading="lazy" width="300" height="148" /></a></li>
-      </ul>
-      <a class="hero-link" href="/pages/ar/articles.html">كل التغطيات</a>
+
+  <section class="band band--wine stats-band" aria-labelledby="statsTitle">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">أثر يُقاس</div>
+        <h2 class="section-title" id="statsTitle">نبراس في أرقام... <span class="highlight">وتجربة تتحدث عن نفسها</span></h2>
+      </div>
+      <div class="stats-row" data-stats></div>
+    </div>
+  </section>
+
+  <section class="band" id="pathways">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">مسارات التعلم</div>
+        <h2 class="section-title">مسارات تعليمية <span class="highlight">تناسب طموحك المهني</span></h2>
+        <p class="section-subtitle">من تطوير مهارة محددة إلى بناء مسار مهني أكثر تقدماً، اختر المسار الذي يناسب مرحلتك وهدفك.</p>
+      </div>
+      <div class="paths" data-pathways></div>
     </div>
   </section>
 
@@ -144,63 +148,7 @@
     </div>
   </section>
 
-  <section class="band" id="pathways">
-    <div class="container">
-      <div class="section-header">
-        <div class="section-badge">مسارات التعلم</div>
-        <h2 class="section-title">مسارات تعليمية <span class="highlight">تناسب طموحك المهني</span></h2>
-        <p class="section-subtitle">من تطوير مهارة محددة إلى بناء مسار مهني أكثر تقدماً، توفر نبراس مجموعة من المسارات التعليمية التي تساعدك على اختيار ما يناسب مرحلتك وهدفك.</p>
-      </div>
-
-      <div class="tracks">
-        <!-- 01 الدورات التدريبية -->
-        <a class="track" href="pages/ar/pro_courses.html">
-          <span class="track-num">01</span>
-          <div class="track-head">
-            <h3>الدورات التدريبية</h3>
-            <p class="track-tag">مهارة جديدة اليوم... فرصة أكبر غداً</p>
-          </div>
-          <p class="track-desc">دورات تدريبية متخصصة تساعدك على اكتساب مهارات جديدة وتطوير معرفتك في مجالات مهنية متنوعة ترفع كفاءتك العملية.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
-        </a>
-
-        <!-- 02 الدبلومات المهنية -->
-        <a class="track" href="pages/ar/diploma.html">
-          <span class="track-num">02</span>
-          <div class="track-head">
-            <h3>الدبلومات المهنية</h3>
-            <p class="track-tag">تخصص أعمق... وخبرة أكثر</p>
-          </div>
-          <p class="track-desc">برامج مهنية متخصصة تساعدك على التعمق في مجال محدد، وبناء قاعدة معرفية ومهارية أكثر شمولاً تدعم تطورك أو انتقالك لمجال جديد.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
-        </a>
-
-        <!-- 03 الماجستير المهني -->
-        <a class="track" href="pages/ar/masters.html">
-          <span class="track-num">03</span>
-          <div class="track-head">
-            <h3>الماجستير المهني</h3>
-            <p class="track-tag">ارتِق بخبرتك... ووسّع آفاقك</p>
-          </div>
-          <p class="track-desc">برامج مهنية متقدمة تجمع بين المعرفة المتخصصة والتطبيق، وتساعد المهنيين على تطوير قدراتهم الإدارية والقيادية والتنفيذية.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
-        </a>
-
-        <!-- 04 الدكتوراه المهنية -->
-        <a class="track" href="pages/ar/phd.html">
-          <span class="track-num">04</span>
-          <div class="track-head">
-            <h3>الدكتوراه المهنية</h3>
-            <p class="track-tag">للمهنيين والخبراء والقيادات الطموحة</p>
-          </div>
-          <p class="track-desc">مسارات مهنية متقدمة تركز على المعرفة التخصصية العميقة، والتفكير الاستراتيجي، وتطوير القدرات القيادية وصناعة القرار المؤسسي.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section class="band band--tint">
+  <section class="band">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">لماذا نبراس؟</div>
@@ -242,7 +190,7 @@
     </div>
   </section>
 
-  <section class="band">
+  <section class="band band--tint">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">التخصصات المهنية</div>
@@ -264,32 +212,17 @@
         </div>
     </div>
   </section>
-
-  <!-- آراء المتدربين: ضع اقتباسات حقيقية بموافقة أصحابها، ثم احذف السمة hidden ليظهر القسم -->
-  <section class="band band--wine" id="testimonials" hidden>
+  <section class="band band--wine" data-testimonials hidden>
     <div class="container">
       <div class="section-header">
-        <div class="section-badge">آراء المتدربين</div>
+        <div class="section-badge">آراء المتدربين والعملاء</div>
         <h2 class="section-title">ماذا يقول من بدأوا رحلتهم مع نبراس</h2>
       </div>
-      <div class="quotes">
-        <figure class="quote">
-          <blockquote>نص رأي المتدرب كما كتبه.</blockquote>
-          <figcaption><strong>اسم المتدرب</strong><span>اسم البرنامج · المدينة</span></figcaption>
-        </figure>
-        <figure class="quote">
-          <blockquote>نص رأي المتدرب كما كتبه.</blockquote>
-          <figcaption><strong>اسم المتدرب</strong><span>اسم البرنامج · المدينة</span></figcaption>
-        </figure>
-        <figure class="quote">
-          <blockquote>نص رأي المتدرب كما كتبه.</blockquote>
-          <figcaption><strong>اسم المتدرب</strong><span>اسم البرنامج · المدينة</span></figcaption>
-        </figure>
-      </div>
+      <div class="quotes"></div>
     </div>
   </section>
 
-  <section class="band band--tint">
+  <section class="band">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">خطوات الانطلاق</div>
@@ -321,7 +254,7 @@
     </div>
   </section>
 
-  <section class="band band--center final-call">
+  <section class="band band--tint band--center final-call">
     <div class="container">
       <h2>مستواك القادم يبدأ من هنا</h2>
       <p class="lead">لا تتوقف عند ما تعرفه... اكتشف ما يمكنك أن تصبح عليه.</p>
@@ -359,7 +292,7 @@
               <li><a href="/index.html">الرئيسية</a></li>
               <li><a href="/pages/ar/about.html">عن نبراس</a></li>
               <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
-              <li><a href="/pages/ar/articles.html">المقالات والإعلام</a></li>
+              <li><a href="/pages/ar/corporate.html">حلول الشركات</a></li>
               <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
             </ul>
           </div>
@@ -370,7 +303,7 @@
               <li><a href="/pages/ar/diploma.html">الدبلومات المهنية</a></li>
               <li><a href="/pages/ar/masters.html">الماجستير المهني</a></li>
               <li><a href="/pages/ar/phd.html">الدكتوراه المهنية</a></li>
-              <li><a href="/pages/ar/programs.html#services">تدريب الشركات</a></li>
+              <li><a href="/pages/ar/corporate.html">تدريب الشركات</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
@@ -399,7 +332,9 @@
   <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="/assets/js/site-content.js?v=20261116"></script>
+
   <script src="/assets/js/specialties.js?v=20261101"></script>
-  <script src="/assets/js/script.js?v=20261113"></script>
+  <script src="/assets/js/script.js?v=20261116"></script>
 </body>
 </html>

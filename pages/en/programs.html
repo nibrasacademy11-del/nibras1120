@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261108" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261116" />
 </head>
 <body>
 
@@ -30,7 +30,7 @@
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-footer">
       <div class="cart-total"><span>Total:</span><strong id="cartTotal">0.00 US$</strong></div>
-      <a href="/pages/en/checkout.html" class="btn-primary">Proceed to Checkout <i class="fas fa-credit-card"></i></a>
+      <a href="/pages/en/checkout.html" class="btn-primary">Send Enrollment Request <i class="fab fa-whatsapp"></i></a>
     </div>
   </div>
   <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
@@ -50,7 +50,7 @@
         <li><a href="/en/index.html" class="nav-link">Home</a></li>
         <li><a href="/pages/en/about.html" class="nav-link">About</a></li>
         <li><a href="/pages/en/programs.html" class="nav-link active">Programs & Services</a></li>
-        <li><a href="/pages/en/articles.html" class="nav-link">Articles & Media</a></li>
+        <li><a href="/pages/en/corporate.html" class="nav-link">Corporate Solutions</a></li>
         <li><a href="/pages/en/contact.html" class="nav-link">Contact</a></li>
         <li><a href="/pages/en/verify.html" class="nav-link">Verify Certificate</a></li>
       </ul>
@@ -69,14 +69,14 @@
       <li><a href="/en/index.html">Home</a></li>
       <li><a href="/pages/en/about.html">About</a></li>
       <li><a href="/pages/en/programs.html">Programs & Services</a></li>
-      <li><a href="/pages/en/articles.html">Articles & Media</a></li>
+      <li><a href="/pages/en/corporate.html">Corporate Solutions</a></li>
       <li><a href="/pages/en/contact.html">Contact</a></li>
       <li><a href="/pages/en/verify.html">Verify Certificate</a></li>
       <li id="mobileNavAuth"><a href="/pages/en/login.html" class="mobile-btn">Login</a></li>
     </ul>
   </div>
 
-  <section class="page-header">
+  <section class="page-header" data-hero="programs">
     <div class="container">
       <div style="margin-bottom: 15px">
         <a href="../../en/index.html">Home</a> → 
@@ -112,8 +112,6 @@
         <i class="fas fa-search search-box-icon"></i>
       </div>
 
-      <!-- Specialty Filter Tags with Icons -->
-      <div class="filter-tags-wrapper" id="catalogFilterButtons"></div>
 
       <!-- Interactive Search Results Grid -->
       <div id="catalogResultsArea" class="hidden">
@@ -137,54 +135,23 @@
         <p class="section-subtitle">Structured pathways tailored to each career stage and professional aspiration.</p>
       </div>
 
-      <div class="tracks">
-        
-        <!-- Track 1: Courses -->
-        <a class="track" href="pro_courses.html">
-          <span class="track-num">01</span>
-          <div class="track-head">
-            <h3>Training Courses</h3>
-          </div>
-          <p class="track-desc">A new skill today... A greater opportunity tomorrow. Specialized training focused on immediate operational excellence in leadership, PMP, customer experience, and labor regulations.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
-        </a>
-
-        <!-- Track 2: Diplomas -->
-        <a class="track" href="diploma.html">
-          <span class="track-num">02</span>
-          <div class="track-head">
-            <h3>Professional Diplomas</h3>
-          </div>
-          <p class="track-desc">Deeper specialization... richer practical experience. Applied programs designed to consolidate functional mastery across 15 high-demand corporate disciplines.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
-        </a>
-
-        <!-- Track 3: Masters -->
-        <a class="track" href="masters.html">
-          <span class="track-num">03</span>
-          <div class="track-head">
-            <h3>Professional Master</h3>
-          </div>
-          <p class="track-desc">Elevate your expertise... expand your leadership horizons. Comprehensive master tracks across 18 specialized disciplines combining modern theory with strategic application.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
-        </a>
-
-        <!-- Track 4: PhD -->
-        <a class="track" href="phd.html">
-          <span class="track-num">04</span>
-          <div class="track-head">
-            <h3>Professional Doctorate</h3>
-          </div>
-          <p class="track-desc">For experienced leaders and researchers. High-level doctorate tracks focused on strategic research, governance, and transformational leadership.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
-        </a>
-
-      </div>
+      <div class="paths" data-pathways></div>
     </div>
   </section>
 
   <!-- Corporate & Institutional Services (From PDF Page 30-33) -->
-  <section class="band" id="services">
+  <section class="band">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">Choosing Guide</div>
+        <h2 class="section-title">How to Choose <span class="highlight">the Right Program?</span></h2>
+        <p class="section-subtitle">Start from your goal... and take your next step with clarity and confidence.</p>
+      </div>
+      <div class="guide-grid" data-guide-cards></div>
+    </div>
+  </section>
+
+  <section class="band band--tint" id="services">
     <div class="container">
       <div class="section-header" style="text-align: center; margin-bottom: 50px">
         <div class="section-badge">Corporate & Institutional Solutions</div>
@@ -194,51 +161,7 @@
         </p>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 30px; margin-bottom: 50px">
-        
-        <!-- Pillar 1 -->
-        <div class="panel">
-          <div class="text-gold" style="margin-bottom: 15px"><i class="fas fa-building"></i></div>
-          <h3 style="margin-bottom: 12px">Corporate Solutions</h3>
-          <p style="margin-bottom: 15px">
-            Tailored programs crafted around strategic enterprise goals, skill gap audits, and team performance metrics with flexible remote delivery.
-          </p>
-          <ul style="margin: 0; display: flex; flex-direction: column; gap: 8px">
-            <li><i class="fas fa-check text-gold"></i> Training Needs Analysis (TNA)</li>
-            <li><i class="fas fa-check text-gold"></i> Custom Curriculum Development</li>
-            <li><i class="fas fa-check text-gold"></i> Progress Tracking & Comprehensive Reporting</li>
-          </ul>
-        </div>
-
-        <!-- Pillar 2 -->
-        <div class="panel">
-          <div class="text-gold" style="margin-bottom: 15px"><i class="fas fa-chalkboard-teacher"></i></div>
-          <h3 style="margin-bottom: 12px">Training Package Development</h3>
-          <p style="margin-bottom: 15px">
-            End-to-end training kit engineering for academic institutes and training academies seeking accredited, turnkey material.
-          </p>
-          <ul style="margin: 0; display: flex; flex-direction: column; gap: 8px">
-            <li><i class="fas fa-check text-gold"></i> Instructor & Trainee Manuals</li>
-            <li><i class="fas fa-check text-gold"></i> Interactive Slide Decks & Case Studies</li>
-            <li><i class="fas fa-check text-gold"></i> Assessment Toolkits & Evaluation Rubrics</li>
-          </ul>
-        </div>
-
-        <!-- Pillar 3 -->
-        <div class="panel">
-          <div class="text-gold" style="margin-bottom: 15px"><i class="fas fa-user-tie"></i></div>
-          <h3 style="margin-bottom: 12px">Individual Professional Coaching</h3>
-          <p style="margin-bottom: 15px">
-            Dedicated counseling helping professionals map out their educational pathway, choose the optimal track, and advance confidently.
-          </p>
-          <ul style="margin: 0; display: flex; flex-direction: column; gap: 8px">
-            <li><i class="fas fa-check text-gold"></i> Personalized Academic Advisory</li>
-            <li><i class="fas fa-check text-gold"></i> Digital Certificate Issuance & Verification</li>
-            <li><i class="fas fa-check text-gold"></i> Ongoing Knowledge Support</li>
-          </ul>
-        </div>
-
-      </div>
+      <div class="service-grid" data-service-cards></div>
 
       <!-- Custom Request Form -->
       <div class="panel" style="max-width: 750px; margin: 0 auto">
@@ -292,7 +215,7 @@
               <li><a href="/en/index.html">Home</a></li>
               <li><a href="/pages/en/about.html">About</a></li>
               <li><a href="/pages/en/programs.html">Programs & Services</a></li>
-              <li><a href="/pages/en/articles.html">Articles & Media</a></li>
+              <li><a href="/pages/en/corporate.html">Corporate Solutions</a></li>
               <li><a href="/pages/en/contact.html">Contact</a></li>
             </ul>
           </div>
@@ -303,7 +226,7 @@
               <li><a href="/pages/en/diploma.html">Professional Diplomas</a></li>
               <li><a href="/pages/en/masters.html">Professional Master</a></li>
               <li><a href="/pages/en/phd.html">Professional Doctorate</a></li>
-              <li><a href="/pages/en/programs.html#services">Corporate Training</a></li>
+              <li><a href="/pages/en/corporate.html">Corporate Training</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
@@ -332,10 +255,12 @@
   <button class="scroll-top" id="scrollTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="/assets/js/site-content.js?v=20261116"></script>
+
   <script src="/assets/js/specialties.js?v=20261101"></script>
-  <script src="/assets/js/script.js?v=20261113"></script>
+  <script src="/assets/js/script.js?v=20261116"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => initCatalogPage({ gridId: 'catalogGrid', searchId: 'catalogSearch', filterId: 'catalogFilterButtons', areaId: 'catalogResultsArea', countId: 'catalogCount' }));
+    document.addEventListener('DOMContentLoaded', () => initCatalogPage({ gridId: 'catalogGrid', searchId: 'catalogSearch', areaId: 'catalogResultsArea', countId: 'catalogCount' }));
   </script>
 </body>
 </html>

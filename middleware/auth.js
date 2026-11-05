@@ -14,11 +14,20 @@ function getJwtSecret() {
     return devSecret;
 }
 
-const authRequired = (req, res, next) => {
+// The user is re-read on every request: a changed password, a new role or a deleted
+// account takes effect at once instead of when the 7-day token expires.
+async function userFromToken(token) {
+    const payload = jwt.verify(token, getJwtSecret());
+    const user = await User.findById(payload.id).select('name email role tokenVersion');
+    if (!user || (user.tokenVersion || 0) !== (payload.tv || 0)) return null;
+    return { id: String(user._id), name: user.name, email: user.email, role: user.role };
+}
+
+const authRequired = async (req, res, next) => {
     try {
         const token = req.cookies.nibras_token;
-        if (!token) return res.status(401).json({ message: 'Unauthorized.' });
-        req.user = jwt.verify(token, getJwtSecret());
+        req.user = token ? await userFromToken(token) : null;
+        if (!req.user) return res.status(401).json({ message: 'Unauthorized.' });
         next();
     } catch (e) {
         res.status(401).json({ message: 'Unauthorized.' });
@@ -26,28 +35,24 @@ const authRequired = (req, res, next) => {
 };
 
 // For public routes that show more to a signed-in admin. Never rejects the request.
-const attachUser = (req, res, next) => {
+const attachUser = async (req, res, next) => {
     try {
         const token = req.cookies.nibras_token;
-        if (token) req.user = jwt.verify(token, getJwtSecret());
+        req.user = token ? (await userFromToken(token)) || undefined : undefined;
     } catch (e) {
         req.user = undefined;
     }
     next();
 };
 
-// The role is re-read from the database so a demoted admin loses access immediately.
-const adminRequired = async (req, res, next) => {
-    try {
-        if (!req.user) return res.status(403).json({ message: 'Forbidden.' });
-        const user = await User.findById(req.user.id).select('role');
-        if (!user || user.role !== 'admin') {
-            return res.status(403).json({ message: 'Forbidden.' });
-        }
-        next();
-    } catch (e) {
-        res.status(403).json({ message: 'Forbidden.' });
+// Runs after authRequired, which already loaded the current role from the database
+const adminRequired = (req, res, next) => {
+    if (!req.user || req.user.role !== 'admin') {
+        return res.status(403).json({ message: 'Forbidden.' });
     }
+    next();
 };
 
-module.exports = { authRequired, adminRequired, attachUser, getJwtSecret };
+const isAdmin = (req) => !!req.user && req.user.role === 'admin';
+
+module.exports = { authRequired, adminRequired, attachUser, isAdmin, getJwtSecret };

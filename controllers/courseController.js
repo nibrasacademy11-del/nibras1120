@@ -8,7 +8,7 @@ const escapeRegex = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$
 const EDITABLE_FIELDS = [
     'titleAr', 'titleEn', 'slug', 'type', 'specialty', 'descriptionAr', 'descriptionEn',
     'objectivesAr', 'objectivesEn', 'topicsAr', 'topicsEn', 'audienceAr', 'audienceEn',
-    'outcomesAr', 'outcomesEn', 'duration', 'deliveryMethod', 'price', 'currency', 'image',
+    'outcomesAr', 'outcomesEn', 'duration', 'deliveryMethod', 'price', 'discountPercent', 'currency', 'image',
     'status', 'featured', 'certificateType', 'seoTitleAr', 'seoTitleEn', 'seoDescriptionAr',
     'seoDescriptionEn'
 ];
@@ -28,12 +28,20 @@ function makeSlug(text) {
         .replace(/^-|-$/g, '');
 }
 
+// The admin panel is Arabic, so failures are explained in Arabic
+const FIELD_NAMES = {
+    titleAr: 'اسم البرنامج', slug: 'رابط الصفحة', type: 'المسار', specialty: 'التخصص',
+    price: 'السعر', discountPercent: 'نسبة الخصم (من 0 إلى 90)', status: 'الحالة'
+};
+
 function saveError(res, error, fallback) {
     if (error.code === 11000) {
         return res.status(409).json({ message: 'يوجد برنامج آخر بنفس الاسم أو الرابط.' });
     }
     if (error.name === 'ValidationError' || error.name === 'CastError') {
-        return res.status(400).json({ message: error.message });
+        const fields = error.errors ? Object.keys(error.errors) : [error.path];
+        const names = fields.map((f) => FIELD_NAMES[f] || f).join('، ');
+        return res.status(400).json({ message: `راجع الحقول التالية: ${names}` });
     }
     console.error(fallback, error);
     res.status(500).json({ message: fallback });
@@ -41,9 +49,15 @@ function saveError(res, error, fallback) {
 
 exports.getAllCourses = async (req, res) => {
     try {
-        const { type, specialty, status, search, featured, limit, page } = req.query;
+        const { type, specialty, status, search, featured, ids, limit, page } = req.query;
         const isAdmin = !!req.user && req.user.role === 'admin';
         const query = {};
+
+        // The cart and checkout ask for the programs they hold, to show current prices
+        if (ids) {
+            const list = String(ids).split(',').map((s) => s.trim()).filter((s) => mongoose.Types.ObjectId.isValid(s)).slice(0, 50);
+            query._id = { $in: list };
+        }
 
         if (type) {
             const t = String(type).toLowerCase().trim();
@@ -143,7 +157,7 @@ exports.createCourse = async (req, res) => {
         await course.save();
         res.status(201).json({ message: 'Program created successfully.', course });
     } catch (error) {
-        saveError(res, error, 'Server error while creating program.');
+        saveError(res, error, 'تعذر إضافة البرنامج. حاول مرة أخرى.');
     }
 };
 
@@ -155,7 +169,7 @@ exports.updateCourse = async (req, res) => {
         await course.save();
         res.json({ message: 'Program updated successfully.', course });
     } catch (error) {
-        saveError(res, error, 'Server error while updating program.');
+        saveError(res, error, 'تعذر حفظ البرنامج. حاول مرة أخرى.');
     }
 };
 
@@ -165,6 +179,6 @@ exports.deleteCourse = async (req, res) => {
         if (!course) return res.status(404).json({ message: 'Program not found.' });
         res.json({ message: 'Program deleted successfully.' });
     } catch (error) {
-        res.status(500).json({ message: 'Server error while deleting program.' });
+        res.status(500).json({ message: 'تعذر حذف البرنامج. حاول مرة أخرى.' });
     }
 };

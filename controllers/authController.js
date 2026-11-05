@@ -8,12 +8,18 @@ const { isMailConfigured, createTransporter } = require('../config/mailer');
 const MIN_PASSWORD_LENGTH = 8;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const PRIVATE_FIELDS = User.PRIVATE_FIELDS;
+
 function signToken(user) {
     return jwt.sign(
-        { id: user._id || user.id, email: user.email, role: user.role, name: user.name },
+        { id: String(user._id), tv: user.tokenVersion || 0 },
         getJwtSecret(),
         { expiresIn: '7d' }
     );
+}
+
+function publicUser(user) {
+    return { id: String(user._id), name: user.name, email: user.email, role: user.role };
 }
 
 function authCookieOptions() {
@@ -64,9 +70,8 @@ exports.register = async (req, res) => {
         });
         await user.save();
 
-        const payload = { id: user._id, name: user.name, email: user.email, role: user.role };
-        setAuthCookie(res, signToken(payload));
-        res.status(201).json({ message: 'Account created successfully.', user: payload });
+        setAuthCookie(res, signToken(user));
+        res.status(201).json({ message: 'Account created successfully.', user: publicUser(user) });
     } catch (error) {
         console.error('Registration error:', error);
         res.status(500).json({ message: 'Server error during registration.' });
@@ -87,9 +92,8 @@ exports.login = async (req, res) => {
         const ok = await bcrypt.compare(password, user.password);
         if (!ok) return res.status(401).json({ message: 'Invalid email or password.' });
 
-        const payload = { id: user._id, name: user.name, email: user.email, role: user.role };
-        setAuthCookie(res, signToken(payload));
-        res.json({ message: 'Login successful.', user: payload });
+        setAuthCookie(res, signToken(user));
+        res.json({ message: 'Login successful.', user: publicUser(user) });
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ message: 'Server error during login.' });
@@ -103,7 +107,7 @@ exports.logout = (req, res) => {
 
 exports.getMe = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).select('-password -resetPasswordToken -resetPasswordExpire');
+        const user = await User.findById(req.user.id).select(PRIVATE_FIELDS);
         if (!user) return res.status(401).json({ message: 'Unauthorized.' });
         res.json({ user });
     } catch (error) {
@@ -114,7 +118,7 @@ exports.getMe = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await User.find().select('-password -resetPasswordToken -resetPasswordExpire').sort({ createdAt: -1 });
+        const users = await User.find().select(PRIVATE_FIELDS).sort({ createdAt: -1 });
         res.json({ users });
     } catch (error) {
         res.status(500).json({ message: 'Server error fetching users.' });
@@ -192,6 +196,8 @@ exports.resetPassword = async (req, res) => {
         user.password = await bcrypt.hash(password, 10);
         user.resetPasswordToken = undefined;
         user.resetPasswordExpire = undefined;
+        // Sign out every session that existed before the reset
+        user.tokenVersion = (user.tokenVersion || 0) + 1;
         await user.save();
 
         res.json({ message: 'تم تغيير كلمة المرور بنجاح. يمكنك تسجيل الدخول الآن.' });
@@ -202,7 +208,7 @@ exports.resetPassword = async (req, res) => {
 
 exports.getSingleUser = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id).select('-password -resetPasswordToken -resetPasswordExpire');
+        const user = await User.findById(req.params.id).select(PRIVATE_FIELDS);
         if (!user) return res.status(404).json({ message: 'User not found.' });
         res.json({ user });
     } catch (error) {
@@ -220,15 +226,25 @@ exports.updateUser = async (req, res) => {
             return res.status(400).json({ message: 'لا يمكنك إلغاء صلاحية المدير عن حسابك الحالي.' });
         }
 
-        if (name) user.name = String(name).trim();
-        if (email) user.email = String(email).trim().toLowerCase();
-        if (phone !== undefined) user.phone = String(phone);
-        if (role) user.role = role;
-        if (Array.isArray(enrolledCourses)) user.enrolledCourses = enrolledCourses.map(String);
+        if (email !== undefined) {
+            const normalizedEmail = String(email).trim().toLowerCase();
+            if (!EMAIL_PATTERN.test(normalizedEmail)) {
+                return res.status(400).json({ message: 'صيغة البريد الإلكتروني غير صحيحة.' });
+            }
+            user.email = normalizedEmail;
+        }
+        if (name) user.name = String(name).trim().slice(0, 120);
+        if (phone !== undefined) user.phone = String(phone).trim().slice(0, 30);
+        if (role && role !== user.role) {
+            user.role = role;
+            // A changed role must not keep working through tokens issued before it
+            user.tokenVersion = (user.tokenVersion || 0) + 1;
+        }
+        if (Array.isArray(enrolledCourses)) user.enrolledCourses = enrolledCourses.map((c) => String(c).trim()).filter(Boolean);
 
         await user.save();
-        const { password, resetPasswordToken, resetPasswordExpire, ...safeUser } = user.toObject();
-        res.json({ message: 'User updated successfully.', user: safeUser });
+        const saved = await User.findById(user._id).select(PRIVATE_FIELDS);
+        res.json({ message: 'User updated successfully.', user: saved });
     } catch (error) {
         if (error.code === 11000) return res.status(409).json({ message: 'هذا البريد الإلكتروني مستخدم لحساب آخر.' });
         if (error.name === 'ValidationError') return res.status(400).json({ message: error.message });
@@ -251,7 +267,7 @@ exports.deleteUser = async (req, res) => {
 
 exports.getUserProfile = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).select('-password -resetPasswordToken -resetPasswordExpire');
+        const user = await User.findById(req.user.id).select(PRIVATE_FIELDS);
         if (!user) return res.status(404).json({ message: 'User not found.' });
 
         // Fetch certificates linked to this user

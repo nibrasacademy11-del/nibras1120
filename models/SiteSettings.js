@@ -1,6 +1,16 @@
 const mongoose = require('mongoose');
 
+// Admin-edited content. Missing entries fall back to assets/js/site-content.js,
+// so each section stays unset (undefined) until the admin saves it.
+const editable = { type: [mongoose.Schema.Types.Mixed], default: undefined };
+
 const siteSettingsSchema = new mongoose.Schema({
+    heroes: { type: Map, of: String, default: undefined },
+    pathways: editable,
+    stats: editable,
+    guideCards: editable,
+    serviceCards: editable,
+
     academyNameAr: { type: String, default: 'أكاديمية نبراس للتدريب والتأهيل المهني' },
     academyNameEn: { type: String, default: 'Nibras Academy for Training & Professional Qualification' },
     sloganAr: { type: String, default: 'نبني الكفاءات... ونصنع أثراً يمتد إلى المستقبل' },

@@ -1,558 +1,412 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>لوحة الإدارة الشاملة | أكاديمية نبراس للتدريب والتأهيل المهني</title>
-    <link rel="icon" type="image/png" href="../../assets/img/logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link rel="stylesheet" href="../../assets/css/admin.css?v=20261104" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>لوحة التحكم | أكاديمية نبراس</title>
+  <link rel="icon" type="image/png" href="/assets/img/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/css/admin.css?v=20261116" />
 </head>
-
 <body class="admin-body">
-    <!-- Login Section -->
-    <div class="login-page" id="loginPage">
-        <div class="login-card">
-            <img src="../../assets/img/logo.png" alt="Logo">
-            <h1>أكاديمية نبراس</h1>
-            <p>منصة الإدارة والتحكم</p>
-            <form id="loginForm">
-                <div class="input-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" id="loginEmail" autocomplete="username" required>
-                </div>
-                <div class="input-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="loginPassword" autocomplete="current-password" required>
-                </div>
-                <button type="submit" class="login-btn">دخول للنظام</button>
+
+  <!-- Shown until the session is confirmed as an admin; anyone else is sent to the login page -->
+  <div class="admin-gate" id="adminGate">
+    <img src="/assets/img/logo.png" alt="" width="72" height="72" />
+    <p><i class="fas fa-spinner fa-spin"></i> جاري التحقق من الصلاحيات...</p>
+  </div>
+
+  <div class="admin-shell" id="adminShell" hidden>
+    <aside class="admin-sidebar" id="adminSidebar">
+      <a class="admin-brand" href="/index.html">
+        <img src="/assets/img/logo.png" alt="" width="44" height="44" />
+        <span>أكاديمية نبراس<small>لوحة التحكم</small></span>
+      </a>
+      <nav class="admin-nav" id="adminNav" aria-label="أقسام لوحة التحكم">
+        <button type="button" data-section="dashboard"><i class="fas fa-gauge-high"></i> نظرة عامة</button>
+        <p class="admin-nav-label">البرامج</p>
+        <button type="button" data-section="programs"><i class="fas fa-graduation-cap"></i> البرامج</button>
+        <button type="button" data-section="featured"><i class="fas fa-star"></i> البرامج المميزة</button>
+        <button type="button" data-section="pathways"><i class="fas fa-route"></i> المسارات التعليمية</button>
+        <p class="admin-nav-label">محتوى الموقع</p>
+        <button type="button" data-section="heroes"><i class="fas fa-image"></i> صور رؤوس الصفحات</button>
+        <button type="button" data-section="cards"><i class="fas fa-layer-group"></i> محاور البرامج والخدمات</button>
+        <button type="button" data-section="stats"><i class="fas fa-chart-simple"></i> أرقام نبراس</button>
+        <button type="button" data-section="testimonials"><i class="fas fa-comment-dots"></i> آراء العملاء</button>
+        <p class="admin-nav-label">المتابعة</p>
+        <button type="button" data-section="inquiries"><i class="fas fa-inbox"></i> الطلبات والرسائل <span class="nav-count" id="newInquiriesBadge" hidden></span></button>
+        <button type="button" data-section="certificates"><i class="fas fa-certificate"></i> الشهادات</button>
+        <button type="button" data-section="users"><i class="fas fa-users"></i> المستخدمون</button>
+      </nav>
+      <div class="admin-sidebar-foot">
+        <a href="/index.html" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square"></i> عرض الموقع</a>
+        <button type="button" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> تسجيل الخروج</button>
+      </div>
+    </aside>
+    <div class="admin-overlay" id="adminOverlay" hidden></div>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <button type="button" class="icon-btn admin-menu-btn" id="adminMenuBtn" aria-label="القائمة"><i class="fas fa-bars"></i></button>
+        <div class="admin-title">
+          <h1 id="sectionTitle">نظرة عامة</h1>
+          <p id="sectionDesc"></p>
+        </div>
+        <div class="admin-user"><i class="fas fa-user-shield"></i> <span id="adminName"></span></div>
+      </header>
+
+      <main class="admin-content">
+
+        <!-- Overview -->
+        <section class="admin-section" id="sec-dashboard" hidden>
+          <div class="kpi-grid" id="kpiGrid"></div>
+          <div class="panel-card">
+            <div class="panel-head"><h2><i class="fas fa-clock-rotate-left"></i> أحدث الطلبات والرسائل</h2><button type="button" class="btn btn-light" data-go="inquiries">عرض الكل</button></div>
+            <div id="recentInquiries" class="table-wrap"></div>
+          </div>
+        </section>
+
+        <!-- Programs -->
+        <section class="admin-section" id="sec-programs" hidden>
+          <div class="panel-card">
+            <div class="toolbar">
+              <div class="search-field"><i class="fas fa-search"></i><input type="search" id="programSearch" placeholder="ابحث باسم البرنامج..." /></div>
+              <select id="programTypeFilter" aria-label="المسار">
+                <option value="">كل المسارات</option>
+                <option value="course">الدورات التدريبية</option>
+                <option value="diploma">الدبلومات المهنية</option>
+                <option value="master">الماجستير المهني</option>
+                <option value="phd">الدكتوراه المهنية</option>
+              </select>
+              <select id="programStatusFilter" aria-label="الحالة">
+                <option value="">كل الحالات</option>
+                <option value="available">متاح</option>
+                <option value="coming_soon">قريباً</option>
+                <option value="unavailable">غير متاح</option>
+                <option value="hidden">مخفي</option>
+              </select>
+              <button type="button" class="btn btn-primary" id="addProgramBtn"><i class="fas fa-plus"></i> برنامج جديد</button>
+            </div>
+            <div id="programsTable" class="table-wrap"></div>
+          </div>
+        </section>
+
+        <!-- Featured programs -->
+        <section class="admin-section" id="sec-featured" hidden>
+          <div class="panel-card">
+            <div class="panel-head">
+              <h2><i class="fas fa-star"></i> البرامج المميزة الحالية</h2>
+            </div>
+            <p class="panel-note">تظهر في الصفحة الرئيسية تحت المسارات (أول 6 برامج). لو مفيش برامج مميزة، الموقع بيختار برامج تلقائياً.</p>
+            <div id="featuredList" class="chip-list"></div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-head"><h2><i class="fas fa-plus-circle"></i> إضافة برنامج للمميزة</h2></div>
+            <div class="toolbar">
+              <div class="search-field"><i class="fas fa-search"></i><input type="search" id="featuredSearch" placeholder="ابحث عن برنامج لإضافته..." /></div>
+            </div>
+            <div id="featuredCandidates" class="table-wrap"></div>
+          </div>
+        </section>
+
+        <!-- Pathways -->
+        <section class="admin-section" id="sec-pathways" hidden>
+          <p class="panel-note">المسارات الأربعة بتظهر في الصفحة الرئيسية وصفحة البرامج والخدمات. ارفع صورة لكل مسار وعدّل نصوصه.</p>
+          <div class="editor-grid" id="pathwaysEditor"></div>
+          <div class="save-bar"><button type="button" class="btn btn-primary" data-save="pathways"><i class="fas fa-floppy-disk"></i> حفظ المسارات</button></div>
+        </section>
+
+        <!-- Page header images -->
+        <section class="admin-section" id="sec-heroes" hidden>
+          <p class="panel-note">كل صفحة ليها صورة خاصة في الخلفية العنابي اللي في أولها. الصورة بيتحط فوقها لون عنابي شفاف عشان الكلام يفضل واضح. المقاس الأنسب 1920×600.</p>
+          <div class="hero-grid" id="heroesEditor"></div>
+          <div class="save-bar"><button type="button" class="btn btn-primary" data-save="heroes"><i class="fas fa-floppy-disk"></i> حفظ صور الصفحات</button></div>
+        </section>
+
+        <!-- Programs page cards -->
+        <section class="admin-section" id="sec-cards" hidden>
+          <div class="panel-card">
+            <div class="panel-head"><h2><i class="fas fa-compass"></i> كروت "كيف تختار البرنامج المناسب؟"</h2></div>
+            <div class="editor-grid" id="guideEditor"></div>
+            <div class="save-bar"><button type="button" class="btn btn-primary" data-save="guideCards"><i class="fas fa-floppy-disk"></i> حفظ كروت الاختيار</button></div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-head"><h2><i class="fas fa-briefcase"></i> كروت "خدماتنا المهنية"</h2></div>
+            <p class="panel-note">النقاط: كل نقطة في سطر. لو كتبت "عنوان: وصف"، العنوان هيظهر بخط عريض.</p>
+            <div class="editor-grid" id="servicesEditor"></div>
+            <div class="save-bar"><button type="button" class="btn btn-primary" data-save="serviceCards"><i class="fas fa-floppy-disk"></i> حفظ كروت الخدمات</button></div>
+          </div>
+        </section>
+
+        <!-- Numbers -->
+        <section class="admin-section" id="sec-stats" hidden>
+          <div class="panel-card">
+            <div class="panel-head">
+              <h2><i class="fas fa-chart-simple"></i> أرقام نبراس</h2>
+              <button type="button" class="btn btn-light" id="addStatBtn"><i class="fas fa-plus"></i> إضافة رقم</button>
+            </div>
+            <p class="panel-note">بتظهر في الصفحة الرئيسية وصفحة عن نبراس، بحد أقصى 8 أرقام. استخدم الأسهم لترتيبها.</p>
+            <div id="statsEditor" class="stats-editor"></div>
+            <div class="save-bar"><button type="button" class="btn btn-primary" data-save="stats"><i class="fas fa-floppy-disk"></i> حفظ الأرقام</button></div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-head"><h2><i class="fas fa-eye"></i> معاينة</h2></div>
+            <div class="stats-preview" id="statsPreview"></div>
+          </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="admin-section" id="sec-testimonials" hidden>
+          <div class="panel-card">
+            <div class="toolbar">
+              <p class="panel-note">بتظهر في الصفحة الرئيسية وفي آخر صفحة حلول الشركات. الرأي المخفي ما بيظهرش في الموقع.</p>
+              <button type="button" class="btn btn-primary" id="addTestimonialBtn"><i class="fas fa-plus"></i> رأي جديد</button>
+            </div>
+            <div id="testimonialsTable" class="table-wrap"></div>
+          </div>
+        </section>
+
+        <!-- Inquiries and enrollment requests -->
+        <section class="admin-section" id="sec-inquiries" hidden>
+          <div class="panel-card">
+            <div class="toolbar">
+              <div class="segmented" id="inquiryTypeFilter" role="tablist">
+                <button type="button" data-type="" class="active">الكل</button>
+                <button type="button" data-type="enrollment">طلبات التسجيل</button>
+                <button type="button" data-type="message">الرسائل</button>
+              </div>
+              <select id="inquiryStatusFilter" aria-label="الحالة">
+                <option value="">كل الحالات</option>
+                <option value="New">جديدة</option>
+                <option value="In Progress">قيد المتابعة</option>
+                <option value="Replied">تم الرد</option>
+                <option value="Closed">مغلقة</option>
+              </select>
+              <div class="search-field"><i class="fas fa-search"></i><input type="search" id="inquirySearch" placeholder="ابحث بالاسم أو الرقم..." /></div>
+            </div>
+            <div id="inquiriesTable" class="table-wrap"></div>
+          </div>
+        </section>
+
+        <!-- Certificates -->
+        <section class="admin-section" id="sec-certificates" hidden>
+          <div class="panel-card">
+            <div class="panel-head"><h2 id="certFormTitle"><i class="fas fa-plus-circle"></i> إضافة شهادة</h2></div>
+            <form id="certForm" class="form-grid" novalidate>
+              <input type="hidden" name="editId" />
+              <label class="field">رقم الشهادة *<input name="certNum" required placeholder="مثلاً: NIB-2026-001" /></label>
+              <label class="field">اسم المتدرب *<input name="traineeName" required /></label>
+              <label class="field">نوع الشهادة
+                <select name="programType">
+                  <option value="ماجستير مهني">ماجستير مهني</option>
+                  <option value="دكتوراه مهنية">دكتوراه مهنية</option>
+                  <option value="دبلوم مهني">دبلوم مهني</option>
+                  <option value="دورة تدريبية">دورة تدريبية</option>
+                </select>
+              </label>
+              <label class="field">الحالة
+                <select name="status">
+                  <option value="Valid">صالحة</option>
+                  <option value="Suspended">معلقة</option>
+                  <option value="Cancelled">ملغاة</option>
+                  <option value="Expired">منتهية</option>
+                </select>
+              </label>
+              <label class="field">البرنامج *<input name="programName" required /></label>
+              <label class="field">التخصص<input name="field" /></label>
+              <label class="field">تاريخ الإصدار *<input name="issueDate" type="date" required /></label>
+              <label class="field">ربط بحساب مسجل<select name="userId"><option value="">بدون ربط</option></select></label>
+              <label class="field field--wide">ملف PDF (حتى 4 ميجابايت)<input name="pdf" type="file" accept="application/pdf" /></label>
+              <div class="form-actions field--wide">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-floppy-disk"></i> حفظ الشهادة</button>
+                <button type="button" class="btn btn-light" id="certCancelBtn" hidden>إلغاء التعديل</button>
+              </div>
             </form>
-        </div>
+          </div>
+          <div class="panel-card">
+            <div class="toolbar">
+              <div class="search-field"><i class="fas fa-search"></i><input type="search" id="certSearch" placeholder="ابحث برقم الشهادة أو الاسم..." /></div>
+            </div>
+            <div id="certsTable" class="table-wrap"></div>
+          </div>
+        </section>
+
+        <!-- Users -->
+        <section class="admin-section" id="sec-users" hidden>
+          <div class="panel-card">
+            <div class="toolbar">
+              <div class="search-field"><i class="fas fa-search"></i><input type="search" id="userSearch" placeholder="ابحث بالاسم أو البريد..." /></div>
+            </div>
+            <div id="usersTable" class="table-wrap"></div>
+          </div>
+        </section>
+
+      </main>
     </div>
+  </div>
 
-    <!-- Dashboard Section -->
-    <div class="dashboard admin-container" id="dashboard" style="display: none;">
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <img src="../../assets/img/logo.png" alt="Logo">
-                <h2>نبراس</h2>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a class="nav-link active" onclick="showSection('programs-section', this)">
-                        <i class="fas fa-graduation-cap"></i>
-                        <span>البرامج التدريبية</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showSection('articles-section', this)">
-                        <i class="fas fa-newspaper"></i>
-                        <span>المقالات والتغطيات</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showSection('inquiries-section', this)">
-                        <i class="fas fa-envelope-open-text"></i>
-                        <span>رسائل التواصل</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showSection('certs-section', this)">
-                        <i class="fas fa-certificate"></i>
-                        <span>الشهادات</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showSection('users-section', this)">
-                        <i class="fas fa-users"></i>
-                        <span>العملاء</span>
-                    </a>
-                </li>
-            </ul>
-            <div class="sidebar-footer">
-                <a onclick="window.logout()" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>تسجيل الخروج</span>
-                </a>
-            </div>
-        </aside>
+  <!-- Program editor -->
+  <dialog class="admin-dialog admin-dialog--wide" id="programDialog">
+    <form id="programForm" method="dialog" novalidate>
+      <header class="dialog-head">
+        <h2 id="programDialogTitle">برنامج جديد</h2>
+        <button type="button" class="icon-btn" data-close aria-label="إغلاق"><i class="fas fa-xmark"></i></button>
+      </header>
+      <div class="dialog-body">
+        <input type="hidden" name="id" />
+        <fieldset>
+          <legend>البيانات الأساسية</legend>
+          <div class="form-grid">
+            <label class="field field--wide">اسم البرنامج بالعربي *<input name="titleAr" required maxlength="200" /></label>
+            <label class="field field--wide">اسم البرنامج بالإنجليزي<input name="titleEn" dir="ltr" maxlength="200" /></label>
+            <label class="field">المسار *
+              <select name="type" required>
+                <option value="course">دورة تدريبية</option>
+                <option value="diploma">دبلوم مهني</option>
+                <option value="master">ماجستير مهني</option>
+                <option value="phd">دكتوراه مهنية</option>
+              </select>
+            </label>
+            <label class="field">التخصص *<select name="specialty" required id="programSpecialty"></select></label>
+            <label class="field">الحالة
+              <select name="status">
+                <option value="available">متاح للتسجيل</option>
+                <option value="coming_soon">قريباً</option>
+                <option value="unavailable">غير متاح</option>
+                <option value="hidden">مخفي</option>
+              </select>
+            </label>
+            <label class="field">رابط الصفحة (اختياري)<input name="slug" dir="ltr" placeholder="يتولد تلقائياً من الاسم" /></label>
+            <label class="check-field field--wide"><input type="checkbox" name="featured" /> برنامج مميز (يظهر في الصفحة الرئيسية)</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>السعر والخصم</legend>
+          <div class="form-grid">
+            <label class="field">السعر (US$) *<input name="price" type="number" min="0" step="0.01" required /></label>
+            <label class="field">نسبة الخصم %<input name="discountPercent" type="number" min="0" max="90" step="1" value="0" /></label>
+            <div class="price-preview field--wide" id="pricePreview"></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>تفاصيل البرنامج</legend>
+          <div class="form-grid">
+            <label class="field">المدة<input name="duration" placeholder="مثلاً: 6 أشهر" /></label>
+            <label class="field">طريقة الدراسة<input name="deliveryMethod" placeholder="عن بُعد (محاضرات مباشرة ومسجلة)" /></label>
+            <label class="field field--wide">نوع الشهادة<input name="certificateType" placeholder="مثلاً: شهادة دبلوم مهني" /></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>صورة الكفر</legend>
+          <p class="panel-note">اختياري: لو مفيش صورة، البرنامج بياخد كفر التخصص تلقائياً.</p>
+          <div class="uploader" data-uploader data-name="image" data-size="card" style="--aspect: 16 / 10"></div>
+        </fieldset>
+        <details open>
+          <summary>المحتوى بالعربي</summary>
+          <div class="form-grid">
+            <label class="field field--wide">الوصف<textarea name="descriptionAr" rows="4"></textarea></label>
+            <label class="field">الأهداف (كل هدف في سطر)<textarea name="objectivesAr" rows="5"></textarea></label>
+            <label class="field">المحاور (كل محور في سطر)<textarea name="topicsAr" rows="5"></textarea></label>
+            <label class="field">الفئة المستهدفة (كل فئة في سطر)<textarea name="audienceAr" rows="4"></textarea></label>
+            <label class="field">المخرجات (كل مخرج في سطر)<textarea name="outcomesAr" rows="4"></textarea></label>
+          </div>
+        </details>
+        <details>
+          <summary>المحتوى بالإنجليزي</summary>
+          <div class="form-grid" dir="ltr">
+            <label class="field field--wide">Description<textarea name="descriptionEn" rows="4"></textarea></label>
+            <label class="field">Objectives (one per line)<textarea name="objectivesEn" rows="5"></textarea></label>
+            <label class="field">Topics (one per line)<textarea name="topicsEn" rows="5"></textarea></label>
+            <label class="field">Audience (one per line)<textarea name="audienceEn" rows="4"></textarea></label>
+            <label class="field">Outcomes (one per line)<textarea name="outcomesEn" rows="4"></textarea></label>
+          </div>
+        </details>
+        <details>
+          <summary>محركات البحث (SEO)</summary>
+          <div class="form-grid">
+            <label class="field">عنوان الصفحة بالعربي<input name="seoTitleAr" maxlength="70" /></label>
+            <label class="field">Page title (English)<input name="seoTitleEn" dir="ltr" maxlength="70" /></label>
+            <label class="field">الوصف بالعربي<textarea name="seoDescriptionAr" rows="2" maxlength="170"></textarea></label>
+            <label class="field">Description (English)<textarea name="seoDescriptionEn" rows="2" dir="ltr" maxlength="170"></textarea></label>
+          </div>
+        </details>
+      </div>
+      <footer class="dialog-foot">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-floppy-disk"></i> حفظ البرنامج</button>
+        <button type="button" class="btn btn-light" data-close>إلغاء</button>
+      </footer>
+    </form>
+  </dialog>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="top-bar">
-                <div class="page-title">
-                    <h1 id="sectionTitle">إدارة البرامج التدريبية</h1>
-                    <p id="sectionDesc">إضافة وتعديل وحذف البرامج وتحديد الحالات والأسعار</p>
-                </div>
-                <div class="user-profile">
-                    <span id="adminUser">المسؤول</span>
-                    <i class="fas fa-user-shield" style="color: var(--primary);"></i>
-                </div>
-            </div>
-
-            <!-- Stats Bar -->
-            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
-                <div class="stat-card">
-                    <div class="stat-icon primary">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>إجمالي البرامج</h3>
-                        <p id="totalProgramsCount">0</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon accent">
-                        <i class="fas fa-newspaper"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>المقالات والتغطيات</h3>
-                        <p id="totalArticlesCount">0</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon" style="background:#eff8ff; color:#175cd3;">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>رسائل التواصل</h3>
-                        <p id="totalInquiriesCount">0</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon" style="background:#e6f9ed; color:#12b76a;">
-                        <i class="fas fa-award"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>إجمالي الشهادات</h3>
-                        <p id="totalCertsCount">0</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon" style="background:#fef7e7; color:#b54708;">
-                        <i class="fas fa-user-graduate"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>العملاء النشطين</h3>
-                        <p id="totalUsersCount">0</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================== -->
-            <!-- 1. Programs Section -->
-            <!-- ============================================== -->
-            <div id="programs-section" class="tab-content">
-                <div class="content-section">
-                    <div class="section-header">
-                        <h2><i class="fas fa-plus-circle"></i> إضافة / تعديل برنامج تدريبي</h2>
-                    </div>
-                    <form id="adminProgramForm" class="admin-form">
-                        <input type="hidden" id="progEditId" value="">
-                        
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label>اسم البرنامج (عربي) *</label>
-                                <input type="text" id="progTitleAr" required placeholder="مثلاً: الماجستير المهني في إدارة الأعمال">
-                            </div>
-                            <div class="form-group">
-                                <label>اسم البرنامج (إنجليزي)</label>
-                                <input type="text" id="progTitleEn" placeholder="Professional Master in Business Administration">
-                            </div>
-                        </div>
-
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label>نوع المسار *</label>
-                                <select id="progType" required>
-                                    <option value="master">الماجستير المهني</option>
-                                    <option value="phd">الدكتوراه المهنية</option>
-                                    <option value="diploma">الدبلومات المهنية</option>
-                                    <option value="course">الدورات التدريبية</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>المجال / التخصص *</label>
-                                <select id="progSpecialty" required></select>
-                            </div>
-                        </div>
-
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label>السعر (US$) *</label>
-                                <input type="number" id="progPrice" required placeholder="1200" step="1">
-                            </div>
-                            <div class="form-group">
-                                <label>حالة البرنامج *</label>
-                                <select id="progStatus" required>
-                                    <option value="available">متاح للتسجيل (available)</option>
-                                    <option value="coming_soon">قريباً - تسجيل اهتمام (coming_soon)</option>
-                                    <option value="unavailable">غير متاح حالياً (unavailable)</option>
-                                    <option value="hidden">مخفي من القوائم (hidden)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label>مدة البرنامج</label>
-                                <input type="text" id="progDuration" placeholder="مثلاً: 6 أشهر / 40 ساعة">
-                            </div>
-                            <div class="form-group">
-                                <label>طريقة الدراسة</label>
-                                <input type="text" id="progDelivery" placeholder="عن بُعد (محاضرات مباشرة ومسجلة)">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>رابط صورة البرنامج (اتركه فارغاً لاستخدام صورة التخصص)</label>
-                            <input type="text" id="progImage" dir="ltr" placeholder="/assets/img/covers/ar/business.webp">
-                        </div>
-
-                        <div class="form-group">
-                            <label>وصف البرنامج (عربي) *</label>
-                            <textarea id="progDescAr" rows="3" required placeholder="نبذة توضيحية عن البرنامج وأهدافه..."></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>المحاور الرئيسية (افصل بينها برمز ; أو أسطر)</label>
-                            <textarea id="progTopicsAr" rows="3" placeholder="مقدمة في الإدارة الحديثة; التخطيط المالي; دراسة الجدوى..."></textarea>
-                        </div>
-
-                        <div class="form-submit" style="display:flex; gap:10px;">
-                            <button type="submit" class="btn-save" id="btnSaveProg">حفظ البرنامج</button>
-                            <button type="button" class="btn-save" id="btnCancelProgEdit" style="background:#f2f4f7; color:#475467; display:none;" onclick="cancelProgEdit()">إلغاء التعديل</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="content-section">
-                    <div class="section-header" style="flex-wrap:wrap; gap:15px;">
-                        <h2><i class="fas fa-list-ul"></i> قائمة البرامج المسجلة</h2>
-                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                            <select id="adminProgTypeFilter" onchange="filterAdminPrograms()" style="padding:8px 12px; border-radius:8px; border:1px solid var(--border); font-family:inherit;">
-                                <option value="all">جميع المسارات</option>
-                                <option value="master">ماجستير مهني</option>
-                                <option value="phd">دكتوراه مهنية</option>
-                                <option value="diploma">دبلوم مهني</option>
-                                <option value="course">دورة تدريبية</option>
-                            </select>
-                            <input type="text" id="adminProgSearch" placeholder="بحث في البرامج..." oninput="filterAdminPrograms()" style="padding:8px 14px; border-radius:8px; border:1px solid var(--border); font-family:inherit;">
-                        </div>
-                    </div>
-                    <div id="programsTableContainer" class="table-container">
-                        <p style="text-align:center; padding:30px; color: var(--text-muted);">جاري تحميل البرامج...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================== -->
-            <!-- 2. Articles & Media Section -->
-            <!-- ============================================== -->
-            <div id="articles-section" class="tab-content hidden">
-                <div class="content-section">
-                    <div class="section-header">
-                        <h2><i class="fas fa-plus-circle"></i> إضافة مقال أو تغطية إعلامية</h2>
-                    </div>
-                    <form id="adminArticleForm" class="admin-form">
-                        <input type="hidden" id="artEditId" value="">
-                        
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label>العنوان (عربي) *</label>
-                                <input type="text" id="artTitleAr" required placeholder="عنوان المقال أو التغطية">
-                            </div>
-                            <div class="form-group">
-                                <label>التصنيف *</label>
-                                <select id="artCategory" required>
-                                    <option value="media_coverage">تغطية إعلامية</option>
-                                    <option value="article">مقال متخصص</option>
-                                    <option value="news">خبر صحفي</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label>رابط المصدر الأصلي (Source URL)</label>
-                                <input type="url" id="artSourceUrl" placeholder="https://jeddah24.net/...">
-                            </div>
-                            <div class="form-group">
-                                <label>الكاتب أو الجهة الإعلامية</label>
-                                <input type="text" id="artAuthor" placeholder="مثلاً: صحيفة الرياض / إدارة الأكاديمية">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>رابط الصورة (اختياري)</label>
-                            <input type="text" id="artImage" dir="ltr" placeholder="/assets/img/...">
-                        </div>
-
-                        <div class="form-group">
-                            <label>المحتوى أو النبذة المختصرة *</label>
-                            <textarea id="artContentAr" rows="4" required placeholder="نص المقال أو ملخص التغطية الإعلامية..."></textarea>
-                        </div>
-
-                        <div class="form-group" style="display:flex; align-items:center; gap:10px;">
-                            <input type="checkbox" id="artPublished" checked style="width:20px; height:20px;">
-                            <label for="artPublished" style="margin-bottom:0; cursor:pointer;">نشر المقال فوراً في الموقع</label>
-                        </div>
-
-                        <div class="form-submit" style="display:flex; gap:10px;">
-                            <button type="submit" class="btn-save" id="btnSaveArt">حفظ المقال</button>
-                            <button type="button" class="btn-save" id="btnCancelArtEdit" style="background:#f2f4f7; color:#475467; display:none;" onclick="cancelArtEdit()">إلغاء</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="content-section">
-                    <div class="section-header">
-                        <h2><i class="fas fa-newspaper"></i> المقالات والتغطيات المنشورة</h2>
-                    </div>
-                    <div id="articlesTableContainer" class="table-container">
-                        <p style="text-align:center; padding:30px; color: var(--text-muted);">جاري تحميل المقالات...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================== -->
-            <!-- 3. Inquiries Section -->
-            <!-- ============================================== -->
-            <div id="inquiries-section" class="tab-content hidden">
-                <div class="content-section">
-                    <div class="section-header" style="flex-wrap:wrap; gap:15px;">
-                        <h2><i class="fas fa-inbox"></i> رسائل واستفسارات الزوار</h2>
-                        <div style="display:flex; gap:10px; align-items:center;">
-                            <label style="font-size:0.9rem; color:var(--text-muted);">تصفية بالحالة:</label>
-                            <select id="inquiryStatusFilter" onchange="filterAdminInquiries()" style="padding:8px 12px; border-radius:8px; border:1px solid var(--border); font-family:inherit;">
-                                <option value="all">جميع الرسائل</option>
-                                <option value="New">جديدة (New)</option>
-                                <option value="In Progress">قيد المتابعة (In Progress)</option>
-                                <option value="Replied">تم الرد (Replied)</option>
-                                <option value="Closed">مغلقة (Closed)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="inquiriesTableContainer" class="table-container">
-                        <p style="text-align:center; padding:30px; color: var(--text-muted);">جاري تحميل الرسائل...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================== -->
-            <!-- 4. Certificates Section (Existing + Enhanced) -->
-            <!-- ============================================== -->
-            <div id="certs-section" class="tab-content hidden">
-                <div class="content-section">
-                    <div class="section-header">
-                        <h2><i class="fas fa-plus-circle"></i> إضافة شهادة جديدة</h2>
-                    </div>
-                    <form id="adminCertForm" class="admin-form">
-                        <input type="hidden" id="certEditId" value="">
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label>رقم الشهادة *</label>
-                                <input type="text" id="adminCertNum" required placeholder="مثلاً: NIB-2024-001">
-                            </div>
-                            <div class="form-group">
-                                <label>اسم المتدرب *</label>
-                                <input type="text" id="adminTraineeName" required placeholder="الاسم الكامل">
-                            </div>
-                        </div>
-
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label>نوع الشهادة *</label>
-                                <select id="adminProgramType" required>
-                                    <option value="ماجستير مهني">ماجستير مهني</option>
-                                    <option value="دكتوراه مهنية">دكتوراه مهنية</option>
-                                    <option value="دبلوم مهني">دبلوم مهني</option>
-                                    <option value="دورة تدريبية">دورة تدريبية</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>حالة الشهادة *</label>
-                                <select id="adminCertStatus" required>
-                                    <option value="Valid">معتمدة وصالحة (Valid)</option>
-                                    <option value="Suspended">معلقة (Suspended)</option>
-                                    <option value="Cancelled">ملغاة (Cancelled)</option>
-                                    <option value="Expired">منتهية الصلاحية (Expired)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label>البرنامج التدريبي *</label>
-                                <input type="text" id="adminProgramName" required placeholder="اسم البرنامج">
-                            </div>
-                            <div class="form-group">
-                                <label>المجال / التخصص *</label>
-                                <input type="text" id="adminField" required placeholder="مثلاً: إدارة الأعمال">
-                            </div>
-                        </div>
-
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label>ربط بحساب مسجل (اختياري)</label>
-                                <select id="adminCertUserId">
-                                    <option value="">--- اختر مستخدم ---</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>تاريخ الإصدار *</label>
-                                <input type="date" id="adminIssueDate" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>ملف الشهادة PDF (اختياري، بحد أقصى 4 ميجابايت)</label>
-                            <input type="file" id="adminPdfFile" accept="application/pdf">
-                        </div>
-
-                        <div class="form-submit" style="display:flex; gap:10px;">
-                            <button type="submit" class="btn-save" id="btnSaveCert">حفظ بيانات الشهادة</button>
-                            <button type="button" class="btn-save" id="btnCancelCertEdit" style="background:#f2f4f7; color:#475467; display:none;" onclick="cancelCertEdit()">إلغاء التعديل</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="content-section">
-                    <div class="section-header">
-                        <h2><i class="fas fa-list-ul"></i> سجل الشهادات الصادرة</h2>
-                    </div>
-                    <div id="certsTableContainer" class="table-container">
-                        <p style="text-align:center; padding:30px; color: var(--text-muted);">جاري تحميل الشهادات...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================== -->
-            <!-- 5. Users Section (Preserved) -->
-            <!-- ============================================== -->
-            <div id="users-section" class="tab-content hidden">
-                <div class="content-section">
-                    <div class="section-header">
-                        <h2><i class="fas fa-users-cog"></i> سجل العملاء والطلاب المسجلين</h2>
-                    </div>
-                    <div id="usersTableContainer" class="table-container">
-                        <p style="text-align:center; padding:30px; color: var(--text-muted);">جاري تحميل قائمة المستخدمين...</p>
-                    </div>
-                </div>
-            </div>
-
-        </main>
-
-        <!-- Edit User Modal (Preserved) -->
-        <div class="modal-backdrop" id="editUserModal" style="display: none;">
-            <div class="modal-card">
-                <div class="modal-header">
-                    <h2><i class="fas fa-user-edit"></i> تعديل بيانات العميل</h2>
-                    <button class="close-modal" onclick="closeEditModal()">&times;</button>
-                </div>
-                <form id="editUserForm" class="admin-form">
-                    <input type="hidden" id="editUserId">
-                    <div class="form-group">
-                        <label>الاسم</label>
-                        <input type="text" id="editUserName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>البريد الإلكتروني</label>
-                        <input type="email" id="editUserEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label>رقم الهاتف</label>
-                        <input type="text" id="editUserPhone">
-                    </div>
-                    <div class="form-group">
-                        <label>الدور</label>
-                        <select id="editUserRole">
-                            <option value="student">طالب (Student)</option>
-                            <option value="admin">مدير (Admin)</option>
-                        </select>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>الدورات المسجلة (افصل بينها بفاصلة)</label>
-                        <textarea id="editUserCourses" rows="3" placeholder="مثلاً: دبلوم الإدارة، دورة المحاسبة"></textarea>
-                    </div>
-                    <div class="form-submit">
-                        <button type="submit" class="btn-save">تحديث البيانات</button>
-                    </div>
-                </form>
-            </div>
+  <!-- Testimonial editor -->
+  <dialog class="admin-dialog" id="testimonialDialog">
+    <form id="testimonialForm" method="dialog" novalidate>
+      <header class="dialog-head">
+        <h2 id="testimonialDialogTitle">رأي جديد</h2>
+        <button type="button" class="icon-btn" data-close aria-label="إغلاق"><i class="fas fa-xmark"></i></button>
+      </header>
+      <div class="dialog-body">
+        <input type="hidden" name="id" />
+        <div class="form-grid">
+          <label class="field">الاسم بالعربي *<input name="nameAr" required maxlength="120" /></label>
+          <label class="field">Name (English)<input name="nameEn" dir="ltr" maxlength="120" /></label>
+          <label class="field">الصفة أو الشركة<input name="roleAr" maxlength="160" /></label>
+          <label class="field">Role / company (English)<input name="roleEn" dir="ltr" maxlength="160" /></label>
+          <label class="field field--wide">الرأي بالعربي *<textarea name="quoteAr" rows="4" required maxlength="1200"></textarea></label>
+          <label class="field field--wide">Quote (English)<textarea name="quoteEn" rows="4" dir="ltr" maxlength="1200"></textarea></label>
+          <label class="field">الترتيب<input name="order" type="number" step="1" value="0" /></label>
+          <label class="check-field"><input type="checkbox" name="visible" checked /> ظاهر في الموقع</label>
+          <div class="field field--wide">
+            <span>الصورة الشخصية (اختياري)</span>
+            <div class="uploader uploader--round" data-uploader data-name="image" data-size="avatar" style="--aspect: 1 / 1"></div>
+          </div>
         </div>
+      </div>
+      <footer class="dialog-foot">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-floppy-disk"></i> حفظ الرأي</button>
+        <button type="button" class="btn btn-light" data-close>إلغاء</button>
+      </footer>
+    </form>
+  </dialog>
 
-        <!-- Mobile Toggle -->
-        <div class="mobile-nav-toggle" id="mobileToggle" onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
+  <!-- User editor -->
+  <dialog class="admin-dialog" id="userDialog">
+    <form id="userForm" method="dialog" novalidate>
+      <header class="dialog-head">
+        <h2>تعديل بيانات المستخدم</h2>
+        <button type="button" class="icon-btn" data-close aria-label="إغلاق"><i class="fas fa-xmark"></i></button>
+      </header>
+      <div class="dialog-body">
+        <input type="hidden" name="id" />
+        <div class="form-grid">
+          <label class="field">الاسم *<input name="name" required /></label>
+          <label class="field">البريد الإلكتروني *<input name="email" type="email" dir="ltr" required /></label>
+          <label class="field">رقم الهاتف<input name="phone" dir="ltr" /></label>
+          <label class="field">الصلاحية
+            <select name="role">
+              <option value="student">متدرب</option>
+              <option value="admin">مدير</option>
+            </select>
+          </label>
+          <label class="field field--wide">البرامج المسجل فيها (كل برنامج في سطر)<textarea name="enrolledCourses" rows="4"></textarea></label>
         </div>
-    </div>
+      </div>
+      <footer class="dialog-foot">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-floppy-disk"></i> حفظ</button>
+        <button type="button" class="btn btn-light" data-close>إلغاء</button>
+      </footer>
+    </form>
+  </dialog>
 
-    <div id="toast" role="status" aria-live="polite"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script>
-        function showSection(sectionId, element) {
-            document.querySelectorAll('.tab-content').forEach(section => {
-                section.classList.add('hidden');
-            });
-            const target = document.getElementById(sectionId);
-            if (target) target.classList.remove('hidden');
-
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            if (element) element.classList.add('active');
-
-            const titles = {
-                'programs-section': ['إدارة البرامج التدريبية', 'إضافة وتعديل وحذف البرامج وتحديد الحالات والأسعار'],
-                'articles-section': ['إدارة المقالات والتغطيات', 'إضافة وتعديل وحذف ونشر المقالات والأخبار الصحفية'],
-                'inquiries-section': ['رسائل واستفسارات التواصل', 'متابعة رسائل الزوار والرد عليها وتغيير حالتها'],
-                'certs-section': ['إدارة الشهادات', 'إضافة وتعديل بيانات شهادات المتدربين والتحقق'],
-                'users-section': ['إدارة العملاء', 'متابعة وتعديل بيانات الطلاب والمستخدمين المسجلين']
-            };
-
-            if (titles[sectionId]) {
-                document.getElementById('sectionTitle').textContent = titles[sectionId][0];
-                document.getElementById('sectionDesc').textContent = titles[sectionId][1];
-            }
-
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.remove('active');
-                document.getElementById('mobileToggle').innerHTML = '<i class="fas fa-bars"></i>';
-            }
-
-            // Refresh specific tables on demand
-            if (sectionId === 'programs-section' && window.refreshAdminPrograms) window.refreshAdminPrograms();
-            if (sectionId === 'articles-section' && window.refreshAdminArticles) window.refreshAdminArticles();
-            if (sectionId === 'inquiries-section' && window.refreshAdminInquiries) window.refreshAdminInquiries();
-            if (sectionId === 'certs-section' && window.refreshAdminCerts) window.refreshAdminCerts();
-            if (sectionId === 'users-section' && window.refreshUsers) window.refreshUsers();
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.getElementById('mobileToggle');
-            sidebar.classList.toggle('active');
-            toggle.innerHTML = sidebar.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-        }
-
-        function closeEditModal() {
-            document.getElementById('editUserModal').style.display = 'none';
-        }
-    </script>
-
-    <!-- Main Script -->
-    <script src="../../assets/js/specialties.js?v=20261101"></script>
-    <script>
-        document.getElementById('progSpecialty').innerHTML = NIBRAS_SPECIALTIES
-            .map((s) => `<option value="${s.ar}">${s.ar}</option>`).join('');
-    </script>
-    <script src="../../assets/js/script.js?v=20261113"></script>
+  <script src="/assets/js/specialties.js?v=20261101"></script>
+  <script src="/assets/js/site-content.js?v=20261116"></script>
+  <script src="/assets/js/script.js?v=20261116"></script>
+  <script src="/assets/js/admin.js?v=20261117"></script>
 </body>
-
 </html>

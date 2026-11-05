@@ -33,12 +33,18 @@ Check the deployment at `/api/health`: it should report `"status":"ok"`.
 4. Forward the domain to `http://127.0.0.1:3000`
 
 ## 4) Data
-- All data lives in MongoDB Atlas, including certificate PDFs (4MB max each).
+- All data lives in MongoDB Atlas, including certificate PDFs (4MB max each) and images uploaded from the admin panel.
+- Admin-edited content (page header images, pathways, programs page cards, Nibras numbers) is stored in `SiteSettings`. Until a section is saved, the site shows the defaults in `assets/js/site-content.js`.
+- Uploaded images that nothing uses are removed a day later, the next time an image is uploaded.
 - Enable Atlas backups.
-- `data/seedData.js` adds missing media coverage and settings without touching existing data.
+- `data/seedData.js` adds missing programs and settings without touching existing data.
 - `data/migrateCatalog.js` normalizes specialties and fills English titles. It is safe to run again.
 
-## 5) Security notes
+## 5) Admin panel
+- Sign in from the normal login page with an admin account. The navigation then shows a "لوحة التحكم" button that opens `/pages/ar/admin.html`.
+- Opening the admin page without an admin session sends you to the login page.
+
+## 6) Security notes
 - Secrets belong in environment variables only, never in the code.
 - Use a long `JWT_SECRET` and change it to sign everyone out.
 - Keep the Atlas network access list as narrow as the host allows.

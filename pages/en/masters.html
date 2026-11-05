@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261108" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261116" />
 </head>
 <body>
 
@@ -30,7 +30,7 @@
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-footer">
       <div class="cart-total"><span>Total:</span><strong id="cartTotal">0.00 US$</strong></div>
-      <a href="/pages/en/checkout.html" class="btn-primary">Proceed to Checkout <i class="fas fa-credit-card"></i></a>
+      <a href="/pages/en/checkout.html" class="btn-primary">Send Enrollment Request <i class="fab fa-whatsapp"></i></a>
     </div>
   </div>
   <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
@@ -50,7 +50,7 @@
         <li><a href="/en/index.html" class="nav-link">Home</a></li>
         <li><a href="/pages/en/about.html" class="nav-link">About</a></li>
         <li><a href="/pages/en/programs.html" class="nav-link active">Programs & Services</a></li>
-        <li><a href="/pages/en/articles.html" class="nav-link">Articles & Media</a></li>
+        <li><a href="/pages/en/corporate.html" class="nav-link">Corporate Solutions</a></li>
         <li><a href="/pages/en/contact.html" class="nav-link">Contact</a></li>
         <li><a href="/pages/en/verify.html" class="nav-link">Verify Certificate</a></li>
       </ul>
@@ -69,14 +69,14 @@
       <li><a href="/en/index.html">Home</a></li>
       <li><a href="/pages/en/about.html">About</a></li>
       <li><a href="/pages/en/programs.html">Programs & Services</a></li>
-      <li><a href="/pages/en/articles.html">Articles & Media</a></li>
+      <li><a href="/pages/en/corporate.html">Corporate Solutions</a></li>
       <li><a href="/pages/en/contact.html">Contact</a></li>
       <li><a href="/pages/en/verify.html">Verify Certificate</a></li>
       <li id="mobileNavAuth"><a href="/pages/en/login.html" class="mobile-btn">Login</a></li>
     </ul>
   </div>
 
-  <section class="page-header">
+  <section class="page-header" data-hero="masters">
     <div class="container">
       <div style="margin-bottom: 15px">
         <a href="../../en/index.html">Home</a> → 
@@ -114,7 +114,6 @@
     </div>
   </section>
 
-  <!-- Section 03: Programs List with Filter & Search -->
   <section class="programs-section band band--tint" id="programs-list">
     <div class="container">
       <div class="section-header" style="text-align: center; margin-bottom: 35px">
@@ -123,14 +122,12 @@
         <p class="section-subtitle">Browse through all certified executive tracks and select the program that best matches your aspirations.</p>
       </div>
 
-      <!-- Search & Specialty Filter Controls -->
       <div style="max-width: 950px; margin: 0 auto 35px">
         <div class="search-box-wrapper">
           <input type="text" id="masterSearch" class="search-box-input" placeholder="Search by program title or specialty (e.g., MBA, Project Management, Cybersecurity)..." />
           <i class="fas fa-search search-box-icon"></i>
         </div>
 
-        <div class="filter-tags-wrapper" id="specialtyFilterButtons"></div>
       </div>
 
       <!-- Dynamic Cards Grid -->
@@ -229,7 +226,7 @@
               <li><a href="/en/index.html">Home</a></li>
               <li><a href="/pages/en/about.html">About</a></li>
               <li><a href="/pages/en/programs.html">Programs & Services</a></li>
-              <li><a href="/pages/en/articles.html">Articles & Media</a></li>
+              <li><a href="/pages/en/corporate.html">Corporate Solutions</a></li>
               <li><a href="/pages/en/contact.html">Contact</a></li>
             </ul>
           </div>
@@ -240,7 +237,7 @@
               <li><a href="/pages/en/diploma.html">Professional Diplomas</a></li>
               <li><a href="/pages/en/masters.html">Professional Master</a></li>
               <li><a href="/pages/en/phd.html">Professional Doctorate</a></li>
-              <li><a href="/pages/en/programs.html#services">Corporate Training</a></li>
+              <li><a href="/pages/en/corporate.html">Corporate Training</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
@@ -269,10 +266,12 @@
   <button class="scroll-top" id="scrollTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="/assets/js/site-content.js?v=20261116"></script>
+
   <script src="/assets/js/specialties.js?v=20261101"></script>
-  <script src="/assets/js/script.js?v=20261113"></script>
+  <script src="/assets/js/script.js?v=20261116"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => initCatalogPage({ type: 'master', gridId: 'mastersGrid', searchId: 'masterSearch', filterId: 'specialtyFilterButtons' }));
+    document.addEventListener('DOMContentLoaded', () => initCatalogPage({ type: 'master', gridId: 'mastersGrid', searchId: 'masterSearch' }));
   </script>
 </body>
 </html>

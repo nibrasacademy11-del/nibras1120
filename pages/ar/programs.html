@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261108" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261116" />
 </head>
 <body>
 
@@ -30,7 +30,7 @@
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-footer">
       <div class="cart-total"><span>الإجمالي:</span><strong id="cartTotal">0.00 US$</strong></div>
-      <a href="/pages/ar/checkout.html" class="btn-primary">إتمام الدفع <i class="fas fa-credit-card"></i></a>
+      <a href="/pages/ar/checkout.html" class="btn-primary">إرسال طلب التسجيل <i class="fab fa-whatsapp"></i></a>
     </div>
   </div>
   <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
@@ -50,7 +50,7 @@
         <li><a href="/index.html" class="nav-link">الرئيسية</a></li>
         <li><a href="/pages/ar/about.html" class="nav-link">عن نبراس</a></li>
         <li><a href="/pages/ar/programs.html" class="nav-link active">البرامج والخدمات</a></li>
-        <li><a href="/pages/ar/articles.html" class="nav-link">المقالات والإعلام</a></li>
+        <li><a href="/pages/ar/corporate.html" class="nav-link">حلول الشركات</a></li>
         <li><a href="/pages/ar/contact.html" class="nav-link">تواصل معنا</a></li>
         <li><a href="/pages/ar/verify.html" class="nav-link">التحقق من الشهادات</a></li>
       </ul>
@@ -69,14 +69,14 @@
       <li><a href="/index.html">الرئيسية</a></li>
       <li><a href="/pages/ar/about.html">عن نبراس</a></li>
       <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
-      <li><a href="/pages/ar/articles.html">المقالات والإعلام</a></li>
+      <li><a href="/pages/ar/corporate.html">حلول الشركات</a></li>
       <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
       <li><a href="/pages/ar/verify.html">التحقق من الشهادات</a></li>
       <li id="mobileNavAuth"><a href="/pages/ar/login.html" class="mobile-btn">تسجيل الدخول</a></li>
     </ul>
   </div>
 
-  <section class="page-header" style="text-align: center">
+  <section class="page-header" data-hero="programs" style="text-align: center">
     <div class="container">
       <div class="section-badge">منظومة التعلم والتأهيل</div>
       <h1 style="margin-bottom: 15px">البرامج والخدمات المهنية</h1>
@@ -101,8 +101,6 @@
         <i class="fas fa-search search-box-icon"></i>
       </div>
 
-      <!-- Specialty Keyword Filter Tags with Icons -->
-      <div class="filter-tags-wrapper" id="catalogFilterButtons"></div>
 
       <!-- Interactive Search Results Grid -->
       <div id="catalogResultsArea" class="hidden">
@@ -126,51 +124,7 @@
         <p class="section-subtitle">صممنا مساراتنا التعليمية لتناسب مراحل مختلفة من التطور المهني، بحيث يمكنك اختيار البرنامج الأقرب إلى هدفك ومرحلتك الحالية.</p>
       </div>
 
-      <div class="tracks">
-        <!-- 01 الدورات التدريبية -->
-        <a class="track" href="pro_courses.html">
-          <span class="track-num">01</span>
-          <div class="track-head">
-            <h3>الدورات التدريبية</h3>
-            <p class="track-tag">مهارة جديدة... تبدأ بخطوة</p>
-          </div>
-          <p class="track-desc">برامج تدريبية متخصصة تركز على تطوير المهارات العملية والمعارف المهنية في مجالات متنوعة، وتساعدك على رفع كفاءتك ومواكبة متطلبات بيئة العمل.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
-        </a>
-
-        <!-- 02 الدبلومات المهنية -->
-        <a class="track" href="diploma.html">
-          <span class="track-num">02</span>
-          <div class="track-head">
-            <h3>الدبلومات المهنية</h3>
-            <p class="track-tag">تخصص أعمق... وخبرة أكثر</p>
-          </div>
-          <p class="track-desc">برامج مهنية تساعدك على التعمق في مجال تخصص محدد، وبناء قاعدة معرفية ومهارية أكثر شمولاً، بما يدعم تطورك المهني أو انتقالك إلى مجال جديد.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
-        </a>
-
-        <!-- 03 الماجستير المهني -->
-        <a class="track" href="masters.html">
-          <span class="track-num">03</span>
-          <div class="track-head">
-            <h3>الماجستير المهني</h3>
-            <p class="track-tag">ارتِق بخبرتك... ووسّع آفاقك</p>
-          </div>
-          <p class="track-desc">برامج مهنية متقدمة تجمع بين المعرفة المتخصصة والتطبيق العملي، وتهدف إلى تطوير القدرات المهنية والإدارية والقيادية ودعم النمو الوظيفي.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
-        </a>
-
-        <!-- 04 الدكتوراه المهنية -->
-        <a class="track" href="phd.html">
-          <span class="track-num">04</span>
-          <div class="track-head">
-            <h3>الدكتوراه المهنية</h3>
-            <p class="track-tag">مستوى متقدم من المعرفة والخبرة</p>
-          </div>
-          <p class="track-desc">برامج مهنية متقدمة تستهدف المهنيين والخبراء والقيادات الراغبين في تعميق معرفتهم وتطوير قدراتهم التحليلية والاستراتيجية والقيادية وصناعة القرار.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
-        </a>
-      </div>
+      <div class="paths" data-pathways></div>
     </div>
   </section>
 
@@ -183,35 +137,7 @@
         <p class="section-subtitle">ابدأ من هدفك... وحدد خطوتك القادمة بكل وضوح وثقة.</p>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 25px; margin-top: 40px">
-        <div class="panel">
-          <div style="margin-bottom: 12px"><i class="fas fa-bullseye"></i></div>
-          <h4 style="margin-bottom: 8px">أريد تطوير مهارة محددة</h4>
-          <p style="margin-bottom: 20px">ابدأ من الدورات التدريبية واكتسب معرفة ومهارات مركزة في وقت قياسي.</p>
-          <a class="btn-outline" href="pro_courses.html">استكشف الدورات <i class="fas fa-arrow-left"></i></a>
-        </div>
-
-        <div class="panel">
-          <div style="margin-bottom: 12px"><i class="fas fa-award"></i></div>
-          <h4 style="margin-bottom: 8px">أريد التخصص في مجال مهني</h4>
-          <p style="margin-bottom: 20px">استكشف الدبلومات المهنية وابنِ قاعدة معرفية وتطبيقية أكثر تخصصاً.</p>
-          <a class="btn-outline" href="diploma.html">استكشف الدبلومات <i class="fas fa-arrow-left"></i></a>
-        </div>
-
-        <div class="panel">
-          <div style="margin-bottom: 12px"><i class="fas fa-user-tie"></i></div>
-          <h4 style="margin-bottom: 8px">أريد تطوير مساري الوظيفي</h4>
-          <p style="margin-bottom: 20px">تعرف على برامج الماجستير المهني التي تساعدك على توسيع معارفك وقدراتك الإدارية.</p>
-          <a class="btn-primary" href="masters.html">استكشف الماجستير <i class="fas fa-arrow-left"></i></a>
-        </div>
-
-        <div class="panel">
-          <div style="margin-bottom: 12px"><i class="fas fa-chess-king"></i></div>
-          <h4 style="margin-bottom: 8px">أطمح لمستوى قيادي متقدم</h4>
-          <p style="margin-bottom: 20px">استكشف برامج الدكتوراه المهنية لتعميق التفكير الاستراتيجي والقيادة المؤسسية.</p>
-          <a class="btn-outline" href="phd.html">استكشف الدكتوراه <i class="fas fa-arrow-left"></i></a>
-        </div>
-      </div>
+      <div class="guide-grid" data-guide-cards></div>
     </div>
   </section>
 
@@ -224,66 +150,7 @@
         <p class="section-subtitle">في أكاديمية نبراس للتدريب والتأهيل المهني، نؤمن بأن احتياجات التطوير تختلف باختلاف الفرد، وطبيعة المؤسسة، والأهداف المطلوب تحقيقها.</p>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 30px; margin-top: 40px">
-        
-        <!-- للأفراد والمهنيين -->
-        <div class="panel">
-          <div class="tile">
-            <i class="fas fa-user-check"></i>
-          </div>
-          <h3 style="margin-bottom: 12px">للأفراد والمهنيين</h3>
-          <h5 class="text-gold" style="margin-bottom: 15px">طوّر مهاراتك... وابنِ مسارك المهني</h5>
-          <p style="margin-bottom: 18px">
-            نوفر للأفراد والمهنيين برامج وخدمات متكاملة تساعدهم على تطوير المعرفة، وبناء المهارات، واختيار المسار الأقرب لأهدافهم.
-          </p>
-          <ul style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 25px">
-            <li><i class="fas fa-check" style="margin-inline-end: 6px"></i> دورات وبرامج في تخصصات متنوعة</li>
-            <li><i class="fas fa-check" style="margin-inline-end: 6px"></i> محتوى يجمع بين المعرفة والتطبيق</li>
-            <li><i class="fas fa-check" style="margin-inline-end: 6px"></i> خيارات تعلم تراعي التزاماتك اليومية</li>
-            <li><i class="fas fa-check" style="margin-inline-end: 6px"></i> متابعة وتقييم خلال الرحلة التدريبية</li>
-          </ul>
-          <a class="btn-primary" href="#pathways" style="width: 100%">استكشف برامج الأفراد <i class="fas fa-arrow-down"></i></a>
-        </div>
-
-        <!-- للشركات والمؤسسات -->
-        <div class="panel panel--accent">
-          <div class="tile">
-            <i class="fas fa-building"></i>
-          </div>
-          <h3 style="margin-bottom: 12px">للشركات والمؤسسات</h3>
-          <h5 class="text-gold" style="margin-bottom: 15px">التدريب الذي يبدأ من احتياج المؤسسة</h5>
-          <p style="margin-bottom: 18px">
-            نعمل مع الشركات والمؤسسات على تطوير حلول تدريبية مخصصة ترتبط بأهدافها وتواكب التحول في بيئات العمل:
-          </p>
-          <ul style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 25px">
-            <li><i class="fas fa-check-circle text-gold" style="margin-inline-end: 6px"></i> <strong>تحليل الاحتياجات:</strong> تحديد الفجوات والمهارات المستهدفة</li>
-            <li><i class="fas fa-check-circle text-gold" style="margin-inline-end: 6px"></i> <strong>تصميم برامج مخصصة:</strong> إعداد برامج تلائم بيئة المؤسسة</li>
-            <li><i class="fas fa-check-circle text-gold" style="margin-inline-end: 6px"></i> <strong>تنفيذ مرن:</strong> تدريب عن بُعد أو وفق النموذج المتفق عليه</li>
-            <li><i class="fas fa-check-circle text-gold" style="margin-inline-end: 6px"></i> <strong>تقارير تدريبية:</strong> قياس الأثر ومستوى المشاركة والتقدم</li>
-          </ul>
-          <a class="btn-primary" href="#customInquiry" style="width: 100%">اطلب حلاً تدريبياً لمؤسستك <i class="fas fa-briefcase"></i></a>
-        </div>
-
-        <!-- لمراكز التدريب والمعاهد -->
-        <div class="panel">
-          <div class="tile">
-            <i class="fas fa-book-open"></i>
-          </div>
-          <h3 style="margin-bottom: 12px">لمراكز التدريب والمعاهد</h3>
-          <h5 class="text-gold" style="margin-bottom: 15px">محتوى تدريبي احترافي يدعم برامجك</h5>
-          <p style="margin-bottom: 18px">
-            نقدم حلولاً لتطوير وإعداد الحقائب التدريبية والمحتوى المتخصص لمراكز التدريب والجهات التعليمية:
-          </p>
-          <ul style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 25px">
-            <li><i class="fas fa-folder-open" style="margin-inline-end: 6px"></i> <strong>الحقائب التدريبية:</strong> دليل مدرب، دليل متدرب، عروض</li>
-            <li><i class="fas fa-tasks" style="margin-inline-end: 6px"></i> <strong>أدوات التقييم:</strong> أنشطة وتطبيقات ومواد مساندة</li>
-            <li><i class="fas fa-paint-brush" style="margin-inline-end: 6px"></i> <strong>تطوير وتخصيص:</strong> صياغة وفق هوية وأهداف المركز</li>
-            <li><i class="fas fa-sync" style="margin-inline-end: 6px"></i> <strong>تحديث المحتوى:</strong> مواكبة التغيرات في المجال التخصصي</li>
-          </ul>
-          <a class="btn-outline" href="#customInquiry" style="width: 100%">تحدث مع فريقنا <i class="fas fa-comments"></i></a>
-        </div>
-
-      </div>
+      <div class="service-grid" data-service-cards></div>
 
       <!-- Form: طلب احتياج تدريبي خاص (Page 33-34 in PDF) -->
       <div class="panel" id="customInquiry" style="margin-top: 60px">
@@ -359,7 +226,7 @@
               <li><a href="/index.html">الرئيسية</a></li>
               <li><a href="/pages/ar/about.html">عن نبراس</a></li>
               <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
-              <li><a href="/pages/ar/articles.html">المقالات والإعلام</a></li>
+              <li><a href="/pages/ar/corporate.html">حلول الشركات</a></li>
               <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
             </ul>
           </div>
@@ -370,7 +237,7 @@
               <li><a href="/pages/ar/diploma.html">الدبلومات المهنية</a></li>
               <li><a href="/pages/ar/masters.html">الماجستير المهني</a></li>
               <li><a href="/pages/ar/phd.html">الدكتوراه المهنية</a></li>
-              <li><a href="/pages/ar/programs.html#services">تدريب الشركات</a></li>
+              <li><a href="/pages/ar/corporate.html">تدريب الشركات</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
@@ -399,10 +266,12 @@
   <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="/assets/js/site-content.js?v=20261116"></script>
+
   <script src="/assets/js/specialties.js?v=20261101"></script>
-  <script src="/assets/js/script.js?v=20261113"></script>
+  <script src="/assets/js/script.js?v=20261116"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => initCatalogPage({ gridId: 'catalogGrid', searchId: 'catalogSearch', filterId: 'catalogFilterButtons', areaId: 'catalogResultsArea', countId: 'catalogCount' }));
+    document.addEventListener('DOMContentLoaded', () => initCatalogPage({ gridId: 'catalogGrid', searchId: 'catalogSearch', areaId: 'catalogResultsArea', countId: 'catalogCount' }));
   </script>
 </body>
 </html>

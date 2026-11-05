@@ -1,10 +1,32 @@
+const mongoose = require('mongoose');
 const Certificate = require('../models/Certificate');
+const User = require('../models/User');
+const { isAdmin } = require('../middleware/auth');
+
+const text = (value) => (typeof value === 'string' ? value.trim() : '');
+
+// The linked account is optional; anything that is not a real id is a mistake in the form
+function parseUserId(value) {
+    if (value === undefined) return undefined;
+    if (!value) return null;
+    return mongoose.Types.ObjectId.isValid(value) ? value : false;
+}
+
+// Adds the program to the linked trainee's profile, once
+async function linkProgramToUser(userId, programName) {
+    if (!userId || !programName) return;
+    const user = await User.findById(userId);
+    if (user && !user.enrolledCourses.includes(programName)) {
+        user.enrolledCourses.push(programName);
+        await user.save();
+    }
+}
 
 exports.getCertificate = async (req, res) => {
     try {
         const code = String(req.params.code || '').trim();
-        // Don't return pdf_data in search results (it's huge)
-        const cert = await Certificate.findOne({ cert_num: code }).select('-pdf_data');
+        // The public answer carries what a verifier needs, never the PDF bytes or the linked account
+        const cert = await Certificate.findOne({ cert_num: code }).select('-pdf_data -userId');
         if (!cert) return res.status(404).json({ message: 'Certificate not found.' });
         res.json({ certificate: cert });
     } catch (error) {
@@ -24,53 +46,43 @@ exports.getAllCertificates = async (req, res) => {
 
 exports.addCertificate = async (req, res) => {
     try {
-        const { certNum, traineeName, programName, programType, field, issueDate, status, userId } = req.body;
+        const certNum = text(req.body.certNum);
+        const traineeName = text(req.body.traineeName);
+        const programName = text(req.body.programName);
+        const issueDate = text(req.body.issueDate);
+        const userId = parseUserId(req.body.userId);
         if (!certNum || !traineeName || !programName || !issueDate) {
             return res.status(400).json({ message: 'Please complete required fields.' });
         }
-        const existing = await Certificate.findOne({ cert_num: certNum.trim() });
+        if (userId === false) return res.status(400).json({ message: 'الحساب المرتبط غير صحيح.' });
+
+        const existing = await Certificate.findOne({ cert_num: certNum });
         if (existing) return res.status(400).json({ message: 'Certificate number already exists.' });
 
-        const certData = {
-            cert_num: certNum.trim(),
-            trainee_name: traineeName.trim(),
-            program_name: programName.trim(),
-            program_type: (programType || 'برنامج مهني').trim(),
-            field: (field || '').trim(),
+        const cert = new Certificate({
+            cert_num: certNum,
+            trainee_name: traineeName,
+            program_name: programName,
+            program_type: text(req.body.programType) || 'برنامج مهني',
+            field: text(req.body.field),
             issue_date: issueDate,
-            status: status || 'Valid',
+            status: req.body.status || 'Valid',
             userId: userId || null
-        };
+        });
 
-        // If PDF was uploaded, store it in MongoDB as binary
+        // If a PDF was uploaded, store it in MongoDB as binary
         if (req.file && req.file.buffer) {
-            certData.pdf_data = req.file.buffer;
-            certData.pdf_mimetype = req.file.mimetype || 'application/pdf';
-            certData.pdf_url = 'pending';
-        }
-
-        const cert = new Certificate(certData);
-        await cert.save();
-
-        if (req.file && req.file.buffer) {
+            cert.pdf_data = req.file.buffer;
+            cert.pdf_mimetype = req.file.mimetype || 'application/pdf';
             cert.pdf_url = `/api/certificates/download/${cert._id}`;
-            await cert.save();
         }
 
-        // AUTO-ADD TO USER PROFILE: If a user is linked, add this program to their enrolledCourses
-        if (userId) {
-            const User = require('../models/User');
-            const user = await User.findById(userId);
-            if (user) {
-                if (!user.enrolledCourses.includes(programName.trim())) {
-                    user.enrolledCourses.push(programName.trim());
-                    await user.save();
-                }
-            }
-        }
+        await cert.save();
+        await linkProgramToUser(cert.userId, programName);
 
         res.status(201).json({ id: cert._id, message: 'Certificate added successfully.' });
     } catch (error) {
+        if (error.name === 'ValidationError') return res.status(400).json({ message: error.message });
         console.error('Error adding certificate:', error);
         res.status(500).json({ message: 'Server error while saving certificate.' });
     }
@@ -78,16 +90,19 @@ exports.addCertificate = async (req, res) => {
 
 exports.updateCertificate = async (req, res) => {
     try {
-        const { certNum, traineeName, programName, programType, field, issueDate, status, userId } = req.body;
+        const { certNum, traineeName, programName, programType, field, issueDate, status } = req.body;
+        const userId = parseUserId(req.body.userId);
+        if (userId === false) return res.status(400).json({ message: 'الحساب المرتبط غير صحيح.' });
+
         const updateData = {};
-        if (certNum) updateData.cert_num = certNum.trim();
-        if (traineeName) updateData.trainee_name = traineeName.trim();
-        if (programName) updateData.program_name = programName.trim();
-        if (programType) updateData.program_type = programType.trim();
-        if (field !== undefined) updateData.field = field.trim();
-        if (issueDate) updateData.issue_date = issueDate;
+        if (text(certNum)) updateData.cert_num = text(certNum);
+        if (text(traineeName)) updateData.trainee_name = text(traineeName);
+        if (text(programName)) updateData.program_name = text(programName);
+        if (text(programType)) updateData.program_type = text(programType);
+        if (field !== undefined) updateData.field = text(field);
+        if (text(issueDate)) updateData.issue_date = text(issueDate);
         if (status) updateData.status = status;
-        if (userId !== undefined) updateData.userId = userId || null;
+        if (userId !== undefined) updateData.userId = userId;
 
         if (req.file && req.file.buffer) {
             updateData.pdf_data = req.file.buffer;
@@ -97,9 +112,11 @@ exports.updateCertificate = async (req, res) => {
 
         const cert = await Certificate.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true }).select('-pdf_data');
         if (!cert) return res.status(404).json({ message: 'Certificate not found.' });
+        await linkProgramToUser(cert.userId, cert.program_name);
         res.json({ message: 'Certificate updated successfully.', certificate: cert });
     } catch (error) {
         if (error.code === 11000) return res.status(400).json({ message: 'Certificate number already exists.' });
+        if (error.name === 'ValidationError') return res.status(400).json({ message: error.message });
         res.status(500).json({ message: 'Error updating certificate.' });
     }
 };
@@ -107,7 +124,8 @@ exports.updateCertificate = async (req, res) => {
 exports.downloadPdf = async (req, res) => {
     try {
         const cert = await Certificate.findById(req.params.id);
-        if (!cert || !cert.pdf_data) {
+        // Suspended, cancelled or expired certificates are not handed out, except to an admin
+        if (!cert || !cert.pdf_data || (cert.status !== 'Valid' && !isAdmin(req))) {
             return res.status(404).json({ message: 'PDF file not found.' });
         }
 
@@ -115,6 +133,7 @@ exports.downloadPdf = async (req, res) => {
         res.setHeader('Content-Type', cert.pdf_mimetype || 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
         res.setHeader('Content-Length', cert.pdf_data.length);
+        res.setHeader('Cache-Control', 'private, no-store');
         res.send(cert.pdf_data);
     } catch (error) {
         res.status(500).json({ message: 'Error downloading PDF.' });
@@ -123,9 +142,8 @@ exports.downloadPdf = async (req, res) => {
 
 exports.deleteCertificate = async (req, res) => {
     try {
-        const cert = await Certificate.findById(req.params.id);
+        const cert = await Certificate.findByIdAndDelete(req.params.id);
         if (!cert) return res.status(404).json({ message: 'Certificate not found.' });
-        await Certificate.findByIdAndDelete(req.params.id);
         res.json({ message: 'Certificate deleted successfully.' });
     } catch (error) {
         res.status(500).json({ message: 'Server error while deleting certificate.' });

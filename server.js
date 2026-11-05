@@ -19,6 +19,8 @@ connectDB().catch((err) => console.error('Initial MongoDB connection error:', er
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+const SITE_URL = (process.env.SITE_URL || 'https://www.nibras-ac.com').replace(/\/$/, '');
 
 // Vercel sits in front of the app, so req.ip and req.protocol come from its headers
 app.set('trust proxy', 1);
@@ -33,7 +35,7 @@ const allowedOrigins = [
 ];
 app.use((req, res, next) => {
     const origin = req.headers.origin;
-    if (origin && (allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production')) {
+    if (origin && (allowedOrigins.includes(origin) || !isProd)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
         res.setHeader('Access-Control-Allow-Credentials', 'true');
         res.setHeader('Vary', 'Origin');
@@ -44,8 +46,22 @@ app.use((req, res, next) => {
     next();
 });
 
-// Security headers
+// Security headers. Pages still use inline scripts and handlers, so scripts allow 'unsafe-inline';
+// the policy still blocks foreign script hosts, plugins, framing and form posts to other sites.
+const CSP = [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
+    "font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com",
+    "img-src 'self' data: blob: https:",
+    "connect-src 'self'",
+    "frame-ancestors 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'"
+].join('; ');
 app.use((req, res, next) => {
+    res.setHeader('Content-Security-Policy', CSP);
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -63,6 +79,11 @@ app.use((req, res, next) => {
 });
 app.use(cookieParser());
 
+// The articles section was replaced by the corporate solutions page
+app.get(['/pages/ar/articles.html', '/pages/en/articles.html'], (req, res) => {
+    res.redirect(301, req.path.replace('articles.html', 'corporate.html'));
+});
+
 // Static Files (Explicit paths help Vercel include them in the build)
 // Only public folders are served: never expose the project root, it holds the server code.
 const staticOptions = { maxAge: '1h' };
@@ -79,7 +100,7 @@ app.use('/api', async (req, res, next) => {
         console.error('API Database Connection Error:', err.message);
         return res.status(503).json({
             message: 'Database connection failed. Please try again shortly.',
-            error: process.env.NODE_ENV === 'production' ? undefined : err.message
+            error: isProd ? undefined : err.message
         });
     }
 });
@@ -104,23 +125,9 @@ app.get('/api/health', (req, res) => {
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api', require('./routes/certificateRoutes'));
+app.use('/api', require('./routes/siteRoutes'));
 app.use('/api/courses', require('./routes/courseRoutes'));
 app.use('/api/inquiries', require('./routes/inquiryRoutes'));
-app.use('/api/articles', require('./routes/articleRoutes'));
-
-// Public Settings route
-const SiteSettings = require('./models/SiteSettings');
-app.get('/api/settings', async (req, res) => {
-    try {
-        let settings = await SiteSettings.findOne();
-        if (!settings) {
-            settings = await SiteSettings.create({});
-        }
-        res.json({ settings });
-    } catch (e) {
-        res.status(500).json({ message: 'Error fetching settings' });
-    }
-});
 
 // Unknown API paths answer in JSON
 app.use('/api', (req, res) => {
@@ -135,7 +142,27 @@ app.get(['/logo.png', '/favicon.ico'], (req, res) => {
     res.sendFile(path.join(__dirname, 'assets/img/logo.png'));
 });
 app.get('/robots.txt', (req, res) => {
-    res.sendFile(path.join(__dirname, 'assets/robots.txt'));
+    res.type('text/plain').send(`User-agent: *\nDisallow: /api/\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
+});
+
+// Public pages plus every visible program, in both languages
+const SITEMAP_PAGES = ['about', 'programs', 'pro_courses', 'diploma', 'masters', 'phd', 'corporate', 'contact', 'verify', 'privacy', 'terms', 'refund', 'accessibility'];
+app.get('/sitemap.xml', async (req, res) => {
+    const Course = require('./models/Course');
+    const urls = ['/', '/en/index.html', ...SITEMAP_PAGES.flatMap((p) => [`/pages/ar/${p}.html`, `/pages/en/${p}.html`])];
+    try {
+        await connectDB();
+        const courses = await Course.find({ status: { $ne: 'hidden' } }).select('slug').lean();
+        for (const c of courses) {
+            const slug = encodeURIComponent(c.slug);
+            urls.push(`/pages/ar/program-detail.html?slug=${slug}`, `/pages/en/program-detail.html?slug=${slug}`);
+        }
+    } catch (err) {
+        console.error('Sitemap programs skipped:', err.message);
+    }
+    const xmlEscape = (s) => s.replace(/&/g, '&amp;');
+    res.type('application/xml').setHeader('Cache-Control', 'public, max-age=0, s-maxage=3600');
+    res.send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${xmlEscape(SITE_URL + u)}</loc></url>`).join('\n')}\n</urlset>\n`);
 });
 
 // Admin Initializer: creates the first admin only when credentials are provided by the environment
@@ -176,6 +203,9 @@ app.use((err, req, res, next) => {
     console.error('Unhandled Error:', err?.message || err);
     if (err.code === 'LIMIT_FILE_SIZE') {
         return res.status(413).json({ message: 'File too large. Max 4MB allowed.' });
+    }
+    if (err.name === 'MulterError') {
+        return res.status(400).json({ message: 'Invalid upload.' });
     }
     if (err.message === 'Only PDF files are allowed.') {
         return res.status(400).json({ message: 'Only PDF files are allowed.' });

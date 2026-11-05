@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261113" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261116" />
 </head>
 <body>
 
@@ -30,7 +30,7 @@
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-footer">
       <div class="cart-total"><span>Total:</span><strong id="cartTotal">0.00 US$</strong></div>
-      <a href="/pages/en/checkout.html" class="btn-primary">Proceed to Checkout <i class="fas fa-credit-card"></i></a>
+      <a href="/pages/en/checkout.html" class="btn-primary">Send Enrollment Request <i class="fab fa-whatsapp"></i></a>
     </div>
   </div>
   <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
@@ -50,7 +50,7 @@
         <li><a href="/en/index.html" class="nav-link active">Home</a></li>
         <li><a href="/pages/en/about.html" class="nav-link">About</a></li>
         <li><a href="/pages/en/programs.html" class="nav-link">Programs & Services</a></li>
-        <li><a href="/pages/en/articles.html" class="nav-link">Articles & Media</a></li>
+        <li><a href="/pages/en/corporate.html" class="nav-link">Corporate Solutions</a></li>
         <li><a href="/pages/en/contact.html" class="nav-link">Contact</a></li>
         <li><a href="/pages/en/verify.html" class="nav-link">Verify Certificate</a></li>
       </ul>
@@ -69,7 +69,7 @@
       <li><a href="/en/index.html">Home</a></li>
       <li><a href="/pages/en/about.html">About</a></li>
       <li><a href="/pages/en/programs.html">Programs & Services</a></li>
-      <li><a href="/pages/en/articles.html">Articles & Media</a></li>
+      <li><a href="/pages/en/corporate.html">Corporate Solutions</a></li>
       <li><a href="/pages/en/contact.html">Contact</a></li>
       <li><a href="/pages/en/verify.html">Verify Certificate</a></li>
       <li id="mobileNavAuth"><a href="/pages/en/login.html" class="mobile-btn">Login</a></li>
@@ -88,11 +88,6 @@
             <a href="/pages/en/programs.html" class="btn-primary">Explore Our Programs <i class="fas fa-arrow-right"></i></a>
             <a href="/pages/en/about.html" class="hero-link">Learn About Nibras</a>
           </div>
-          <ul class="hero-stats">
-            <li><strong>4</strong> learning tracks</li>
-            <li><strong>21</strong> specialties</li>
-            <li><strong data-stat="programs">77</strong> programs</li>
-          </ul>
         </div>
         <div class="hero-visual">
           <div class="cert-card" aria-hidden="true">
@@ -113,16 +108,25 @@
     </div>
   </section>
 
-  <section class="press" aria-labelledby="pressTitle">
-    <div class="container press-inner">
-      <h2 class="press-title" id="pressTitle">Nibras in the media</h2>
-      <ul class="press-logos">
-        <li><a href="https://okaznews.net/mix/0702/44015/" target="_blank" rel="noopener noreferrer"><img src="/assets/img/عكاظ-اليوم-1.webp" alt="Okaz News" loading="lazy" width="2498" height="1165" /></a></li>
-        <li><a href="https://alsaudi.news/technology/0702/53533/" target="_blank" rel="noopener noreferrer"><img src="/assets/img/السعودية-الاخبارية.webp" alt="Saudi News" loading="lazy" width="2173" height="870" /></a></li>
-        <li><a href="https://alriyadhnews.net/mix/0702/47160/" target="_blank" rel="noopener noreferrer"><img src="/assets/img/الرياض.webp" alt="Riyadh News" loading="lazy" width="1079" height="432" /></a></li>
-        <li><a href="https://jeddah24.net/mix/0702/46636/" target="_blank" rel="noopener noreferrer"><img src="/assets/img/جدة-24-.webp" alt="Jeddah 24" loading="lazy" width="300" height="148" /></a></li>
-      </ul>
-      <a class="hero-link" href="/pages/en/articles.html">All coverage</a>
+
+  <section class="band band--wine stats-band" aria-labelledby="statsTitle">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">Measurable Impact</div>
+        <h2 class="section-title" id="statsTitle">Nibras in Numbers... <span class="highlight">An Experience That Speaks for Itself</span></h2>
+      </div>
+      <div class="stats-row" data-stats></div>
+    </div>
+  </section>
+
+  <section class="band" id="pathways">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">Learning Pathways</div>
+        <h2 class="section-title">Pathways Tailored to <span class="highlight">Your Ambition</span></h2>
+        <p class="section-subtitle">From mastering a specific skill to advanced executive credentials, choose the track that fits your stage and goal.</p>
+      </div>
+      <div class="paths" data-pathways></div>
     </div>
   </section>
 
@@ -144,63 +148,7 @@
     </div>
   </section>
 
-  <section class="band" id="pathways">
-    <div class="container">
-      <div class="section-header">
-        <div class="section-badge">Learning Pathways</div>
-        <h2 class="section-title">Pathways Tailored to <span class="highlight">Your Ambition</span></h2>
-        <p class="section-subtitle">From mastering a specific skill to achieving advanced executive credentials, Nibras provides clear pathways for every stage.</p>
-      </div>
-
-      <div class="tracks">
-        <!-- 01 Courses -->
-        <a class="track" href="../pages/en/pro_courses.html">
-          <span class="track-num">01</span>
-          <div class="track-head">
-            <h3>Professional Courses</h3>
-            <p class="track-tag">New Skill Today... Bigger Opportunity Tomorrow</p>
-          </div>
-          <p class="track-desc">Targeted training courses to acquire specialized skills and update your operational knowledge across key sectors.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
-        </a>
-
-        <!-- 02 Diplomas -->
-        <a class="track" href="../pages/en/diploma.html">
-          <span class="track-num">02</span>
-          <div class="track-head">
-            <h3>Professional Diplomas</h3>
-            <p class="track-tag">Deeper Specialization... Greater Competence</p>
-          </div>
-          <p class="track-desc">Comprehensive programs to specialize in a specific domain and build a robust foundation for career advancement.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
-        </a>
-
-        <!-- 03 Masters -->
-        <a class="track" href="../pages/en/masters.html">
-          <span class="track-num">03</span>
-          <div class="track-head">
-            <h3>Professional Masters</h3>
-            <p class="track-tag">Elevate Your Expertise... Expand Your Horizons</p>
-          </div>
-          <p class="track-desc">Advanced graduate programs merging specialized knowledge with practical application to develop executive and strategic leaders.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
-        </a>
-
-        <!-- 04 PhD -->
-        <a class="track" href="../pages/en/phd.html">
-          <span class="track-num">04</span>
-          <div class="track-head">
-            <h3>Professional Doctorate</h3>
-            <p class="track-tag">For Senior Leaders & Subject Matter Experts</p>
-          </div>
-          <p class="track-desc">High-level executive programs focusing on deep industry mastery, strategic vision, and high-impact decision making.</p>
-          <span class="track-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section class="band band--tint">
+  <section class="band">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">Why Nibras?</div>
@@ -242,7 +190,7 @@
     </div>
   </section>
 
-  <section class="band">
+  <section class="band band--tint">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">Disciplines</div>
@@ -264,32 +212,17 @@
         </div>
     </div>
   </section>
-
-  <!-- Testimonials: add real quotes with their authors' permission, then remove the hidden attribute -->
-  <section class="band band--wine" id="testimonials" hidden>
+  <section class="band band--wine" data-testimonials hidden>
     <div class="container">
       <div class="section-header">
-        <div class="section-badge">Learner Stories</div>
-        <h2 class="section-title">What Our Learners Say</h2>
+        <div class="section-badge">Learner & Client Stories</div>
+        <h2 class="section-title">What People Say About Nibras</h2>
       </div>
-      <div class="quotes">
-        <figure class="quote">
-          <blockquote>The learner's quote, in their own words.</blockquote>
-          <figcaption><strong>Learner name</strong><span>Program · City</span></figcaption>
-        </figure>
-        <figure class="quote">
-          <blockquote>The learner's quote, in their own words.</blockquote>
-          <figcaption><strong>Learner name</strong><span>Program · City</span></figcaption>
-        </figure>
-        <figure class="quote">
-          <blockquote>The learner's quote, in their own words.</blockquote>
-          <figcaption><strong>Learner name</strong><span>Program · City</span></figcaption>
-        </figure>
-      </div>
+      <div class="quotes"></div>
     </div>
   </section>
 
-  <section class="band band--tint">
+  <section class="band">
     <div class="container">
       <div class="section-header">
         <div class="section-badge">Your Journey</div>
@@ -321,7 +254,7 @@
     </div>
   </section>
 
-  <section class="band band--center final-call">
+  <section class="band band--tint band--center final-call">
     <div class="container">
       <h2>Your Next Level Starts Here</h2>
       <p class="lead">Don't stop at what you know... Discover who you can become.</p>
@@ -359,7 +292,7 @@
               <li><a href="/en/index.html">Home</a></li>
               <li><a href="/pages/en/about.html">About</a></li>
               <li><a href="/pages/en/programs.html">Programs & Services</a></li>
-              <li><a href="/pages/en/articles.html">Articles & Media</a></li>
+              <li><a href="/pages/en/corporate.html">Corporate Solutions</a></li>
               <li><a href="/pages/en/contact.html">Contact</a></li>
             </ul>
           </div>
@@ -370,7 +303,7 @@
               <li><a href="/pages/en/diploma.html">Professional Diplomas</a></li>
               <li><a href="/pages/en/masters.html">Professional Master</a></li>
               <li><a href="/pages/en/phd.html">Professional Doctorate</a></li>
-              <li><a href="/pages/en/programs.html#services">Corporate Training</a></li>
+              <li><a href="/pages/en/corporate.html">Corporate Training</a></li>
             </ul>
           </div>
           <div class="footer-links-col">
@@ -399,7 +332,9 @@
   <button class="scroll-top" id="scrollTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="/assets/js/site-content.js?v=20261116"></script>
+
   <script src="/assets/js/specialties.js?v=20261101"></script>
-  <script src="/assets/js/script.js?v=20261113"></script>
+  <script src="/assets/js/script.js?v=20261116"></script>
 </body>
 </html>

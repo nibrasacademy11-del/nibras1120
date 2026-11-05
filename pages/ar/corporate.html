@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الحلول التدريبية للشركات | أكاديمية نبراس للتدريب والتأهيل المهني</title>
+  <meta name="description" content="حلول تدريبية مخصصة للشركات والمؤسسات ومراكز التدريب من أكاديمية نبراس: تحليل الاحتياجات، تصميم برامج مخصصة، تنفيذ مرن، وتقارير تقيس الأثر." />
+  <meta name="theme-color" content="#5a020e" />
+  <link rel="canonical" href="https://www.nibras-ac.com/pages/ar/corporate.html" />
+  <meta property="og:title" content="الحلول التدريبية للشركات | أكاديمية نبراس للتدريب والتأهيل المهني" />
+  <meta property="og:description" content="حلول تدريبية مخصصة للشركات والمؤسسات ومراكز التدريب من أكاديمية نبراس: تحليل الاحتياجات، تصميم برامج مخصصة، تنفيذ مرن، وتقارير تقيس الأثر." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.nibras-ac.com/pages/ar/corporate.html" />
+  <meta property="og:image" content="https://www.nibras-ac.com/assets/img/logo.png" />
+  <link rel="icon" type="image/png" href="/assets/img/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261116" />
+</head>
+<body>
+
+  <!-- Cart -->
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+      <button onclick="toggleCart(event)" class="close-cart" aria-label="إغلاق">&times;</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total"><span>الإجمالي:</span><strong id="cartTotal">0.00 US$</strong></div>
+      <a href="/pages/ar/checkout.html" class="btn-primary">إرسال طلب التسجيل <i class="fab fa-whatsapp"></i></a>
+    </div>
+  </div>
+  <div id="cartOverlay" class="cart-overlay" onclick="toggleCart(event)"></div>
+  <button class="floating-cart" onclick="toggleCart(event)" aria-label="السلة">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="floating-cart-badge cart-badge">0</span>
+  </button>
+
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar">
+    <div class="nav-container">
+      <a href="/index.html" class="nav-logo">
+        <img src="/assets/img/logo.png" alt="أكاديمية نبراس للتدريب والتأهيل المهني" width="54" height="54" />
+        <span>أكاديمية نبراس</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/index.html" class="nav-link">الرئيسية</a></li>
+        <li><a href="/pages/ar/about.html" class="nav-link">عن نبراس</a></li>
+        <li><a href="/pages/ar/programs.html" class="nav-link">البرامج والخدمات</a></li>
+        <li><a href="/pages/ar/corporate.html" class="nav-link active">حلول الشركات</a></li>
+        <li><a href="/pages/ar/contact.html" class="nav-link">تواصل معنا</a></li>
+        <li><a href="/pages/ar/verify.html" class="nav-link">التحقق من الشهادات</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="/pages/en/corporate.html" class="lang-switch-btn"><i class="fas fa-globe"></i> English</a>
+        <button class="nav-cart" onclick="toggleCart(event)" aria-label="السلة"><i class="fas fa-shopping-cart"></i><span id="cartBadge" class="cart-badge">0</span></button>
+        <div id="navAuth"><a href="/pages/ar/login.html" class="nav-btn">تسجيل الدخول</a></div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="القائمة"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="/index.html">الرئيسية</a></li>
+      <li><a href="/pages/ar/about.html">عن نبراس</a></li>
+      <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
+      <li><a href="/pages/ar/corporate.html">حلول الشركات</a></li>
+      <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
+      <li><a href="/pages/ar/verify.html">التحقق من الشهادات</a></li>
+      <li id="mobileNavAuth"><a href="/pages/ar/login.html" class="mobile-btn">تسجيل الدخول</a></li>
+    </ul>
+  </div>
+
+  <section class="page-header" data-hero="corporate" style="text-align: center">
+    <div class="container">
+      <div class="section-badge">للشركات والمؤسسات</div>
+      <h1 style="margin-bottom: 15px">الحلول التدريبية للشركات</h1>
+      <p class="lead" style="max-width: 760px; margin: 0 auto 26px">التدريب الذي يبدأ من احتياج المؤسسة... ويرتبط بأهدافها ويواكب التحول في بيئات العمل.</p>
+      <div class="btn-row btn-row--center">
+        <a class="btn-primary" href="#request">اطلب حلاً تدريبياً لمؤسستك <i class="fas fa-briefcase"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">كيف نعمل مع المؤسسات</div>
+        <h2 class="section-title">حلول تدريبية <span class="highlight">تُصمّم حول احتياجك</span></h2>
+        <p class="section-subtitle">نعمل مع الشركات والمؤسسات على تطوير حلول تدريبية مخصصة ترتبط بأهدافها وتواكب التحول في بيئات العمل.</p>
+      </div>
+      <ol class="steps">
+        <li class="step">
+          <span class="step-no">01</span>
+          <h3>تحليل الاحتياجات</h3>
+          <p>تحديد الفجوات والمهارات المستهدفة لدى فرق العمل.</p>
+        </li>
+        <li class="step">
+          <span class="step-no">02</span>
+          <h3>تصميم برامج مخصصة</h3>
+          <p>إعداد برامج تلائم بيئة المؤسسة وأهدافها.</p>
+        </li>
+        <li class="step">
+          <span class="step-no">03</span>
+          <h3>تنفيذ مرن</h3>
+          <p>تدريب عن بُعد أو وفق النموذج المتفق عليه.</p>
+        </li>
+        <li class="step">
+          <span class="step-no">04</span>
+          <h3>تقارير تدريبية</h3>
+          <p>قياس الأثر ومستوى المشاركة والتقدم.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band band--tint">
+    <div class="container">
+      <div class="corporate-split">
+        <div class="panel panel--accent">
+          <div class="tile"><i class="fas fa-building"></i></div>
+          <h3>للشركات والمؤسسات</h3>
+          <h5 class="text-gold">التدريب الذي يبدأ من احتياج المؤسسة</h5>
+          <p>نعمل مع الشركات والمؤسسات على تطوير حلول تدريبية مخصصة ترتبط بأهدافها، من تحليل الاحتياج حتى قياس الأثر بعد التنفيذ.</p>
+        </div>
+        <div class="panel">
+          <div class="tile"><i class="fas fa-book-open"></i></div>
+          <h3>لمراكز التدريب والمعاهد</h3>
+          <h5 class="text-gold">محتوى تدريبي احترافي يدعم برامجك</h5>
+          <ul class="check-list">
+            <li><strong>الحقائب التدريبية:</strong> دليل مدرب، دليل متدرب، عروض</li>
+            <li><strong>أدوات التقييم:</strong> أنشطة وتطبيقات ومواد مساندة</li>
+            <li><strong>تطوير وتخصيص:</strong> صياغة وفق هوية وأهداف المركز</li>
+            <li><strong>تحديث المحتوى:</strong> مواكبة التغيرات في المجال التخصصي</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="request">
+    <div class="container">
+      <div class="panel request-panel">
+        <div class="section-header">
+          <div class="section-badge">طلب حل تدريبي</div>
+          <h2 class="section-title">أخبرنا باحتياج مؤسستك</h2>
+          <p class="section-subtitle">سيتواصل معك فريق نبراس لفهم المتطلبات وتحديد الحل الأنسب.</p>
+        </div>
+        <form onsubmit="handleContact(event)" class="stack-form">
+          <div class="two-col">
+            <div><label for="corpName">الاسم الكامل *</label><input id="corpName" type="text" name="name" required /></div>
+            <div><label for="corpPhone">رقم التواصل (واتساب) *</label><input id="corpPhone" type="tel" name="phone" required /></div>
+          </div>
+          <div class="two-col">
+            <div><label for="corpEmail">البريد الإلكتروني</label><input id="corpEmail" type="email" name="email" /></div>
+            <div>
+              <label for="corpType">نوع الخدمة</label>
+              <select id="corpType" name="inquiryType">
+                <option value="الخدمات التدريبية للشركات">حلول تدريبية للشركات والمؤسسات</option>
+                <option value="خدمات مراكز التدريب">خدمات مراكز التدريب والمعاهد</option>
+                <option value="استفسار عام">استفسار آخر</option>
+              </select>
+            </div>
+          </div>
+          <div><label for="corpOrg">اسم المؤسسة</label><input id="corpOrg" type="text" name="programOrService" /></div>
+          <div><label for="corpMessage">احتياجكم التدريبي *</label><textarea id="corpMessage" name="message" rows="4" required></textarea></div>
+          <button class="btn-primary" type="submit">إرسال الطلب <i class="fas fa-paper-plane"></i></button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--wine" data-testimonials hidden>
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">آراء عملائنا</div>
+        <h2 class="section-title">ماذا يقول من عمل معنا</h2>
+      </div>
+      <div class="quotes"></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="/assets/img/logo.png" alt="أكاديمية نبراس" width="72" height="72" loading="lazy" />
+            <h4>نبراس للتدريب والتأهيل المهني</h4>
+            <p>معرفة تُطوّر. مهارات تُمكّن. مستقبل نصنعه معاً.</p>
+            <div class="social-links">
+              <a href="https://www.facebook.com/nibars8883" class="social-link" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://www.instagram.com/nibars8883" class="social-link" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+              <a href="https://x.com/nibras8883" class="social-link" aria-label="X" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+              <a href="https://www.linkedin.com/in/nibras-academy-5803a239b" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://wa.me/201112220796" class="social-link" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h5>الأكاديمية</h5>
+            <ul>
+              <li><a href="/index.html">الرئيسية</a></li>
+              <li><a href="/pages/ar/about.html">عن نبراس</a></li>
+              <li><a href="/pages/ar/programs.html">البرامج والخدمات</a></li>
+              <li><a href="/pages/ar/corporate.html">حلول الشركات</a></li>
+              <li><a href="/pages/ar/contact.html">تواصل معنا</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>البرامج والمسارات</h5>
+            <ul>
+              <li><a href="/pages/ar/pro_courses.html">الدورات التدريبية</a></li>
+              <li><a href="/pages/ar/diploma.html">الدبلومات المهنية</a></li>
+              <li><a href="/pages/ar/masters.html">الماجستير المهني</a></li>
+              <li><a href="/pages/ar/phd.html">الدكتوراه المهنية</a></li>
+              <li><a href="/pages/ar/corporate.html">تدريب الشركات</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h5>روابط مهمة</h5>
+            <ul>
+              <li><a href="/pages/ar/verify.html">التحقق من الشهادات</a></li>
+              <li><a href="/pages/ar/privacy.html">سياسة الخصوصية</a></li>
+              <li><a href="/pages/ar/terms.html">الشروط والأحكام</a></li>
+              <li><a href="/pages/ar/refund.html">سياسة الاسترداد</a></li>
+              <li><a href="/pages/ar/accessibility.html">إمكانية الوصول</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-help">
+          <div>
+            <h5>هل تحتاج إلى مساعدة في اختيار البرنامج المناسب؟</h5>
+            <p>تواصل مع فريق نبراس وسنساعدك في التعرف على الخيارات التي تناسب أهدافك المهنية.</p>
+          </div>
+          <a href="/pages/ar/contact.html" class="btn-primary">تواصل معنا الآن <i class="fas fa-headset"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom"><div class="container"><p>© 2026 أكاديمية نبراس للتدريب والتأهيل المهني. جميع الحقوق محفوظة.</p></div></div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/assets/js/site-content.js?v=20261116"></script>
+
+  <script src="/assets/js/specialties.js?v=20261101"></script>
+  <script src="/assets/js/script.js?v=20261116"></script>
+</body>
+</html>
