@@ -126,7 +126,9 @@ exports.getSettings = async (req, res) => {
 
 const VALIDATORS = {
     'customers.lookupNamePolicy': (v) => ['full', 'partial'].includes(v),
-    'enrollments.teamLeaderReview': (v) => typeof v === 'boolean'
+    'enrollments.teamLeaderReview': (v) => typeof v === 'boolean',
+    'commissions.defaultEmployeeRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
+    'commissions.defaultLeaderRate': (v) => typeof v === 'number' && v >= 0 && v <= 100
 };
 
 exports.updateSettings = async (req, res) => {

@@ -62,7 +62,7 @@ const movementSchema = new mongoose.Schema({
     rate: { type: Number, required: true },
     baseAmount: money,
     source: {
-        kind: { type: String, enum: ['payment', 'refund', 'expense', 'transfer', 'opening', 'void'], required: true },
+        kind: { type: String, enum: ['payment', 'refund', 'expense', 'transfer', 'opening', 'void', 'commission'], required: true },
         id: { type: ObjectId, required: true },
         no: String
     },

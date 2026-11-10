@@ -4,6 +4,7 @@ import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { ErrorBox, Field, Loading, Modal, Pager, Pill, StaffSelect, useAction, useLoad } from '../components/ui.jsx';
+import { SplitEditor } from './Commissions.jsx';
 
 const ENROLLMENT_STATUSES = ['active', 'on_hold', 'completed', 'withdrawn', 'cancelled'];
 const MODULE_STATUSES = ['not_started', 'in_progress', 'ready_for_review', 'approved', 'rejected', 'certificate_issued'];
@@ -195,6 +196,7 @@ export function EnrollmentDetail() {
               <ol className="module-list">{e.modules.map((m) => <ModuleCard key={m.module} e={e} m={m} onChanged={state.reload} />)}</ol>
             )}
           </section>
+          <SplitEditor enrollmentId={e._id} />
           {editing && <EditEnrollment e={e} onClose={() => setEditing(false)} onSaved={() => { setEditing(false); state.reload(); }} />}
         </>
       )}

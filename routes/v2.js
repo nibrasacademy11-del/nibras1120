@@ -17,6 +17,7 @@ const programs = require('../modules/learning/programController');
 const enrollments = require('../modules/learning/enrollmentController');
 const finSetup = require('../modules/finance/setupController');
 const money = require('../modules/finance/moneyController');
+const commissions = require('../modules/commission/commissionController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -168,6 +169,21 @@ router.post('/expenses', all('expenses.create'), handle(money.createExpense));
 router.post('/expenses/:id/void', validId(), all('expenses.view'), handle(money.requestExpenseVoid));
 router.post('/transfers', all('accounts.update'), handle(money.createTransfer));
 router.get('/finance/summary', all('payments.view'), handle(money.summary));
+
+// ---- commissions ----
+router.get('/commissions/rates', can('commissions.view'), handle(commissions.listRates));
+router.post('/commissions/rates', all('commissions.manage'), handle(commissions.setRate));
+router.get('/commissions/lines', can('commissions.view'), handle(commissions.listLines));
+router.get('/commissions/statement', can('commissions.view'), handle(commissions.statement));
+router.get('/commissions/overview', can('commissions.view', 'team'), handle(commissions.overview));
+router.post('/commissions/approve', all('commissions.approve'), handle(commissions.approve));
+router.post('/commissions/lines/:id/cancel', validId(), all('commissions.manage'), handle(commissions.cancelLine));
+router.post('/commissions/adjustments', all('commissions.manage'), handle(commissions.addAdjustment));
+router.get('/commissions/payouts', can('commissions.view'), handle(commissions.listPayouts));
+router.post('/commissions/payouts', all('commissions.manage'), handle(commissions.createPayout));
+router.post('/commissions/generate', all('commissions.manage'), handle(commissions.generateMissing));
+router.get('/enrollments/:id/commission-split', validId(), all('commissions.view'), handle(commissions.getSplit));
+router.put('/enrollments/:id/commission-split', validId(), all('commissions.manage'), handle(commissions.setSplit));
 
 // ---- tasks and follow-ups ----
 router.get('/tasks', can('tasks.view'), handle(activity.listTasks));

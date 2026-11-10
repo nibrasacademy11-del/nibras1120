@@ -16,6 +16,7 @@ const NAV = [
   { to: '/my-payments', key: 'myPayments', icon: '¤', customerOnly: true },
   { to: '/finance', key: 'financeNav', icon: '¤', permission: 'payments.view', minScope: 'all' },
   { to: '/payments', key: 'paymentsNav', icon: '⊕', permission: 'payments.view', staffOnly: true },
+  { to: '/commissions', key: 'commissionsNav', icon: '%', permission: 'commissions.view' },
   { to: '/approvals', key: 'approvalsNav', icon: '✓', permission: 'payments.approve', minScope: 'all' },
   { to: '/accounts', key: 'accountsNav', icon: '▣', permission: 'accounts.view', minScope: 'all' },
   { to: '/expenses', key: 'expensesNav', icon: '⊖', permission: 'expenses.view', minScope: 'all' },

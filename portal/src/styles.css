@@ -296,3 +296,7 @@ h2 { font-size: 1.15rem; margin: 0 0 12px; }
   .receipt { border: 0; padding: 0; }
   body { background: #fff; }
 }
+
+/* ---- Phase 4: commissions ---- */
+tr.negative td { color: var(--danger); }
+input[type="month"] { font: inherit; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px; }

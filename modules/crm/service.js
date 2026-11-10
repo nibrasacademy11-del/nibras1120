@@ -47,7 +47,10 @@ const SETTING_DEFAULTS = {
     // A module goes to the team leader before the admin when the enrollment's team has a leader
     'enrollments.teamLeaderReview': true,
     // The academy's reporting currency. Changed only from the finance setup page, before any transaction.
-    'finance.baseCurrency': 'SAR'
+    'finance.baseCurrency': 'SAR',
+    // Rates used for anyone without a rate of their own (percent)
+    'commissions.defaultEmployeeRate': 0,
+    'commissions.defaultLeaderRate': 0
 };
 
 async function getSetting(key) {

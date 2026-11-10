@@ -12,6 +12,7 @@ const { customerAccess } = require('../../lib/customerAccess');
 const { HttpError, assertVersion, paging, parseDate } = require('../../lib/http');
 const { addEvent, notify } = require('../crm/service');
 const L = require('./ledger');
+const commissions = require('../commission/engine');
 
 // Customer charges and installments, payments and receipts, refunds, discounts, voids,
 // expenses, transfers and the approvals that guard them. Nothing financial is edited or deleted:
@@ -208,7 +209,10 @@ exports.createPayment = async (req, res) => {
             confirmedAt: confirmed ? new Date() : null,
             note: str(req.body.note)
         }], { session });
-        if (confirmed) await postPayment(p, req.user.id, session);
+        if (confirmed) {
+            await postPayment(p, req.user.id, session);
+            await commissions.onPaymentConfirmed(p, { session, by: req.user.id });
+        }
         return p;
     });
 
@@ -297,6 +301,7 @@ exports.confirmPayment = async (req, res) => {
         p.confirmedAt = new Date();
         await p.save({ session });
         await postPayment(p, req.user.id, session);
+        await commissions.onPaymentConfirmed(p, { session, by: req.user.id });
     });
     await addEvent(req, p.customer, 'payment', `${p.receiptNo} confirmed`, { section: 'financial' });
     await audit.record(req, { action: 'payment.confirmed', resource: 'payments', resourceId: p._id, summary: `${p.receiptNo} ${p.amount} ${p.currency}` });
@@ -391,6 +396,7 @@ exports.decideApproval = async (req, res) => {
                 payment.refundedAmount = M.round(payment.refundedAmount + refund.amount, 3);
                 await payment.save({ session });
                 await L.post({ account: refund.account, date: today, direction: 'out', amount: refund.amount, currency: refund.currency, rate: refund.rate, source: { kind: 'refund', id: refund._id, no: refund.refundNo }, description: `Refund ${refund.refundNo} of ${payment.receiptNo}`, by: req.user.id, session });
+                await commissions.onRefundPaid(payment, refund, { session, by: req.user.id });
             } else {
                 refund.status = 'rejected';
                 await refund.save({ session });
@@ -407,6 +413,7 @@ exports.decideApproval = async (req, res) => {
             await payment.save({ session });
             // The reversal is dated today, so a closed month is never changed
             await L.post({ account: payment.account, date: today, direction: 'out', amount: payment.amount, currency: payment.currency, rate: payment.rate, source: { kind: 'void', id: payment._id, no: payment.receiptNo }, description: `Void of ${payment.receiptNo}`, by: req.user.id, session });
+            await commissions.onPaymentVoided(payment, { session, by: req.user.id });
         }
         if (a.type === 'void_expense' && approve) {
             await L.assertOpenPeriod(today);
