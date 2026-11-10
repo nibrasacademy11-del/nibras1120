@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Certificate = require('../models/Certificate');
 const User = require('../models/User');
 const { isAdmin } = require('../middleware/auth');
+const { publicView } = require('../lib/certificateDesign');
+const audit = require('../lib/audit');
 
 const text = (value) => (typeof value === 'string' ? value.trim() : '');
 
@@ -26,9 +28,10 @@ exports.getCertificate = async (req, res) => {
     try {
         const code = String(req.params.code || '').trim();
         // The public answer carries what a verifier needs, never the PDF bytes or the linked account
-        const cert = await Certificate.findOne({ cert_num: code }).select('-pdf_data -userId');
+        const cert = await Certificate.findOne({ cert_num: code }).select('-pdf_data -userId -design').populate('replacedBy', 'cert_num').lean();
         if (!cert) return res.status(404).json({ message: 'Certificate not found.' });
-        res.json({ certificate: cert });
+        if (cert.replacedBy) cert.replacedByNumber = cert.replacedBy.cert_num;
+        res.json({ certificate: publicView(cert) });
     } catch (error) {
         res.status(500).json({ message: 'Server error while checking certificate.' });
     }
@@ -94,6 +97,11 @@ exports.updateCertificate = async (req, res) => {
         const userId = parseUserId(req.body.userId);
         if (userId === false) return res.status(400).json({ message: 'الحساب المرتبط غير صحيح.' });
 
+        const current = await Certificate.findById(req.params.id).select('kind');
+        if (!current) return res.status(404).json({ message: 'Certificate not found.' });
+        // Certificates issued by the management system are changed by reissuing them, from the portal
+        if (current.kind && current.kind !== 'legacy') return res.status(400).json({ message: 'هذه الشهادة صادرة من نظام الإدارة؛ عدّلها بإعادة الإصدار من البوابة.' });
+
         const updateData = {};
         if (text(certNum)) updateData.cert_num = text(certNum);
         if (text(traineeName)) updateData.trainee_name = text(traineeName);
@@ -142,9 +150,16 @@ exports.downloadPdf = async (req, res) => {
 
 exports.deleteCertificate = async (req, res) => {
     try {
-        const cert = await Certificate.findByIdAndDelete(req.params.id);
+        // Certificates are never deleted: "delete" cancels the certificate and keeps the record
+        const cert = await Certificate.findById(req.params.id);
         if (!cert) return res.status(404).json({ message: 'Certificate not found.' });
-        res.json({ message: 'Certificate deleted successfully.' });
+        const from = cert.status;
+        cert.status = 'Cancelled';
+        cert.statusReason = 'Cancelled from the content panel';
+        cert.statusHistory = [...(cert.statusHistory || []), { status: 'Cancelled', reason: cert.statusReason, by: req.user.id, byName: req.user.name, at: new Date() }];
+        await cert.save();
+        await audit.record(req, { action: 'certificate.status_changed', resource: 'certificates', resourceId: cert._id, summary: cert.cert_num, changes: { status: { from, to: 'Cancelled' } } });
+        res.json({ message: 'تم إلغاء الشهادة (السجل محفوظ). / The certificate was cancelled and its record kept.' });
     } catch (error) {
         res.status(500).json({ message: 'Server error while deleting certificate.' });
     }

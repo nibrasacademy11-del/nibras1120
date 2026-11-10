@@ -76,7 +76,7 @@ function ModuleForm({ programId, mod, onClose, onSaved }) {
       <form className="form-grid" onSubmit={submit}>
         <Field label={`${t('nameAr')} *`}><input required value={f.titleAr} onChange={set('titleAr')} /></Field>
         <Field label={t('nameEn')}><input dir="ltr" value={f.titleEn} onChange={set('titleEn')} /></Field>
-        <Field label={t('code')}><input dir="ltr" value={f.code} onChange={set('code')} /></Field>
+        <Field label={t('codeLabel')}><input dir="ltr" value={f.code} onChange={set('codeLabel')} /></Field>
         <Field label={t('hoursLabel')}><input type="number" min={0} value={f.hours} onChange={set('hours')} /></Field>
         <Field label={t('description')} wide><textarea rows={3} value={f.descriptionAr} onChange={set('descriptionAr')} /></Field>
         <Field label={`${t('description')} (EN)`} wide><textarea dir="ltr" rows={2} value={f.descriptionEn} onChange={set('descriptionEn')} /></Field>

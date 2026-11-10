@@ -18,6 +18,7 @@ const enrollments = require('../modules/learning/enrollmentController');
 const finSetup = require('../modules/finance/setupController');
 const money = require('../modules/finance/moneyController');
 const commissions = require('../modules/commission/commissionController');
+const certs = require('../modules/learning/certificateController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -184,6 +185,22 @@ router.post('/commissions/payouts', all('commissions.manage'), handle(commission
 router.post('/commissions/generate', all('commissions.manage'), handle(commissions.generateMissing));
 router.get('/enrollments/:id/commission-split', validId(), all('commissions.view'), handle(commissions.getSplit));
 router.put('/enrollments/:id/commission-split', validId(), all('commissions.manage'), handle(commissions.setSplit));
+
+// ---- certificates ----
+router.get('/my/certificates', handle(certs.mine));
+router.get('/certificate-templates', all('certificates.view'), handle(certs.listTemplates));
+router.post('/certificate-templates', all('certificates.manage'), handle(certs.saveTemplate));
+router.put('/certificate-templates/:id', validId(), all('certificates.manage'), handle(certs.saveTemplate));
+router.get('/accreditations', all('certificates.view'), handle(certs.listAccreditations));
+router.post('/accreditations', all('certificates.manage'), handle(certs.saveAccreditation));
+router.put('/accreditations/:id', validId(), all('certificates.manage'), handle(certs.saveAccreditation));
+router.get('/certificates/eligible', all('certificates.create'), handle(certs.eligible));
+router.post('/certificates/issue', all('certificates.create'), handle(certs.issue));
+router.post('/certificates/issue-bulk', all('certificates.create'), handle(certs.issueBulk));
+router.get('/certificates', can('certificates.view'), handle(certs.list));
+router.get('/certificates/:id', validId(), handle(certs.get));
+router.post('/certificates/:id/status', validId(), all('certificates.archive'), handle(certs.setStatus));
+router.post('/certificates/:id/reissue', validId(), all('certificates.create'), handle(certs.reissue));
 
 // ---- tasks and follow-ups ----
 router.get('/tasks', can('tasks.view'), handle(activity.listTasks));

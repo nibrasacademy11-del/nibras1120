@@ -18,6 +18,7 @@ import ChangePassword from './pages/ChangePassword.jsx';
 import Programs, { ProgramDetail } from './pages/Programs.jsx';
 import Enrollments, { EnrollmentDetail, MyPrograms, Reviews } from './pages/Enrollments.jsx';
 import Commissions from './pages/Commissions.jsx';
+import Certificates, { CertificateDetail, MyCertificates } from './pages/Certificates.jsx';
 import Payments, { AccountStatement, Accounts, Approvals, Currencies, Expenses, FinanceSummary, MyPayments, PaymentDetail, Periods } from './pages/Finance.jsx';
 
 function Guard({ permission, minScope = 'own', children }) {
@@ -49,6 +50,9 @@ export default function App() {
         <Route path="/" element={me.user.isStaff ? <Dashboard /> : <MyPrograms />} />
         <Route path="/my-programs" element={<MyPrograms />} />
         <Route path="/my-payments" element={<MyPayments />} />
+        <Route path="/my-certificates" element={<MyCertificates />} />
+        <Route path="/certificates" element={<Guard permission="certificates.view"><Certificates /></Guard>} />
+        <Route path="/certificates/:id" element={<CertificateDetail />} />
         <Route path="/commissions" element={<Guard permission="commissions.view"><Commissions /></Guard>} />
         <Route path="/finance" element={<Guard permission="payments.view" minScope="all"><FinanceSummary /></Guard>} />
         <Route path="/payments" element={<Guard permission="payments.view"><Payments /></Guard>} />

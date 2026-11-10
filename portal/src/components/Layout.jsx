@@ -14,6 +14,8 @@ const NAV = [
   { to: '/reviews', key: 'reviews', icon: '✔', permission: 'enrollments.approve', minScope: 'team' },
   { to: '/programs', key: 'programsNav', icon: '▤', permission: 'programs.view', staffOnly: true },
   { to: '/my-payments', key: 'myPayments', icon: '¤', customerOnly: true },
+  { to: '/my-certificates', key: 'myCertificates', icon: '✪', customerOnly: true },
+  { to: '/certificates', key: 'certificatesNav', icon: '✪', permission: 'certificates.view', staffOnly: true },
   { to: '/finance', key: 'financeNav', icon: '¤', permission: 'payments.view', minScope: 'all' },
   { to: '/payments', key: 'paymentsNav', icon: '⊕', permission: 'payments.view', staffOnly: true },
   { to: '/commissions', key: 'commissionsNav', icon: '%', permission: 'commissions.view' },

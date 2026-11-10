@@ -66,7 +66,7 @@ export function TaskTable({ items, onChanged, hideCustomer }) {
                   <td className={`nowrap${late ? ' late' : ''}`}>{x.dueAt ? fmtDate(x.dueAt) : '—'}{late && <div><Pill tone="warn">{t('overdue')}</Pill></div>}</td>
                   <td>{x.assignee ? x.assignee.name : '—'}</td>
                   <td>{t(x.priority)}</td>
-                  <td><Pill value={x.status}>{t(x.status)}</Pill></td>
+                  <td><Pill value={x.status}>{t(`task_${x.status}`)}</Pill></td>
                   <td className="nowrap">
                     {x.status === 'open' && <button type="button" className="btn btn--small" onClick={() => complete(x, 'done')}>✓ {t('markDone')}</button>}{' '}
                     {x.status === 'open' && <button type="button" className="btn btn--small" onClick={() => setEditing(x)}>{t('edit')}</button>}
@@ -101,7 +101,7 @@ export default function Tasks() {
       </div>
       <div className="card filters">
         <Field label={t('assignee')}><select value={filter.mine} onChange={set('mine')}><option value="1">{t('mine')}</option>{can('tasks.view', 'team') && <option value="">{t('all')}</option>}</select></Field>
-        <Field label={t('status')}><select value={filter.status} onChange={set('status')}>{['open', 'done', 'cancelled'].map((s) => <option key={s} value={s}>{t(s)}</option>)}</select></Field>
+        <Field label={t('status')}><select value={filter.status} onChange={set('status')}>{['open', 'done', 'cancelled'].map((s) => <option key={s} value={s}>{t(`task_${s}`)}</option>)}</select></Field>
         <Field label={t('dueAt')}><select value={filter.due} onChange={set('due')}><option value="">{t('all')}</option><option value="overdue">{t('overdue')}</option><option value="today">{t('today')}</option></select></Field>
       </div>
       <section className="card">

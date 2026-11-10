@@ -411,6 +411,12 @@ function initPublicAuth(isEN) {
 function initVerifyForm(isEN) {
     const verifyForm = document.getElementById('verifyForm');
     if (!verifyForm) return;
+    // The QR code on a certificate opens this page with ?code=NUMBER and verifies at once
+    const codeFromLink = new URLSearchParams(window.location.search).get('code');
+    if (codeFromLink && document.getElementById('certNumber')) {
+        document.getElementById('certNumber').value = codeFromLink.slice(0, 60);
+        setTimeout(() => verifyForm.requestSubmit(), 0);
+    }
 
     verifyForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -433,6 +439,7 @@ function initVerifyForm(isEN) {
                 valid: { badge: isEN ? 'Valid' : 'معتمدة وصالحة', title: isEN ? 'Verified Certificate' : 'شهادة موثّقة ومعتمدة', note: isEN ? 'This certificate is authentic and registered in the records of Nibras Academy.' : 'هذه الشهادة صحيحة ومسجلة رسمياً في سجلات أكاديمية نبراس.', icon: 'fa-circle-check', box: 'verify-success' },
                 suspended: { badge: isEN ? 'Suspended' : 'معلقة', title: isEN ? 'Certificate Suspended' : 'الشهادة معلقة حالياً', note: isEN ? 'This certificate exists in our records but is currently suspended.' : 'هذه الشهادة مسجلة لدينا لكنها معلقة حالياً.', icon: 'fa-circle-pause', box: 'verify-warning' },
                 expired: { badge: isEN ? 'Expired' : 'منتهية الصلاحية', title: isEN ? 'Certificate Expired' : 'انتهت صلاحية الشهادة', note: isEN ? 'This certificate exists in our records but is no longer valid.' : 'هذه الشهادة مسجلة لدينا لكن صلاحيتها انتهت.', icon: 'fa-clock', box: 'verify-warning' },
+                replaced: { badge: isEN ? 'Replaced' : 'مستبدلة', title: isEN ? 'Replaced by a newer version' : 'استُبدلت بإصدار أحدث', note: cert.replacedByNumber ? (isEN ? `This certificate was reissued under number ${esc(cert.replacedByNumber)}. Please verify that number.` : `أعيد إصدار هذه الشهادة برقم ${esc(cert.replacedByNumber)}. يرجى التحقق من الرقم الجديد.`) : (isEN ? 'This certificate was replaced by a newer version.' : 'استُبدلت هذه الشهادة بإصدار أحدث.'), icon: 'fa-arrows-rotate', box: 'verify-warning' },
                 cancelled: { badge: isEN ? 'Cancelled' : 'ملغاة', title: isEN ? 'Certificate Cancelled' : 'الشهادة ملغاة', note: isEN ? 'This certificate has been cancelled and is not valid.' : 'تم إلغاء هذه الشهادة وهي غير سارية.', icon: 'fa-circle-xmark', box: 'verify-error-result' }
             };
             const state = states[statusKey] || states.valid;
@@ -453,7 +460,9 @@ function initVerifyForm(isEN) {
                     ${row('fa-user', isEN ? 'Holder Name' : 'اسم حامل الشهادة', esc(cert.trainee_name), 'strong')}
                     ${row('fa-graduation-cap', isEN ? 'Program' : 'اسم البرنامج', esc(cert.program_name), 'strong')}
                     ${row('fa-layer-group', isEN ? 'Credential Type' : 'نوع الشهادة', esc(cert.program_type || (isEN ? 'Professional Certificate' : 'شهادة مهنية')))}
-                    ${row('fa-briefcase', isEN ? 'Specialty / Field' : 'التخصص', esc(cert.field || '—'))}
+                    ${row('fa-briefcase', cert.moduleName ? (isEN ? 'Module' : 'المحور') : (isEN ? 'Specialty / Field' : 'التخصص'), esc(cert.field || '—'))}
+                    ${cert.hours ? row('fa-clock', isEN ? 'Training Hours' : 'الساعات التدريبية', esc(String(cert.hours))) : ''}
+                    ${(cert.accreditations || []).length ? row('fa-award', isEN ? 'Accreditations' : 'الاعتمادات', esc(cert.accreditations.map((a) => (isEN && a.nameEn ? a.nameEn : a.nameAr) + (a.number ? ` (${a.number})` : '')).join(' · '))) : ''}
                     ${row('fa-hashtag', isEN ? 'Certificate No.' : 'رقم الشهادة', `<bdi>${esc(cert.cert_num)}</bdi>`)}
                     ${row('fa-calendar-days', isEN ? 'Issue Date' : 'تاريخ الإصدار', esc(cert.issue_date))}
                     ${row('fa-shield-halved', isEN ? 'Status' : 'حالة الشهادة', `<span class="badge-status ${esc(statusKey)}">${state.badge}</span>`)}

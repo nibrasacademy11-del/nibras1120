@@ -437,7 +437,7 @@ export function Accounts() {
           {(d) => (!d.items.length ? <p className="muted">{t('noData')}</p> : (
             <div className="table-wrap">
               <table className="table">
-                <thead><tr><th>{t('code')}</th><th>{t('name')}</th><th>{t('accountType')}</th><th>{t('currency')}</th><th>{t('in')}</th><th>{t('out')}</th><th>{t('balance')}</th><th /></tr></thead>
+                <thead><tr><th>{t('codeLabel')}</th><th>{t('name')}</th><th>{t('accountType')}</th><th>{t('currency')}</th><th>{t('in')}</th><th>{t('out')}</th><th>{t('balance')}</th><th /></tr></thead>
                 <tbody>
                   {d.items.map((a) => (
                     <tr key={a._id} className={a.active ? '' : 'muted'}>
@@ -479,7 +479,7 @@ function AccountForm({ item, currencies, onClose, onSaved }) {
   return (
     <Modal title={item ? t('edit') : t('newAccount')} onClose={onClose}>
       <form className="stack" onSubmit={submit}>
-        <Field label={t('code')}><input dir="ltr" required value={f.code} onChange={set('code')} placeholder="CASH-SAR" /></Field>
+        <Field label={t('codeLabel')}><input dir="ltr" required value={f.code} onChange={set('codeLabel')} placeholder="CASH-SAR" /></Field>
         <Field label={t('nameAr')}><input required value={f.nameAr} onChange={set('nameAr')} /></Field>
         <Field label={t('nameEn')}><input dir="ltr" value={f.nameEn} onChange={set('nameEn')} /></Field>
         <Field label={t('accountType')}><select value={f.type} onChange={set('type')}>{['cash', 'bank', 'wallet', 'gateway'].map((x) => <option key={x} value={x}>{t(x)}</option>)}</select></Field>
@@ -661,7 +661,7 @@ export function Currencies() {
               <p>{t('baseCurrency')}: <strong>{d.base}</strong></p>
               <div className="table-wrap">
                 <table className="table">
-                  <thead><tr><th>{t('code')}</th><th>{t('name')}</th><th>{t('symbol')}</th><th>{t('decimals')}</th><th>{t('rate')}</th><th>{t('effectiveAt')}</th><th>{t('status')}</th></tr></thead>
+                  <thead><tr><th>{t('codeLabel')}</th><th>{t('name')}</th><th>{t('symbol')}</th><th>{t('decimals')}</th><th>{t('rate')}</th><th>{t('effectiveAt')}</th><th>{t('status')}</th></tr></thead>
                   <tbody>
                     {d.items.map((c) => (
                       <tr key={c.code}>
