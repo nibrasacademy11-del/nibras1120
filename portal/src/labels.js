@@ -1,6 +1,17 @@
 // Interface text for the CRM and HR screens, merged into the main dictionary in i18n.jsx
 export const crmText = {
   ar: {
+    programsNav: 'البرامج والمحاور', enrollmentsNav: 'التسجيلات', reviews: 'مراجعات المحاور', myPrograms: 'برامجي',
+    program: 'البرنامج', modules: 'المحاور', module: 'المحور', cohorts: 'المجموعات', cohort: 'المجموعة', enrollment: 'التسجيل', enrollmentNo: 'رقم التسجيل',
+    enroll: 'تسجيل في برنامج', newModule: 'محور جديد', newCohort: 'مجموعة جديدة', requirements: 'المتطلبات', requirementsHint: 'متطلب في كل سطر', hoursLabel: 'عدد الساعات',
+    requiredModule: 'مطلوب للشهادة النهائية', moduleCertificate: 'له شهادة مستقلة', inactive: 'غير مفعل', code: 'الكود', order: 'الترتيب', moveUp: '↑', moveDown: '↓',
+    rules: 'شروط الإتمام', modulesRequired: 'عدد المحاور المطلوبة للشهادة النهائية', modulesRequiredHint: '0 = كل المحاور المطلوبة', startDate: 'تاريخ البدء', endDate: 'تاريخ الانتهاء',
+    schedule: 'المواعيد', instructor: 'المدرب', delivery: 'طريقة التدريب', online: 'أونلاين', onsite: 'حضوري', hybrid: 'مدمج', capacity: 'السعة', capacityHint: '0 = بلا حد', enrolled: 'مسجلون',
+    progress: 'التقدم', enrolledAt: 'تاريخ التسجيل', completedAt: 'تاريخ الإتمام', eligible: 'مستحق للشهادة النهائية', syncModules: 'إضافة المحاور الجديدة', noCohort: 'بدون مجموعة',
+    teamLeaderReview: 'مراجعة قائد الفريق', submittedAt: 'تاريخ التقديم', reviewHistory: 'سجل المراجعات', noModules: 'لا توجد محاور لهذا البرنامج بعد. أضفها من صفحة البرنامج.',
+    statusReason: 'السبب', chooseProgram: 'اختر البرنامج', waitingTl: 'بانتظار قائد الفريق', waitingAdmin: 'بانتظار الاعتماد', type: 'المسار',
+    act_start: 'بدء', act_submit: 'إرسال للمراجعة', act_rework: 'إعادة العمل', act_team_leader_approve: 'موافقة قائد الفريق', act_team_leader_reject: 'رفض (قائد الفريق)',
+    act_approve: 'اعتماد نهائي', act_reject: 'رفض', act_reopen: 'إعادة فتح',
     customers: 'العملاء', customer: 'العميل', lookup: 'البحث عن عميل', tasks: 'المهام والمتابعات', accessRequests: 'طلبات التصريح',
     employees: 'الموظفون', teams: 'الأقسام والفرق', duplicates: 'الملفات المكررة', settings: 'الإعدادات', notifications: 'الإشعارات',
     newCustomer: 'عميل جديد', customerNo: 'رقم العميل', name: 'الاسم', nameAr: 'الاسم بالعربية', nameEn: 'الاسم بالإنجليزية',
@@ -36,6 +47,17 @@ export const crmText = {
     lookupHint: 'ابحث برقم العميل (NB-000123) أو رقم الهوية أو رقم الجواز.'
   },
   en: {
+    programsNav: 'Programs & modules', enrollmentsNav: 'Enrollments', reviews: 'Module reviews', myPrograms: 'My programs',
+    program: 'Program', modules: 'Modules', module: 'Module', cohorts: 'Groups', cohort: 'Group', enrollment: 'Enrollment', enrollmentNo: 'Enrollment no.',
+    enroll: 'Enroll in a program', newModule: 'New module', newCohort: 'New group', requirements: 'Requirements', requirementsHint: 'One requirement per line', hoursLabel: 'Hours',
+    requiredModule: 'Required for the final certificate', moduleCertificate: 'Has its own certificate', inactive: 'Inactive', code: 'Code', order: 'Order', moveUp: '↑', moveDown: '↓',
+    rules: 'Completion rule', modulesRequired: 'Modules required for the final certificate', modulesRequiredHint: '0 = all required modules', startDate: 'Start date', endDate: 'End date',
+    schedule: 'Schedule', instructor: 'Trainer', delivery: 'Delivery', online: 'Online', onsite: 'On site', hybrid: 'Hybrid', capacity: 'Capacity', capacityHint: '0 = no limit', enrolled: 'Enrolled',
+    progress: 'Progress', enrolledAt: 'Enrolled', completedAt: 'Completed', eligible: 'Eligible for the final certificate', syncModules: 'Add new modules', noCohort: 'No group',
+    teamLeaderReview: 'Team leader review', submittedAt: 'Submitted', reviewHistory: 'Review history', noModules: 'This program has no modules yet. Add them on the program page.',
+    statusReason: 'Reason', chooseProgram: 'Choose the program', waitingTl: 'Waiting for team leader', waitingAdmin: 'Waiting for approval', type: 'Track',
+    act_start: 'Start', act_submit: 'Submit for review', act_rework: 'Rework', act_team_leader_approve: 'Team leader approve', act_team_leader_reject: 'Reject (team leader)',
+    act_approve: 'Final approval', act_reject: 'Reject', act_reopen: 'Reopen',
     customers: 'Customers', customer: 'Customer', lookup: 'Customer lookup', tasks: 'Tasks & follow-ups', accessRequests: 'Access requests',
     employees: 'Employees', teams: 'Departments & teams', duplicates: 'Duplicate files', settings: 'Settings', notifications: 'Notifications',
     newCustomer: 'New customer', customerNo: 'Customer no.', name: 'Name', nameAr: 'Name (Arabic)', nameEn: 'Name (English)',
@@ -99,6 +121,14 @@ export const enumText = {
     identity: { ar: 'هوية', en: 'Identity' }, contract: { ar: 'عقد', en: 'Contract' }, certificate: { ar: 'شهادة', en: 'Certificate' },
     receipt: { ar: 'إيصال', en: 'Receipt' }, academic: { ar: 'أكاديمي', en: 'Academic' }, other: { ar: 'أخرى', en: 'Other' }
   },
+  moduleStatus: {
+    not_started: { ar: 'لم يبدأ', en: 'Not started' }, in_progress: { ar: 'قيد التنفيذ', en: 'In progress' }, ready_for_review: { ar: 'جاهز للمراجعة', en: 'Ready for review' },
+    approved: { ar: 'معتمد', en: 'Approved' }, rejected: { ar: 'مرفوض', en: 'Rejected' }, certificate_issued: { ar: 'صدرت الشهادة', en: 'Certificate issued' }
+  },
+  enrollmentStatus: {
+    active: { ar: 'نشط', en: 'Active' }, on_hold: { ar: 'متوقف مؤقتاً', en: 'On hold' }, completed: { ar: 'مكتمل', en: 'Completed' }, withdrawn: { ar: 'منسحب', en: 'Withdrawn' }, cancelled: { ar: 'ملغي', en: 'Cancelled' }
+  },
+  programType: { course: { ar: 'دورة', en: 'Course' }, diploma: { ar: 'دبلوم', en: 'Diploma' }, master: { ar: 'ماجستير', en: 'Master' }, phd: { ar: 'دكتوراه', en: 'PhD' } },
   role: {
     super_admin: { ar: 'مدير النظام', en: 'Super Admin' }, admin: { ar: 'مدير', en: 'Admin' }, hr_manager: { ar: 'مدير الموارد البشرية', en: 'HR Manager' },
     finance_manager: { ar: 'المدير المالي', en: 'Finance Manager' }, team_leader: { ar: 'قائد فريق', en: 'Team Leader' }, employee: { ar: 'موظف', en: 'Employee' },

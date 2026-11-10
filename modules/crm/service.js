@@ -43,7 +43,9 @@ async function approvedSections(userId, customerId) {
 }
 
 const SETTING_DEFAULTS = {
-    'customers.lookupNamePolicy': 'partial'
+    'customers.lookupNamePolicy': 'partial',
+    // A module goes to the team leader before the admin when the enrollment's team has a leader
+    'enrollments.teamLeaderReview': true
 };
 
 async function getSetting(key) {

@@ -6,9 +6,13 @@ import Notifications from './Notifications.jsx';
 
 // Menu entries appear only when the user holds the permission behind them
 const NAV = [
-  { to: '/', key: 'dashboard', icon: '⌂', end: true },
+  { to: '/', key: 'dashboard', icon: '⌂', end: true, staffOnly: true },
+  { to: '/', key: 'myPrograms', icon: '▤', end: true, customerOnly: true },
   { to: '/customers', key: 'customers', icon: '◉', permission: 'customers.view' },
   { to: '/lookup', key: 'lookup', icon: '⌕', permission: 'customer_lookup.view' },
+  { to: '/enrollments', key: 'enrollmentsNav', icon: '❖', permission: 'enrollments.view', staffOnly: true },
+  { to: '/reviews', key: 'reviews', icon: '✔', permission: 'enrollments.approve', minScope: 'team' },
+  { to: '/programs', key: 'programsNav', icon: '▤', permission: 'programs.view', staffOnly: true },
   { to: '/tasks', key: 'tasks', icon: '✓', permission: 'tasks.view' },
   { to: '/access-requests', key: 'accessRequests', icon: '⇄', permission: 'access_requests.view' },
   { to: '/employees', key: 'employees', icon: '☺', permission: 'employees.view', minScope: 'team' },
@@ -39,8 +43,8 @@ export default function Layout({ children }) {
         </div>
         {!locked && (
           <nav>
-            {NAV.filter((n) => !n.permission || can(n.permission, n.minScope)).map((n) => (
-              <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
+            {NAV.filter((n) => (!n.permission || can(n.permission, n.minScope)) && !(n.staffOnly && !me.user.isStaff) && !(n.customerOnly && me.user.isStaff)).map((n) => (
+              <NavLink key={n.key} to={n.to} end={n.end} className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
                 <span className="nav-icon" aria-hidden="true">{n.icon}</span>
                 {t(n.key)}
               </NavLink>

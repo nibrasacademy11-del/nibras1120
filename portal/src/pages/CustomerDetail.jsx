@@ -6,6 +6,23 @@ import { useI18n } from '../i18n.jsx';
 import { EnumSelect, ErrorBox, Field, Loading, Modal, Pill, StaffSelect, fromLocalInput, toLocalInput, useAction, useLoad } from '../components/ui.jsx';
 import { DuplicateList } from './Customers.jsx';
 import { TaskTable, TaskForm } from './Tasks.jsx';
+import { CustomerPrograms, ModuleStatus } from './Enrollments.jsx';
+
+// Programs on the card: each enrollment with its status and the status of each module
+export function ProgramSummary({ programs }) {
+  const { label, en } = useI18n();
+  if (!programs || !programs.length) return '—';
+  return (
+    <ul className="plain-list">
+      {programs.map((p, i) => (
+        <li key={i} style={{ display: 'block' }}>
+          <strong>{label({ ar: p.title, en: p.titleEn })}</strong> {p.status && <small className="muted">· {en('enrollmentStatus', p.status)}</small>}
+          {p.modules && p.modules.length > 0 && <div className="mini-modules">{p.modules.map((m, k) => <span key={k}><ModuleStatus status={m.status} /> {label({ ar: m.title, en: m.titleEn })}</span>)}</div>}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 const STATUSES = ['lead', 'interested', 'customer', 'lost', 'inactive'];
 const SOURCES = ['website', 'facebook', 'instagram', 'tiktok', 'whatsapp', 'phone', 'referral', 'walk_in', 'corporate', 'event', 'other'];
@@ -66,7 +83,7 @@ function BasicCard({ c }) {
           <Info label={t('customerNo')} ltr>{c.customerNo}</Info>
           <Info label={t('owner')}>{c.owner ? c.owner.name : t('unassigned')}</Info>
           <Info label={t('status')}><Pill value={c.status}>{en('status', c.status)}</Pill></Info>
-          <Info label={t('programs')}>{c.programs && c.programs.length ? c.programs.join('، ') : '—'}</Info>
+          <Info label={t('programs')}><ProgramSummary programs={c.programs} /></Info>
         </div>
       </section>
       {c.canRequestAccess && <section className="card"><RequestAccess customer={c} /></section>}
@@ -200,7 +217,7 @@ function Overview({ c, onReload }) {
           <Info label={t('nextFollowUp')}>{c.nextFollowUpAt ? fmtDate(c.nextFollowUpAt) : '—'}</Info>
           <Info label={t('segment')}>{c.segment}</Info>
           <Info label={t('tags')}>{(c.tags || []).length ? <div className="tags">{c.tags.map((x) => <span key={x} className="tag">{x}</span>)}</div> : '—'}</Info>
-          <Info label={t('programs')}>{(c.programs || []).join('، ')}</Info>
+
         </div>
       </section>
       {s.contact && c.contact && (
@@ -458,7 +475,7 @@ export default function CustomerDetail() {
         if (c.access === 'basic') return <BasicCard c={c} />;
         const s = c.permissions.sections;
         const tabs = [
-          ['overview', true], ['timeline', true], ['notes', s.notes], ['communications', s.contact], ['tasks', c.access === 'full' && can('tasks.view')], ['documents', s.documents]
+          ['overview', true], ['programs', c.access === 'full' && can('enrollments.view')], ['timeline', true], ['notes', s.notes], ['communications', s.contact], ['tasks', c.access === 'full' && can('tasks.view')], ['documents', s.documents]
         ].filter(([, show]) => show).map(([k]) => k);
         const reload = state.reload;
         return (
@@ -488,6 +505,7 @@ export default function CustomerDetail() {
             </div>
 
             {tab === 'overview' && <Overview c={c} onReload={reload} />}
+            {tab === 'programs' && <CustomerPrograms c={c} />}
             {tab === 'timeline' && <Timeline id={c.id} />}
             {tab === 'notes' && <Notes c={c} />}
             {tab === 'communications' && <Communications c={c} />}

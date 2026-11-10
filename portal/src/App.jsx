@@ -15,6 +15,8 @@ import AccessRequests from './pages/AccessRequests.jsx';
 import Employees, { Teams } from './pages/Employees.jsx';
 import { Duplicates, Settings } from './pages/Admin.jsx';
 import ChangePassword from './pages/ChangePassword.jsx';
+import Programs, { ProgramDetail } from './pages/Programs.jsx';
+import Enrollments, { EnrollmentDetail, MyPrograms, Reviews } from './pages/Enrollments.jsx';
 
 function Guard({ permission, minScope = 'own', children }) {
   const { can } = useAuth();
@@ -42,7 +44,13 @@ export default function App() {
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={me.user.isStaff ? <Dashboard /> : <MyPrograms />} />
+        <Route path="/my-programs" element={<MyPrograms />} />
+        <Route path="/programs" element={<Guard permission="programs.view"><Programs /></Guard>} />
+        <Route path="/programs/:id" element={<Guard permission="programs.view"><ProgramDetail /></Guard>} />
+        <Route path="/enrollments" element={<Guard permission="enrollments.view"><Enrollments /></Guard>} />
+        <Route path="/enrollments/:id" element={<Guard permission="enrollments.view"><EnrollmentDetail /></Guard>} />
+        <Route path="/reviews" element={<Guard permission="enrollments.approve" minScope="team"><Reviews /></Guard>} />
         <Route path="/customers" element={<Guard permission="customers.view"><Customers /></Guard>} />
         <Route path="/customers/:id" element={<Guard permission="customer_lookup.view"><CustomerDetail /></Guard>} />
         <Route path="/lookup" element={<Guard permission="customer_lookup.view"><Lookup /></Guard>} />

@@ -28,11 +28,17 @@ const POPULATE = [
     { path: 'createdBy', select: 'name' }
 ];
 
-// Programs come with enrollments in phase 2; until then the linked account's program list is shown
+// The card shows each program, its enrollment status and the status of each module.
+// Accounts from before enrollments existed fall back to their old program list.
 async function programsOf(customer) {
+    const Enrollment = require('../../models/Enrollment');
+    const list = await Enrollment.find({ customer: customer._id, status: { $ne: 'cancelled' } }).select('enrollmentNo programTitleAr programTitleEn status modules.titleAr modules.titleEn modules.status').sort({ enrolledAt: -1 }).limit(20).lean();
+    if (list.length) {
+        return list.map((e) => ({ enrollmentNo: e.enrollmentNo, title: e.programTitleAr, titleEn: e.programTitleEn, status: e.status, modules: e.modules.map((m) => ({ title: m.titleAr, titleEn: m.titleEn, status: m.status })) }));
+    }
     if (!customer.user) return [];
     const u = await User.findById(customer.user._id || customer.user).select('enrolledCourses').lean();
-    return u ? (u.enrolledCourses || []).slice(0, 20) : [];
+    return u ? (u.enrolledCourses || []).slice(0, 20).map((title) => ({ title, status: null, modules: [] })) : [];
 }
 
 async function accessFor(req, customer) {

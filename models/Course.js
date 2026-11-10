@@ -48,6 +48,8 @@ const courseSchema = new mongoose.Schema({
     },
     featured: { type: Boolean, default: false },
     certificateType: { type: String, default: 'شهادة مهنية معتمدة' },
+    // Management system: how many required modules complete the program (0 = all of them)
+    modulesRequired: { type: Number, default: 0, min: 0 },
     
     // SEO
     seoTitleAr: { type: String, default: '' },

@@ -261,3 +261,24 @@ h2 { font-size: 1.15rem; margin: 0 0 12px; }
   .bars li { grid-template-columns: 90px 1fr 40px; }
   .assign-bar { top: 56px; }
 }
+
+/* ---- Phase 2: programs and enrollments ---- */
+.pill--not_started { background: #eee8e2; color: var(--muted); }
+.pill--in_progress { background: var(--info-bg); color: #2f4a7a; }
+.pill--ready_for_review { background: var(--gold-light); color: var(--warn); }
+.pill--approved, .pill--certificate_issued { background: var(--ok-bg); color: var(--ok); }
+.pill--rejected { background: var(--danger-bg); color: var(--danger); }
+.progress { display: flex; align-items: center; gap: 8px; min-width: 120px; }
+.progress .bar { flex: 1; }
+.module-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.module-item { border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; background: var(--surface); }
+.module-item.inactive { opacity: .6; }
+.module-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.module-row .grow { min-width: 160px; }
+.module-order { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: grid; place-items: center; font-weight: 700; font-size: .85rem; flex-shrink: 0; }
+.module-meta { color: var(--muted); font-size: .85rem; margin-top: 4px; }
+.module-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.review-log { list-style: none; margin: 8px 0 0; padding: 8px 0 0; border-top: 1px dashed var(--border); font-size: .85rem; color: var(--muted); }
+.mini-modules { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.mini-modules .pill { font-size: .72rem; margin: 0; }
+.program-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 12px; }

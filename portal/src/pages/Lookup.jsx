@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { api, pickMessage } from '../api.js';
 import { useI18n } from '../i18n.jsx';
 import { Pill } from '../components/ui.jsx';
+import { ProgramSummary } from './CustomerDetail.jsx';
 
 // Search any customer by number, national ID or passport. People who are not responsible
 // for the customer see the basic card and can ask for more.
@@ -50,7 +51,7 @@ export default function Lookup() {
                       <td dir="ltr">{c.customerNo}</td>
                       <td>{c.name}</td>
                       <td>{c.owner ? c.owner.name : t('unassigned')}</td>
-                      <td>{c.programs.length ? c.programs.join('، ') : '—'}</td>
+                      <td><ProgramSummary programs={c.programs} /></td>
                       <td><Pill value={c.status}>{en('status', c.status)}</Pill></td>
                       <td><Link to={`/customers/${c.id}`}>{c.access === 'full' ? t('open_file') : c.canRequestAccess ? t('requestAccess') : t('open_file')}</Link></td>
                     </tr>

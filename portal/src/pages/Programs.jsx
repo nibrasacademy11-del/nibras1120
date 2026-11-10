@@ -1,0 +1,238 @@
+import { useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { api } from '../api.js';
+import { useAuth } from '../auth.jsx';
+import { useI18n } from '../i18n.jsx';
+import { ErrorBox, Field, Loading, Modal, Pager, Pill, useAction, useLoad } from '../components/ui.jsx';
+
+export default function Programs() {
+  const { t, en, label } = useI18n();
+  const navigate = useNavigate();
+  const [q, setQ] = useState('');
+  const [query, setQuery] = useState({ q: '', type: '', page: 1 });
+  const params = new URLSearchParams({ page: String(query.page), limit: '100' });
+  if (query.q) params.set('q', query.q);
+  if (query.type) params.set('type', query.type);
+  const state = useLoad(`/api/v2/programs?${params}`);
+
+  return (
+    <>
+      <h1 className="page-title">{t('programsNav')}</h1>
+      <form className="card filters" onSubmit={(e) => { e.preventDefault(); setQuery({ ...query, q, page: 1 }); }}>
+        <Field label={t('search')}><input value={q} onChange={(e) => setQ(e.target.value)} /></Field>
+        <Field label={t('type')}>
+          <select value={query.type} onChange={(e) => setQuery({ ...query, type: e.target.value, page: 1 })}>
+            <option value="">{t('all')}</option>
+            {['course', 'diploma', 'master', 'phd'].map((x) => <option key={x} value={x}>{en('programType', x)}</option>)}
+          </select>
+        </Field>
+        <button className="btn btn--primary">{t('apply')}</button>
+      </form>
+      <section className="card">
+        <Loading state={state}>
+          {(d) => (!d.items.length ? <p className="muted">{t('noResults')}</p> : (
+            <>
+              <div className="table-wrap">
+                <table className="table table--hover">
+                  <thead><tr><th>{t('program')}</th><th>{t('type')}</th><th>{t('modules')}</th><th>{t('enrollmentsNav')}</th><th>{t('status')}</th></tr></thead>
+                  <tbody>
+                    {d.items.map((p) => (
+                      <tr key={p._id} onClick={() => navigate(`/programs/${p._id}`)}>
+                        <td><strong>{label({ ar: p.titleAr, en: p.titleEn })}</strong><br /><small className="muted">{p.specialty}</small></td>
+                        <td>{en('programType', p.type)}</td>
+                        <td>{p.modules || <span className="muted">0</span>}</td>
+                        <td>{p.openEnrollments}</td>
+                        <td><small className="muted">{p.status}</small></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <Pager page={query.page} total={d.total} limit={d.limit} onPage={(p) => setQuery({ ...query, page: p })} />
+            </>
+          ))}
+        </Loading>
+      </section>
+    </>
+  );
+}
+
+function ModuleForm({ programId, mod, onClose, onSaved }) {
+  const { t } = useI18n();
+  const [f, setF] = useState({
+    code: mod?.code || '', titleAr: mod?.titleAr || '', titleEn: mod?.titleEn || '', descriptionAr: mod?.descriptionAr || '', descriptionEn: mod?.descriptionEn || '',
+    requirements: (mod?.requirements || []).join('\n'), hours: mod?.hours || 0, required: mod ? mod.required : true, certificate: mod ? mod.certificate : true, active: mod ? mod.active : true
+  });
+  const { busy, error, run } = useAction();
+  const set = (k) => (e) => setF({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });
+  const submit = (e) => {
+    e.preventDefault();
+    const body = { ...f, hours: Number(f.hours) || 0, requirements: f.requirements.split('\n').map((x) => x.trim()).filter(Boolean) };
+    const req = mod ? api(`/api/v2/modules/${mod._id}`, { method: 'PUT', body: { ...body, __v: mod.__v } }) : api(`/api/v2/programs/${programId}/modules`, { method: 'POST', body });
+    run(() => req).then(onSaved).catch(() => {});
+  };
+  return (
+    <Modal title={mod ? t('edit') : t('newModule')} onClose={onClose} wide>
+      <form className="form-grid" onSubmit={submit}>
+        <Field label={`${t('nameAr')} *`}><input required value={f.titleAr} onChange={set('titleAr')} /></Field>
+        <Field label={t('nameEn')}><input dir="ltr" value={f.titleEn} onChange={set('titleEn')} /></Field>
+        <Field label={t('code')}><input dir="ltr" value={f.code} onChange={set('code')} /></Field>
+        <Field label={t('hoursLabel')}><input type="number" min={0} value={f.hours} onChange={set('hours')} /></Field>
+        <Field label={t('description')} wide><textarea rows={3} value={f.descriptionAr} onChange={set('descriptionAr')} /></Field>
+        <Field label={`${t('description')} (EN)`} wide><textarea dir="ltr" rows={2} value={f.descriptionEn} onChange={set('descriptionEn')} /></Field>
+        <Field label={t('requirements')} hint={t('requirementsHint')} wide><textarea rows={4} value={f.requirements} onChange={set('requirements')} /></Field>
+        <label className="check"><input type="checkbox" checked={f.required} onChange={set('required')} /> {t('requiredModule')}</label>
+        <label className="check"><input type="checkbox" checked={f.certificate} onChange={set('certificate')} /> {t('moduleCertificate')}</label>
+        {mod && <label className="check"><input type="checkbox" checked={f.active} onChange={set('active')} /> {t('active')}</label>}
+        <div className="field--wide"><ErrorBox error={error} /></div>
+        <div className="row field--wide"><button className="btn btn--primary" disabled={busy}>{t('save')}</button><button type="button" className="btn btn--ghost" onClick={onClose}>{t('cancel')}</button></div>
+      </form>
+    </Modal>
+  );
+}
+
+function CohortForm({ programId, cohort, onClose, onSaved }) {
+  const { t } = useI18n();
+  const d = (v) => (v ? String(v).slice(0, 10) : '');
+  const [f, setF] = useState({
+    nameAr: cohort?.nameAr || '', nameEn: cohort?.nameEn || '', startDate: d(cohort?.startDate), endDate: d(cohort?.endDate), schedule: cohort?.schedule || '',
+    instructor: cohort?.instructor || '', delivery: cohort?.delivery || 'online', capacity: cohort?.capacity || 0, status: cohort?.status || 'open', notes: cohort?.notes || ''
+  });
+  const { busy, error, run } = useAction();
+  const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
+  const submit = (e) => {
+    e.preventDefault();
+    const req = cohort ? api(`/api/v2/cohorts/${cohort._id}`, { method: 'PUT', body: { ...f, __v: cohort.__v } }) : api(`/api/v2/programs/${programId}/cohorts`, { method: 'POST', body: f });
+    run(() => req).then(onSaved).catch(() => {});
+  };
+  return (
+    <Modal title={cohort ? t('edit') : t('newCohort')} onClose={onClose} wide>
+      <form className="form-grid" onSubmit={submit}>
+        <Field label={`${t('nameAr')} *`}><input required value={f.nameAr} onChange={set('nameAr')} /></Field>
+        <Field label={t('nameEn')}><input dir="ltr" value={f.nameEn} onChange={set('nameEn')} /></Field>
+        <Field label={t('startDate')}><input type="date" value={f.startDate} onChange={set('startDate')} /></Field>
+        <Field label={t('endDate')}><input type="date" value={f.endDate} onChange={set('endDate')} /></Field>
+        <Field label={t('schedule')}><input value={f.schedule} onChange={set('schedule')} /></Field>
+        <Field label={t('instructor')}><input value={f.instructor} onChange={set('instructor')} /></Field>
+        <Field label={t('delivery')}><select value={f.delivery} onChange={set('delivery')}>{['online', 'onsite', 'hybrid'].map((x) => <option key={x} value={x}>{t(x)}</option>)}</select></Field>
+        <Field label={t('capacity')} hint={t('capacityHint')}><input type="number" min={0} value={f.capacity} onChange={set('capacity')} /></Field>
+        <Field label={t('status')}><select value={f.status} onChange={set('status')}>{['planned', 'open', 'running', 'finished', 'cancelled'].map((x) => <option key={x} value={x}>{x}</option>)}</select></Field>
+        <Field label={t('note')} wide><input value={f.notes} onChange={set('notes')} /></Field>
+        <div className="field--wide"><ErrorBox error={error} /></div>
+        <div className="row field--wide"><button className="btn btn--primary" disabled={busy}>{t('save')}</button><button type="button" className="btn btn--ghost" onClick={onClose}>{t('cancel')}</button></div>
+      </form>
+    </Modal>
+  );
+}
+
+export function ProgramDetail() {
+  const { id } = useParams();
+  const { t, en, label, fmtDay } = useI18n();
+  const { can } = useAuth();
+  const state = useLoad(`/api/v2/programs/${id}`, [id]);
+  const [dialog, setDialog] = useState(null);
+  const [rule, setRule] = useState(null);
+  const canEdit = can('programs.update', 'all');
+  const done = () => { setDialog(null); state.reload(); };
+
+  const move = async (modules, index, dir) => {
+    const list = modules.filter((m) => m.active).map((m) => m._id);
+    const j = index + dir;
+    if (j < 0 || j >= list.length) return;
+    [list[index], list[j]] = [list[j], list[index]];
+    await api(`/api/v2/programs/${id}/modules/order`, { method: 'POST', body: { ids: list } });
+    state.reload();
+  };
+
+  return (
+    <Loading state={state}>
+      {({ item: p, modules, cohorts }) => {
+        const active = modules.filter((m) => m.active);
+        const retired = modules.filter((m) => !m.active);
+        const required = rule ?? p.modulesRequired ?? 0;
+        return (
+          <>
+            <Link to="/programs" className="muted">← {t('programsNav')}</Link>
+            <h1 className="page-title">{label({ ar: p.titleAr, en: p.titleEn })} <small className="muted">{en('programType', p.type)}</small></h1>
+
+            <section className="card">
+              <div className="card-head">
+                <h2>{t('modules')} ({active.length})</h2>
+                {can('programs.create', 'all') && <button type="button" className="btn btn--primary" onClick={() => setDialog({ kind: 'module' })}>+ {t('newModule')}</button>}
+              </div>
+              {!active.length ? <p className="muted">{t('noModules')}</p> : (
+                <ol className="module-list">
+                  {active.map((m, i) => (
+                    <li key={m._id} className="module-item">
+                      <div className="module-row">
+                        <span className="module-order">{i + 1}</span>
+                        <div className="grow">
+                          <strong>{label({ ar: m.titleAr, en: m.titleEn })}</strong> {m.code && <small className="muted" dir="ltr">{m.code}</small>}
+                          <div className="module-meta">
+                            {m.hours ? `${m.hours} ${t('hours')} · ` : ''}{m.required ? t('requiredModule') : t('optional')}{m.certificate ? ` · ${t('moduleCertificate')}` : ''}
+                          </div>
+                          {m.requirements.length > 0 && <ul className="module-meta">{m.requirements.map((r, k) => <li key={k}>{r}</li>)}</ul>}
+                        </div>
+                        {canEdit && (
+                          <div className="module-actions">
+                            <button type="button" className="btn btn--small" disabled={i === 0} onClick={() => move(modules, i, -1)} aria-label="up">↑</button>
+                            <button type="button" className="btn btn--small" disabled={i === active.length - 1} onClick={() => move(modules, i, 1)} aria-label="down">↓</button>
+                            <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'module', item: m })}>{t('edit')}</button>
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              )}
+              {retired.length > 0 && (
+                <details className="module-meta"><summary>{t('inactive')} ({retired.length})</summary>
+                  <ul>{retired.map((m) => <li key={m._id}>{m.titleAr} {canEdit && <button type="button" className="link" onClick={() => setDialog({ kind: 'module', item: m })}>{t('edit')}</button>}</li>)}</ul>
+                </details>
+              )}
+            </section>
+
+            <section className="card">
+              <h2>{t('rules')}</h2>
+              <form className="row" onSubmit={async (e) => { e.preventDefault(); await api(`/api/v2/programs/${id}/rules`, { method: 'PUT', body: { modulesRequired: required } }); setRule(null); state.reload(); }}>
+                <Field label={t('modulesRequired')} hint={t('modulesRequiredHint')}>
+                  <input type="number" min={0} max={active.length} value={required} disabled={!canEdit} onChange={(e) => setRule(Number(e.target.value))} />
+                </Field>
+                {canEdit && rule !== null && <button className="btn btn--primary">{t('save')}</button>}
+              </form>
+            </section>
+
+            <section className="card">
+              <div className="card-head">
+                <h2>{t('cohorts')}</h2>
+                {can('programs.create', 'all') && <button type="button" className="btn btn--primary" onClick={() => setDialog({ kind: 'cohort' })}>+ {t('newCohort')}</button>}
+              </div>
+              {!cohorts.length ? <p className="muted">{t('noData')}</p> : (
+                <div className="table-wrap">
+                  <table className="table">
+                    <thead><tr><th>{t('name')}</th><th>{t('startDate')}</th><th>{t('schedule')}</th><th>{t('instructor')}</th><th>{t('enrolled')}</th><th>{t('status')}</th><th /></tr></thead>
+                    <tbody>
+                      {cohorts.map((c) => (
+                        <tr key={c._id}>
+                          <td><strong>{label({ ar: c.nameAr, en: c.nameEn })}</strong><br /><small className="muted">{t(c.delivery)}</small></td>
+                          <td>{fmtDay(c.startDate)}{c.endDate ? ` – ${fmtDay(c.endDate)}` : ''}</td>
+                          <td>{c.schedule || '—'}</td>
+                          <td>{c.instructor || '—'}</td>
+                          <td><Link to={`/enrollments?cohort=${c._id}`}>{c.enrolled}{c.capacity ? ` / ${c.capacity}` : ''}</Link></td>
+                          <td><Pill tone={c.status === 'open' || c.status === 'running' ? 'ok' : 'muted'}>{c.status}</Pill></td>
+                          <td>{canEdit && <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'cohort', item: c })}>{t('edit')}</button>}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
+            {dialog?.kind === 'module' && <ModuleForm programId={id} mod={dialog.item} onClose={() => setDialog(null)} onSaved={done} />}
+            {dialog?.kind === 'cohort' && <CohortForm programId={id} cohort={dialog.item} onClose={() => setDialog(null)} onSaved={done} />}
+          </>
+        );
+      }}
+    </Loading>
+  );
+}

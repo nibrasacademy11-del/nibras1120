@@ -13,6 +13,8 @@ const activity = require('../modules/crm/activityController');
 const access = require('../modules/crm/accessController');
 const documents = require('../modules/crm/documentController');
 const home = require('../modules/crm/homeController');
+const programs = require('../modules/learning/programController');
+const enrollments = require('../modules/learning/enrollmentController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -107,6 +109,28 @@ router.post('/customers/:id/access-requests', validId(), can('access_requests.cr
 router.get('/access-requests', can('access_requests.view'), handle(access.list));
 router.post('/access-requests/:requestId/decide', validId('requestId'), can('access_requests.view'), handle(access.decide));
 router.post('/access-requests/:requestId/revoke', validId('requestId'), can('access_requests.view'), handle(access.revoke));
+
+// ---- programs, modules, groups ----
+router.get('/programs', can('programs.view'), handle(programs.list));
+router.get('/programs/:id', validId(), can('programs.view'), handle(programs.get));
+router.put('/programs/:id/rules', validId(), all('programs.update'), handle(programs.updateRules));
+router.post('/programs/:id/modules', validId(), all('programs.create'), handle(programs.addModule));
+router.post('/programs/:id/modules/order', validId(), all('programs.update'), handle(programs.reorderModules));
+router.put('/modules/:moduleId', validId('moduleId'), all('programs.update'), handle(programs.updateModule));
+router.get('/cohorts', can('programs.view'), handle(programs.listCohorts));
+router.post('/programs/:id/cohorts', validId(), all('programs.create'), handle(programs.addCohort));
+router.put('/cohorts/:cohortId', validId('cohortId'), all('programs.update'), handle(programs.updateCohort));
+
+// ---- enrollments and module reviews ----
+router.get('/my/enrollments', handle(enrollments.mine));
+router.get('/reviews', can('enrollments.approve', 'team'), handle(enrollments.reviews));
+router.get('/enrollments', can('enrollments.view'), handle(enrollments.list));
+router.post('/enrollments', can('enrollments.create'), handle(enrollments.create));
+router.get('/enrollments/:id', validId(), can('enrollments.view'), handle(enrollments.get));
+router.put('/enrollments/:id', validId(), can('enrollments.update'), handle(enrollments.update));
+router.post('/enrollments/:id/sync-modules', validId(), can('enrollments.update'), handle(enrollments.syncModules));
+router.post('/enrollments/:id/modules/:moduleId', validId(), validId('moduleId'), can('enrollments.view'), handle(enrollments.transition));
+router.get('/customers/:id/enrollments', validId(), can('enrollments.view'), handle(enrollments.forCustomer));
 
 // ---- tasks and follow-ups ----
 router.get('/tasks', can('tasks.view'), handle(activity.listTasks));
