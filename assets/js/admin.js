@@ -248,7 +248,7 @@
             { go: 'inquiries', icon: 'fa-file-signature', label: 'طلبات التسجيل الجديدة', value: value(inquiries, (l) => l.filter((i) => i.inquiryType === ENROLLMENT && i.status === 'New').length), sub: value(inquiries, (l) => `من ${l.filter((i) => i.inquiryType === ENROLLMENT).length} طلب`) },
             { go: 'inquiries', icon: 'fa-envelope', label: 'رسائل جديدة', value: value(inquiries, (l) => l.filter((i) => i.inquiryType !== ENROLLMENT && i.status === 'New').length), sub: value(inquiries, (l) => `من ${l.filter((i) => i.inquiryType !== ENROLLMENT).length} رسالة`) },
             { go: 'certificates', icon: 'fa-certificate', label: 'الشهادات', value: value(certs, (l) => l.length), sub: value(certs, (l) => `${l.filter((c) => c.status === 'Valid').length} صالحة`) },
-            { go: 'users', icon: 'fa-users', label: 'المستخدمون', value: value(users, (l) => l.length), sub: value(users, (l) => `${l.filter((u) => u.role === 'admin').length} مدير`) },
+            { go: 'users', icon: 'fa-users', label: 'المستخدمون', value: value(users, (l) => l.length), sub: value(users, (l) => `${l.filter((u) => u.role === 'admin' || u.role === 'super_admin').length} مدير`) },
             { go: 'testimonials', icon: 'fa-comment-dots', label: 'آراء العملاء', value: value(testimonials, (l) => l.length), sub: value(testimonials, (l) => `${l.filter((t) => t.visible).length} ظاهر في الموقع`) }
         ];
         grid.innerHTML = kpis.map((k) => `
@@ -994,7 +994,7 @@
                         <td><strong>${esc(u.name)}</strong></td>
                         <td dir="ltr" class="nowrap">${esc(u.email)}</td>
                         <td dir="ltr" class="nowrap">${esc(u.phone || '—')}</td>
-                        <td><span class="pill${u.role === 'admin' ? ' pill--gold' : ''}">${u.role === 'admin' ? 'مدير' : 'متدرب'}</span></td>
+                        <td><span class="pill${u.role !== 'student' && u.role !== 'user' && u.role !== 'customer' ? ' pill--gold' : ''}">${esc(ROLE_NAMES[u.role] || 'متدرب')}</span></td>
                         <td>${(u.enrolledCourses || []).length}</td>
                         <td class="nowrap">${fmtDate(u.createdAt)}</td>
                         <td class="row-actions">
@@ -1005,6 +1005,12 @@
             </table>` : empty('لا يوجد مستخدمون.', 'fa-users');
     }
 
+    const ROLE_NAMES = {
+        super_admin: 'مدير النظام', admin: 'مدير', hr_manager: 'مدير الموارد البشرية', finance_manager: 'المدير المالي',
+        team_leader: 'قائد فريق', employee: 'موظف', accountant: 'محاسب', customer_support: 'خدمة العملاء',
+        customer: 'عميل', student: 'متدرب', user: 'متدرب'
+    };
+
     function bindUsers() {
         $('#userSearch').addEventListener('input', renderUsers);
         $('#usersTable').addEventListener('click', async (e) => {
@@ -1014,7 +1020,7 @@
                 const u = state.users.find((x) => x._id === edit.dataset.edit);
                 const form = $('#userForm');
                 form.reset();
-                fillFields(form, { ...u, id: u._id, role: u.role === 'admin' ? 'admin' : 'student' });
+                fillFields(form, { ...u, id: u._id, role: u.role === 'user' ? 'student' : u.role });
                 $('#userDialog').showModal();
             }
             if (del) {
@@ -1034,7 +1040,11 @@
             e.preventDefault();
             const v = readFields(e.target);
             if (!v.name || !v.email) return showToast('الاسم والبريد مطلوبان.', true);
-            const payload = { name: v.name, email: v.email, phone: v.phone, role: v.role, enrolledCourses: lines(v.enrolledCourses) };
+            const current = state.users.find((x) => x._id === v.id);
+            const payload = { name: v.name, email: v.email, phone: v.phone, enrolledCourses: lines(v.enrolledCourses) };
+            // Send the role only when it was changed here, so an untouched form never resets it
+            const currentRole = current && current.role === 'user' ? 'student' : current && current.role;
+            if (v.role !== currentRole) payload.role = v.role;
             await busy(e.target.querySelector('[type="submit"]'), async () => {
                 try {
                     const data = await apiFetch(`/api/auth/users/${v.id}`, json('PUT', payload));
@@ -1059,7 +1069,7 @@
         } catch (e) {
             user = null;
         }
-        if (!user || user.role !== 'admin') {
+        if (!user || !['admin', 'super_admin'].includes(user.role)) {
             window.location.replace(`/pages/ar/login.html?next=${encodeURIComponent('/pages/ar/admin.html')}`);
             return;
         }

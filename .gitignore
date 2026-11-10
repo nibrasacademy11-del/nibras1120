@@ -1,4 +1,8 @@
-﻿node_modules
+node_modules
 .env
 .vercel
 .claude
+.env.development
+.env.test
+portal/node_modules
+portal/dist

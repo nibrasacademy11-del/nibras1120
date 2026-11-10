@@ -1,45 +1,33 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const { getJwtSecret } = require('../middleware/auth');
 const { isMailConfigured, createTransporter } = require('../config/mailer');
+const { ROLES, LEGACY_ROLES, normalizeRole, isStaffRole } = require('../lib/permissions');
+const sessions = require('../lib/sessions');
+const audit = require('../lib/audit');
+const { checkSecondFactor } = require('../lib/twoFactor');
 
 const MIN_PASSWORD_LENGTH = 8;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const PRIVATE_FIELDS = User.PRIVATE_FIELDS;
 
-function signToken(user) {
-    return jwt.sign(
-        { id: String(user._id), tv: user.tokenVersion || 0 },
-        getJwtSecret(),
-        { expiresIn: '7d' }
-    );
-}
-
 function publicUser(user) {
-    return { id: String(user._id), name: user.name, email: user.email, role: user.role };
-}
-
-function authCookieOptions() {
     return {
-        httpOnly: true,
-        // Site and API share one origin, so lax works and blocks cross-site form posts
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        path: '/'
+        id: String(user._id),
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isStaff: isStaffRole(user.role)
     };
-}
-
-function setAuthCookie(res, token) {
-    res.cookie('nibras_token', token, { ...authCookieOptions(), maxAge: 7 * 24 * 60 * 60 * 1000 });
 }
 
 // Reset links must point at our own domain, never at a client-supplied Origin header
 function siteUrl(req) {
     return process.env.SITE_URL || `${req.protocol}://${req.get('host')}`;
 }
+
+const LOCKED_MESSAGE = 'تم إيقاف الدخول مؤقتاً بسبب محاولات خاطئة متكررة. حاول بعد 15 دقيقة. / Sign-in is paused after repeated failed attempts. Try again in 15 minutes.';
 
 exports.register = async (req, res) => {
     try {
@@ -70,13 +58,30 @@ exports.register = async (req, res) => {
         });
         await user.save();
 
-        setAuthCookie(res, signToken(user));
+        await sessions.startSession(req, res, user);
         res.status(201).json({ message: 'Account created successfully.', user: publicUser(user) });
     } catch (error) {
         console.error('Registration error:', error);
         res.status(500).json({ message: 'Server error during registration.' });
     }
 };
+
+async function finishLogin(req, res, user, { twoFactor }) {
+    await sessions.startSession(req, res, user, { twoFactor });
+    user.lastLoginAt = new Date();
+    await user.save();
+    await sessions.logAttempt(req, { email: user.email, user, success: true, reason: 'ok' });
+    if (isStaffRole(user.role)) {
+        await audit.record(req, {
+            actor: { id: user._id, name: user.name, role: user.role },
+            action: 'auth.login',
+            resource: 'users',
+            resourceId: user._id,
+            summary: twoFactor ? 'Signed in with two-factor' : 'Signed in'
+        });
+    }
+    res.json({ message: 'Login successful.', user: publicUser(user) });
+}
 
 exports.login = async (req, res) => {
     try {
@@ -86,22 +91,98 @@ exports.login = async (req, res) => {
         }
         const normalizedEmail = email.trim().toLowerCase();
 
+        if (await sessions.isLocked(normalizedEmail)) {
+            await sessions.logAttempt(req, { email: normalizedEmail, success: false, reason: 'locked' });
+            return res.status(429).json({ message: LOCKED_MESSAGE, code: 'LOCKED' });
+        }
+
         const user = await User.findOne({ email: normalizedEmail });
-        if (!user) return res.status(401).json({ message: 'Invalid email or password.' });
+        if (!user) {
+            await sessions.logAttempt(req, { email: normalizedEmail, success: false, reason: 'unknown_email' });
+            return res.status(401).json({ message: 'Invalid email or password.' });
+        }
 
         const ok = await bcrypt.compare(password, user.password);
-        if (!ok) return res.status(401).json({ message: 'Invalid email or password.' });
+        if (!ok) {
+            await sessions.logAttempt(req, { email: normalizedEmail, user, success: false, reason: 'bad_password' });
+            return res.status(401).json({ message: 'Invalid email or password.' });
+        }
 
-        setAuthCookie(res, signToken(user));
-        res.json({ message: 'Login successful.', user: publicUser(user) });
+        if (user.status === 'disabled') {
+            await sessions.logAttempt(req, { email: normalizedEmail, user, success: false, reason: 'disabled' });
+            return res.status(403).json({ message: 'هذا الحساب معطل. يرجى التواصل مع الإدارة. / This account is disabled.', code: 'DISABLED' });
+        }
+
+        if (user.twoFactor && user.twoFactor.enabled) {
+            sessions.setChallenge(res, user);
+            await sessions.logAttempt(req, { email: normalizedEmail, user, success: false, reason: '2fa_pending' });
+            return res.json({
+                twoFactorRequired: true,
+                message: 'أدخل رمز التحقق من تطبيق المصادقة. / Enter the code from your authenticator app.'
+            });
+        }
+
+        await finishLogin(req, res, user, { twoFactor: false });
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ message: 'Server error during login.' });
     }
 };
 
-exports.logout = (req, res) => {
-    res.clearCookie('nibras_token', authCookieOptions());
+// Second step of a two-factor sign-in: the password step left a 5-minute challenge cookie
+exports.loginTwoFactor = async (req, res) => {
+    try {
+        const challenge = sessions.readChallenge(req);
+        if (!challenge) {
+            return res.status(401).json({
+                message: 'انتهت مهلة التحقق، سجل الدخول مرة أخرى. / The sign-in expired, please start again.',
+                code: 'CHALLENGE_EXPIRED'
+            });
+        }
+        const user = await User.findById(challenge.id);
+        if (!user || (user.tokenVersion || 0) !== (challenge.tv || 0) || user.status === 'disabled') {
+            sessions.clearChallenge(res);
+            return res.status(401).json({ message: 'Unauthorized.' });
+        }
+        if (await sessions.isLocked(user.email)) {
+            sessions.clearChallenge(res);
+            return res.status(429).json({ message: LOCKED_MESSAGE, code: 'LOCKED' });
+        }
+
+        const method = checkSecondFactor(user, req.body.code);
+        if (!method) {
+            await sessions.logAttempt(req, { email: user.email, user, success: false, reason: '2fa_failed' });
+            return res.status(401).json({ message: 'رمز التحقق غير صحيح. / The code is not correct.', code: 'BAD_CODE' });
+        }
+
+        sessions.clearChallenge(res);
+        if (method === 'recovery') {
+            await audit.record(req, {
+                actor: { id: user._id, name: user.name, role: user.role },
+                action: 'auth.recovery_code_used',
+                resource: 'users',
+                resourceId: user._id,
+                summary: `Recovery code used, ${user.twoFactor.recoveryCodes.length} left`
+            });
+        }
+        await finishLogin(req, res, user, { twoFactor: true });
+    } catch (error) {
+        console.error('Two-factor login error:', error);
+        res.status(500).json({ message: 'Server error during login.' });
+    }
+};
+
+exports.logout = async (req, res) => {
+    try {
+        const { userFromToken } = require('../middleware/auth');
+        const token = req.cookies.nibras_token;
+        const current = token ? await userFromToken(token).catch(() => null) : null;
+        if (current && current.sid) await sessions.endSession(current.sid, 'signed_out');
+    } catch (e) {
+        // Signing out always succeeds for the browser
+    }
+    sessions.clearAuthCookie(res);
+    sessions.clearChallenge(res);
     res.json({ message: 'Logged out.' });
 };
 
@@ -109,7 +190,7 @@ exports.getMe = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select(PRIVATE_FIELDS);
         if (!user) return res.status(401).json({ message: 'Unauthorized.' });
-        res.json({ user });
+        res.json({ user, isStaff: req.user.isStaff });
     } catch (error) {
         console.error('GetMe error:', error);
         res.status(500).json({ message: 'Server error.' });
@@ -199,6 +280,14 @@ exports.resetPassword = async (req, res) => {
         // Sign out every session that existed before the reset
         user.tokenVersion = (user.tokenVersion || 0) + 1;
         await user.save();
+        await sessions.revokeAllSessions(user._id, { reason: 'password_reset' });
+        await audit.record(req, {
+            actor: { id: user._id, name: user.name, role: user.role },
+            action: 'auth.password_reset',
+            resource: 'users',
+            resourceId: user._id,
+            summary: 'Password reset by email link'
+        });
 
         res.json({ message: 'تم تغيير كلمة المرور بنجاح. يمكنك تسجيل الدخول الآن.' });
     } catch (error) {
@@ -216,14 +305,39 @@ exports.getSingleUser = async (req, res) => {
     }
 };
 
+const ADMIN_ROLES = ['super_admin', 'admin'];
+
 exports.updateUser = async (req, res) => {
     try {
         const { name, email, phone, role, enrolledCourses } = req.body;
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ message: 'User not found.' });
+        const snapshot = () => ({
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            enrolledCourses: [...(user.enrolledCourses || [])]
+        });
+        const before = snapshot();
 
-        if (role && role !== 'admin' && user.role === 'admin' && String(user._id) === String(req.user.id)) {
-            return res.status(400).json({ message: 'لا يمكنك إلغاء صلاحية المدير عن حسابك الحالي.' });
+        const actorIsSuper = req.user.role === 'super_admin';
+        if (normalizeRole(user.role) === 'super_admin' && !actorIsSuper) {
+            return res.status(403).json({ message: 'فقط مدير النظام يمكنه تعديل حساب مدير النظام.' });
+        }
+
+        const roleChanging = role !== undefined && role !== user.role;
+        if (roleChanging) {
+            if (![...ROLES, ...Object.keys(LEGACY_ROLES)].includes(role)) {
+                return res.status(400).json({ message: 'صلاحية غير معروفة.' });
+            }
+            if (String(user._id) === String(req.user.id)) {
+                return res.status(400).json({ message: 'لا يمكنك تغيير صلاحية حسابك الحالي.' });
+            }
+            // Only the super admin hands out or takes away the two admin roles
+            if (!actorIsSuper && (ADMIN_ROLES.includes(role) || ADMIN_ROLES.includes(normalizeRole(user.role)))) {
+                return res.status(403).json({ message: 'فقط مدير النظام يمكنه منح أو سحب صلاحية المدير.' });
+            }
         }
 
         if (email !== undefined) {
@@ -235,7 +349,7 @@ exports.updateUser = async (req, res) => {
         }
         if (name) user.name = String(name).trim().slice(0, 120);
         if (phone !== undefined) user.phone = String(phone).trim().slice(0, 30);
-        if (role && role !== user.role) {
+        if (roleChanging) {
             user.role = role;
             // A changed role must not keep working through tokens issued before it
             user.tokenVersion = (user.tokenVersion || 0) + 1;
@@ -243,6 +357,18 @@ exports.updateUser = async (req, res) => {
         if (Array.isArray(enrolledCourses)) user.enrolledCourses = enrolledCourses.map((c) => String(c).trim()).filter(Boolean);
 
         await user.save();
+        if (roleChanging) await sessions.revokeAllSessions(user._id, { reason: 'role_changed' });
+
+        const changes = audit.diff(before, snapshot());
+        if (Object.keys(changes).length) {
+            await audit.record(req, {
+                action: changes.role ? 'user.role_changed' : 'user.updated',
+                resource: 'users',
+                resourceId: user._id,
+                summary: `Updated account ${user.email}`,
+                changes
+            });
+        }
         const saved = await User.findById(user._id).select(PRIVATE_FIELDS);
         res.json({ message: 'User updated successfully.', user: saved });
     } catch (error) {
@@ -257,8 +383,20 @@ exports.deleteUser = async (req, res) => {
         if (String(req.params.id) === String(req.user.id)) {
             return res.status(400).json({ message: 'لا يمكنك حذف حسابك الحالي.' });
         }
-        const user = await User.findByIdAndDelete(req.params.id);
-        if (!user) return res.status(404).json({ message: 'User not found.' });
+        const target = await User.findById(req.params.id).select('name email role');
+        if (!target) return res.status(404).json({ message: 'User not found.' });
+        if (ADMIN_ROLES.includes(normalizeRole(target.role)) && req.user.role !== 'super_admin') {
+            return res.status(403).json({ message: 'فقط مدير النظام يمكنه حذف حساب مدير.' });
+        }
+        await User.deleteOne({ _id: target._id });
+        await sessions.revokeAllSessions(target._id, { reason: 'account_deleted' });
+        await audit.record(req, {
+            action: 'user.deleted',
+            resource: 'users',
+            resourceId: target._id,
+            summary: `Deleted account ${target.email}`,
+            meta: { name: target.name, email: target.email, role: target.role }
+        });
         res.json({ message: 'User deleted successfully.' });
     } catch (error) {
         res.status(500).json({ message: 'Error deleting user.' });

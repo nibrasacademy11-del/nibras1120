@@ -388,8 +388,16 @@
           <label class="field">رقم الهاتف<input name="phone" dir="ltr" /></label>
           <label class="field">الصلاحية
             <select name="role">
-              <option value="student">متدرب</option>
+              <option value="student">متدرب / عميل</option>
+              <option value="customer">عميل</option>
+              <option value="employee">موظف</option>
+              <option value="team_leader">قائد فريق</option>
+              <option value="customer_support">خدمة العملاء</option>
+              <option value="accountant">محاسب</option>
+              <option value="finance_manager">المدير المالي</option>
+              <option value="hr_manager">مدير الموارد البشرية</option>
               <option value="admin">مدير</option>
+              <option value="super_admin">مدير النظام</option>
             </select>
           </label>
           <label class="field field--wide">البرامج المسجل فيها (كل برنامج في سطر)<textarea name="enrolledCourses" rows="4"></textarea></label>

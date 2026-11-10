@@ -1,4 +1,12 @@
-require('dotenv').config();
+// Local runs use .env.development (the test database) when it exists, so nothing written while
+// developing reaches the live data in .env. Vercel sets its variables itself and loads neither file.
+const devEnv = require('path').join(__dirname, '.env.development');
+if (!process.env.VERCEL && require('fs').existsSync(devEnv)) {
+    require('dotenv').config({ path: devEnv, quiet: true });
+    console.log('Environment: .env.development');
+} else {
+    require('dotenv').config({ quiet: true });
+}
 const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -91,6 +99,17 @@ app.use('/assets', express.static(path.join(__dirname, 'assets'), staticOptions)
 app.use('/pages', express.static(path.join(__dirname, 'pages')));
 app.use('/en', express.static(path.join(__dirname, 'en')));
 
+// Management portals (React build in portal/dist). Hashed assets are cached, index.html never is,
+// and every portal path returns index.html so the app's own router can show the page.
+const portalDist = path.join(__dirname, 'portal', 'dist');
+app.use('/portal/assets', express.static(path.join(portalDist, 'assets'), { maxAge: '365d', immutable: true }));
+app.get(['/portal', '/portal/{*rest}'], (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    res.sendFile(path.join(portalDist, 'index.html'), (err) => {
+        if (err) res.status(503).type('text').send('The portal has not been built yet. Run: npm run build:portal');
+    });
+});
+
 // Ensure Database is connected for all API requests
 app.use('/api', async (req, res, next) => {
     try {
@@ -128,6 +147,7 @@ app.use('/api', require('./routes/certificateRoutes'));
 app.use('/api', require('./routes/siteRoutes'));
 app.use('/api/courses', require('./routes/courseRoutes'));
 app.use('/api/inquiries', require('./routes/inquiryRoutes'));
+app.use('/api/v2', require('./routes/v2'));
 
 // Unknown API paths answer in JSON
 app.use('/api', (req, res) => {

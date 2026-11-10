@@ -10,6 +10,7 @@ const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20, message: tooM
 
 router.post('/register', authLimiter, authController.register);
 router.post('/login', authLimiter, authController.login);
+router.post('/login/2fa', authLimiter, authController.loginTwoFactor);
 router.post('/logout', authController.logout);
 router.post('/forgot-password', authLimiter, authController.forgotPassword);
 router.post('/reset-password', authLimiter, authController.resetPassword);

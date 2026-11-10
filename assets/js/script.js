@@ -266,7 +266,9 @@ function formatAuthError(msg, isEN) {
 function afterLoginUrl(user, isEN) {
     const next = new URLSearchParams(window.location.search).get('next') || '';
     if (next.startsWith('/') && !next.startsWith('//')) return next;
-    if (user && user.role === 'admin') return isEN ? '/en/index.html' : '/index.html';
+    if (user && (user.role === 'admin' || user.role === 'super_admin')) return isEN ? '/en/index.html' : '/index.html';
+    // Employees, team leaders and the other staff roles work in the management portal
+    if (user && user.isStaff) return '/portal/';
     return isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html';
 }
 
@@ -321,6 +323,11 @@ function initPublicAuth(isEN) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
+                // Accounts with two-factor sign-in finish in the portal, which asks for the code
+                if (data.twoFactorRequired) {
+                    window.location.href = '/portal/';
+                    return;
+                }
                 showToast(isEN ? 'Login successful.' : 'تم تسجيل الدخول بنجاح.');
                 if (data.user && data.user.name) {
                     localStorage.setItem('nibras_user_name', data.user.name);
@@ -494,11 +501,12 @@ async function updateNavAuth(isEN) {
         return;
     }
 
-    const isAdmin = user.role === 'admin';
+    const isAdmin = user.role === 'admin' || user.role === 'super_admin';
+    const isStaff = !isAdmin && ['hr_manager', 'finance_manager', 'team_leader', 'employee', 'accountant', 'customer_support'].includes(user.role);
     const firstName = String(user.name || '').split(' ')[0];
-    const profileUrl = isAdmin ? '/pages/ar/admin.html' : (isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html');
-    const label = isAdmin
-        ? `<i class="fas fa-gauge-high"></i> ${isEN ? 'Control Panel' : 'لوحة التحكم'}`
+    const profileUrl = isAdmin ? '/pages/ar/admin.html' : isStaff ? '/portal/' : (isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html');
+    const label = (isAdmin || isStaff)
+        ? `<i class="fas fa-gauge-high"></i> ${isStaff ? (isEN ? 'Staff Portal' : 'بوابة الموظفين') : (isEN ? 'Control Panel' : 'لوحة التحكم')}`
         : `<i class="fas fa-user-circle"></i> ${esc(firstName)}`;
 
     // 1. Desktop Nav Auth
