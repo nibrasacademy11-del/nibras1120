@@ -22,6 +22,7 @@ const certs = require('../modules/learning/certificateController');
 const complaints = require('../modules/crm/complaintController');
 const reports = require('../modules/reports/reportController');
 const analytics = require('../modules/reports/analyticsController');
+const attendance = require('../modules/hr/attendanceController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -38,6 +39,10 @@ const all = (perm) => requirePermission(perm, 'all');
 
 // The reminder job is called by Vercel Cron with its own secret, not a user session
 router.get('/cron/reminders', handle(home.cronReminders));
+// The kiosk screen and the local attendance server use their own keys, not user sessions
+const kioskLimit = rateLimit({ windowMs: 60 * 1000, max: 30, message: tooMany });
+router.get('/attendance/kiosk/:id', validId(), kioskLimit, handle(attendance.kiosk));
+router.post('/attendance/sync', rateLimit({ windowMs: 60 * 1000, max: 30, message: tooMany }), handle(attendance.sync));
 
 router.use(authRequired);
 
@@ -219,6 +224,28 @@ router.get('/reports/:id', handle(reports.run));
 router.get('/reports/:id/xlsx', handle(reports.exportXlsx));
 router.post('/reports/printed', handle(reports.printed));
 router.get('/analytics', can('reports.view', 'team'), handle(analytics.overview));
+
+// ---- attendance and leaves ----
+// No IP rate limit here: everyone in the academy shares one internet address at the morning rush
+router.post('/attendance/scan', can('attendance.create'), handle(attendance.scan));
+router.post('/attendance/device', can('attendance.create'), handle(attendance.deviceToken));
+router.get('/attendance/me', can('attendance.view'), handle(attendance.myMonth));
+router.get('/attendance/today', can('attendance.view', 'team'), handle(attendance.today));
+router.get('/attendance/month', can('attendance.view', 'team'), handle(attendance.month));
+router.post('/attendance/corrections', all('attendance.update'), handle(attendance.correct));
+router.get('/attendance/shifts', can('attendance.view'), handle(attendance.listShifts));
+router.post('/attendance/shifts', all('attendance.manage'), handle(attendance.saveShift));
+router.put('/attendance/shifts/:id', validId(), all('attendance.manage'), handle(attendance.saveShift));
+router.get('/attendance/holidays', can('attendance.view'), handle(attendance.listHolidays));
+router.post('/attendance/holidays', all('attendance.manage'), handle(attendance.addHoliday));
+router.delete('/attendance/holidays/:date', all('attendance.manage'), handle(attendance.removeHoliday));
+router.get('/attendance/stations', all('attendance.manage'), handle(attendance.listStations));
+router.post('/attendance/stations', all('attendance.manage'), handle(attendance.saveStation));
+router.put('/attendance/stations/:id', validId(), all('attendance.manage'), handle(attendance.saveStation));
+router.get('/leaves', can('leaves.view'), handle(attendance.listLeaves));
+router.post('/leaves', can('leaves.create'), handle(attendance.requestLeave));
+router.post('/leaves/:id/decide', validId(), can('leaves.approve', 'team'), handle(attendance.decideLeave));
+router.post('/leaves/:id/cancel', validId(), can('leaves.create'), handle(attendance.cancelLeave));
 
 // ---- tasks and follow-ups ----
 router.get('/tasks', can('tasks.view'), handle(activity.listTasks));

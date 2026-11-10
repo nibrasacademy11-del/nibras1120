@@ -50,7 +50,9 @@ const SETTING_DEFAULTS = {
     'finance.baseCurrency': 'SAR',
     // Rates used for anyone without a rate of their own (percent)
     'commissions.defaultEmployeeRate': 0,
-    'commissions.defaultLeaderRate': 0
+    'commissions.defaultLeaderRate': 0,
+    // The time zone attendance days and hours are counted in
+    'attendance.timeZone': 'Africa/Cairo'
 };
 
 async function getSetting(key) {

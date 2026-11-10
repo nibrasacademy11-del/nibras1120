@@ -20,6 +20,8 @@ const employeeSchema = new mongoose.Schema({
     department: { type: mongoose.Schema.Types.ObjectId, ref: 'Department', default: null, index: true },
     team: { type: mongoose.Schema.Types.ObjectId, ref: 'Team', default: null, index: true },
     phone: { type: String, default: '', trim: true, maxlength: 30 },
+    // Working hours for attendance; empty means the default shift
+    shift: { type: mongoose.Schema.Types.ObjectId, ref: 'Shift', default: null },
     hireDate: { type: Date, default: null },
     // active, or left (account disabled, customers transferred, history kept)
     status: { type: String, enum: ['active', 'left'], default: 'active', index: true },

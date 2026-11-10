@@ -1,0 +1,8 @@
+{
+  "cloudUrl": "https://www.nibras-ac.com",
+  "syncSecret": "SAME VALUE AS ATTENDANCE_SYNC_SECRET ON THE CLOUD SERVER",
+  "kioskKey": "A LONG RANDOM VALUE THAT OPENS THE KIOSK SCREEN",
+  "stationName": "استقبال الأكاديمية",
+  "port": 4000,
+  "localUrl": ""
+}

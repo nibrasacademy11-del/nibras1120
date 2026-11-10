@@ -247,6 +247,24 @@ const REPORTS = [
         }
     },
     {
+        id: 'attendance', group: 'hr', titleAr: 'تقرير الحضور والانصراف الشهري', titleEn: 'Monthly attendance', permission: 'attendance.view', minScope: 'team', orientation: 'landscape',
+        filters: [{ key: 'period', type: 'month' }, { key: 'team', type: 'team' }],
+        async run(req, f, scope) {
+            const { _evaluate } = require('../hr/attendanceController');
+            const month = /^\d{4}-\d{2}$/.test(String(f.period || '')) ? f.period : new Date().toISOString().slice(0, 7);
+            const filter = { status: 'active', ...P.scopeFilter(scope, req.user, { owner: 'user', team: 'team' }) };
+            if (oid(f.team)) filter.team = oid(f.team);
+            const emps = await Employee.find(filter).select('user').lean();
+            const rows = await _evaluate(emps.map((e) => e.user), month);
+            const h = (m) => M.round(m / 60, 1);
+            return {
+                columns: [col('name', 'الموظف', 'Employee'), col('team', 'الفريق', 'Team'), col('shift', 'الدوام', 'Shift'), col('workingDays', 'أيام العمل', 'Working days', 'number'), col('present', 'حضور', 'Present', 'number'), col('late', 'مرات التأخير', 'Late days', 'number'), col('lateMinutes', 'دقائق التأخير', 'Late minutes', 'number'), col('absent', 'غياب', 'Absent', 'number'), col('leave', 'إجازات', 'Leave', 'number'), col('earlyLeaveMinutes', 'انصراف مبكر (د)', 'Early leave (min)', 'number'), col('hours', 'ساعات العمل', 'Hours worked', 'number')],
+                rows: rows.map((r) => ({ name: r.name, team: r.team, shift: `${r.shift.start}-${r.shift.end}`, ...r.summary, hours: h(r.summary.workedMinutes) })),
+                meta: { month }
+            };
+        }
+    },
+    {
         id: 'tasks', group: 'crm', titleAr: 'المهام والمتابعات', titleEn: 'Tasks and follow-ups', permission: 'tasks.view', orientation: 'landscape',
         filters: [COMMON.from, COMMON.to, { key: 'status', type: 'select', options: ['open', 'done', 'cancelled'] }, { key: 'owner', type: 'staff' }],
         async run(req, f, scope) {

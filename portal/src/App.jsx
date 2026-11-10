@@ -21,6 +21,7 @@ import Commissions from './pages/Commissions.jsx';
 import Reports, { ReportView } from './pages/Reports.jsx';
 import Analytics from './pages/Analytics.jsx';
 import Complaints, { MyComplaints } from './pages/Complaints.jsx';
+import Attendance, { Attend, Kiosk, Leaves, PairDevice } from './pages/Attendance.jsx';
 import Certificates, { CertificateDetail, MyCertificates } from './pages/Certificates.jsx';
 import Payments, { AccountStatement, Accounts, Approvals, Currencies, Expenses, FinanceSummary, MyPayments, PaymentDetail, Periods } from './pages/Finance.jsx';
 
@@ -36,6 +37,8 @@ export default function App() {
   const { t } = useI18n();
   const location = useLocation();
 
+  // The reception screen runs without a sign-in, on its station key
+  if (location.pathname.startsWith('/kiosk/')) return <Routes><Route path="/kiosk/:id" element={<Kiosk />} /></Routes>;
   if (loading) return <div className="splash">{t('loading')}</div>;
   if (!me) return <Login />;
 
@@ -55,6 +58,10 @@ export default function App() {
         <Route path="/my-payments" element={<MyPayments />} />
         <Route path="/my-certificates" element={<MyCertificates />} />
         <Route path="/my-complaints" element={<MyComplaints />} />
+        <Route path="/attend" element={<Attend />} />
+        <Route path="/attend/pair" element={<PairDevice />} />
+        <Route path="/attendance" element={<Guard permission="attendance.view"><Attendance /></Guard>} />
+        <Route path="/leaves" element={<Guard permission="leaves.view"><Leaves /></Guard>} />
         <Route path="/complaints" element={<Guard permission="complaints.view"><Complaints /></Guard>} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/reports/:id" element={<ReportView />} />

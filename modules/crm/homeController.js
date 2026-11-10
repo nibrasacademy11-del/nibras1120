@@ -128,7 +128,8 @@ const VALIDATORS = {
     'customers.lookupNamePolicy': (v) => ['full', 'partial'].includes(v),
     'enrollments.teamLeaderReview': (v) => typeof v === 'boolean',
     'commissions.defaultEmployeeRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
-    'commissions.defaultLeaderRate': (v) => typeof v === 'number' && v >= 0 && v <= 100
+    'commissions.defaultLeaderRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
+    'attendance.timeZone': (v) => { try { new Intl.DateTimeFormat('en', { timeZone: v }); return true; } catch { return false; } }
 };
 
 exports.updateSettings = async (req, res) => {

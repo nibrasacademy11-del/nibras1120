@@ -199,6 +199,7 @@ exports.updateEmployee = async (req, res) => {
     if (req.body.nameEn !== undefined) emp.nameEn = str(req.body.nameEn);
     if (req.body.phone !== undefined) emp.phone = str(req.body.phone, 30);
     if (req.body.hireDate !== undefined) emp.hireDate = req.body.hireDate ? new Date(req.body.hireDate) : null;
+    if (req.body.shift !== undefined) emp.shift = oid(req.body.shift);
 
     const next = {
         department: req.body.department !== undefined ? oid(req.body.department) : emp.department?._id || null,

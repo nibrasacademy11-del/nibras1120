@@ -28,6 +28,8 @@ const NAV = [
   { to: '/expenses', key: 'expensesNav', icon: '⊖', permission: 'expenses.view', minScope: 'all' },
   { to: '/currencies', key: 'currenciesNav', icon: '⇋', permission: 'currencies.view', minScope: 'all' },
   { to: '/periods', key: 'periodsNav', icon: '▥', permission: 'accounts.view', minScope: 'all' },
+  { to: '/attendance', key: 'attendanceNav', icon: '◷', permission: 'attendance.view' },
+  { to: '/leaves', key: 'leavesNav', icon: '☂', permission: 'leaves.view' },
   { to: '/tasks', key: 'tasks', icon: '✓', permission: 'tasks.view' },
   { to: '/access-requests', key: 'accessRequests', icon: '⇄', permission: 'access_requests.view' },
   { to: '/employees', key: 'employees', icon: '☺', permission: 'employees.view', minScope: 'team' },
