@@ -174,3 +174,90 @@ h2 { font-size: 1.15rem; margin: 0 0 12px; }
   .card { box-shadow: none; border: 0; }
   @page { size: A4; margin: 15mm; }
 }
+
+/* ---- Phase 1: CRM and HR screens ---- */
+.page-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.page-head .page-title { margin-bottom: 6px; }
+.page-title small { font-size: .9rem; font-weight: 500; }
+.grid--4 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.grid--2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.stat--link { text-decoration: none; color: inherit; transition: border-color .15s; }
+.stat--link:hover { border-color: var(--gold); }
+.pill--gold { background: var(--gold-light); color: var(--warn); }
+.pill--info { background: var(--info-bg); color: #2f4a7a; }
+.pill--muted { background: #eee8e2; color: var(--muted); }
+.pill { margin-inline-start: 4px; }
+.table--hover tbody tr { cursor: pointer; }
+.table--hover tbody tr:hover { background: var(--primary-light); }
+.late { color: var(--danger); }
+.tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.tag { font-size: .72rem; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0 6px; }
+.plain-list { list-style: none; margin: 0; padding: 0; }
+.plain-list li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.grow { flex: 1; min-width: 200px; }
+.lookup-form input { font: inherit; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; }
+.assign-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; position: sticky; top: 64px; z-index: 4; }
+.assign-bar select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border); }
+
+.modal { border: 0; border-radius: 16px; padding: 0; width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 32px); box-shadow: 0 24px 64px rgba(0,0,0,.3); background: var(--surface); color: var(--text); }
+.modal--wide { width: min(900px, calc(100vw - 32px)); }
+.modal::backdrop { background: rgba(29, 20, 22, .45); }
+.modal-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--surface); z-index: 1; }
+.modal-head h2 { margin: 0; }
+.modal-body { padding: 18px 20px; }
+.modal .stack { max-width: none; margin-top: 0; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.field--wide { grid-column: 1 / -1; }
+.form-grid h3 { margin: 6px 0 0; font-size: 1rem; color: var(--primary); }
+.stack--full { max-width: none; margin-bottom: 16px; }
+.checks { border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.checks legend { font-weight: 600; font-size: .9rem; padding: 0 4px; }
+.check { display: flex; gap: 8px; align-items: center; }
+.big-code { font-size: 1.4rem; padding: 10px 16px; text-align: center; display: block; }
+
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px 20px; }
+.info small { display: block; color: var(--muted); font-size: .8rem; }
+.info div { font-weight: 500; word-break: break-word; }
+
+.tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
+.tab { font: inherit; background: none; border: 0; padding: 10px 16px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -2px; white-space: nowrap; }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+
+.timeline { list-style: none; margin: 0; padding: 0; }
+.timeline li { padding: 10px 0 10px 0; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 170px 120px 1fr; gap: 4px 12px; }
+.timeline li small { grid-column: 3; }
+.tl-time { color: var(--muted); font-size: .85rem; }
+.tl-type { font-family: ui-monospace, Consolas, monospace; font-size: .78rem; color: var(--gold-dark, #8a6420); }
+.notes { list-style: none; padding: 0; margin: 0; }
+.notes li { border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; }
+.notes li.pinned { border-color: var(--gold); background: var(--gold-light); }
+.notes p { margin: 6px 0 0; white-space: pre-wrap; }
+.note-head { display: flex; gap: 10px; align-items: center; }
+.note-head .link { margin-inline-start: auto; text-decoration: none; }
+
+.bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.bars li { display: grid; grid-template-columns: 110px 1fr 50px; align-items: center; gap: 10px; }
+.bars a { color: var(--text); text-decoration: none; }
+.bar { height: 10px; background: var(--bg); border-radius: 6px; overflow: hidden; }
+.bar-fill { display: block; height: 100%; border-radius: 6px; background: var(--gold); }
+.bar--customer { background: var(--ok); }
+.bar--lead { background: #6b85b8; }
+.bar--interested { background: var(--gold); }
+.bar--lost { background: var(--danger); }
+.bar--inactive { background: #b7aaa3; }
+
+.bell { position: relative; }
+.bell .icon-btn { font-size: 1.15rem; position: relative; padding: 6px; }
+.badge { position: absolute; top: -2px; inset-inline-end: -4px; background: var(--danger); color: #fff; border-radius: 999px; font-size: .68rem; padding: 0 5px; min-width: 18px; line-height: 18px; text-align: center; }
+.bell-panel { position: absolute; inset-inline-end: 0; top: 44px; width: min(360px, calc(100vw - 32px)); max-height: 70vh; overflow-y: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); padding: 12px; z-index: 30; }
+.bell-panel ul { list-style: none; margin: 0; padding: 0; }
+.bell-panel li button { all: unset; display: flex; flex-direction: column; gap: 2px; padding: 10px 8px; border-radius: 8px; cursor: pointer; width: 100%; box-sizing: border-box; }
+.bell-panel li button:hover { background: var(--bg); }
+.bell-panel li.unread button { background: var(--primary-light); }
+
+@media (max-width: 900px) {
+  .timeline li { grid-template-columns: 1fr; }
+  .timeline li small { grid-column: 1; }
+  .bars li { grid-template-columns: 90px 1fr 40px; }
+  .assign-bar { top: 56px; }
+}

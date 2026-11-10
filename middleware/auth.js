@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Session = require('../models/Session');
 const { normalizeRole, isStaffRole, isAdminRole, scopeFor, hasScope } = require('../lib/permissions');
 const policyStore = require('../lib/policyStore');
+const { teamIdsFor } = require('../lib/teams');
 
 const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
 const WEAK_SECRETS = ['change-this-secret', 'replace-with-strong-secret'];
@@ -37,7 +38,7 @@ const SESSION_TOUCH_MS = 5 * 60 * 1000;
 async function userFromToken(token) {
     const payload = jwt.verify(token, getJwtSecret());
     if (payload.purpose) return null; // a 2FA challenge token is not a sign-in
-    const user = await User.findById(payload.id).select('name email role status tokenVersion twoFactor.enabled');
+    const user = await User.findById(payload.id).select('name email role status tokenVersion twoFactor.enabled mustChangePassword');
     if (!user || (user.tokenVersion || 0) !== (payload.tv || 0)) return null;
     if (user.status === 'disabled') return null;
 
@@ -66,21 +67,30 @@ async function userFromToken(token) {
         sid: session ? String(session._id) : null,
         twoFactorEnabled: !!(user.twoFactor && user.twoFactor.enabled),
         mustEnrollTwoFactor: twoFactorRequiredFor(role) && !(user.twoFactor && user.twoFactor.enabled),
-        // Filled from the teams module (phase 1); team scope matches nothing beyond the user's own records until then
-        teamIds: [],
+        mustChangePassword: !!user.mustChangePassword,
+        // Teams the user belongs to or leads: team-scoped permissions cover their records
+        teamIds: isStaffRole(role) ? await teamIdsFor(user._id) : [],
         grants: await policyStore.grantsForRole(role)
     };
 }
 
-// Paths a user who still has to turn on two-factor sign-in may reach
-const ENROLLMENT_PATHS = [/^\/api\/v2\/me(\/2fa(\/.*)?)?$/, /^\/api\/auth\/(me|logout)$/];
+// Paths a user who still has to change a temporary password, or turn on two-factor sign-in, may reach
+const PASSWORD_PATHS = [/^\/api\/v2\/me(\/password)?$/, /^\/api\/auth\/(me|logout)$/];
+const ENROLLMENT_PATHS = [/^\/api\/v2\/me(\/2fa(\/.*)?|\/password)?$/, /^\/api\/auth\/(me|logout)$/];
 
 const authRequired = async (req, res, next) => {
     try {
         const token = req.cookies.nibras_token;
         req.user = token ? await userFromToken(token) : null;
         if (!req.user) return res.status(401).json({ message: 'Unauthorized.' });
-        if (req.user.mustEnrollTwoFactor && !ENROLLMENT_PATHS.some((re) => re.test(req.originalUrl.split('?')[0]))) {
+        const path = req.originalUrl.split('?')[0];
+        if (req.user.mustChangePassword && !PASSWORD_PATHS.some((re) => re.test(path))) {
+            return res.status(403).json({
+                message: 'يجب تغيير كلمة المرور المؤقتة أولاً. / Change your temporary password first.',
+                code: 'PASSWORD_CHANGE_REQUIRED'
+            });
+        }
+        if (req.user.mustEnrollTwoFactor && !ENROLLMENT_PATHS.some((re) => re.test(path))) {
             return res.status(403).json({
                 message: 'يجب تفعيل التحقق بخطوتين أولاً. / Two-factor sign-in must be turned on first.',
                 code: 'TWO_FACTOR_ENROLLMENT_REQUIRED'

@@ -44,11 +44,33 @@ exports.me = async (req, res) => {
             twoFactorEnabled: !!user.twoFactor?.enabled,
             twoFactorRequired: twoFactorRequiredFor(req.user.role),
             mustEnrollTwoFactor: req.user.mustEnrollTwoFactor,
+            mustChangePassword: req.user.mustChangePassword,
             recoveryCodesLeft: user.twoFactor?.enabled ? (user.twoFactor.recoveryCodes || []).length : 0
         },
         sessionId: req.user.sid,
         grants: req.user.grants
     });
+};
+
+// Other devices are signed out; this one gets a fresh session with the new token version
+exports.changePassword = async (req, res) => {
+    const user = await loadSelf(req);
+    await confirmPassword(user, req.body.currentPassword);
+    const next = req.body.newPassword;
+    if (typeof next !== 'string' || next.length < 8) {
+        throw new HttpError(400, 'كلمة المرور الجديدة يجب ألا تقل عن 8 أحرف. / The new password must be at least 8 characters.', 'WEAK_PASSWORD');
+    }
+    if (await bcrypt.compare(next, user.password)) {
+        throw new HttpError(400, 'اختر كلمة مرور مختلفة عن الحالية. / Choose a password different from the current one.', 'SAME_PASSWORD');
+    }
+    user.password = await bcrypt.hash(next, 10);
+    user.mustChangePassword = false;
+    user.tokenVersion = (user.tokenVersion || 0) + 1;
+    await user.save();
+    await sessions.revokeAllSessions(user._id, { reason: 'password_changed' });
+    await sessions.startSession(req, res, user, { twoFactor: !!user.twoFactor?.enabled });
+    await audit.record(req, { action: 'security.password_changed', resource: 'users', resourceId: user._id, summary: 'Password changed' });
+    res.json({ message: 'تم تغيير كلمة المرور. / Password changed.' });
 };
 
 // Step 1: a new secret, kept pending until the user proves the app shows the right codes

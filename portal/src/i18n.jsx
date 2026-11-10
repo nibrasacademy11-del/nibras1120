@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { crmText, enumText } from './labels.js';
 
 const dict = {
   ar: {
@@ -166,6 +167,9 @@ const dict = {
   }
 };
 
+Object.assign(dict.ar, crmText.ar);
+Object.assign(dict.en, crmText.en);
+
 const I18nContext = createContext(null);
 
 function initialLang() {
@@ -199,9 +203,12 @@ export function I18nProvider({ children }) {
     (v) => (v ? new Date(v).toLocaleString(lang === 'ar' ? 'ar-EG' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '—'),
     [lang]
   );
+  // enum values from the API, e.g. en('status', 'lead')
+  const en = useCallback((group, value) => label(enumText[group] && enumText[group][value]) || value || '—', [label]);
+  const fmtDay = useCallback((v) => (v ? new Date(v).toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-GB', { dateStyle: 'medium' }) : '—'), [lang]);
   const toggle = useCallback(() => setLang((l) => (l === 'ar' ? 'en' : 'ar')), []);
 
-  const value = useMemo(() => ({ lang, t, label, fmtDate, toggle }), [lang, t, label, fmtDate, toggle]);
+  const value = useMemo(() => ({ lang, t, label, fmtDate, fmtDay, en, toggle }), [lang, t, label, fmtDate, fmtDay, en, toggle]);
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 

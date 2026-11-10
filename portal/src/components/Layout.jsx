@@ -2,12 +2,21 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
+import Notifications from './Notifications.jsx';
 
 // Menu entries appear only when the user holds the permission behind them
 const NAV = [
   { to: '/', key: 'dashboard', icon: '⌂', end: true },
+  { to: '/customers', key: 'customers', icon: '◉', permission: 'customers.view' },
+  { to: '/lookup', key: 'lookup', icon: '⌕', permission: 'customer_lookup.view' },
+  { to: '/tasks', key: 'tasks', icon: '✓', permission: 'tasks.view' },
+  { to: '/access-requests', key: 'accessRequests', icon: '⇄', permission: 'access_requests.view' },
+  { to: '/employees', key: 'employees', icon: '☺', permission: 'employees.view', minScope: 'team' },
+  { to: '/teams', key: 'teams', icon: '▦', permission: 'teams.view', minScope: 'team' },
+  { to: '/duplicates', key: 'duplicates', icon: '⧉', permission: 'customers.manage', minScope: 'all' },
   { to: '/roles', key: 'roles', icon: '◈', permission: 'roles.view', minScope: 'all' },
   { to: '/audit', key: 'audit', icon: '☰', permission: 'audit.view', minScope: 'all' },
+  { to: '/settings', key: 'settings', icon: '⚙', permission: 'settings.manage', minScope: 'all' },
   { to: '/security', key: 'security', icon: '⚿' }
 ];
 
@@ -16,6 +25,7 @@ export default function Layout({ children }) {
   const { t, label, toggle } = useI18n();
   const [open, setOpen] = useState(false);
   const isAdmin = ['super_admin', 'admin'].includes(me.user.role);
+  const locked = me.security.mustChangePassword;
 
   return (
     <div className={`shell${open ? ' shell--open' : ''}`}>
@@ -27,14 +37,16 @@ export default function Layout({ children }) {
             <small>{label(me.user.roleLabel)}</small>
           </div>
         </div>
-        <nav>
-          {NAV.filter((n) => !n.permission || can(n.permission, n.minScope)).map((n) => (
-            <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
-              <span className="nav-icon" aria-hidden="true">{n.icon}</span>
-              {t(n.key)}
-            </NavLink>
-          ))}
-        </nav>
+        {!locked && (
+          <nav>
+            {NAV.filter((n) => !n.permission || can(n.permission, n.minScope)).map((n) => (
+              <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
+                <span className="nav-icon" aria-hidden="true">{n.icon}</span>
+                {t(n.key)}
+              </NavLink>
+            ))}
+          </nav>
+        )}
         <div className="sidebar-foot">
           {isAdmin && <a className="nav-item" href="/pages/ar/admin.html">{t('oldPanel')}</a>}
           <a className="nav-item" href="/">{t('website')}</a>
@@ -44,10 +56,9 @@ export default function Layout({ children }) {
       <div className="main">
         <header className="topbar">
           <button type="button" className="icon-btn menu-btn" aria-label="Menu" onClick={() => setOpen((o) => !o)}>☰</button>
-          <div className="topbar-user">
-            <span>{me.user.name}</span>
-          </div>
+          <div className="topbar-user"><span>{me.user.name}</span></div>
           <div className="topbar-actions">
+            {!locked && me.user.isStaff && <Notifications />}
             <button type="button" className="btn btn--ghost" onClick={toggle}>{t('language')}</button>
             <button type="button" className="btn btn--ghost" onClick={signOut}>{t('signOut')}</button>
           </div>

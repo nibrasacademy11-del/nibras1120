@@ -23,6 +23,8 @@ const userSchema = new mongoose.Schema({
         recoveryCodes: [{ type: String }],               // sha256 hashes, each usable once
         enabledAt: Date
     },
+    // Set for accounts created with a temporary password; the portal asks for a new one first
+    mustChangePassword: { type: Boolean, default: false },
     lastLoginAt: Date
 }, { timestamps: true });
 

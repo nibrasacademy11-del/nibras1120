@@ -6,6 +6,7 @@ const { ROLES, LEGACY_ROLES, normalizeRole, isStaffRole } = require('../lib/perm
 const sessions = require('../lib/sessions');
 const audit = require('../lib/audit');
 const { checkSecondFactor } = require('../lib/twoFactor');
+const intake = require('../modules/crm/intake');
 
 const MIN_PASSWORD_LENGTH = 8;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -57,6 +58,8 @@ exports.register = async (req, res) => {
             role: 'student'
         });
         await user.save();
+        // New accounts get a customer file (or join the one opened from an earlier inquiry)
+        await intake.safely(() => intake.ingestUser(user), 'register');
 
         await sessions.startSession(req, res, user);
         res.status(201).json({ message: 'Account created successfully.', user: publicUser(user) });

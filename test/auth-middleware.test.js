@@ -10,6 +10,8 @@ delete process.env.REQUIRE_2FA;
 const User = require('../models/User');
 const Session = require('../models/Session');
 const RolePolicy = require('../models/RolePolicy');
+const Employee = require('../models/Employee');
+const Team = require('../models/Team');
 const { authRequired, requirePermission } = require('../middleware/auth');
 const policyStore = require('../lib/policyStore');
 
@@ -20,7 +22,10 @@ let users = {};
 let sessions = {};
 let policies = [];
 
-const query = (value) => ({ select: () => Promise.resolve(value), lean: () => Promise.resolve(value), then: (r, j) => Promise.resolve(value).then(r, j) });
+const query = (value) => {
+    const q = { select: () => q, lean: () => Promise.resolve(value), then: (r, j) => Promise.resolve(value).then(r, j) };
+    return q;
+};
 
 test.beforeEach(() => {
     users = {
@@ -33,6 +38,8 @@ test.beforeEach(() => {
     test.mock.method(Session, 'findOne', (f) => query(sessions[f._id] && String(sessions[f._id].user) === String(f.user) ? sessions[f._id] : null));
     test.mock.method(Session, 'updateOne', () => Promise.resolve({}));
     test.mock.method(RolePolicy, 'find', () => query(policies));
+    test.mock.method(Employee, 'findOne', () => query({ team: 't1' }));
+    test.mock.method(Team, 'find', () => query([{ _id: 't2' }]));
 });
 test.afterEach(() => test.mock.restoreAll());
 
@@ -61,6 +68,7 @@ test('valid session token signs the user in with their grants', async () => {
     assert.equal(r.req.user.role, 'employee');
     assert.equal(r.req.user.sid, SID);
     assert.equal(r.req.user.grants['customers.view'], 'own');
+    assert.deepEqual(r.req.user.teamIds.sort(), ['t1', 't2']);
 });
 
 test('revoked or foreign session is rejected', async () => {

@@ -3,6 +3,7 @@ import QRCode from 'qrcode';
 import { api, pickMessage } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
+import ChangePassword from './ChangePassword.jsx';
 
 function RecoveryCodes({ codes, onDone }) {
   const { t } = useI18n();
@@ -274,6 +275,7 @@ export default function Security() {
       <TwoFactorCard />
       {!me.security.mustEnrollTwoFactor && (
         <>
+          <ChangePassword />
           <DevicesCard />
           <HistoryCard />
         </>
