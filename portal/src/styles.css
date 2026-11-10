@@ -282,3 +282,17 @@ h2 { font-size: 1.15rem; margin: 0 0 12px; }
 .mini-modules { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
 .mini-modules .pill { font-size: .72rem; margin: 0; }
 .program-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+
+/* ---- Phase 3: finance ---- */
+.money { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.money small { color: var(--muted); font-weight: 500; }
+.receipt-head { display: flex; align-items: center; gap: 16px; border-bottom: 2px solid var(--primary); padding-bottom: 14px; margin-bottom: 16px; }
+.receipt-head img { width: 64px; height: 64px; object-fit: contain; }
+.receipt-head h1 { margin: 0; font-size: 1.4rem; }
+.receipt-head .pill { margin-inline-start: auto; }
+.receipt-foot { margin-top: 24px; font-size: .8rem; }
+@media print {
+  .no-print, .tabs { display: none !important; }
+  .receipt { border: 0; padding: 0; }
+  body { background: #fff; }
+}

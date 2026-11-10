@@ -7,6 +7,7 @@ import { EnumSelect, ErrorBox, Field, Loading, Modal, Pill, StaffSelect, fromLoc
 import { DuplicateList } from './Customers.jsx';
 import { TaskTable, TaskForm } from './Tasks.jsx';
 import { CustomerPrograms, ModuleStatus } from './Enrollments.jsx';
+import { CustomerFinance } from './Finance.jsx';
 
 // Programs on the card: each enrollment with its status and the status of each module
 export function ProgramSummary({ programs }) {
@@ -475,7 +476,7 @@ export default function CustomerDetail() {
         if (c.access === 'basic') return <BasicCard c={c} />;
         const s = c.permissions.sections;
         const tabs = [
-          ['overview', true], ['programs', c.access === 'full' && can('enrollments.view')], ['timeline', true], ['notes', s.notes], ['communications', s.contact], ['tasks', c.access === 'full' && can('tasks.view')], ['documents', s.documents]
+          ['overview', true], ['programs', c.access === 'full' && can('enrollments.view')], ['financial', s.financial], ['timeline', true], ['notes', s.notes], ['communications', s.contact], ['tasks', c.access === 'full' && can('tasks.view')], ['documents', s.documents]
         ].filter(([, show]) => show).map(([k]) => k);
         const reload = state.reload;
         return (
@@ -506,6 +507,7 @@ export default function CustomerDetail() {
 
             {tab === 'overview' && <Overview c={c} onReload={reload} />}
             {tab === 'programs' && <CustomerPrograms c={c} />}
+            {tab === 'financial' && <CustomerFinance c={c} />}
             {tab === 'timeline' && <Timeline id={c.id} />}
             {tab === 'notes' && <Notes c={c} />}
             {tab === 'communications' && <Communications c={c} />}

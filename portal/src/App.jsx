@@ -17,6 +17,7 @@ import { Duplicates, Settings } from './pages/Admin.jsx';
 import ChangePassword from './pages/ChangePassword.jsx';
 import Programs, { ProgramDetail } from './pages/Programs.jsx';
 import Enrollments, { EnrollmentDetail, MyPrograms, Reviews } from './pages/Enrollments.jsx';
+import Payments, { AccountStatement, Accounts, Approvals, Currencies, Expenses, FinanceSummary, MyPayments, PaymentDetail, Periods } from './pages/Finance.jsx';
 
 function Guard({ permission, minScope = 'own', children }) {
   const { can } = useAuth();
@@ -46,6 +47,16 @@ export default function App() {
       <Routes>
         <Route path="/" element={me.user.isStaff ? <Dashboard /> : <MyPrograms />} />
         <Route path="/my-programs" element={<MyPrograms />} />
+        <Route path="/my-payments" element={<MyPayments />} />
+        <Route path="/finance" element={<Guard permission="payments.view" minScope="all"><FinanceSummary /></Guard>} />
+        <Route path="/payments" element={<Guard permission="payments.view"><Payments /></Guard>} />
+        <Route path="/payments/:id" element={<PaymentDetail />} />
+        <Route path="/approvals" element={<Guard permission="payments.view"><Approvals /></Guard>} />
+        <Route path="/accounts" element={<Guard permission="accounts.view" minScope="all"><Accounts /></Guard>} />
+        <Route path="/accounts/:id" element={<Guard permission="accounts.view" minScope="all"><AccountStatement /></Guard>} />
+        <Route path="/expenses" element={<Guard permission="expenses.view" minScope="all"><Expenses /></Guard>} />
+        <Route path="/currencies" element={<Guard permission="currencies.view" minScope="all"><Currencies /></Guard>} />
+        <Route path="/periods" element={<Guard permission="accounts.view" minScope="all"><Periods /></Guard>} />
         <Route path="/programs" element={<Guard permission="programs.view"><Programs /></Guard>} />
         <Route path="/programs/:id" element={<Guard permission="programs.view"><ProgramDetail /></Guard>} />
         <Route path="/enrollments" element={<Guard permission="enrollments.view"><Enrollments /></Guard>} />

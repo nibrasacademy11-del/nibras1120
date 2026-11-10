@@ -45,7 +45,9 @@ async function approvedSections(userId, customerId) {
 const SETTING_DEFAULTS = {
     'customers.lookupNamePolicy': 'partial',
     // A module goes to the team leader before the admin when the enrollment's team has a leader
-    'enrollments.teamLeaderReview': true
+    'enrollments.teamLeaderReview': true,
+    // The academy's reporting currency. Changed only from the finance setup page, before any transaction.
+    'finance.baseCurrency': 'SAR'
 };
 
 async function getSetting(key) {

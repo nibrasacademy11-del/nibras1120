@@ -15,6 +15,8 @@ const documents = require('../modules/crm/documentController');
 const home = require('../modules/crm/homeController');
 const programs = require('../modules/learning/programController');
 const enrollments = require('../modules/learning/enrollmentController');
+const finSetup = require('../modules/finance/setupController');
+const money = require('../modules/finance/moneyController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -131,6 +133,41 @@ router.put('/enrollments/:id', validId(), can('enrollments.update'), handle(enro
 router.post('/enrollments/:id/sync-modules', validId(), can('enrollments.update'), handle(enrollments.syncModules));
 router.post('/enrollments/:id/modules/:moduleId', validId(), validId('moduleId'), can('enrollments.view'), handle(enrollments.transition));
 router.get('/customers/:id/enrollments', validId(), can('enrollments.view'), handle(enrollments.forCustomer));
+
+// ---- finance: setup ----
+router.get('/finance/currencies', can('payments.view'), handle(finSetup.listCurrencies));
+router.post('/finance/currencies', all('currencies.manage'), handle(finSetup.saveCurrency));
+router.post('/finance/base-currency', all('currencies.manage'), handle(finSetup.setBaseCurrency));
+router.get('/finance/rates', all('currencies.view'), handle(finSetup.listRates));
+router.post('/finance/rates', all('currencies.update'), handle(finSetup.addRate));
+router.get('/finance/accounts', can('payments.create'), handle(finSetup.listAccounts));
+router.post('/finance/accounts', all('accounts.create'), handle(finSetup.saveAccount));
+router.put('/finance/accounts/:id', validId(), all('accounts.update'), handle(finSetup.saveAccount));
+router.get('/finance/accounts/:id/statement', validId(), all('accounts.view'), handle(finSetup.accountStatement));
+router.get('/finance/periods', all('accounts.view'), handle(finSetup.listPeriods));
+router.post('/finance/periods/:key', all('accounts.approve'), handle(finSetup.setPeriod));
+
+// ---- finance: customer money ----
+router.get('/my/finance', handle(money.myFinance));
+router.get('/customers/:id/finance', validId(), can('customer_financial.view'), handle(money.customerFinance));
+router.post('/charges', can('customer_financial.create'), handle(money.createCharge));
+router.post('/charges/:id/discount', validId(), can('customer_financial.update'), handle(money.requestDiscount));
+router.post('/charges/:id/cancel', validId(), all('payments.approve'), handle(money.cancelCharge));
+router.get('/payments', can('payments.view'), handle(money.listPayments));
+router.post('/payments', can('payments.create'), handle(money.createPayment));
+router.get('/payments/:id', validId(), handle(money.getPayment));
+router.post('/payments/:id/confirm', validId(), all('payments.update'), handle(money.confirmPayment));
+router.post('/payments/:id/void', validId(), can('payments.view'), handle(money.requestVoid));
+router.post('/payments/:id/refunds', validId(), can('payments.view'), handle(money.requestRefund));
+router.get('/approvals', can('payments.view'), handle(money.listApprovals));
+router.post('/approvals/:id/decide', validId(), all('payments.approve'), handle(money.decideApproval));
+
+// ---- finance: academy money ----
+router.get('/expenses', all('expenses.view'), handle(money.listExpenses));
+router.post('/expenses', all('expenses.create'), handle(money.createExpense));
+router.post('/expenses/:id/void', validId(), all('expenses.view'), handle(money.requestExpenseVoid));
+router.post('/transfers', all('accounts.update'), handle(money.createTransfer));
+router.get('/finance/summary', all('payments.view'), handle(money.summary));
 
 // ---- tasks and follow-ups ----
 router.get('/tasks', can('tasks.view'), handle(activity.listTasks));
