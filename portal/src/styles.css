@@ -338,3 +338,47 @@ input[type="month"] { font: inherit; padding: 8px 10px; border: 1px solid var(--
   .cert-sheet { box-shadow: none; margin: 0; width: 297mm; height: 210mm; font-size: 12pt; break-after: page; }
   .content { max-width: none; }
 }
+
+/* ---- Phase 6: reports, A4 printing, analytics ---- */
+.print-only { display: none; }
+.report-list { columns: 2; margin: 0; padding-inline-start: 20px; }
+.report-list li { margin-bottom: 6px; }
+.report-totals { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-bottom: 12px; padding: 10px 12px; background: var(--bg); border-radius: 10px; }
+.report-table td.num, .report-table th.num { text-align: end; font-variant-numeric: tabular-nums; }
+.report-foot { margin: 10px 0 0; font-size: .85rem; }
+.hbars { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.hbars li { display: grid; grid-template-columns: minmax(110px, 40%) 1fr auto; gap: 10px; align-items: center; }
+.hbar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.trend { display: flex; align-items: flex-end; gap: 2px; height: 120px; border-bottom: 1px solid var(--border); }
+.trend span { flex: 1; background: var(--gold); border-radius: 3px 3px 0 0; min-height: 2px; }
+.stars { display: inline-flex; gap: 4px; direction: ltr; }
+.stars button { background: none; border: 0; font-size: 2rem; color: #d8cfc4; cursor: pointer; line-height: 1; padding: 0; }
+.stars button.on { color: var(--gold); }
+.stars-static { color: var(--gold); letter-spacing: 1px; }
+
+@page { size: A4 portrait; margin: 14mm 12mm 16mm; @bottom-center { content: counter(page) " / " counter(pages); font-size: 9pt; color: #62555a; } }
+@page landscape-report { size: A4 landscape; margin: 12mm 10mm 14mm; @bottom-center { content: counter(page) " / " counter(pages); font-size: 9pt; color: #62555a; } }
+@media print {
+  .print-only { display: block; }
+  .print-header { display: flex !important; align-items: center; gap: 14px; border-bottom: 2px solid var(--primary); padding-bottom: 8px; margin-bottom: 12px; }
+  .print-header img { width: 46px; height: 46px; object-fit: contain; }
+  .print-header h1 { margin: 2px 0; font-size: 15pt; }
+  .print-header > div:nth-child(2) { flex: 1; }
+  .print-sub { font-size: 9pt; color: #62555a; }
+  .print-meta { font-size: 8.5pt; color: #62555a; text-align: end; }
+  body.print-landscape .content { page: landscape-report; }
+  .shell, .main { display: block; }
+  .content { padding: 0; max-width: none; }
+  .card { border: 0; box-shadow: none; padding: 0; margin-bottom: 10px; break-inside: auto; }
+  .grid { gap: 8px; }
+  .stat { border: 1px solid #ddd !important; padding: 8px !important; break-inside: avoid; }
+  .table { font-size: 8.5pt; }
+  .table th, .table td { padding: 4px 6px; border-bottom: 0.5pt solid #ccc; }
+  .table thead { display: table-header-group; }
+  .table tr { break-inside: avoid; page-break-inside: avoid; }
+  .table-wrap { overflow: visible; }
+  .table--hover tbody tr:hover { background: none; }
+  a { color: inherit; text-decoration: none; }
+  .tabs, .filters, .pager, .modal { display: none !important; }
+  .page-title { font-size: 14pt; }
+}

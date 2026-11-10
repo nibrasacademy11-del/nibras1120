@@ -19,6 +19,9 @@ const finSetup = require('../modules/finance/setupController');
 const money = require('../modules/finance/moneyController');
 const commissions = require('../modules/commission/commissionController');
 const certs = require('../modules/learning/certificateController');
+const complaints = require('../modules/crm/complaintController');
+const reports = require('../modules/reports/reportController');
+const analytics = require('../modules/reports/analyticsController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -201,6 +204,21 @@ router.get('/certificates', can('certificates.view'), handle(certs.list));
 router.get('/certificates/:id', validId(), handle(certs.get));
 router.post('/certificates/:id/status', validId(), all('certificates.archive'), handle(certs.setStatus));
 router.post('/certificates/:id/reissue', validId(), all('certificates.create'), handle(certs.reissue));
+
+// ---- complaints and satisfaction ----
+router.get('/complaints/meta', handle(complaints.meta));
+router.get('/complaints', can('complaints.view'), handle(complaints.list));
+router.post('/complaints', can('complaints.create'), handle(complaints.create));
+router.put('/complaints/:id', validId(), can('complaints.update'), handle(complaints.update));
+router.post('/my/ratings', handle(complaints.rate));
+router.get('/my/ratings', handle(complaints.myRatings));
+
+// ---- reports and analytics ----
+router.get('/reports', handle(reports.list));
+router.get('/reports/:id', handle(reports.run));
+router.get('/reports/:id/xlsx', handle(reports.exportXlsx));
+router.post('/reports/printed', handle(reports.printed));
+router.get('/analytics', can('reports.view', 'team'), handle(analytics.overview));
 
 // ---- tasks and follow-ups ----
 router.get('/tasks', can('tasks.view'), handle(activity.listTasks));

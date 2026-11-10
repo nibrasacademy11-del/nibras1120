@@ -8,6 +8,7 @@ import { DuplicateList } from './Customers.jsx';
 import { TaskTable, TaskForm } from './Tasks.jsx';
 import { CustomerPrograms, ModuleStatus } from './Enrollments.jsx';
 import { CustomerFinance } from './Finance.jsx';
+import { PrintButton, PrintHeader } from '../components/Print.jsx';
 
 // Programs on the card: each enrollment with its status and the status of each module
 export function ProgramSummary({ programs }) {
@@ -492,7 +493,8 @@ export default function CustomerDetail() {
                 </div>
               </div>
               {c.access === 'full' && c.status !== 'merged' && (
-                <div className="row">
+                <div className="row no-print">
+                  <PrintButton what={`customer:${c.customerNo}`} title={c.customerNo} />
                   {(c.permissions.canEdit || c.permissions.canEditSection.contact || c.permissions.canEditSection.identity) && <button type="button" className="btn btn--primary" onClick={() => setDialog('edit')}>{t('edit')}</button>}
                   {c.permissions.canManage && <button type="button" className="btn btn--ghost" onClick={() => setDialog('transfer')}>{t('transfer')}</button>}
                   {can('customers.manage', 'all') && <button type="button" className="btn btn--ghost" onClick={() => setDialog('merge')}>{t('merge')}</button>}
@@ -501,6 +503,7 @@ export default function CustomerDetail() {
               )}
             </div>
 
+            <PrintHeader title={`${c.customerNo} — ${c.nameAr}`} subtitle={t(tab)} />
             <div className="tabs" role="tablist">
               {tabs.map((k) => <button key={k} type="button" role="tab" aria-selected={tab === k} className={`tab${tab === k ? ' active' : ''}`} onClick={() => setTab(k)}>{t(k)}</button>)}
             </div>

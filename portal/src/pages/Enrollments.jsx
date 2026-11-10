@@ -5,6 +5,8 @@ import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { ErrorBox, Field, Loading, Modal, Pager, Pill, StaffSelect, useAction, useLoad } from '../components/ui.jsx';
 import { SplitEditor } from './Commissions.jsx';
+import { PrintButton, PrintHeader } from '../components/Print.jsx';
+import { RateDialog } from './Complaints.jsx';
 
 const ENROLLMENT_STATUSES = ['active', 'on_hold', 'completed', 'withdrawn', 'cancelled'];
 const MODULE_STATUSES = ['not_started', 'in_progress', 'ready_for_review', 'approved', 'rejected', 'certificate_issued'];
@@ -163,7 +165,8 @@ export function EnrollmentDetail() {
     <Loading state={state}>
       {({ item: e }) => (
         <>
-          <Link to="/enrollments" className="muted">← {t('enrollmentsNav')}</Link>
+          <PrintHeader title={`${e.enrollmentNo} — ${e.programTitleAr}`} subtitle={`${e.customer.customerNo} ${e.customer.nameAr}`} />
+          <Link to="/enrollments" className="muted no-print">← {t('enrollmentsNav')}</Link>
           <div className="page-head">
             <div>
               <h1 className="page-title">{label({ ar: e.programTitleAr, en: e.programTitleEn })} <small className="muted" dir="ltr">{e.enrollmentNo}</small></h1>
@@ -173,6 +176,7 @@ export function EnrollmentDetail() {
               </div>
             </div>
             <div className="row">
+              <PrintButton what={`enrollment:${e.enrollmentNo}`} title={e.enrollmentNo} />
               {e.permissions?.canUpdate && <button type="button" className="btn btn--primary" onClick={() => setEditing(true)}>{t('edit')}</button>}
               {e.permissions?.canUpdate && <button type="button" className="btn btn--ghost" onClick={sync}>{t('syncModules')}</button>}
             </div>
@@ -352,6 +356,9 @@ export function CustomerPrograms({ c }) {
 export function MyPrograms() {
   const { t, en, label, fmtDay } = useI18n();
   const state = useLoad('/api/v2/my/enrollments');
+  const ratings = useLoad('/api/v2/my/ratings');
+  const [rating, setRating] = useState(null);
+  const rated = Object.fromEntries((ratings.data?.items || []).filter((r) => r.enrollment).map((r) => [String(r.enrollment), r.score]));
   return (
     <>
       <h1 className="page-title">{t('myPrograms')}</h1>
@@ -363,12 +370,13 @@ export function MyPrograms() {
                 <h2>{label({ ar: e.programTitleAr, en: e.programTitleEn })}</h2>
                 <div className="module-meta">{t('enrolledAt')}: {fmtDay(e.enrolledAt)}{e.cohort ? ` · ${label({ ar: e.cohort.nameAr, en: e.cohort.nameEn })}${e.cohort.schedule ? ` (${e.cohort.schedule})` : ''}` : ''}</div>
               </div>
-              <div className="row"><ProgressBar progress={e.progress} /><Pill tone={e.status === 'completed' ? 'ok' : 'info'}>{en('enrollmentStatus', e.status)}</Pill></div>
+              <div className="row"><ProgressBar progress={e.progress} /><Pill tone={e.status === 'completed' ? 'ok' : 'info'}>{en('enrollmentStatus', e.status)}</Pill>{rated[e._id] ? <span className="stars-static">{'★'.repeat(rated[e._id])}</span> : <button type="button" className="btn btn--small" onClick={() => setRating(e)}>{t('rateUs')}</button>}</div>
             </div>
             <ol className="module-list">{e.modules.map((m) => <ModuleCard key={m.module} e={e} m={m} readOnly onChanged={() => {}} />)}</ol>
           </section>
         )))}
       </Loading>
+      {rating && <RateDialog kind="program" enrollment={rating._id} title={label({ ar: rating.programTitleAr, en: rating.programTitleEn })} onClose={() => setRating(null)} onDone={() => { setRating(null); ratings.reload(); }} />}
     </>
   );
 }
