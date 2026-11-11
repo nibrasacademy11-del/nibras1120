@@ -18,6 +18,7 @@ function configChecks() {
         { key: 'EMAIL_USER / EMAIL_PASS', ok: isSet('EMAIL_USER') && isSet('EMAIL_PASS'), required: true, note: 'password reset and notifications' },
         { key: 'CRON_SECRET', ok: isSet('CRON_SECRET', 16), required: false, note: 'daily follow-up reminders' },
         { key: 'ZOOM_ACCOUNT_ID / ZOOM_CLIENT_ID / ZOOM_CLIENT_SECRET', ok: isSet('ZOOM_ACCOUNT_ID') && isSet('ZOOM_CLIENT_ID') && isSet('ZOOM_CLIENT_SECRET'), required: false, note: 'lectures created on Zoom, personal links, attendance' },
+        { key: 'R2_ACCOUNT_ID / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY / R2_BUCKET', ok: require('../../lib/r2').isConfigured(), required: false, note: 'uploaded files in Cloudflare R2 instead of the database' },
         { key: 'ATTENDANCE_SYNC_SECRET', ok: isSet('ATTENDANCE_SYNC_SECRET', 32), required: false, note: 'offline attendance server' },
         { key: 'REQUIRE_2FA', ok: ['admins', 'staff'].includes(String(process.env.REQUIRE_2FA || '').toLowerCase()), required: false, note: 'recommended: admins' },
         { key: 'NODE_ENV=production', ok: prod, required: true }

@@ -2,6 +2,7 @@ const SiteSettings = require('../models/SiteSettings');
 const Testimonial = require('../models/Testimonial');
 const Media = require('../models/Media');
 const Course = require('../models/Course');
+const r2 = require('../lib/r2');
 const defaults = require('../assets/js/site-content');
 
 const MEDIA_URL = /^\/api\/media\/[0-9a-f]{24}$/;
@@ -208,7 +209,11 @@ async function sweepOrphanMedia() {
     ]);
     const used = JSON.stringify([settings, courses, testimonials]);
     const orphans = old.filter((m) => !used.includes(String(m._id))).map((m) => m._id);
-    if (orphans.length) await Media.deleteMany({ _id: { $in: orphans } });
+    if (!orphans.length) return;
+    // Their bytes in R2 go too (a failure only leaves an unused object behind)
+    const inR2 = await Media.find({ _id: { $in: orphans }, r2Key: { $ne: '' } }).select('r2Key').lean();
+    for (const m of inR2) await r2.del(m.r2Key).catch(() => {});
+    await Media.deleteMany({ _id: { $in: orphans } });
 }
 
 exports.uploadMedia = async (req, res) => {
@@ -216,7 +221,14 @@ exports.uploadMedia = async (req, res) => {
         if (!req.file || !req.file.buffer) return res.status(400).json({ message: 'لم يتم اختيار صورة.' });
         const mimetype = sniffImage(req.file.buffer);
         if (!mimetype) return res.status(400).json({ message: 'الملف ليس صورة صالحة (JPG أو PNG أو WebP).' });
-        const media = await Media.create({ data: req.file.buffer, mimetype, size: req.file.size });
+        let media;
+        if (r2.isConfigured()) {
+            const r2Key = r2.newKey('media', '');
+            await r2.put(r2Key, req.file.buffer, mimetype);
+            media = await Media.create({ r2Key, mimetype, size: req.file.size });
+        } else {
+            media = await Media.create({ data: req.file.buffer, mimetype, size: req.file.size });
+        }
         sweepOrphanMedia().catch((err) => console.error('Media sweep failed:', err.message));
         res.status(201).json({ url: media.url() });
     } catch (error) {
@@ -229,12 +241,14 @@ exports.getMedia = async (req, res) => {
     try {
         const media = await Media.findById(req.params.id);
         if (!media) return res.status(404).json({ message: 'Not found.' });
+        const data = media.r2Key ? await r2.get(media.r2Key) : media.data;
+        if (!data) return res.status(404).json({ message: 'Not found.' });
         // An id always names the same bytes, so browsers and the CDN may keep it for a year
         res.setHeader('Content-Type', media.mimetype);
-        res.setHeader('Content-Length', media.data.length);
+        res.setHeader('Content-Length', data.length);
         res.setHeader('Cache-Control', 'public, max-age=31536000, s-maxage=31536000, immutable');
         res.setHeader('ETag', `"${media._id}"`);
-        res.send(media.data);
+        res.send(data);
     } catch (error) {
         res.status(500).json({ message: 'Could not load image.' });
     }
