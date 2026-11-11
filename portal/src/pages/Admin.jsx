@@ -74,7 +74,7 @@ function MergeDialog({ keep, others, onClose, onDone }) {
 export function Settings() {
   const { t } = useI18n();
   const state = useLoad('/api/v2/settings');
-  const [policy, setPolicy] = useState(null);
+  const [changes, setChanges] = useState({});
   const [reason, setReason] = useState('');
   const [saved, setSaved] = useState(false);
   const { busy, error, run } = useAction();
@@ -83,11 +83,18 @@ export function Settings() {
       <h1 className="page-title">{t('settings')}</h1>
       <Loading state={state}>
         {(d) => {
-          const current = policy || d.settings['customers.lookupNamePolicy'];
+          const val = (k) => (changes[k] !== undefined ? changes[k] : d.settings[k]);
+          const change = (k, v) => setChanges({ ...changes, [k]: v });
           return (
-            <form className="card stack" onSubmit={(e) => { e.preventDefault(); setSaved(false); run(() => api('/api/v2/settings', { method: 'PUT', body: { reason, settings: { 'customers.lookupNamePolicy': current } } })).then(() => { setSaved(true); setReason(''); state.reload(); }).catch(() => {}); }}>
+            <form className="card stack" onSubmit={(e) => { e.preventDefault(); setSaved(false); run(() => api('/api/v2/settings', { method: 'PUT', body: { reason, settings: changes } })).then(() => { setSaved(true); setReason(''); setChanges({}); state.reload(); }).catch(() => {}); }}>
+              <Field label={t('setPaymentRule')}>
+                <select value={val('certificates.paymentRule')} onChange={(e) => change('certificates.paymentRule', e.target.value)}>
+                  {['customer', 'enrollment', 'off'].map((x) => <option key={x} value={x}>{t(`pay_${x}`)}</option>)}
+                </select>
+              </Field>
+              <Field label={t('presentPercent')}><input type="number" min={1} max={100} value={val('lectures.presentPercent')} onChange={(e) => change('lectures.presentPercent', Number(e.target.value))} /></Field>
               <Field label={t('lookupNamePolicy')}>
-                <select value={current} onChange={(e) => setPolicy(e.target.value)}>
+                <select value={val('customers.lookupNamePolicy')} onChange={(e) => change('customers.lookupNamePolicy', e.target.value)}>
                   <option value="partial">{t('namePartial')}</option>
                   <option value="full">{t('nameFull')}</option>
                 </select>
@@ -95,7 +102,7 @@ export function Settings() {
               <Field label={t('reason')}><input required value={reason} onChange={(e) => setReason(e.target.value)} /></Field>
               <ErrorBox error={error} />
               {saved && <div className="alert alert--ok">{t('saved')}</div>}
-              <div><button className="btn btn--primary" disabled={busy}>{t('save')}</button></div>
+              <div><button className="btn btn--primary" disabled={busy || !Object.keys(changes).length}>{t('save')}</button></div>
             </form>
           );
         }}

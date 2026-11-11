@@ -5,6 +5,57 @@ import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { ErrorBox, Field, Loading, Modal, Pager, Pill, useAction, useLoad } from '../components/ui.jsx';
+import { owed } from './GroupCertificates.jsx';
+
+const PAPER_TONE = { none: 'muted', printed: 'info', ready: 'gold', shipped: 'info', delivered: 'ok' };
+const NEXT_STEPS = { none: ['printed'], printed: ['ready', 'shipped'], ready: ['delivered'], shipped: ['delivered'], delivered: [] };
+
+// Email and the paper copy: what was done, and the next step
+function DeliveryCard({ c, canUpdate, onChanged }) {
+  const { t, fmtDate } = useI18n();
+  const dl = c.delivery || { paper: { status: 'none' }, log: [] };
+  const paper = dl.paper || { status: 'none' };
+  const [step, setStep] = useState(null);
+  const [f, setF] = useState({ note: '', carrier: '', trackingNo: '', receivedBy: '' });
+  const [msg, setMsg] = useState('');
+  const { busy, error, run } = useAction();
+  const email = () => run(() => api(`/api/v2/certificates/${c._id}/email`, { method: 'POST' })).then((r) => { setMsg(`${t('cdEmailed')}: ${r.to}`); onChanged(); }).catch(() => {});
+  const save = (e) => { e.preventDefault(); run(() => api(`/api/v2/certificates/${c._id}/delivery`, { method: 'POST', body: { step, ...f } })).then(() => { setStep(null); setF({ note: '', carrier: '', trackingNo: '', receivedBy: '' }); onChanged(); }).catch(() => {}); };
+  const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
+  return (
+    <section className="card no-print">
+      <h2>{t('cdDelivery')}</h2>
+      {c.paymentWaiver && <div className="alert alert--warn">{t('cdWaived')}: {c.paymentWaiver}</div>}
+      <div className="info-grid">
+        <div className="info"><small>{t('cdEmailed')}</small><div>{dl.emailedAt ? <>{fmtDate(dl.emailedAt)} <small className="muted" dir="ltr">{dl.emailedTo}</small></> : <span className="muted">{t('cdNotEmailed')}</span>}</div></div>
+        <div className="info"><small>{t('cdViewed')}</small><div>{dl.viewedAt ? fmtDate(dl.viewedAt) : <span className="muted">{t('cdNotViewed')}</span>}</div></div>
+        <div className="info"><small>{t('cdPaper')}</small><div><Pill tone={PAPER_TONE[paper.status]}>{t(`paper_${paper.status}`)}</Pill>{paper.trackingNo && <small dir="ltr"> {paper.carrier} {paper.trackingNo}</small>}{paper.receivedBy && <small> · {paper.receivedBy}</small>}</div></div>
+      </div>
+      {canUpdate && c.status === 'Valid' && (
+        <div className="row">
+          <button type="button" className="btn btn--small" disabled={busy} onClick={email}>{dl.emailedAt ? t('cdResend') : t('cdSendEmail')}</button>
+          {(NEXT_STEPS[paper.status] || []).map((s) => <button key={s} type="button" className="btn btn--small btn--ghost" onClick={() => setStep(s)}>{t(`step_${s}`)}</button>)}
+        </div>
+      )}
+      {msg && <div className="alert alert--ok">{msg}</div>}
+      <ErrorBox error={error} />
+      {step && (
+        <form className="form-grid" onSubmit={save}>
+          {step === 'shipped' && <><Field label={t('cdCarrier')}><input value={f.carrier} onChange={set('carrier')} /></Field><Field label={t('cdTracking')}><input dir="ltr" value={f.trackingNo} onChange={set('trackingNo')} /></Field></>}
+          {step === 'delivered' && <Field label={`${t('cdReceivedBy')} *`}><input required value={f.receivedBy} onChange={set('receivedBy')} /></Field>}
+          <Field label={t('note')}><input value={f.note} onChange={set('note')} /></Field>
+          <div className="row field--wide"><button className="btn btn--primary" disabled={busy}>{t(`step_${step}`)}</button><button type="button" className="btn btn--ghost" onClick={() => setStep(null)}>{t('cancel')}</button></div>
+        </form>
+      )}
+      {(dl.log || []).length > 0 && (
+        <>
+          <h3>{t('cdLog')}</h3>
+          <ul className="plain-list">{dl.log.slice().reverse().map((l, i) => <li key={i}><span>{PAPER_TONE[l.step] ? t(`paper_${l.step}`) : t(`step_${l.step}`)}{l.note ? ` — ${l.note}` : ''}</span><small className="muted">{l.byName} · {fmtDate(l.at)}</small></li>)}</ul>
+        </>
+      )}
+    </section>
+  );
+}
 
 const TONE = { Valid: 'ok', Suspended: 'gold', Cancelled: 'warn', Expired: 'muted', Replaced: 'muted' };
 const SAMPLE = { kind: 'module', name: 'سارة أحمد علي', nameEn: 'Sara Ahmed Ali', program: 'دبلوم إدارة المشاريع الاحترافية', programEn: 'Professional Project Management Diploma', module: 'إدارة المخاطر', moduleEn: 'Risk Management', date: new Date().toISOString().slice(0, 10), number: 'NC-0000000', hours: 24 };
@@ -136,6 +187,10 @@ export function CertificateDetail() {
               </div>
             </section>
           )}
+          {me.user.isStaff && c.kind !== 'legacy' && <DeliveryCard c={c} canUpdate={can('certificates.update')} onChanged={state.reload} />}
+          {!me.user.isStaff && c.delivery?.paper && c.delivery.paper.status !== 'none' && (
+            <section className="card no-print"><p>{t('cdPaperYours')}: <Pill tone={PAPER_TONE[c.delivery.paper.status]}>{t(`paper_${c.delivery.paper.status}`)}</Pill>{c.delivery.paper.trackingNo && <small dir="ltr"> {c.delivery.paper.carrier} {c.delivery.paper.trackingNo}</small>}</p></section>
+          )}
           {me.user.isStaff && (
             <section className="card no-print">
               <h2>{t('history')}</h2>
@@ -197,10 +252,11 @@ export default function Certificates() {
   const { can } = useAuth();
   const navigate = useNavigate();
   const [tab, setTab] = useState('issued');
-  const [filter, setFilter] = useState({ q: '', status: '', page: 1 });
+  const [filter, setFilter] = useState({ q: '', status: '', delivery: '', page: 1 });
   const q = new URLSearchParams({ page: String(filter.page), limit: '50' });
   if (filter.q) q.set('q', filter.q);
   if (filter.status) q.set('status', filter.status);
+  if (filter.delivery) q.set('delivery', filter.delivery);
   const state = useLoad(tab === 'issued' ? `/api/v2/certificates?${q}` : null, [tab]);
   const tabs = ['issued', ...(can('certificates.create', 'all') ? ['eligibleTab'] : []), ...(can('certificates.manage', 'all') ? ['templatesTab', 'accreditationsTab'] : [])];
   return (
@@ -212,6 +268,7 @@ export default function Certificates() {
           <div className="card filters">
             <Field label={t('search')}><input value={filter.q} onChange={(e) => setFilter({ ...filter, q: e.target.value, page: 1 })} placeholder="NC-0000001" /></Field>
             <Field label={t('status')}><select value={filter.status} onChange={(e) => setFilter({ ...filter, status: e.target.value, page: 1 })}><option value="">{t('all')}</option>{['Valid', 'Suspended', 'Cancelled', 'Expired', 'Replaced'].map((s) => <option key={s} value={s}>{t(`cs_${s}`)}</option>)}</select></Field>
+            <Field label={t('cdDelivery')}><select value={filter.delivery} onChange={(e) => setFilter({ ...filter, delivery: e.target.value, page: 1 })}>{['', 'not_emailed', 'paper_pending', 'paper_ready'].map((s) => <option key={s} value={s}>{t(`dlv_${s || 'all'}`)}</option>)}</select></Field>
           </div>
           <section className="card">
             <Loading state={state}>
@@ -219,11 +276,12 @@ export default function Certificates() {
                 <>
                   <div className="table-wrap">
                     <table className="table table--hover">
-                      <thead><tr><th>{t('certNo')}</th><th>{t('name')}</th><th>{t('program')}</th><th>{t('module')}</th><th>{t('date')}</th><th>{t('status')}</th></tr></thead>
+                      <thead><tr><th>{t('certNo')}</th><th>{t('name')}</th><th>{t('program')}</th><th>{t('module')}</th><th>{t('date')}</th><th>{t('status')}</th><th>{t('cdDelivery')}</th></tr></thead>
                       <tbody>{d.items.map((c) => (
                         <tr key={c._id} onClick={() => navigate(`/certificates/${c._id}`)}>
                           <td dir="ltr">{c.cert_num}</td><td>{c.trainee_name}</td><td>{c.program_name}</td><td>{c.moduleName || (c.kind === 'program' ? t('finalCert') : '—')}</td><td>{c.issue_date}</td>
                           <td><Pill tone={TONE[c.status]}>{t(`cs_${c.status}`)}</Pill></td>
+                          <td>{c.kind === 'legacy' ? '—' : <>{c.delivery?.emailedAt ? '✉ ' : ''}<Pill tone={PAPER_TONE[c.delivery?.paper?.status || 'none']}>{t(`paper_${c.delivery?.paper?.status || 'none'}`)}</Pill></>}</td>
                         </tr>
                       ))}</tbody>
                     </table>
@@ -244,13 +302,16 @@ export default function Certificates() {
 
 function Eligible() {
   const { t, fmtDay } = useI18n();
+  const { can } = useAuth();
+  const [email, setEmail] = useState(true);
+  const [waive, setWaive] = useState(null);
   const state = useLoad('/api/v2/certificates/eligible');
   const templates = useLoad('/api/v2/certificate-templates');
   const [selected, setSelected] = useState([]);
   const [results, setResults] = useState(null);
   const { busy, error, run } = useAction();
   const key = (i) => `${i.enrollment}:${i.module || 'final'}`;
-  const issue = () => run(() => api('/api/v2/certificates/issue-bulk', { method: 'POST', body: { items: state.data.items.filter((i) => selected.includes(key(i))).map((i) => ({ enrollment: i.enrollment, module: i.module })) } }))
+  const issue = () => run(() => api('/api/v2/certificates/issue-bulk', { method: 'POST', body: { email, items: state.data.items.filter((i) => selected.includes(key(i))).map((i) => ({ enrollment: i.enrollment, module: i.module })) } }))
     .then((d) => { setResults(d.results); setSelected([]); state.reload(); }).catch(() => {});
   return (
     <section className="card">
@@ -258,17 +319,18 @@ function Eligible() {
       <Loading state={state}>
         {(d) => (!d.items.length ? <p className="muted">{t('noData')}</p> : (
           <>
-            <div className="card-head"><span>{selected.length} {t('selected')}</span><button type="button" className="btn btn--primary" disabled={busy || !selected.length} onClick={issue}>{t('issueSelected')}</button></div>
+            <div className="card-head"><span>{selected.length} {t('selected')}</span><div className="row"><label className="check"><input type="checkbox" checked={email} onChange={(e) => setEmail(e.target.checked)} /> {t('cdIssueEmail')}</label><button type="button" className="btn btn--primary" disabled={busy || !selected.length} onClick={issue}>{t('issueSelected')}</button></div></div>
             <div className="table-wrap">
               <table className="table">
-                <thead><tr><th><input type="checkbox" aria-label="all" checked={selected.length === d.items.length} onChange={(e) => setSelected(e.target.checked ? d.items.map(key) : [])} /></th><th>{t('customer')}</th><th>{t('program')}</th><th>{t('certificate')}</th><th>{t('approved')}</th></tr></thead>
+                <thead><tr><th><input type="checkbox" aria-label="all" checked={selected.length > 0 && selected.length === d.items.filter((i) => !i.unpaid).length} onChange={(e) => setSelected(e.target.checked ? d.items.filter((i) => !i.unpaid).map(key) : [])} /></th><th>{t('customer')}</th><th>{t('program')}</th><th>{t('certificate')}</th><th>{t('approved')}</th><th>{t('cdUnpaid')}</th></tr></thead>
                 <tbody>{d.items.map((i) => (
                   <tr key={key(i)}>
-                    <td><input type="checkbox" aria-label={i.title} checked={selected.includes(key(i))} onChange={() => setSelected((s) => (s.includes(key(i)) ? s.filter((x) => x !== key(i)) : [...s, key(i)]))} /></td>
+                    <td><input type="checkbox" aria-label={i.title} disabled={!!i.unpaid} checked={selected.includes(key(i))} onChange={() => setSelected((s) => (s.includes(key(i)) ? s.filter((x) => x !== key(i)) : [...s, key(i)]))} /></td>
                     <td>{i.customer?.customerNo} {i.customer?.nameAr}</td>
                     <td>{i.program}<br /><small className="muted" dir="ltr">{i.enrollmentNo}</small></td>
                     <td>{i.kind === 'program' ? <Pill tone="ok">{t('finalCert')}</Pill> : i.title}</td>
                     <td>{fmtDay(i.approvedAt)}</td>
+                    <td>{i.unpaid ? <><small className="late" dir="ltr">{owed(i.unpaid)}</small>{can('certificates.manage', 'all') && <><br /><button type="button" className="btn btn--small btn--ghost" onClick={() => setWaive(i)}>{t('cdWaive')}</button></>}</> : '—'}</td>
                   </tr>
                 ))}</tbody>
               </table>
@@ -277,8 +339,26 @@ function Eligible() {
         ))}
       </Loading>
       <ErrorBox error={error} />
-      {results && <ul className="plain-list">{results.map((r, i) => <li key={i}>{r.ok ? <Link to={`/certificates/${r.id}`} dir="ltr">{r.cert_num}</Link> : <span className="warn">{r.message}</span>}</li>)}</ul>}
+      {results && <ul className="plain-list">{results.map((r, i) => <li key={i}>{r.ok ? <><Link to={`/certificates/${r.id}`} dir="ltr">{r.cert_num}</Link>{r.emailError && <small className="late"> {t('cdEmailError')}: {r.emailError}</small>}</> : <span className="warn">{r.message}</span>}</li>)}</ul>}
+      {waive && <WaiveDialog item={waive} email={email} onClose={() => setWaive(null)} onDone={() => { setWaive(null); state.reload(); }} />}
     </section>
+  );
+}
+
+function WaiveDialog({ item, email, onClose, onDone }) {
+  const { t } = useI18n();
+  const [reason, setReason] = useState('');
+  const { busy, error, run } = useAction();
+  return (
+    <Modal title={t('cdWaiveTitle')} onClose={onClose}>
+      <form className="stack" onSubmit={(e) => { e.preventDefault(); run(() => api('/api/v2/certificates/issue', { method: 'POST', body: { enrollment: item.enrollment, module: item.module, waivePayment: reason, email } })).then(onDone).catch(() => {}); }}>
+        <p>{item.customer?.customerNo} {item.customer?.nameAr} · {item.title}</p>
+        <div className="alert alert--warn">{t('cdUnpaid')}: <span dir="ltr">{owed(item.unpaid)}</span></div>
+        <Field label={`${t('cdWaiveReason')} *`}><input required value={reason} onChange={(e) => setReason(e.target.value)} /></Field>
+        <ErrorBox error={error} />
+        <div className="row"><button className="btn btn--danger" disabled={busy}>{t('cdWaive')}</button><button type="button" className="btn btn--ghost" onClick={onClose}>{t('cancel')}</button></div>
+      </form>
+    </Modal>
   );
 }
 
@@ -441,11 +521,22 @@ function AccreditationForm({ item, programs, onClose, onSaved }) {
 // ---- the customer's certificates ----
 
 export function MyCertificates() {
-  const { t } = useI18n();
+  const { t, label } = useI18n();
   const state = useLoad('/api/v2/my/certificates');
   return (
     <>
       <h1 className="page-title">{t('myCertificates')}</h1>
+      {state.data?.pending?.length > 0 && (
+        <section className="card">
+          <h2>{t('cdPending')}</h2>
+          <ul className="plain-list">{state.data.pending.map((p, i) => (
+            <li key={i}>
+              <span><strong>{label({ ar: p.titleAr, en: p.titleEn })}</strong>{!p.final && <small className="muted"> · {p.program}</small>}</span>
+              {p.remaining.length ? <span className="late">{t('cdPendingPay')}: <span dir="ltr">{owed(p.remaining)}</span></span> : <Pill tone="info">{t('cdPendingSoon')}</Pill>}
+            </li>
+          ))}</ul>
+        </section>
+      )}
       <section className="card">
         <Loading state={state}>
           {(d) => (!d.items.length ? <p className="muted">{t('noData')}</p> : (
@@ -453,6 +544,7 @@ export function MyCertificates() {
               <li key={c._id}>
                 <span><strong>{c.moduleName || c.program_name}</strong>{c.moduleName && <small className="muted"> · {c.program_name}</small>}</span>
                 <span dir="ltr">{c.cert_num} · {c.issue_date}</span>
+                {c.delivery?.paper && c.delivery.paper.status !== 'none' && <Pill tone={PAPER_TONE[c.delivery.paper.status]}>{t('cdPaperYours')}: {t(`paper_${c.delivery.paper.status}`)}</Pill>}
                 {c.kind === 'legacy' ? (c.pdf_url ? <a className="btn btn--small" href={c.pdf_url}>{t('download')}</a> : <span />) : <Link className="btn btn--small" to={`/certificates/${c._id}`}>{t('open_file')}</Link>}
               </li>
             ))}</ul>

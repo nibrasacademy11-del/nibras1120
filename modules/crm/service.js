@@ -54,7 +54,10 @@ const SETTING_DEFAULTS = {
     // The time zone attendance days and hours are counted in
     'attendance.timeZone': 'Africa/Cairo',
     // A member counts as present when Zoom shows them in at least this share of the lecture (percent)
-    'lectures.presentPercent': 50
+    'lectures.presentPercent': 50,
+    // A certificate is issued only when nothing is owed: on any of the customer's charges (customer),
+    // on the enrollment's charges (enrollment), or no check (off)
+    'certificates.paymentRule': 'customer'
 };
 
 async function getSetting(key) {

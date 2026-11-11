@@ -39,16 +39,7 @@ async function loadLecture(id) {
 const timeZone = () => getSetting('attendance.timeZone');
 const presentPercent = async () => Number(await getSetting('lectures.presentPercent')) || 50;
 
-// Held lectures (finished, not cancelled) and each member's presence in them
-async function attendanceStats(cohortId) {
-    const held = await Lecture.find({ cohort: cohortId, status: 'scheduled', startsAt: { $lt: new Date() } }).select('_id startsAt durationMin').lean();
-    const heldIds = held.filter((l) => L.endOf(l) < new Date()).map((l) => l._id);
-    const rows = await LectureAttendance.aggregate([
-        { $match: { lecture: { $in: heldIds }, present: true } },
-        { $group: { _id: '$customer', n: { $sum: 1 }, minutes: { $sum: '$minutes' } } }
-    ]);
-    return { held: heldIds.length, byCustomer: Object.fromEntries(rows.map((r) => [String(r._id), r])) };
-}
+const { attendanceStats } = groups;
 
 // ---- groups ----
 

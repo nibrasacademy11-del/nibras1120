@@ -44,7 +44,29 @@ const certificateSchema = new mongoose.Schema({
     replaces: { type: ObjectId, ref: 'Certificate', default: null },
     replacedBy: { type: ObjectId, ref: 'Certificate', default: null },
     statusReason: { type: String, default: '' },
-    statusHistory: [{ _id: false, status: String, reason: String, by: { type: ObjectId, ref: 'User' }, byName: String, at: Date }]
+    statusHistory: [{ _id: false, status: String, reason: String, by: { type: ObjectId, ref: 'User' }, byName: String, at: Date }],
+    // Getting the certificate to the customer: by email and in the portal, and the paper copy
+    delivery: {
+        emailedAt: { type: Date, default: null },
+        emailedTo: { type: String, default: '' },
+        emailCount: { type: Number, default: 0 },
+        viewedAt: { type: Date, default: null },          // the customer first opened it in the portal
+        paper: {
+            status: { type: String, enum: ['none', 'printed', 'ready', 'shipped', 'delivered'], default: 'none', index: true },
+            method: { type: String, enum: ['', 'pickup', 'shipping'], default: '' },
+            printedAt: { type: Date, default: null },
+            readyAt: { type: Date, default: null },
+            shippedAt: { type: Date, default: null },
+            carrier: { type: String, default: '', maxlength: 80 },
+            trackingNo: { type: String, default: '', maxlength: 80 },
+            deliveredAt: { type: Date, default: null },
+            receivedBy: { type: String, default: '', maxlength: 160 },
+            handedBy: { type: ObjectId, ref: 'User', default: null }
+        },
+        log: [{ _id: false, step: String, note: String, by: { type: ObjectId, ref: 'User' }, byName: String, at: Date }]
+    },
+    // Issued although the customer still owed money (an explicit, recorded decision)
+    paymentWaiver: { type: String, default: '' }
 }, {
     timestamps: true,
     toJSON: { virtuals: true },
@@ -63,7 +85,7 @@ for (const op of ['deleteOne', 'deleteMany', 'findOneAndDelete', 'findOneAndRemo
         throw new Error('Certificates cannot be deleted; cancel them instead.');
     });
 }
-const ISSUED_MUTABLE = new Set(['status', 'statusReason', 'statusHistory', 'replacedBy', 'userId', 'updatedAt', 'pdf_data', 'pdf_url', 'pdf_mimetype']);
+const ISSUED_MUTABLE = new Set(['status', 'statusReason', 'statusHistory', 'replacedBy', 'userId', 'updatedAt', 'pdf_data', 'pdf_url', 'pdf_mimetype', 'delivery']);
 certificateSchema.pre('save', function () {
     if (this.isNew || this.kind === 'legacy') return;
     const bad = this.modifiedPaths().map((p) => p.split('.')[0]).filter((p) => !ISSUED_MUTABLE.has(p));

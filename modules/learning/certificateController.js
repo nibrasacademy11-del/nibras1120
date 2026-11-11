@@ -10,7 +10,12 @@ const audit = require('../../lib/audit');
 const design = require('../../lib/certificateDesign');
 const { nextNumber } = require('../../lib/sequence');
 const { HttpError, assertVersion, paging, parseDate } = require('../../lib/http');
-const { addEvent, notify } = require('../crm/service');
+const { addEvent, notify, getSetting } = require('../crm/service');
+const User = require('../../models/User');
+const R = require('../../lib/certificateRules');
+const { outstandingFor } = require('../finance/balances');
+const { brandedEmail } = require('../../lib/brandEmail');
+const { isMailConfigured, createTransporter } = require('../../config/mailer');
 
 // Issuing, listing, revoking and reissuing certificates; templates and accreditations
 
@@ -104,9 +109,50 @@ async function templateFor(kind, templateId) {
 
 const isoDay = (d) => new Date(d).toISOString().slice(0, 10);
 
+// Whether the customer has paid everything the payment rule asks for before a certificate
+async function paymentCheck(enrollment) {
+    const rule = await getSetting('certificates.paymentRule');
+    if (rule === 'off') return { clear: true, byCurrency: [] };
+    return rule === 'enrollment' ? outstandingFor({ enrollment: enrollment._id }) : outstandingFor({ customer: enrollment.customer });
+}
+
+const portalCertUrl = (id) => `${siteUrl()}/portal/certificates/${id}`;
+
+// Sends the certificate link to the customer and records it on the certificate
+async function emailCertificate(req, cert) {
+    if (!isMailConfigured()) throw new HttpError(400, 'إعدادات البريد غير مكتملة. / Email is not set up.', 'NO_MAIL');
+    const customer = await Customer.findById(cert.customer).select('nameAr contact.email user');
+    let to = customer && customer.contact && customer.contact.email;
+    if (!to && customer && customer.user) to = (await User.findById(customer.user).select('email').lean() || {}).email;
+    if (!to) throw new HttpError(400, 'لا يوجد إيميل لهذا العميل. / This customer has no email.', 'NO_EMAIL');
+    const title = cert.kind === 'module' ? cert.moduleName : cert.program_name;
+    await createTransporter().sendMail({
+        from: `"أكاديمية نبراس" <${process.env.EMAIL_USER}>`,
+        to,
+        subject: `شهادتك من أكاديمية نبراس - ${cert.cert_num}`,
+        html: brandedEmail({
+            heading: `مبروك يا ${cert.trainee_name}!`,
+            lines: ['صدرت شهادتك:', title],
+            highlight: `رقم الشهادة: ${cert.cert_num}`,
+            button: { label: 'عرض وطباعة الشهادة', url: portalCertUrl(cert._id) },
+            secondary: { label: 'رابط التحقق من الشهادة', url: verifyUrl(cert.cert_num) },
+            noteEn: `Congratulations! Your certificate ${cert.cert_num} is ready in the Nibras portal, where you can view, print or save it as PDF.`,
+            footer: 'يمكن لأي جهة التحقق من الشهادة برقمها أو بمسح رمز QR المطبوع عليها.'
+        }),
+        text: `مبروك! صدرت شهادتك ${cert.cert_num} (${title}). اعرضها واطبعها من بوابة نبراس: ${portalCertUrl(cert._id)}`
+    });
+    const now = new Date();
+    await Certificate.updateOne({ _id: cert._id }, {
+        $set: { 'delivery.emailedAt': now, 'delivery.emailedTo': to },
+        $inc: { 'delivery.emailCount': 1 },
+        $push: { 'delivery.log': { step: 'emailed', note: to, by: req.user.id || null, byName: req.user.name, at: now } }
+    });
+    return to;
+}
+
 // Creates one certificate for a module (moduleId) or for the whole program (no moduleId).
 // Checks eligibility, prevents duplicates, freezes the design, and marks the module.
-async function issueOne(req, { enrollmentId, moduleId, templateId, names, replaces, version = 1 }) {
+async function issueOne(req, { enrollmentId, moduleId, templateId, names, replaces, version = 1, waive = '', email = false }) {
     const e = await Enrollment.findById(enrollmentId);
     if (!e) throw new HttpError(404, 'Not found.');
     const customer = await Customer.findById(e.customer).select('customerNo nameAr nameEn user');
@@ -122,6 +168,11 @@ async function issueOne(req, { enrollmentId, moduleId, templateId, names, replac
     }
     const existing = await Certificate.findOne({ enrollment: e._id, module: kind === 'module' ? mod.module : null, kind, status: { $in: ['Valid', 'Suspended'] } }).select('cert_num');
     if (existing && !replaces) throw new HttpError(409, `توجد شهادة سارية بالفعل (${existing.cert_num}). / A valid certificate already exists (${existing.cert_num}).`, 'DUPLICATE');
+    // Nothing owed (a reissue of a certificate already handed over is not checked again)
+    if (!replaces && !waive) {
+        const pay = await paymentCheck(e);
+        if (!pay.clear) throw new HttpError(409, `لا تصدر الشهادة قبل سداد المتبقي: ${R.money(pay.byCurrency)}. / The certificate is issued only after the balance is paid: ${R.money(pay.byCurrency)}.`, 'UNPAID');
+    }
 
     const programModule = mod ? await ProgramModule.findById(mod.module).select('hours').lean() : null;
     const hours = kind === 'module' ? programModule?.hours || 0 : 0;
@@ -162,7 +213,8 @@ async function issueOne(req, { enrollmentId, moduleId, templateId, names, replac
         accreditations: template && template.showAccreditations === false ? [] : await accreditationsFor(e.program, now),
         version,
         replaces: replaces ? replaces._id : null,
-        statusHistory: [{ status: 'Valid', reason: replaces ? `Reissue of ${replaces.cert_num}` : 'Issued', by: req.user.id, byName: req.user.name, at: now }]
+        paymentWaiver: waive || '',
+        statusHistory: [{ status: 'Valid', reason: replaces ? `Reissue of ${replaces.cert_num}` : waive ? `Issued with balance waived: ${waive}` : 'Issued', by: req.user.id, byName: req.user.name, at: now }]
     });
 
     if (mod && mod.status === 'approved') {
@@ -172,6 +224,16 @@ async function issueOne(req, { enrollmentId, moduleId, templateId, names, replac
     }
     await addEvent(req, customer._id, 'certificate', `${cert.cert_num}: ${kind === 'module' ? mod.titleAr : e.programTitleAr}${replaces ? ` (reissue of ${replaces.cert_num})` : ''}`);
     await audit.record(req, { action: replaces ? 'certificate.reissued' : 'certificate.issued', resource: 'certificates', resourceId: cert._id, summary: `${cert.cert_num} ${customer.customerNo}`, meta: { kind, enrollment: String(e._id) } });
+    if (customer.user && !replaces) {
+        await notify(customer.user, { type: 'certificate_issued', titleAr: `صدرت شهادتك: ${data.module || data.program}`, titleEn: `Your certificate is ready: ${data.moduleEn || data.programEn || data.program}`, link: `/certificates/${cert._id}` });
+    }
+    if (email) {
+        try {
+            await emailCertificate(req, cert);
+        } catch (err) {
+            cert.$locals.emailError = err.message;   // issuing still succeeded; the caller reports it
+        }
+    }
     if (e.owner) await notify(e.owner, { type: 'certificate_issued', titleAr: `صدرت الشهادة ${cert.cert_num}`, titleEn: `Certificate ${cert.cert_num} was issued`, bodyAr: `${customer.nameAr} · ${data.module || data.program}`, bodyEn: `${customer.nameAr} · ${data.moduleEn || data.programEn}`, link: `/certificates/${cert._id}` });
     return cert;
 }
@@ -179,13 +241,21 @@ async function issueOne(req, { enrollmentId, moduleId, templateId, names, replac
 exports.issue = async (req, res) => {
     let cert;
     try {
-        cert = await issueOne(req, { enrollmentId: oid(req.body.enrollment), moduleId: oid(req.body.module), templateId: req.body.template });
+        cert = await issueOne(req, { enrollmentId: oid(req.body.enrollment), moduleId: oid(req.body.module), templateId: req.body.template, waive: waiverOf(req), email: req.body.email === true });
     } catch (err) {
         if (err.code === 11000) throw new HttpError(409, 'توجد شهادة سارية بالفعل. / A valid certificate already exists.', 'DUPLICATE');
         throw err;
     }
-    res.status(201).json({ item: cert });
+    res.status(201).json({ item: cert, emailError: cert.$locals.emailError });
 };
+
+// Issuing although money is owed needs the certificates "manage" permission and a written reason
+function waiverOf(req) {
+    const reason = str(req.body.waivePayment, 300);
+    if (!reason) return '';
+    if (P.scopeFor(req.user.grants, 'certificates.manage') !== 'all') throw new HttpError(403, 'Forbidden.');
+    return reason;
+}
 
 // Issues many at once from the eligible list; each item succeeds or fails on its own
 exports.issueBulk = async (req, res) => {
@@ -193,10 +263,10 @@ exports.issueBulk = async (req, res) => {
     const results = [];
     for (const it of items) {
         try {
-            const c = await issueOne(req, { enrollmentId: oid(it.enrollment), moduleId: oid(it.module), templateId: req.body.template });
-            results.push({ ok: true, cert_num: c.cert_num, id: String(c._id) });
+            const c = await issueOne(req, { enrollmentId: oid(it.enrollment), moduleId: oid(it.module), templateId: req.body.template, email: req.body.email === true });
+            results.push({ ok: true, cert_num: c.cert_num, id: String(c._id), emailError: c.$locals.emailError });
         } catch (err) {
-            results.push({ ok: false, enrollment: it.enrollment, module: it.module, message: err.message });
+            results.push({ ok: false, enrollment: it.enrollment, module: it.module, message: err.message, code: err.code });
         }
     }
     res.json({ results });
@@ -217,6 +287,13 @@ exports.eligible = async (req, res) => {
         }
         if (e.eligibleForFinalCertificate && !hasFinal.has(String(e._id))) items.push({ kind: 'program', enrollment: String(e._id), enrollmentNo: e.enrollmentNo, module: null, title: e.programTitleAr, program: e.programTitleAr, customer: e.customer, approvedAt: e.completedAt });
     }
+    // Who still owes money (they are listed, but issuing waits for the payment)
+    const checked = {};
+    for (const it of items) {
+        const e = enrollments.find((x) => String(x._id) === it.enrollment);
+        if (!checked[it.enrollment]) checked[it.enrollment] = await paymentCheck({ _id: e._id, customer: e.customer._id });
+        it.unpaid = checked[it.enrollment].clear ? null : checked[it.enrollment].byCurrency;
+    }
     res.json({ items });
 };
 
@@ -230,6 +307,9 @@ exports.list = async (req, res) => {
     const q = req.query;
     if (q.status) and.push({ status: String(q.status) });
     if (q.kind) and.push({ kind: String(q.kind) });
+    if (q.delivery === 'not_emailed') and.push({ kind: { $ne: 'legacy' }, 'delivery.emailedAt': null });
+    if (q.delivery === 'paper_pending') and.push({ kind: { $ne: 'legacy' }, status: 'Valid', 'delivery.paper.status': { $ne: 'delivered' } });
+    if (q.delivery === 'paper_ready') and.push({ 'delivery.paper.status': 'ready' });
     if (oid(q.customer)) and.push({ customer: oid(q.customer) });
     if (oid(q.enrollment)) and.push({ enrollment: oid(q.enrollment) });
     if (q.q) {
@@ -259,6 +339,10 @@ async function loadVisible(req, id) {
 
 exports.get = async (req, res) => {
     const cert = await loadVisible(req, req.params.id);
+    if (req.user.role === 'customer' && cert.kind !== 'legacy' && !(cert.delivery && cert.delivery.viewedAt)) {
+        const now = new Date();
+        await Certificate.updateOne({ _id: cert._id, 'delivery.viewedAt': null }, { $set: { 'delivery.viewedAt': now }, $push: { 'delivery.log': { step: 'viewed', note: '', by: null, byName: 'customer', at: now } } });
+    }
     res.json({ item: cert, verifyUrl: verifyUrl(cert.cert_num), verifyUrlEn: verifyUrl(cert.cert_num, 'en') });
 };
 
@@ -268,7 +352,18 @@ exports.mine = async (req, res) => {
         $or: [{ customer: { $in: files.map((f) => f._id) } }, { userId: req.user.id }],
         status: { $in: ['Valid', 'Expired'] }
     }).select('-pdf_data -design').sort({ createdAt: -1 }).lean();
-    res.json({ items });
+    // Approved work whose certificate is waiting, and why (usually a balance to pay)
+    const pending = [];
+    const enrollments = await Enrollment.find({ customer: { $in: files.map((f) => f._id) }, status: { $in: ['active', 'on_hold', 'completed'] } }).lean();
+    for (const e of enrollments) {
+        const waiting = [];
+        for (const m of e.modules) if (m.status === 'approved' && m.certificate) waiting.push({ titleAr: m.titleAr, titleEn: m.titleEn });
+        if (e.eligibleForFinalCertificate && !items.some((c) => c.kind === 'program' && String(c.enrollment) === String(e._id))) waiting.push({ titleAr: e.programTitleAr, titleEn: e.programTitleEn, final: true });
+        if (!waiting.length) continue;
+        const pay = await paymentCheck(e);
+        for (const w of waiting) pending.push({ ...w, program: e.programTitleAr, remaining: pay.clear ? [] : pay.byCurrency });
+    }
+    res.json({ items, pending });
 };
 
 // ---- status changes ----
@@ -327,4 +422,62 @@ exports.reissue = async (req, res) => {
     res.status(201).json({ item: cert });
 };
 
+// ---- delivery: email and the paper copy ----
+
+exports.email = async (req, res) => {
+    const cert = await loadVisible(req, req.params.id);
+    if (cert.kind === 'legacy' || cert.status !== 'Valid') throw new HttpError(400, 'تُرسل الشهادات السارية فقط. / Only valid certificates are sent.');
+    const to = await emailCertificate(req, cert);
+    await audit.record(req, { action: 'certificate.emailed', resource: 'certificates', resourceId: cert._id, summary: `${cert.cert_num} → ${to}` });
+    res.json({ ok: true, to });
+};
+
+exports.delivery = async (req, res) => {
+    const cert = await Certificate.findById(req.params.id);
+    if (!cert || cert.kind === 'legacy') throw new HttpError(404, 'Not found.');
+    const scope = P.scopeFor(req.user.grants, 'certificates.update');
+    if (!scope || !P.recordInScope(scope, req.user, cert, FIELDS)) throw new HttpError(403, 'Forbidden.');
+    const step = String(req.body.step || '');
+    const paper = cert.delivery.paper;
+    if (!R.canMovePaper(paper.status, step)) throw new HttpError(400, 'خطوة غير متاحة الآن. / This step is not available now.', 'WRONG_STEP');
+    if (cert.status !== 'Valid') throw new HttpError(400, 'الشهادة غير سارية. / The certificate is not valid.');
+    const now = new Date();
+    const note = str(req.body.note, 300);
+    if (step === 'printed') paper.printedAt = now;
+    if (step === 'ready') { paper.readyAt = now; paper.method = 'pickup'; }
+    if (step === 'shipped') {
+        paper.shippedAt = now;
+        paper.method = 'shipping';
+        paper.carrier = str(req.body.carrier, 80);
+        paper.trackingNo = str(req.body.trackingNo, 80);
+    }
+    if (step === 'delivered') {
+        const receivedBy = str(req.body.receivedBy, 160);
+        if (!receivedBy) throw new HttpError(400, 'اكتب اسم المستلم. / Write who received it.', 'RECEIVER_REQUIRED');
+        paper.deliveredAt = now;
+        paper.receivedBy = receivedBy;
+        paper.handedBy = req.user.id;
+        if (!paper.method) paper.method = 'pickup';
+    }
+    paper.status = step;
+    cert.delivery.log.push({ step, note: [note, step === 'shipped' ? [paper.carrier, paper.trackingNo].filter(Boolean).join(' ') : '', step === 'delivered' ? paper.receivedBy : ''].filter(Boolean).join(' · '), by: req.user.id, byName: req.user.name, at: now });
+    await cert.save();
+    if (cert.customer) await addEvent(req, cert.customer, 'certificate', `${cert.cert_num}: paper ${step}${step === 'delivered' ? ` → ${paper.receivedBy}` : ''}`);
+    const customer = cert.customer ? await Customer.findById(cert.customer).select('user') : null;
+    if (customer && customer.user && ['ready', 'shipped'].includes(step)) {
+        await notify(customer.user, {
+            type: 'certificate_paper',
+            titleAr: step === 'ready' ? `شهادتك الورقية جاهزة للاستلام: ${cert.cert_num}` : `تم شحن شهادتك الورقية: ${cert.cert_num}`,
+            titleEn: step === 'ready' ? `Your paper certificate is ready for pickup: ${cert.cert_num}` : `Your paper certificate was shipped: ${cert.cert_num}`,
+            bodyAr: step === 'shipped' ? [paper.carrier, paper.trackingNo].filter(Boolean).join(' ') : '',
+            link: `/certificates/${cert._id}`
+        });
+    }
+    await audit.record(req, { action: `certificate.paper_${step}`, resource: 'certificates', resourceId: cert._id, summary: cert.cert_num, reason: note });
+    res.json({ item: cert });
+};
+
 exports._verifyUrl = verifyUrl;
+exports._issueOne = issueOne;
+exports._paymentCheck = paymentCheck;
+exports._emailCertificate = emailCertificate;

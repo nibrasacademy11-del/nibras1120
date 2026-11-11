@@ -15,7 +15,17 @@ const cohortSchema = new mongoose.Schema({
     status: { type: String, enum: ['planned', 'open', 'running', 'finished', 'cancelled'], default: 'open', index: true },
     notes: { type: String, default: '', maxlength: 1000 },
     // The modules this group studies; empty means the whole program
-    modules: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ProgramModule' }]
+    modules: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ProgramModule' }],
+    // When the group's certificates are issued (see lib/certificateRules.js)
+    certificateRule: {
+        mode: { type: String, enum: ['manual', 'on_approval', 'on_date', 'after_end'], default: 'manual' },
+        issue: { type: String, enum: ['modules', 'program', 'both'], default: 'both' },
+        date: { type: Date, default: null },
+        daysAfterEnd: { type: Number, default: 0 },
+        minAttendance: { type: Number, default: 0 },
+        sendEmail: { type: Boolean, default: true },
+        template: { type: mongoose.Schema.Types.ObjectId, ref: 'CertificateTemplate', default: null }
+    }
 }, { timestamps: true, optimisticConcurrency: true });
 
 module.exports = mongoose.model('Cohort', cohortSchema);

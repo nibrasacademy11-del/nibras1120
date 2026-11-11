@@ -25,6 +25,7 @@ const analytics = require('../modules/reports/analyticsController');
 const attendance = require('../modules/hr/attendanceController');
 const system = require('../modules/core/systemController');
 const groupsApi = require('../modules/learning/groupController');
+const groupCerts = require('../modules/learning/groupCertificates');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -149,6 +150,10 @@ router.post('/lectures/:id/cancel', validId(), all('programs.update'), handle(gr
 router.post('/lectures/:id/sync', validId(), all('programs.update'), handle(groupsApi.syncLecture));
 router.get('/lectures/:id/attendance', validId(), can('programs.view'), handle(groupsApi.attendance));
 router.post('/lectures/:id/attendance', validId(), all('programs.update'), handle(groupsApi.markAttendance));
+router.get('/groups/:id/certificates', validId(), can('certificates.view'), handle(groupCerts.get));
+router.put('/groups/:id/certificate-rule', validId(), all('certificates.create'), handle(groupCerts.saveRule));
+router.post('/groups/:id/certificates/issue', validId(), all('certificates.create'), handle(groupCerts.issue));
+router.post('/groups/:id/approve-module', validId(), all('enrollments.approve'), handle(groupCerts.approveModule));
 router.get('/zoom/status', all('programs.update'), handle(groupsApi.zoomStatus));
 router.get('/customers/:id/groups', validId(), can('enrollments.view'), handle(groupsApi.forCustomer));
 router.get('/my/lectures', handle(groupsApi.mine));
@@ -229,6 +234,8 @@ router.post('/certificates/issue-bulk', all('certificates.create'), handle(certs
 router.get('/certificates', can('certificates.view'), handle(certs.list));
 router.get('/certificates/:id', validId(), handle(certs.get));
 router.post('/certificates/:id/status', validId(), all('certificates.archive'), handle(certs.setStatus));
+router.post('/certificates/:id/email', validId(), can('certificates.update'), handle(certs.email));
+router.post('/certificates/:id/delivery', validId(), can('certificates.update'), handle(certs.delivery));
 router.post('/certificates/:id/reissue', validId(), all('certificates.create'), handle(certs.reissue));
 
 // ---- complaints and satisfaction ----

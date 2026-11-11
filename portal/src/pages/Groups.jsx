@@ -4,6 +4,7 @@ import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { ErrorBox, Field, Loading, Modal, Pill, fromLocalInput, toLocalInput, useAction, useLoad } from '../components/ui.jsx';
+import GroupCertificates from './GroupCertificates.jsx';
 
 // Training groups: their lectures (Zoom), members (with bulk add) and attendance
 
@@ -109,10 +110,11 @@ export function GroupDetail() {
               <ZoomStatus connected={d.zoomConnected} canManage={d.canManage} />
             </div>
             <div className="tabs" role="tablist">
-              {['grpLectures', 'grpMembers'].map((k) => <button key={k} type="button" role="tab" aria-selected={tab === k} className={`tab${tab === k ? ' active' : ''}`} onClick={() => setTab(k)}>{t(k)}</button>)}
+              {['grpLectures', 'grpMembers', 'grpCertificates'].map((k) => <button key={k} type="button" role="tab" aria-selected={tab === k} className={`tab${tab === k ? ' active' : ''}`} onClick={() => setTab(k)}>{t(k)}</button>)}
             </div>
             {tab === 'grpLectures' && <LecturesTab group={g} modules={covered.length ? covered : d.modules.filter((m) => m.active)} zoomConnected={d.zoomConnected} canManage={d.canManage} />}
             {tab === 'grpMembers' && <MembersTab group={g} canManage={d.canManage} canEnroll={d.canEnroll} onChanged={state.reload} />}
+            {tab === 'grpCertificates' && <GroupCertificates group={g} />}
           </>
         );
       }}
