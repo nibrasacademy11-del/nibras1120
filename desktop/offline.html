@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:" />
+  <title>Nibras Admin</title>
+  <style>
+    body { font-family: system-ui, Tahoma, sans-serif; background: #fbf7f0; color: #1d1416; display: grid; place-items: center; min-height: 100vh; margin: 0; text-align: center; }
+    h1 { color: #5a020e; }
+    button { font: inherit; background: #5a020e; color: #fff; border: 0; border-radius: 10px; padding: 12px 28px; cursor: pointer; }
+    p { color: #62555a; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>تعذر الوصول إلى النظام</h1>
+    <p>تأكد من اتصال الإنترنت ثم أعد المحاولة.<br />Cannot reach the system. Check the internet connection and try again.</p>
+    <button id="retry">إعادة المحاولة / Retry</button>
+  </main>
+  <script>
+    const url = new URLSearchParams(location.search).get('url');
+    const go = () => { if (url && /^https:\/\//.test(url)) location.href = url; };
+    document.getElementById('retry').onclick = go;
+    window.addEventListener('online', go);
+    setTimeout(go, 30000);
+  </script>
+</body>
+</html>

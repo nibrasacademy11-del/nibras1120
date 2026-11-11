@@ -9,3 +9,6 @@ portal/dist
 local-server/config.json
 local-server/data
 local-server/node_modules
+desktop/node_modules
+desktop/dist
+desktop/config.json

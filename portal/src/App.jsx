@@ -22,6 +22,7 @@ import Reports, { ReportView } from './pages/Reports.jsx';
 import Analytics from './pages/Analytics.jsx';
 import Complaints, { MyComplaints } from './pages/Complaints.jsx';
 import Attendance, { Attend, Kiosk, Leaves, PairDevice } from './pages/Attendance.jsx';
+import SystemHealth from './pages/SystemHealth.jsx';
 import Certificates, { CertificateDetail, MyCertificates } from './pages/Certificates.jsx';
 import Payments, { AccountStatement, Accounts, Approvals, Currencies, Expenses, FinanceSummary, MyPayments, PaymentDetail, Periods } from './pages/Finance.jsx';
 
@@ -58,6 +59,7 @@ export default function App() {
         <Route path="/my-payments" element={<MyPayments />} />
         <Route path="/my-certificates" element={<MyCertificates />} />
         <Route path="/my-complaints" element={<MyComplaints />} />
+        <Route path="/system" element={me.user.role === 'super_admin' ? <SystemHealth /> : <div className="card empty">{t('forbidden')}</div>} />
         <Route path="/attend" element={<Attend />} />
         <Route path="/attend/pair" element={<PairDevice />} />
         <Route path="/attendance" element={<Guard permission="attendance.view"><Attendance /></Guard>} />

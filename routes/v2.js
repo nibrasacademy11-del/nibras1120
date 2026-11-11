@@ -23,6 +23,7 @@ const complaints = require('../modules/crm/complaintController');
 const reports = require('../modules/reports/reportController');
 const analytics = require('../modules/reports/analyticsController');
 const attendance = require('../modules/hr/attendanceController');
+const system = require('../modules/core/systemController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -246,6 +247,10 @@ router.get('/leaves', can('leaves.view'), handle(attendance.listLeaves));
 router.post('/leaves', can('leaves.create'), handle(attendance.requestLeave));
 router.post('/leaves/:id/decide', validId(), can('leaves.approve', 'team'), handle(attendance.decideLeave));
 router.post('/leaves/:id/cancel', validId(), can('leaves.create'), handle(attendance.cancelLeave));
+
+// ---- system health ----
+router.get('/system/health', (req, res, next) => (req.user.role === 'super_admin' ? next() : res.status(403).json({ message: 'Forbidden.' })), handle(system.health));
+router.post('/client-errors', rateLimit({ windowMs: 60 * 1000, max: 20, message: tooMany }), handle(system.clientError));
 
 // ---- tasks and follow-ups ----
 router.get('/tasks', can('tasks.view'), handle(activity.listTasks));

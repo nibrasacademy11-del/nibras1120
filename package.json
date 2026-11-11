@@ -9,7 +9,9 @@
     "dev:portal": "npm --prefix portal run dev",
     "build:portal": "npm --prefix portal install --no-audit --no-fund && npm --prefix portal run build",
     "vercel-build": "npm --prefix portal ci --no-audit --no-fund && npm --prefix portal run build",
-    "test": "node --test \"test/**/*.test.js\""
+    "test": "node --test \"test/**/*.test.js\"",
+    "test:all": "node tools/test-all.js",
+    "backup": "node tools/backup-now.js"
   },
   "keywords": [],
   "author": "",

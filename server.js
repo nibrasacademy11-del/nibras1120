@@ -233,6 +233,7 @@ app.use((err, req, res, next) => {
     if (err.type === 'entity.parse.failed' || err.type === 'entity.too.large') {
         return res.status(400).json({ message: 'Invalid request.' });
     }
+    require('./lib/errorLog').logError({ source: 'server', error: err, route: `${req.method} ${req.originalUrl.split('?')[0]}`, status: 500, userAgent: req.get('user-agent') });
     res.status(500).json({ message: 'Internal server error.' });
 });
 

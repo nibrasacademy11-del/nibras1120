@@ -38,6 +38,7 @@ const NAV = [
   { to: '/roles', key: 'roles', icon: '◈', permission: 'roles.view', minScope: 'all' },
   { to: '/audit', key: 'audit', icon: '☰', permission: 'audit.view', minScope: 'all' },
   { to: '/settings', key: 'settings', icon: '⚙', permission: 'settings.manage', minScope: 'all' },
+  { to: '/system', key: 'systemNav', icon: '♥', superOnly: true },
   { to: '/security', key: 'security', icon: '⚿' }
 ];
 
@@ -60,7 +61,7 @@ export default function Layout({ children }) {
         </div>
         {!locked && (
           <nav>
-            {NAV.filter((n) => (!n.permission || can(n.permission, n.minScope)) && !(n.staffOnly && !me.user.isStaff) && !(n.customerOnly && me.user.isStaff)).map((n) => (
+            {NAV.filter((n) => (!n.permission || can(n.permission, n.minScope)) && !(n.staffOnly && !me.user.isStaff) && !(n.customerOnly && me.user.isStaff) && !(n.superOnly && me.user.role !== 'super_admin')).map((n) => (
               <NavLink key={n.key} to={n.to} end={n.end} className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
                 <span className="nav-icon" aria-hidden="true">{n.icon}</span>
                 {t(n.key)}
