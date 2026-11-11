@@ -60,7 +60,9 @@ const SETTING_DEFAULTS = {
     // on the enrollment's charges (enrollment), or no check (off)
     'certificates.paymentRule': 'customer',
     // Name, contacts, tax number and VAT printed on receipts, invoices, statements and reports
-    'academy.profile': require('../../lib/academy').PROFILE_DEFAULT
+    'academy.profile': require('../../lib/academy').PROFILE_DEFAULT,
+    // Automatic payment reminders: days before the due date, days after it, and the channels
+    'finance.reminders': require('../../lib/receivables').REMINDER_DEFAULTS
 };
 
 async function getSetting(key) {

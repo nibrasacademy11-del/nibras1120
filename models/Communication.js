@@ -14,7 +14,9 @@ const communicationSchema = new mongoose.Schema({
     durationMinutes: { type: Number, default: 0, min: 0, max: 600 },
     // Empty for messages that came in through the website
     by: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null, index: true },
-    inquiry: { type: mongoose.Schema.Types.ObjectId, ref: 'Inquiry', default: null }
+    inquiry: { type: mongoose.Schema.Types.ObjectId, ref: 'Inquiry', default: null },
+    // What the message was for, when sent by the system or a finance action (e.g. payment_reminder)
+    kind: { type: String, default: '', index: true }
 }, { timestamps: true });
 
 communicationSchema.statics.CHANNELS = CHANNELS;

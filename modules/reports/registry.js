@@ -171,6 +171,38 @@ const REPORTS = [
         }
     },
     {
+        id: 'program_profit', group: 'finance', titleAr: 'ربحية البرامج', titleEn: 'Profit by program', permission: 'payments.view', minScope: 'all', orientation: 'landscape',
+        filters: [COMMON.from, COMMON.to],
+        async run(req, f) {
+            // Per program and currency: collected − refunds − commissions earned − the program's own expenses
+            const viaEnrollment = [{ $lookup: { from: 'enrollments', localField: 'enrollment', foreignField: '_id', as: 'e' } }, { $addFields: { program: { $arrayElemAt: ['$e.program', 0] } } }];
+            const [pay, ref, com, exp] = await Promise.all([
+                F.Payment.aggregate([{ $match: { status: 'confirmed', ...range(f, 'paidAt') } }, ...viaEnrollment, { $group: { _id: { p: '$program', c: '$currency' }, v: { $sum: '$amount' }, n: { $sum: 1 } } }]),
+                F.Refund.aggregate([{ $match: { status: 'paid', ...range(f, 'paidAt') } }, { $lookup: { from: 'payments', localField: 'payment', foreignField: '_id', as: 'pay' } }, { $addFields: { enrollment: { $arrayElemAt: ['$pay.enrollment', 0] } } }, ...viaEnrollment, { $group: { _id: { p: '$program', c: '$currency' }, v: { $sum: '$amount' } } }]),
+                C.CommissionLine.aggregate([{ $match: { status: { $ne: 'cancelled' }, ...range(f, 'date') } }, ...viaEnrollment, { $group: { _id: { p: '$program', c: '$currency' }, v: { $sum: '$amount' } } }]),
+                F.Expense.aggregate([{ $match: { status: 'posted', program: { $ne: null }, ...range(f, 'date') } }, { $group: { _id: { p: '$program', c: '$currency' }, v: { $sum: '$amount' } } }])
+            ]);
+            const keyOf = (r) => `${r._id.p || ''}|${r._id.c}`;
+            const keys = [...new Set([...pay, ...ref, ...com, ...exp].map(keyOf))];
+            const get = (list, k) => list.find((r) => keyOf(r) === k)?.v || 0;
+            const Course = require('../../models/Course');
+            const titles = Object.fromEntries((await Course.find({ _id: { $in: keys.map((k) => k.split('|')[0]).filter(Boolean) } }).select('titleAr').lean()).map((c) => [String(c._id), c.titleAr]));
+            const rows = keys.map((k) => {
+                const [pid, currency] = k.split('|');
+                const r = { program: pid ? titles[pid] || '—' : 'بدون برنامج / No program', currency, payments: pay.find((x) => keyOf(x) === k)?.n || 0, collected: M.round(get(pay, k), 3), refunds: M.round(get(ref, k), 3), commissions: M.round(get(com, k), 3), expenses: M.round(get(exp, k), 3) };
+                r.profit = M.round(r.collected - r.refunds - r.commissions - r.expenses, 3);
+                r.margin = r.collected ? M.round((r.profit * 100) / r.collected, 1) : 0;
+                return r;
+            }).sort((a, b) => a.currency.localeCompare(b.currency) || b.profit - a.profit);
+            const byCurrency = {};
+            for (const r of rows) byCurrency[r.currency] = M.round((byCurrency[r.currency] || 0) + r.profit, 3);
+            return {
+                columns: [col('program', 'البرنامج', 'Program'), col('currency', 'العملة', 'Currency'), col('payments', 'الدفعات', 'Payments', 'number'), col('collected', 'المحصّل', 'Collected', 'money'), col('refunds', 'الاستردادات', 'Refunds', 'money'), col('commissions', 'العمولات', 'Commissions', 'money'), col('expenses', 'مصروفات البرنامج', 'Program expenses', 'money'), col('profit', 'الربح', 'Profit', 'money'), col('margin', 'هامش الربح %', 'Margin %', 'number')],
+                rows, totals: { programs: new Set(rows.map((r) => r.program)).size, byCurrency }
+            };
+        }
+    },
+    {
         id: 'revenue_expenses', group: 'finance', titleAr: 'الإيرادات والمصروفات', titleEn: 'Revenue and expenses', permission: 'payments.view', minScope: 'all',
         filters: [COMMON.from, COMMON.to],
         async run(req, f) {

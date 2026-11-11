@@ -23,7 +23,9 @@ function EmployeeForm({ emp, onClose, onSaved }) {
   const [temp, setTemp] = useState(null);
   const { busy, error, run } = useAction();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
-  const roles = STAFF_ROLES.filter((r) => me.user.role === 'super_admin' || !['admin', 'super_admin'].includes(r));
+  // The academy works without an accountant: those roles are offered only to someone who already has one
+  const HIDDEN = ['accountant', 'finance_manager'];
+  const roles = STAFF_ROLES.filter((r) => (me.user.role === 'super_admin' || !['admin', 'super_admin'].includes(r)) && (!HIDDEN.includes(r) || r === emp?.user?.role));
   const canRole = !emp || can('users.manage', 'all');
 
   const submit = (e) => {

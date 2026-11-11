@@ -2,7 +2,7 @@ import QRCode from 'qrcode';
 import { BrandBand, PrintFooter } from '../components/Print.jsx';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { api } from '../api.js';
+import { api, pickMessage } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { ErrorBox, Field, Loading, Modal, Pager, Pill, useAction, useLoad } from '../components/ui.jsx';
@@ -600,7 +600,8 @@ export function Expenses() {
   const { t, fmtDay } = useI18n();
   const { can } = useAuth();
   const [page, setPage] = useState(1);
-  const state = useLoad(`/api/v2/expenses?page=${page}&limit=50`);
+  const [missing, setMissing] = useState(false);
+  const state = useLoad(`/api/v2/expenses?page=${page}&limit=50${missing ? '&receipt=missing' : ''}`, [missing]);
   const accounts = useLoad('/api/v2/finance/accounts');
   const [dialog, setDialog] = useState(null);
   const done = () => { setDialog(null); state.reload(); };
@@ -608,7 +609,10 @@ export function Expenses() {
     <>
       <div className="page-head">
         <h1 className="page-title">{t('expensesNav')}</h1>
-        {can('expenses.create', 'all') && <button type="button" className="btn btn--primary" onClick={() => setDialog({ kind: 'new' })}>+ {t('newExpense')}</button>}
+        <div className="row">
+          <label className="check"><input type="checkbox" checked={missing} onChange={(e) => { setPage(1); setMissing(e.target.checked); }} /> {t('fhNoReceipt')}</label>
+          {can('expenses.create', 'all') && <button type="button" className="btn btn--primary" onClick={() => setDialog({ kind: 'new' })}>+ {t('newExpense')}</button>}
+        </div>
       </div>
       <section className="card">
         <Loading state={state}>
@@ -616,12 +620,13 @@ export function Expenses() {
             <>
               <div className="table-wrap">
                 <table className="table">
-                  <thead><tr><th dir="ltr">#</th><th>{t('date')}</th><th>{t('categoryName')}</th><th>{t('payee')}</th><th>{t('amount')}</th><th>{t('account')}</th><th>{t('status')}</th><th /></tr></thead>
+                  <thead><tr><th dir="ltr">#</th><th>{t('date')}</th><th>{t('categoryName')}</th><th>{t('payee')}</th><th>{t('amount')}</th><th>{t('account')}</th><th>{t('fhReceipt')}</th><th>{t('status')}</th><th /></tr></thead>
                   <tbody>
                     {d.items.map((x) => (
                       <tr key={x._id} className={x.status === 'voided' ? 'muted' : ''}>
-                        <td dir="ltr">{x.expenseNo}</td><td>{fmtDay(x.date)}</td><td>{x.category}</td><td>{x.payee}<div className="muted">{x.description}</div></td>
+                        <td dir="ltr">{x.expenseNo}</td><td>{fmtDay(x.date)}</td><td>{x.category}{x.program && <div className="muted">{x.program.titleAr}</div>}</td><td>{x.payee}<div className="muted">{x.description}</div></td>
                         <td><Money amount={x.amount} currency={x.currency} strong /></td><td>{x.account?.nameAr}</td>
+                        <td>{x.attachment?.filename ? <a href={`/api/v2/expenses/${x._id}/receipt`} target="_blank" rel="noreferrer">{t('fhView')}</a> : can('expenses.create', 'all') ? <ReceiptUpload id={x._id} onDone={state.reload} /> : <span className="late">—</span>}</td>
                         <td><Pill tone={x.status === 'posted' ? 'ok' : 'muted'}>{x.status === 'posted' ? t('confirmed') : t('voided')}</Pill></td>
                         <td>{x.status === 'posted' && <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'void', item: x })}>{t('requestVoid')}</button>}</td>
                       </tr>
@@ -640,20 +645,46 @@ export function Expenses() {
   );
 }
 
+// Sends a photo or PDF of an expense's receipt
+async function uploadReceipt(id, file) {
+  const fd = new FormData();
+  fd.append('file', file);
+  const res = await fetch(`/api/v2/expenses/${id}/receipt`, { method: 'POST', body: fd, credentials: 'same-origin' });
+  const d = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(d.message || 'Upload failed');
+  return d;
+}
+
+function ReceiptUpload({ id, onDone }) {
+  const { t, lang } = useI18n();
+  const [error, setError] = useState('');
+  return (
+    <label className="btn btn--small btn--ghost upload-btn">
+      {t('fhAddReceipt')}
+      <input type="file" accept="image/*,application/pdf" hidden onChange={(e) => e.target.files[0] && uploadReceipt(id, e.target.files[0]).then(onDone).catch((err) => setError(pickMessage(err.message, lang)))} />
+      {error && <small className="late">{error}</small>}
+    </label>
+  );
+}
+
 function ExpenseForm({ accounts, categories, onClose, onSaved }) {
   const { t, label } = useI18n();
-  const [f, setF] = useState({ account: '', category: '', amount: '', date: today(), payee: '', description: '' });
+  const programs = useLoad('/api/v2/programs?limit=500');
+  const [file, setFile] = useState(null);
+  const [f, setF] = useState({ account: '', category: '', amount: '', date: today(), payee: '', description: '', program: '' });
   const { busy, error, run } = useAction();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   return (
     <Modal title={t('newExpense')} onClose={onClose}>
-      <form className="stack" onSubmit={(e) => { e.preventDefault(); run(() => api('/api/v2/expenses', { method: 'POST', body: { ...f, amount: Number(f.amount), date: new Date(f.date + 'T12:00:00').toISOString() } })).then(onSaved).catch(() => {}); }}>
+      <form className="stack" onSubmit={(e) => { e.preventDefault(); run(async () => { const d = await api('/api/v2/expenses', { method: 'POST', body: { ...f, program: f.program || null, amount: Number(f.amount), date: new Date(f.date + 'T12:00:00').toISOString() } }); if (file) await uploadReceipt(d.item._id, file); return d; }).then(onSaved).catch(() => {}); }}>
         <Field label={t('account')}><select required value={f.account} onChange={set('account')}><option value="">—</option>{accounts.filter((a) => a.active).map((a) => <option key={a._id} value={a._id}>{label({ ar: a.nameAr, en: a.nameEn })} · {a.currency}</option>)}</select></Field>
         <Field label={t('categoryName')}><input required list="expense-categories" value={f.category} onChange={set('category')} /><datalist id="expense-categories">{categories.map((c) => <option key={c} value={c} />)}</datalist></Field>
         <Field label={t('amount')}><input type="number" step="0.001" min="0" required dir="ltr" value={f.amount} onChange={set('amount')} /></Field>
         <Field label={t('date')}><input type="date" max={today()} value={f.date} onChange={set('date')} /></Field>
         <Field label={t('payee')}><input value={f.payee} onChange={set('payee')} /></Field>
         <Field label={t('description')}><input value={f.description} onChange={set('description')} /></Field>
+        <Field label={t('fhProgramCost')} hint={t('fhProgramCostHint')}><select value={f.program} onChange={set('program')}><option value="">{t('none')}</option>{(programs.data?.items || []).map((p) => <option key={p._id} value={p._id}>{label({ ar: p.titleAr, en: p.titleEn })}</option>)}</select></Field>
+        <Field label={t('fhReceipt')}><input type="file" accept="image/*,application/pdf" onChange={(e) => setFile(e.target.files[0] || null)} /></Field>
         <ErrorBox error={error} />
         <div className="row"><button className="btn btn--primary" disabled={busy}>{t('save')}</button><button type="button" className="btn btn--ghost" onClick={onClose}>{t('cancel')}</button></div>
       </form>

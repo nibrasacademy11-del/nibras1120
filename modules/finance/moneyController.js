@@ -490,7 +490,7 @@ exports.createExpense = async (req, res) => {
     const baseDec = await L.decimals(await L.baseCurrency());
     const { number } = await nextNumber('expense');
     const e = await L.inTransaction(async (session) => {
-        const [x] = await F.Expense.create([{ expenseNo: number, category, account: account._id, amount, currency: account.currency, rate, baseAmount: M.baseOf(amount, rate, baseDec), date, period, payee: str(req.body.payee, 160), description: str(req.body.description), recordedBy: req.user.id }], { session });
+        const [x] = await F.Expense.create([{ expenseNo: number, category, account: account._id, amount, currency: account.currency, rate, baseAmount: M.baseOf(amount, rate, baseDec), date, period, payee: str(req.body.payee, 160), description: str(req.body.description), program: oid(req.body.program), recordedBy: req.user.id }], { session });
         await L.post({ account: account._id, date, direction: 'out', amount, currency: account.currency, rate, source: { kind: 'expense', id: x._id, no: x.expenseNo }, description: `${category}: ${x.description}`.slice(0, 300), by: req.user.id, session });
         return x;
     });
@@ -504,11 +504,13 @@ exports.listExpenses = async (req, res) => {
     if (req.query.category) filter.category = String(req.query.category);
     if (oid(req.query.account)) filter.account = oid(req.query.account);
     if (req.query.status) filter.status = String(req.query.status);
+    if (oid(req.query.program)) filter.program = oid(req.query.program);
+    if (req.query.receipt === 'missing') filter['attachment.storageKey'] = { $in: ['', null] };
     const from = parseDate(req.query.from);
     const to = parseDate(req.query.to);
     if (from || to) filter.date = { ...(from ? { $gte: from } : {}), ...(to ? { $lte: new Date(to.getTime() + 864e5 - 1) } : {}) };
     const [items, total, categories] = await Promise.all([
-        F.Expense.find(filter).populate('account', 'code nameAr currency').populate('recordedBy', 'name').sort({ date: -1 }).skip(skip).limit(limit).lean(),
+        F.Expense.find(filter).select('-attachment.storageKey').populate('account', 'code nameAr currency').populate('recordedBy', 'name').populate('program', 'titleAr titleEn').sort({ date: -1 }).skip(skip).limit(limit).lean(),
         F.Expense.countDocuments(filter),
         F.Expense.distinct('category')
     ]);

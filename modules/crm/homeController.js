@@ -119,7 +119,9 @@ exports.cronReminders = async (req, res) => {
     const lectures = await require('../learning/lectureJobs').run();
     // Groups whose certificate rule is due get their certificates (only when nothing is owed)
     const certificates = await require('../learning/groupCertificates').runDue();
-    res.json({ reminded: due.length, lectures, certificates });
+    // Installment reminders to customers (and the employee responsible) before and after due dates
+    const payments = await require('../finance/reminderJobs').run();
+    res.json({ reminded: due.length, lectures, certificates, payments });
 };
 
 // The academy's identity, for printing (any signed-in user, customers included)
@@ -138,6 +140,7 @@ const VALIDATORS = {
     'enrollments.teamLeaderReview': (v) => typeof v === 'boolean',
     'commissions.defaultEmployeeRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
     'commissions.defaultLeaderRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
+    'finance.reminders': (v) => !!require('../../lib/receivables').cleanReminderSettings(v),
     'academy.profile': (v) => !!require('../../lib/academy').cleanProfile(v),
     'certificates.paymentRule': (v) => ['customer', 'enrollment', 'off'].includes(v),
     'lectures.presentPercent': (v) => typeof v === 'number' && v >= 1 && v <= 100,
@@ -151,6 +154,7 @@ exports.updateSettings = async (req, res) => {
     for (let [key, value] of Object.entries(req.body.settings || {})) {
         if (!VALIDATORS[key] || !VALIDATORS[key](value)) throw new HttpError(400, `Invalid setting: ${key}`);
         if (key === 'academy.profile') value = require('../../lib/academy').cleanProfile(value);
+        if (key === 'finance.reminders') value = require('../../lib/receivables').cleanReminderSettings(value);
         const before = await getSetting(key);
         if (before === value) continue;
         await SystemSetting.findOneAndUpdate({ key }, { key, value, updatedBy: req.user.id }, { upsert: true });

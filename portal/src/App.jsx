@@ -24,9 +24,10 @@ import Complaints, { MyComplaints } from './pages/Complaints.jsx';
 import Attendance, { Attend, Kiosk, Leaves, PairDevice } from './pages/Attendance.jsx';
 import SystemHealth from './pages/SystemHealth.jsx';
 import Groups, { GroupDetail } from './pages/Groups.jsx';
+import FinanceHub from './pages/FinanceHub.jsx';
 import MyLectures from './pages/MyLectures.jsx';
 import Certificates, { CertificateDetail, MyCertificates } from './pages/Certificates.jsx';
-import Payments, { AccountStatement, Accounts, Approvals, Currencies, Expenses, FinanceSummary, MyPayments, PaymentDetail, Periods } from './pages/Finance.jsx';
+import Payments, { AccountStatement, Accounts, Approvals, Currencies, Expenses, MyPayments, PaymentDetail, Periods } from './pages/Finance.jsx';
 
 function Guard({ permission, minScope = 'own', children }) {
   const { can } = useAuth();
@@ -74,7 +75,7 @@ export default function App() {
         <Route path="/certificates" element={<Guard permission="certificates.view"><Certificates /></Guard>} />
         <Route path="/certificates/:id" element={<CertificateDetail />} />
         <Route path="/commissions" element={<Guard permission="commissions.view"><Commissions /></Guard>} />
-        <Route path="/finance" element={<Guard permission="payments.view" minScope="all"><FinanceSummary /></Guard>} />
+        <Route path="/finance" element={<Guard permission="payments.view" minScope="all"><FinanceHub /></Guard>} />
         <Route path="/payments" element={<Guard permission="payments.view"><Payments /></Guard>} />
         <Route path="/payments/:id" element={<PaymentDetail />} />
         <Route path="/approvals" element={<Guard permission="payments.view"><Approvals /></Guard>} />

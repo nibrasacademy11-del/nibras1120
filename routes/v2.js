@@ -26,6 +26,7 @@ const attendance = require('../modules/hr/attendanceController');
 const system = require('../modules/core/systemController');
 const groupsApi = require('../modules/learning/groupController');
 const groupCerts = require('../modules/learning/groupCertificates');
+const hub = require('../modules/finance/hubController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -184,6 +185,10 @@ router.post('/finance/accounts', all('accounts.create'), handle(finSetup.saveAcc
 router.put('/finance/accounts/:id', validId(), all('accounts.update'), handle(finSetup.saveAccount));
 router.get('/finance/accounts/:id/statement', validId(), all('accounts.view'), handle(finSetup.accountStatement));
 router.get('/finance/periods', all('accounts.view'), handle(finSetup.listPeriods));
+router.get('/finance/periods/:key/check', all('accounts.view'), handle(hub.closeCheck));
+router.get('/finance/today', all('payments.view'), handle(hub.today));
+router.get('/finance/receivables', can('customer_financial.view'), handle(hub.receivables));
+router.post('/finance/receivables/:customerId/remind', validId('customerId'), can('customer_financial.view'), rateLimit({ windowMs: 15 * 60 * 1000, max: 150, message: tooMany, keyBy: 'user' }), handle(hub.remind));
 router.post('/finance/periods/:key', all('accounts.approve'), handle(finSetup.setPeriod));
 
 // ---- finance: customer money ----
@@ -205,6 +210,8 @@ router.post('/approvals/:id/decide', validId(), all('payments.approve'), handle(
 router.get('/expenses', all('expenses.view'), handle(money.listExpenses));
 router.post('/expenses', all('expenses.create'), handle(money.createExpense));
 router.post('/expenses/:id/void', validId(), all('expenses.view'), handle(money.requestExpenseVoid));
+router.post('/expenses/:id/receipt', validId(), all('expenses.create'), uploadFile, handle(hub.uploadExpenseReceipt));
+router.get('/expenses/:id/receipt', validId(), all('expenses.view'), handle(hub.expenseReceipt));
 router.post('/transfers', all('accounts.update'), handle(money.createTransfer));
 router.get('/finance/summary', all('payments.view'), handle(money.summary));
 

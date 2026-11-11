@@ -22,14 +22,9 @@ const NAV = [
   { to: '/reports', key: 'reportsNav', icon: '▤', staffOnly: true },
   { to: '/complaints', key: 'complaintsNav', icon: '✉', permission: 'complaints.view', staffOnly: true },
   { to: '/certificates', key: 'certificatesNav', icon: '✪', permission: 'certificates.view', staffOnly: true },
-  { to: '/finance', key: 'financeNav', icon: '¤', permission: 'payments.view', minScope: 'all' },
-  { to: '/payments', key: 'paymentsNav', icon: '⊕', permission: 'payments.view', staffOnly: true },
+  { to: '/finance', key: 'fhTitle', icon: '¤', permission: 'payments.view', minScope: 'all' },
+  { to: '/payments', key: 'paymentsNav', icon: '⊕', permission: 'payments.view', staffOnly: true, hideWith: 'payments.view' },
   { to: '/commissions', key: 'commissionsNav', icon: '%', permission: 'commissions.view' },
-  { to: '/approvals', key: 'approvalsNav', icon: '✓', permission: 'payments.approve', minScope: 'all' },
-  { to: '/accounts', key: 'accountsNav', icon: '▣', permission: 'accounts.view', minScope: 'all' },
-  { to: '/expenses', key: 'expensesNav', icon: '⊖', permission: 'expenses.view', minScope: 'all' },
-  { to: '/currencies', key: 'currenciesNav', icon: '⇋', permission: 'currencies.view', minScope: 'all' },
-  { to: '/periods', key: 'periodsNav', icon: '▥', permission: 'accounts.view', minScope: 'all' },
   { to: '/attendance', key: 'attendanceNav', icon: '◷', permission: 'attendance.view' },
   { to: '/leaves', key: 'leavesNav', icon: '☂', permission: 'leaves.view' },
   { to: '/tasks', key: 'tasks', icon: '✓', permission: 'tasks.view' },
@@ -63,7 +58,7 @@ export default function Layout({ children }) {
         </div>
         {!locked && (
           <nav>
-            {NAV.filter((n) => (!n.permission || can(n.permission, n.minScope)) && !(n.staffOnly && !me.user.isStaff) && !(n.customerOnly && me.user.isStaff) && !(n.superOnly && me.user.role !== 'super_admin')).map((n) => (
+            {NAV.filter((n) => !(n.hideWith && can(n.hideWith, 'all')) && (!n.permission || can(n.permission, n.minScope)) && !(n.staffOnly && !me.user.isStaff) && !(n.customerOnly && me.user.isStaff) && !(n.superOnly && me.user.role !== 'super_admin')).map((n) => (
               <NavLink key={n.key} to={n.to} end={n.end} className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
                 <span className="nav-icon" aria-hidden="true">{n.icon}</span>
                 {t(n.key)}

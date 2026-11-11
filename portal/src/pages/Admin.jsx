@@ -101,6 +101,14 @@ export function Settings() {
                 </select>
               </Field>
               <fieldset className="checks form-grid">
+                <legend>{t('setReminders')}</legend>
+                <label className="check field--wide"><input type="checkbox" checked={val('finance.reminders')?.enabled !== false} onChange={(e) => change('finance.reminders', { ...val('finance.reminders'), enabled: e.target.checked })} /> {t('remEnabled')}</label>
+                <Field label={t('remDaysBefore')}><input type="number" min={0} max={30} dir="ltr" value={val('finance.reminders')?.daysBefore ?? 3} onChange={(e) => change('finance.reminders', { ...val('finance.reminders'), daysBefore: Number(e.target.value) })} /></Field>
+                <Field label={t('remOverdue')}><input dir="ltr" value={(val('finance.reminders')?.overdueDays || []).join(', ')} onChange={(e) => change('finance.reminders', { ...val('finance.reminders'), overdueDays: e.target.value.split(/[,، ]+/).map(Number).filter(Boolean) })} /></Field>
+                <label className="check"><input type="checkbox" checked={val('finance.reminders')?.email !== false} onChange={(e) => change('finance.reminders', { ...val('finance.reminders'), email: e.target.checked })} /> {t('remEmail')}</label>
+                <label className="check"><input type="checkbox" checked={val('finance.reminders')?.notifyOwner !== false} onChange={(e) => change('finance.reminders', { ...val('finance.reminders'), notifyOwner: e.target.checked })} /> {t('remOwner')}</label>
+              </fieldset>
+              <fieldset className="checks form-grid">
                 <legend>{t('academyProfile')}</legend>
                 <p className="muted field--wide"><small>{t('apHint')}</small></p>
                 {[['nameAr', 'apNameAr'], ['nameEn', 'apNameEn', 'ltr'], ['address', 'apAddress'], ['phone', 'apPhone', 'ltr'], ['email', 'apEmail', 'ltr'], ['website', 'apWebsite', 'ltr'], ['taxNumber', 'taxNumber', 'ltr'], ['commercialRegister', 'crNumber', 'ltr']].map(([k, lab, dir]) => (

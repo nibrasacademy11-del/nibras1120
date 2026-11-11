@@ -173,9 +173,20 @@ const expenseSchema = new mongoose.Schema({
     recordedBy: { type: ObjectId, ref: 'User', required: true },
     status: { type: String, enum: ['posted', 'voided'], default: 'posted', index: true },
     voidReason: { type: String, default: '' },
-    voidedBy: { type: ObjectId, ref: 'User', default: null }
+    voidedBy: { type: ObjectId, ref: 'User', default: null },
+    // A direct cost of one program (instructor fee, materials), so its profit can be reported
+    program: { type: ObjectId, ref: 'Course', default: null, index: true },
+    // A photo or PDF of the receipt; can be added after the expense is recorded
+    attachment: {
+        storageKey: { type: String, default: '' },
+        filename: { type: String, default: '' },
+        mimetype: { type: String, default: '' },
+        size: { type: Number, default: 0 },
+        uploadedBy: { type: ObjectId, ref: 'User', default: null },
+        uploadedAt: { type: Date, default: null }
+    }
 }, { timestamps: true, optimisticConcurrency: true });
-expenseSchema.plugin(protectRecords, { mutable: ['status', 'voidReason', 'voidedBy'] });
+expenseSchema.plugin(protectRecords, { mutable: ['status', 'voidReason', 'voidedBy', 'attachment'] });
 
 const transferSchema = new mongoose.Schema({
     transferNo: { type: String, required: true, unique: true },

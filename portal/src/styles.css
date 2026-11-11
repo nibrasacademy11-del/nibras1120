@@ -460,3 +460,12 @@ input[type="month"] { font: inherit; padding: 8px 10px; border: 1px solid var(--
   .receipt-sign { gap: 16px; justify-content: space-between; }
   .receipt-sign span { min-width: 0; flex: 1; }
 }
+
+/* ---- Phase 13: the finance section ---- */
+.hub-body .page-title { font-size: 1.15rem; }
+button.stat { font: inherit; text-align: start; cursor: pointer; background: var(--surface); }
+.btn--wa { background: #1f7a4d; color: #fff; border-color: #1f7a4d; }
+.btn--wa:hover { background: #17603c; }
+tr.row-late td:first-child { border-inline-start: 3px solid var(--danger); }
+.checklist li span:first-child { font-weight: 500; }
+.upload-btn { cursor: pointer; display: inline-flex; flex-direction: column; }
