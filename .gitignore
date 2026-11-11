@@ -12,3 +12,6 @@ local-server/node_modules
 desktop/node_modules
 desktop/dist
 desktop/config.json
+
+# Sample printouts made locally (regenerate from /portal/print-samples)
+print-samples/

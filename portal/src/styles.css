@@ -497,3 +497,32 @@ tr.row-late td:first-child { border-inline-start: 3px solid var(--danger); }
 .tpl-row input { max-width: 160px; }
 .tpl-row textarea { flex: 1; min-width: 200px; }
 @media (max-width: 760px) { .board { grid-template-columns: repeat(4, 240px); } }
+
+/* ---- the menu in sections, "My access", print samples ---- */
+.side-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; overflow-y: auto; }
+.nav-search { margin: 4px 2px 8px; padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.06); color: var(--on-dark); font: inherit; }
+.nav-search::placeholder { color: var(--on-dark-muted); }
+.nav-section { display: flex; flex-direction: column; gap: 2px; margin-bottom: 4px; }
+.nav-section__head { display: flex; align-items: center; gap: 8px; width: 100%; background: none; border: 0; color: #e0bc72; font: inherit; font-size: .8rem; font-weight: 700; letter-spacing: .02em; padding: 8px 10px 4px; cursor: pointer; text-align: start; }
+.nav-section__head span:first-child { flex: 1; }
+.nav-section__count { font-size: .7rem; color: var(--on-dark-muted); font-weight: 500; }
+.nav-section__chev { transition: transform .15s; transform: rotate(90deg); }
+[dir='ltr'] .nav-section__chev { transform: rotate(-90deg); }
+.nav-section--open .nav-section__chev { transform: none; }
+.ma-legend { display: grid; gap: 6px; }
+.ma-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+.ma-page { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; display: grid; gap: 6px; align-content: start; }
+.ma-page__head { display: flex; gap: 8px; align-items: center; }
+.ma-abilities { display: grid; gap: 4px; }
+.ma-ability { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: .85rem; }
+.ma-ability .pill { margin: 0; }
+.ma-hidden { margin-top: 10px; }
+.ma-hidden summary { cursor: pointer; color: var(--muted); }
+.ma-hidden li { opacity: .7; }
+.samples .sample-doc { margin: 18px 0 28px; }
+.sample-title { font-size: 1rem; color: var(--primary); }
+.samples--one .sample-doc { margin-top: 8px; }
+@media print {
+  .samples .sample-doc { break-after: page; margin: 0; }
+  .samples .sample-doc:last-child { break-after: auto; }
+}

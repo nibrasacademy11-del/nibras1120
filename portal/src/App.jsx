@@ -26,6 +26,8 @@ import SystemHealth from './pages/SystemHealth.jsx';
 import Groups, { GroupDetail } from './pages/Groups.jsx';
 import FinanceHub from './pages/FinanceHub.jsx';
 import Website from './pages/Website.jsx';
+import MyAccess from './pages/MyAccess.jsx';
+import PrintSamples from './pages/PrintSamples.jsx';
 import Leads from './pages/Crm360.jsx';
 import MyLectures from './pages/MyLectures.jsx';
 import Certificates, { CertificateDetail, MyCertificates } from './pages/Certificates.jsx';
@@ -94,6 +96,8 @@ export default function App() {
         <Route path="/enrollments/:id" element={<Guard permission="enrollments.view"><EnrollmentDetail /></Guard>} />
         <Route path="/reviews" element={<Guard permission="enrollments.approve" minScope="team"><Reviews /></Guard>} />
         <Route path="/customers" element={<Guard permission="customers.view"><Customers /></Guard>} />
+        <Route path="/my-access" element={<MyAccess />} />
+        <Route path="/print-samples" element={['super_admin', 'admin'].includes(me.user.role) ? <PrintSamples /> : <div className="card empty">{t('forbidden')}</div>} />
         <Route path="/leads" element={<Guard permission="customers.view"><Leads /></Guard>} />
         <Route path="/website" element={['super_admin', 'admin'].includes(me.user.role) ? <Website /> : <div className="card empty">{t('forbidden')}</div>} />
         <Route path="/customers/:id" element={<Guard permission="customer_lookup.view"><CustomerDetail /></Guard>} />

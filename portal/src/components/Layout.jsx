@@ -1,51 +1,14 @@
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { visibleSections } from './navigation.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import Notifications from './Notifications.jsx';
 
-// Menu entries appear only when the user holds the permission behind them
-const NAV = [
-  { to: '/', key: 'dashboard', icon: '⌂', end: true, staffOnly: true },
-  { to: '/', key: 'myPrograms', icon: '▤', end: true, customerOnly: true },
-  { to: '/my-lectures', key: 'myLectures', icon: '▶', customerOnly: true },
-  { to: '/customers', key: 'customers', icon: '◉', permission: 'customers.view' },
-  { to: '/leads', key: 'leadsNav', icon: '▥', permission: 'customers.view', staffOnly: true },
-  { to: '/lookup', key: 'lookup', icon: '⌕', permission: 'customer_lookup.view' },
-  { to: '/enrollments', key: 'enrollmentsNav', icon: '❖', permission: 'enrollments.view', staffOnly: true },
-  { to: '/reviews', key: 'reviews', icon: '✔', permission: 'enrollments.approve', minScope: 'team' },
-  { to: '/groups', key: 'groupsNav', icon: '▶', permission: 'programs.view', staffOnly: true },
-  { to: '/programs', key: 'programsNav', icon: '▤', permission: 'programs.view', staffOnly: true },
-  { to: '/my-payments', key: 'myPayments', icon: '¤', customerOnly: true },
-  { to: '/my-certificates', key: 'myCertificates', icon: '✪', customerOnly: true },
-  { to: '/my-complaints', key: 'myComplaints', icon: '✉', customerOnly: true },
-  { to: '/analytics', key: 'analyticsNav', icon: '◔', permission: 'reports.view', minScope: 'team' },
-  { to: '/reports', key: 'reportsNav', icon: '▤', staffOnly: true },
-  { to: '/complaints', key: 'complaintsNav', icon: '✉', permission: 'complaints.view', staffOnly: true },
-  { to: '/certificates', key: 'certificatesNav', icon: '✪', permission: 'certificates.view', staffOnly: true },
-  { to: '/finance', key: 'fhTitle', icon: '¤', permission: 'payments.view', minScope: 'all' },
-  { to: '/payments', key: 'paymentsNav', icon: '⊕', permission: 'payments.view', staffOnly: true, hideWith: 'payments.view' },
-  { to: '/commissions', key: 'commissionsNav', icon: '%', permission: 'commissions.view' },
-  { to: '/attendance', key: 'attendanceNav', icon: '◷', permission: 'attendance.view' },
-  { to: '/leaves', key: 'leavesNav', icon: '☂', permission: 'leaves.view' },
-  { to: '/tasks', key: 'tasks', icon: '✓', permission: 'tasks.view' },
-  { to: '/access-requests', key: 'accessRequests', icon: '⇄', permission: 'access_requests.view' },
-  { to: '/employees', key: 'employees', icon: '☺', permission: 'employees.view', minScope: 'team' },
-  { to: '/teams', key: 'teams', icon: '▦', permission: 'teams.view', minScope: 'team' },
-  { to: '/duplicates', key: 'duplicates', icon: '⧉', permission: 'customers.manage', minScope: 'all' },
-  { to: '/roles', key: 'roles', icon: '◈', permission: 'roles.view', minScope: 'all' },
-  { to: '/audit', key: 'audit', icon: '☰', permission: 'audit.view', minScope: 'all' },
-  { to: '/website', key: 'websiteNav', icon: '◍', adminOnly: true },
-  { to: '/settings', key: 'settings', icon: '⚙', permission: 'settings.manage', minScope: 'all' },
-  { to: '/system', key: 'systemNav', icon: '♥', superOnly: true },
-  { to: '/security', key: 'security', icon: '⚿' }
-];
-
 export default function Layout({ children }) {
-  const { me, can, signOut } = useAuth();
+  const { me, signOut } = useAuth();
   const { t, label, toggle } = useI18n();
   const [open, setOpen] = useState(false);
-  const isAdmin = ['super_admin', 'admin'].includes(me.user.role);
   const locked = me.security.mustChangePassword;
 
   return (
@@ -58,18 +21,8 @@ export default function Layout({ children }) {
             <small>{label(me.user.roleLabel)}</small>
           </div>
         </div>
-        {!locked && (
-          <nav>
-            {NAV.filter((n) => !(n.hideWith && can(n.hideWith, 'all')) && (!n.permission || can(n.permission, n.minScope)) && !(n.staffOnly && !me.user.isStaff) && !(n.customerOnly && me.user.isStaff) && !(n.superOnly && me.user.role !== 'super_admin') && !(n.adminOnly && !['super_admin', 'admin'].includes(me.user.role))).map((n) => (
-              <NavLink key={n.key} to={n.to} end={n.end} className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
-                <span className="nav-icon" aria-hidden="true">{n.icon}</span>
-                {t(n.key)}
-              </NavLink>
-            ))}
-          </nav>
-        )}
+        {!locked && <SideNav />}
         <div className="sidebar-foot">
-          {isAdmin && <a className="nav-item" href="/pages/ar/admin.html">{t('oldPanel')}</a>}
           <a className="nav-item" href="/">{t('website')}</a>
         </div>
       </aside>
@@ -87,5 +40,50 @@ export default function Layout({ children }) {
         <main className="content">{children}</main>
       </div>
     </div>
+  );
+}
+
+const OPEN_KEY = 'nibras_nav_open';
+const readOpen = () => { try { return JSON.parse(localStorage.getItem(OPEN_KEY) || '[]'); } catch { return []; } };
+
+// The menu in sections. The section of the current page is always open; the others open and
+// close on a click and are remembered. The search box finds any page by name.
+function SideNav() {
+  const { me } = useAuth();
+  const { t } = useI18n();
+  const location = useLocation();
+  const sections = useMemo(() => visibleSections({ role: me.user.role, isStaff: me.user.isStaff, grants: me.grants }), [me]);
+  const [opened, setOpened] = useState(readOpen);
+  const [q, setQ] = useState('');
+  const path = location.pathname;
+  const current = sections.find((sec) => sec.items.some((i) => (i.end ? path === i.to : path === i.to || path.startsWith(`${i.to}/`))));
+  useEffect(() => { try { localStorage.setItem(OPEN_KEY, JSON.stringify(opened)); } catch { /* storage may be blocked */ } }, [opened]);
+  const toggleSection = (key) => setOpened((o) => (o.includes(key) ? o.filter((k) => k !== key) : [...o, key]));
+  const term = q.trim().toLowerCase();
+  const few = sections.reduce((n, sec) => n + sec.items.length, 0) <= 8;
+  return (
+    <nav className="side-nav">
+      {!few && <input className="nav-search" type="search" placeholder={t('navSearch')} value={q} onChange={(e) => setQ(e.target.value)} onClick={(e) => e.stopPropagation()} aria-label={t('navSearch')} />}
+      {sections.map((sec) => {
+        const items = term ? sec.items.filter((i) => t(i.key).toLowerCase().includes(term)) : sec.items;
+        if (!items.length) return null;
+        const isOpen = few || !!term || sec === current || opened.includes(sec.key) || sections.length === 1;
+        return (
+          <div key={sec.key} className={`nav-section${isOpen ? ' nav-section--open' : ''}`}>
+            {!few && (
+              <button type="button" className="nav-section__head" aria-expanded={isOpen} onClick={(e) => { e.stopPropagation(); toggleSection(sec.key); }}>
+                <span>{t(sec.key)}</span><span className="nav-section__count">{items.length}</span><span aria-hidden="true" className="nav-section__chev">▾</span>
+              </button>
+            )}
+            {isOpen && items.map((n) => (
+              <NavLink key={n.to + n.key} to={n.to} end={n.end} className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
+                <span className="nav-icon" aria-hidden="true">{n.icon}</span>
+                {t(n.key)}
+              </NavLink>
+            ))}
+          </div>
+        );
+      })}
+    </nav>
   );
 }

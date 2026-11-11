@@ -41,7 +41,7 @@ node tools/test-all.js
 3. **الدمج والنشر**:
    ```
    git checkout main
-   git merge --no-ff erp-phase-9
+   git merge --no-ff erp-admin-ux
    git push origin main
    ```
    ثم تأكد من `/api/health` = `ok` ومن فتح `/portal/`.

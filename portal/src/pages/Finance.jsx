@@ -293,6 +293,49 @@ export default function Payments() {
 }
 
 // The receipt page doubles as the printable A4 receipt
+// The printed receipt (a tax invoice when the academy is tax registered). Also used for the print samples.
+export function ReceiptSheet({ p, vat, verifyUrl }) {
+  const { t, en, label, fmtDay, fmtDate } = useI18n();
+  return (
+    <section className="card receipt">
+      <BrandBand title={vat ? `${t('taxInvoiceTitle')} / ${t('receiptTitle')}` : t('receiptTitle')}>
+        <div className="receipt-no">
+          <span dir="ltr">{p.receiptNo}</span>
+          <Pill tone={TONE[p.status]}>{en('payStatus', p.status)}</Pill>
+        </div>
+      </BrandBand>
+      <div className="receipt-body">
+        <p className="receipt-line">{t('receiptFor')}: <strong>{p.customer.nameAr}</strong> <small className="muted">({p.customer.customerNo})</small></p>
+        <p className="receipt-line">{t('theSumOf')}: <Money amount={p.amount} currency={p.currency} strong /></p>
+        <p className="receipt-line">{t('forWhat')}: {p.charge ? p.charge.description : p.enrollment ? p.enrollment.programTitleAr : t('advance')}</p>
+        <table className="table receipt-table">
+          <tbody>
+            <tr><th>{t('paidAt')}</th><td>{fmtDay(p.paidAt)}</td><th>{t('method')}</th><td>{en('payMethod', p.method)}{p.reference ? ` · ${p.reference}` : ''}</td></tr>
+            <tr><th>{t('account')}</th><td>{label({ ar: p.account.nameAr, en: p.account.nameEn })}</td><th>{t('collectedBy')}</th><td>{p.collectedBy?.name || '—'}</td></tr>
+            {(p.charge || p.enrollment) && <tr><th>{t('charge')}</th><td>{p.charge ? p.charge.chargeNo : '—'}</td><th>{t('enrollment')}</th><td>{p.enrollment ? p.enrollment.enrollmentNo : '—'}</td></tr>}
+            {vat && (
+              <>
+                <tr><th>{t('netBeforeVat')}</th><td><Money amount={vat.net} currency={p.currency} /></td><th>{t('vatLabel')} ({vat.rate}%)</th><td><Money amount={vat.vat} currency={p.currency} /></td></tr>
+                <tr className="receipt-total"><th>{t('totalLabel')}</th><td colSpan={3}><Money amount={vat.total} currency={p.currency} strong /></td></tr>
+              </>
+            )}
+            {!vat && <tr className="receipt-total"><th>{t('totalLabel')}</th><td colSpan={3}><Money amount={p.amount} currency={p.currency} strong /></td></tr>}
+          </tbody>
+        </table>
+        {p.refundedAmount > 0 && <p className="late">{t('refunds')}: <Money amount={p.refundedAmount} currency={p.currency} /></p>}
+        {p.note && <p>{p.note}</p>}
+        {(p.status === 'voided' || p.status === 'rejected') && <div className="alert alert--error">{p.voidReason}</div>}
+        <div className="receipt-bottom">
+          <div className="receipt-sign"><span>{t('signCollector')}</span><span>{t('signStamp')}</span></div>
+          {verifyUrl && <div className="receipt-qr"><QrImg text={verifyUrl} /><small>{t('scanToVerify')}</small></div>}
+        </div>
+        <p className="muted receipt-foot">{t('recordedBy')}: {p.recordedBy?.name}{p.confirmedBy ? ` · ${t('confirmed')}: ${p.confirmedBy.name}` : ''} · {fmtDate(new Date())}</p>
+      </div>
+      <PrintFooter />
+    </section>
+  );
+}
+
 export function PaymentDetail() {
   const { id } = useParams();
   const { t, en, label, fmtDate, fmtDay } = useI18n();
@@ -318,42 +361,7 @@ export function PaymentDetail() {
               {p.status === 'confirmed' && me.user.isStaff && !p.refundedAmount && <button type="button" className="btn btn--ghost" onClick={() => setDialog('void')}>{t('requestVoid')}</button>}
             </div>
           </div>
-          <section className="card receipt">
-            <BrandBand title={vat ? `${t('taxInvoiceTitle')} / ${t('receiptTitle')}` : t('receiptTitle')}>
-              <div className="receipt-no">
-                <span dir="ltr">{p.receiptNo}</span>
-                <Pill tone={TONE[p.status]}>{en('payStatus', p.status)}</Pill>
-              </div>
-            </BrandBand>
-            <div className="receipt-body">
-              <p className="receipt-line">{t('receiptFor')}: <strong>{p.customer.nameAr}</strong> <small className="muted">({p.customer.customerNo})</small></p>
-              <p className="receipt-line">{t('theSumOf')}: <Money amount={p.amount} currency={p.currency} strong /></p>
-              <p className="receipt-line">{t('forWhat')}: {p.charge ? p.charge.description : p.enrollment ? p.enrollment.programTitleAr : t('advance')}</p>
-              <table className="table receipt-table">
-                <tbody>
-                  <tr><th>{t('paidAt')}</th><td>{fmtDay(p.paidAt)}</td><th>{t('method')}</th><td>{en('payMethod', p.method)}{p.reference ? ` · ${p.reference}` : ''}</td></tr>
-                  <tr><th>{t('account')}</th><td>{label({ ar: p.account.nameAr, en: p.account.nameEn })}</td><th>{t('collectedBy')}</th><td>{p.collectedBy?.name || '—'}</td></tr>
-                  {(p.charge || p.enrollment) && <tr><th>{t('charge')}</th><td>{p.charge ? p.charge.chargeNo : '—'}</td><th>{t('enrollment')}</th><td>{p.enrollment ? p.enrollment.enrollmentNo : '—'}</td></tr>}
-                  {vat && (
-                    <>
-                      <tr><th>{t('netBeforeVat')}</th><td><Money amount={vat.net} currency={p.currency} /></td><th>{t('vatLabel')} ({vat.rate}%)</th><td><Money amount={vat.vat} currency={p.currency} /></td></tr>
-                      <tr className="receipt-total"><th>{t('totalLabel')}</th><td colSpan={3}><Money amount={vat.total} currency={p.currency} strong /></td></tr>
-                    </>
-                  )}
-                  {!vat && <tr className="receipt-total"><th>{t('totalLabel')}</th><td colSpan={3}><Money amount={p.amount} currency={p.currency} strong /></td></tr>}
-                </tbody>
-              </table>
-              {p.refundedAmount > 0 && <p className="late">{t('refunds')}: <Money amount={p.refundedAmount} currency={p.currency} /></p>}
-              {p.note && <p>{p.note}</p>}
-              {(p.status === 'voided' || p.status === 'rejected') && <div className="alert alert--error">{p.voidReason}</div>}
-              <div className="receipt-bottom">
-                <div className="receipt-sign"><span>{t('signCollector')}</span><span>{t('signStamp')}</span></div>
-                {verifyUrl && <div className="receipt-qr"><QrImg text={verifyUrl} /><small>{t('scanToVerify')}</small></div>}
-              </div>
-              <p className="muted receipt-foot">{t('recordedBy')}: {p.recordedBy?.name}{p.confirmedBy ? ` · ${t('confirmed')}: ${p.confirmedBy.name}` : ''} · {fmtDate(new Date())}</p>
-            </div>
-            <PrintFooter />
-          </section>
+          <ReceiptSheet p={p} vat={vat} verifyUrl={verifyUrl} />
           {refunds.length > 0 && (
             <section className="card no-print">
               <h2>{t('refunds')}</h2>
@@ -862,10 +870,23 @@ export function MyPayments() {
   const state = useLoad('/api/v2/my/finance');
   return (
     <>
-      <h1 className="page-title">{t('myPayments')}</h1>
+      <div className="page-head">
+        <h1 className="page-title">{t('myPayments')}</h1>
+        <button type="button" className="btn btn--ghost no-print" onClick={() => window.print()}>{t('printPdf')}</button>
+      </div>
       <Loading state={state}>
-        {(d) => (
+        {(d) => <StatementView d={d} onOpen={(p) => navigate(`/payments/${p._id}`)} />}
+      </Loading>
+    </>
+  );
+}
+
+// The customer's statement: balances per currency, installments and payments. Printed with the academy band.
+export function StatementView({ d, onOpen, customerName }) {
+  const { t, en, fmtDay } = useI18n();
+  return (
           <>
+            <div className="print-only"><BrandBand title={t('stmtTitle')} subtitle={customerName} /></div>
             {d.byCurrency.length > 0 && <div className="grid grid--4">{d.byCurrency.map((x) => <div className="card stat" key={x.currency}><small>{t('remaining')}</small><Money amount={x.remaining} currency={x.currency} strong /><small className="muted">{t('paid')}: <Money amount={x.paid} currency={x.currency} /></small></div>)}</div>}
             <section className="card">
               <h2>{t('installments')}</h2>
@@ -879,12 +900,10 @@ export function MyPayments() {
             <section className="card">
               <h2>{t('paymentsNav')}</h2>
               {!d.payments.length ? <p className="muted">{t('noData')}</p> : (
-                <ul className="plain-list">{d.payments.map((p) => <li key={p._id}><button type="button" className="link" onClick={() => navigate(`/payments/${p._id}`)}>{p.receiptNo}</button><span>{fmtDay(p.paidAt)} · {en('payMethod', p.method)}</span><Money amount={p.amount} currency={p.currency} strong /></li>)}</ul>
+                <ul className="plain-list">{d.payments.map((p) => <li key={p._id}><button type="button" className="link" onClick={() => onOpen && onOpen(p)}>{p.receiptNo}</button><span>{fmtDay(p.paidAt)} · {en('payMethod', p.method)}</span><Money amount={p.amount} currency={p.currency} strong /></li>)}</ul>
               )}
             </section>
+            <PrintFooter />
           </>
-        )}
-      </Loading>
-    </>
   );
 }
