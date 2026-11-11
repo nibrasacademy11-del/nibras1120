@@ -277,3 +277,15 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--primary-dark); line-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+/* Links from the content panel to the management system portal */
+.admin-nav .admin-nav-link { width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--radius-sm); font-weight: 500; color: #ead9c6; text-decoration: none; transition: background .2s, color .2s; }
+.admin-nav .admin-nav-link i { width: 18px; text-align: center; color: var(--gold-bright); opacity: .85; }
+.admin-nav .admin-nav-link:hover { background: rgba(255, 255, 255, .06); color: #fff; }
+.portal-banner { display: flex; align-items: center; gap: 16px; padding: 18px 22px; margin-bottom: 18px; border-radius: var(--radius, 14px); background: linear-gradient(120deg, #5a020e, #7a0f20); color: #fff; text-decoration: none; box-shadow: 0 8px 24px rgba(90, 2, 14, .2); }
+.portal-banner > i:first-child { font-size: 1.6rem; color: #e0bc72; }
+.portal-banner span { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.portal-banner strong { font-size: 1.1rem; }
+.portal-banner small { color: #f0dcc4; }
+.portal-banner:hover { filter: brightness(1.08); }
+[dir="ltr"] .portal-banner > i:last-child { transform: scaleX(-1); }
