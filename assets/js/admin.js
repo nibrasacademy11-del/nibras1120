@@ -794,7 +794,7 @@
                     return `
                     <tr${i.status === 'New' ? ' class="is-new"' : ''}>
                         <td class="nowrap">${fmtDate(i.createdAt)}</td>
-                        <td><strong>${esc(i.name)}</strong>${i.country ? `<small>${esc(i.country)}</small>` : ''}</td>
+                        <td><strong>${esc(i.name)}</strong>${i.country ? `<small>${esc(i.country)}</small>` : ''}${i.customer ? `<a class="contact-link" href="/portal/customers/${esc(i.customer)}"><i class="fas fa-address-card"></i> ملف العميل</a>` : ''}</td>
                         <td class="nowrap">
                             ${phone ? `<a class="contact-link" href="https://wa.me/${phone}" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> ${esc(i.phone)}</a>` : ''}
                             ${i.email ? `<a class="contact-link" href="mailto:${esc(i.email)}"><i class="fas fa-envelope"></i> ${esc(i.email)}</a>` : ''}
@@ -1020,7 +1020,15 @@
                 const u = state.users.find((x) => x._id === edit.dataset.edit);
                 const form = $('#userForm');
                 form.reset();
-                fillFields(form, { ...u, id: u._id, role: u.role === 'user' ? 'student' : u.role });
+                fillFields(form, { ...u, id: u._id, role: u.role === 'user' || u.role === 'customer' ? 'student' : u.role });
+                const roleSelect = form.querySelector('[name="role"]');
+                const staffRole = !['student', 'user', 'customer', 'admin', 'super_admin'].includes(u.role);
+                [...roleSelect.querySelectorAll('option[data-extra]')].forEach((o) => o.remove());
+                if (staffRole || u.role === 'super_admin') {
+                    roleSelect.insertAdjacentHTML('beforeend', `<option data-extra value="${esc(u.role)}">${esc(ROLE_NAMES[u.role] || u.role)}</option>`);
+                    roleSelect.value = u.role;
+                }
+                roleSelect.disabled = staffRole;
                 $('#userDialog').showModal();
             }
             if (del) {
@@ -1041,10 +1049,10 @@
             const v = readFields(e.target);
             if (!v.name || !v.email) return showToast('الاسم والبريد مطلوبان.', true);
             const current = state.users.find((x) => x._id === v.id);
-            const payload = { name: v.name, email: v.email, phone: v.phone, enrolledCourses: lines(v.enrolledCourses) };
+            const payload = { name: v.name, email: v.email, phone: v.phone };
             // Send the role only when it was changed here, so an untouched form never resets it
-            const currentRole = current && current.role === 'user' ? 'student' : current && current.role;
-            if (v.role !== currentRole) payload.role = v.role;
+            const currentRole = current && (current.role === 'user' || current.role === 'customer') ? 'student' : current && current.role;
+            if (v.role && v.role !== currentRole) payload.role = v.role;
             await busy(e.target.querySelector('[type="submit"]'), async () => {
                 try {
                     const data = await apiFetch(`/api/auth/users/${v.id}`, json('PUT', payload));
@@ -1072,6 +1080,15 @@
         if (!user || !['admin', 'super_admin'].includes(user.role)) {
             window.location.replace(`/pages/ar/login.html?next=${encodeURIComponent('/pages/ar/admin.html')}`);
             return;
+        }
+        try {
+            const me = await apiFetch('/api/v2/me');
+            if (me.security && (me.security.mustChangePassword || me.security.mustEnrollTwoFactor)) {
+                window.location.replace('/portal/security');
+                return;
+            }
+        } catch (e) {
+            // the panel keeps working; the server enforces the rule on each request
         }
         try { localStorage.setItem('nibras_user_name', user.name); } catch (e) {}
         $('#adminName').textContent = user.name;

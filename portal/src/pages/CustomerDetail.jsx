@@ -257,7 +257,7 @@ function Overview({ c, onReload }) {
 }
 
 function Timeline({ id }) {
-  const { fmtDate } = useI18n();
+  const { fmtDate, en } = useI18n();
   const state = useLoad(`/api/v2/customers/${id}/timeline`);
   return (
     <section className="card">
@@ -267,7 +267,7 @@ function Timeline({ id }) {
             {d.items.map((e) => (
               <li key={e._id}>
                 <span className="tl-time">{fmtDate(e.at)}</span>
-                <span className="tl-type">{e.type}</span>
+                <span className="tl-type">{en('eventType', e.type)}</span>
                 <div>{e.summary}</div>
                 <small className="muted">{e.actorName}</small>
               </li>

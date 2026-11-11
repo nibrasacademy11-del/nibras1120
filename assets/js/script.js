@@ -269,7 +269,8 @@ function afterLoginUrl(user, isEN) {
     if (user && (user.role === 'admin' || user.role === 'super_admin')) return isEN ? '/en/index.html' : '/index.html';
     // Employees, team leaders and the other staff roles work in the management portal
     if (user && user.isStaff) return '/portal/';
-    return isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html';
+    // Customers follow their programs, payments and certificates in the portal
+    return '/portal/';
 }
 
 function initPublicAuth(isEN) {
@@ -513,7 +514,7 @@ async function updateNavAuth(isEN) {
     const isAdmin = user.role === 'admin' || user.role === 'super_admin';
     const isStaff = !isAdmin && ['hr_manager', 'finance_manager', 'team_leader', 'employee', 'accountant', 'customer_support'].includes(user.role);
     const firstName = String(user.name || '').split(' ')[0];
-    const profileUrl = isAdmin ? '/pages/ar/admin.html' : isStaff ? '/portal/' : (isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html');
+    const profileUrl = isAdmin ? '/pages/ar/admin.html' : '/portal/';
     const label = (isAdmin || isStaff)
         ? `<i class="fas fa-gauge-high"></i> ${isStaff ? (isEN ? 'Staff Portal' : 'بوابة الموظفين') : (isEN ? 'Control Panel' : 'لوحة التحكم')}`
         : `<i class="fas fa-user-circle"></i> ${esc(firstName)}`;

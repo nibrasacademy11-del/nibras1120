@@ -44,8 +44,12 @@ async function createFile({ name, phone, email, country, source, sourceDetail, u
     return c;
 }
 
-async function ingestUser(user, { dryRun = false } = {}) {
-    const existing = await findExisting({ phone: user.phone, email: user.email, userId: user._id });
+// linkMatches: link to a file found by phone or email (migration of old accounts only). Live sign-ups
+// never do: anyone can type someone else's email, and the file would show them that person's payments.
+async function ingestUser(user, { dryRun = false, linkMatches = false } = {}) {
+    const linked = await Customer.findOne({ user: user._id, status: { $ne: 'merged' } });
+    if (linked) return dryRun ? { action: 'already_linked', customerNo: linked.customerNo } : { action: 'linked', customer: linked };
+    const existing = linkMatches ? await findExisting({ phone: user.phone, email: user.email }) : null;
     if (existing) {
         if (dryRun) return { action: existing.user ? 'already_linked' : 'link', customerNo: existing.customerNo };
         if (!existing.user) {
@@ -61,6 +65,13 @@ async function ingestUser(user, { dryRun = false } = {}) {
         userId: user._id, registeredAt: user.createdAt, status: (user.enrolledCourses || []).length ? 'customer' : 'lead',
         legacy: { from: 'user', id: String(user._id) }
     });
+    if (!linkMatches) {
+        const match = await findExisting({ phone: user.phone, email: user.email });
+        if (match && String(match._id) !== String(c._id)) {
+            await CustomerEvent.create({ customer: match._id, type: 'duplicate', summary: `Website account opened as ${c.customerNo} with the same phone or email. Check and merge it into this file to give the customer portal access.`, actorName: 'system' });
+            await CustomerEvent.create({ customer: c._id, type: 'duplicate', summary: `Same phone or email as ${match.customerNo}. Not linked automatically: staff must verify and merge.`, actorName: 'system' });
+        }
+    }
     return { action: 'created', customer: c };
 }
 

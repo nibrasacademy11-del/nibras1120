@@ -50,6 +50,7 @@ exports.getAllCertificates = async (req, res) => {
 exports.addCertificate = async (req, res) => {
     try {
         const certNum = text(req.body.certNum);
+        if (/^NC-/i.test(certNum)) return res.status(400).json({ message: 'الأرقام التي تبدأ بـ NC- محجوزة للشهادات الصادرة من نظام الإدارة.' });
         const traineeName = text(req.body.traineeName);
         const programName = text(req.body.programName);
         const issueDate = text(req.body.issueDate);
@@ -103,6 +104,7 @@ exports.updateCertificate = async (req, res) => {
         if (current.kind && current.kind !== 'legacy') return res.status(400).json({ message: 'هذه الشهادة صادرة من نظام الإدارة؛ عدّلها بإعادة الإصدار من البوابة.' });
 
         const updateData = {};
+        if (/^NC-/i.test(text(certNum))) return res.status(400).json({ message: 'الأرقام التي تبدأ بـ NC- محجوزة للشهادات الصادرة من نظام الإدارة.' });
         if (text(certNum)) updateData.cert_num = text(certNum);
         if (text(traineeName)) updateData.trainee_name = text(traineeName);
         if (text(programName)) updateData.program_name = text(programName);

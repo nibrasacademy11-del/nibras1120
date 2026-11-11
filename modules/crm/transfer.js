@@ -56,7 +56,19 @@ async function transferAllFrom(req, { from, to, reason }) {
         await addEvent(req, c._id, 'transferred', 'Transferred with the files of a departing employee', { meta: { from: String(from), to: String(to), reason } });
     }
     const tasks = await Task.updateMany({ assignee: from, status: 'open' }, { $set: { assignee: to, team: toTeam } });
-    if (customers.length || tasks.modifiedCount) {
+    const Enrollment = require('../../models/Enrollment');
+    const Complaint = require('../../models/Complaint');
+    const enrollments = await Enrollment.find({ owner: from, status: { $in: ['active', 'on_hold'] } });
+    for (const e of enrollments) {
+        const open = e.ownerHistory.find((h) => !h.to);
+        if (open) open.to = new Date();
+        e.ownerHistory.push({ owner: to, team: toTeam, from: new Date(), by: req.user.id, reason });
+        e.owner = to;
+        e.team = toTeam;
+        await e.save();
+    }
+    const complaints = await Complaint.updateMany({ assignee: from, status: { $in: ['open', 'in_progress'] } }, { $set: { assignee: to, team: toTeam } });
+    if (customers.length || tasks.modifiedCount || enrollments.length || complaints.modifiedCount) {
         await notify(to, {
             type: 'customer_assigned',
             titleAr: `تم إسناد ${customers.length} عميل و${tasks.modifiedCount} مهمة إليك`,
@@ -64,7 +76,7 @@ async function transferAllFrom(req, { from, to, reason }) {
             link: '/customers?mine=1'
         });
     }
-    return { customers: customers.length, tasks: tasks.modifiedCount };
+    return { customers: customers.length, tasks: tasks.modifiedCount, enrollments: enrollments.length, complaints: complaints.modifiedCount };
 }
 
 module.exports = { transferCustomer, transferAllFrom };

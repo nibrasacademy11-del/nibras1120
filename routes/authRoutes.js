@@ -6,14 +6,17 @@ const rateLimit = require('../middleware/rateLimit');
 const validId = require('../middleware/validId');
 
 const tooMany = 'عدد كبير من المحاولات، يرجى المحاولة لاحقاً. / Too many attempts, please try again later.';
-const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20, message: tooMany });
+// Per email and address: the whole academy signs in from one internet address every morning
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20, message: tooMany, keyBy: 'email' });
+// Requests without an email (2FA step, reset links) still count per address, with room for an office
+const officeLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: tooMany });
 
-router.post('/register', authLimiter, authController.register);
-router.post('/login', authLimiter, authController.login);
-router.post('/login/2fa', authLimiter, authController.loginTwoFactor);
+router.post('/register', officeLimiter, authLimiter, authController.register);
+router.post('/login', officeLimiter, authLimiter, authController.login);
+router.post('/login/2fa', officeLimiter, authController.loginTwoFactor);
 router.post('/logout', authController.logout);
-router.post('/forgot-password', authLimiter, authController.forgotPassword);
-router.post('/reset-password', authLimiter, authController.resetPassword);
+router.post('/forgot-password', officeLimiter, authLimiter, authController.forgotPassword);
+router.post('/reset-password', officeLimiter, authController.resetPassword);
 router.get('/me', authRequired, authController.getMe);
 router.get('/profile', authRequired, authController.getUserProfile);
 router.get('/users', authRequired, adminRequired, authController.getAllUsers);

@@ -255,7 +255,7 @@ exports.offboardEmployee = async (req, res) => {
     const user = await User.findById(emp.user._id);
     if (P.isAdminRole(user.role) && req.user.role !== 'super_admin') throw new HttpError(403, 'Forbidden.');
 
-    let moved = { customers: 0, tasks: 0 };
+    let moved = { customers: 0, tasks: 0, enrollments: 0, complaints: 0 };
     if (transferTo) {
         const target = await User.findById(transferTo).select('status role');
         if (!target || target.status === 'disabled' || !P.isStaffRole(target.role) || String(target._id) === String(user._id)) {
@@ -277,7 +277,7 @@ exports.offboardEmployee = async (req, res) => {
     await sessions.revokeAllSessions(user._id, { reason: 'employee_left' });
     await Team.updateMany({ leader: user._id }, { $set: { leader: null } });
 
-    await audit.record(req, { action: 'employee.left', resource: 'employees', resourceId: emp._id, summary: `Employee ${emp.employeeNo} left; moved ${moved.customers} customers and ${moved.tasks} tasks`, reason, meta: { transferTo: transferTo && String(transferTo), ...moved } });
+    await audit.record(req, { action: 'employee.left', resource: 'employees', resourceId: emp._id, summary: `Employee ${emp.employeeNo} left; moved ${moved.customers} customers, ${moved.tasks} tasks, ${moved.enrollments} enrollments and ${moved.complaints} complaints`, reason, meta: { transferTo: transferTo && String(transferTo), ...moved } });
     res.json({ message: 'تم.', moved });
 };
 

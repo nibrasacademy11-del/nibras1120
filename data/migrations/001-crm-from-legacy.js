@@ -47,7 +47,8 @@ async function main() {
     // Accounts first, oldest first, so a file's registration date is the account's
     const users = await User.find({ role: { $in: ['student', 'user', 'customer'] } }).sort({ createdAt: 1 });
     for (const u of users) {
-        const r = await intake.ingestUser(u, { dryRun: !apply });
+        // Old accounts are matched to files opened from their own inquiries; review the dry run first
+        const r = await intake.ingestUser(u, { dryRun: !apply, linkMatches: true });
         count('accounts', r.action);
     }
 

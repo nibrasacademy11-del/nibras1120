@@ -331,6 +331,15 @@ exports.updateUser = async (req, res) => {
 
         const roleChanging = role !== undefined && role !== user.role;
         if (roleChanging) {
+            // Staff accounts belong to the employee files of the management system: their role is changed
+            // there (with the team and job history), and staff roles are not handed out from this panel
+            const Employee = require('../models/Employee');
+            if (await Employee.exists({ user: user._id })) {
+                return res.status(400).json({ message: 'هذا الحساب لموظف. غيّر دوره من نظام الإدارة ← الموظفون.' });
+            }
+            if (isStaffRole(role) && !ADMIN_ROLES.includes(role)) {
+                return res.status(400).json({ message: 'لإضافة موظف استخدم نظام الإدارة ← الموظفون ← موظف جديد (يُنشئ ملفه وفريقه).' });
+            }
             if (![...ROLES, ...Object.keys(LEGACY_ROLES)].includes(role)) {
                 return res.status(400).json({ message: 'صلاحية غير معروفة.' });
             }
@@ -357,7 +366,7 @@ exports.updateUser = async (req, res) => {
             // A changed role must not keep working through tokens issued before it
             user.tokenVersion = (user.tokenVersion || 0) + 1;
         }
-        if (Array.isArray(enrolledCourses)) user.enrolledCourses = enrolledCourses.map((c) => String(c).trim()).filter(Boolean);
+        // The old free-text program list is read-only: programs are managed as enrollments in the management system
 
         await user.save();
         if (roleChanging) await sessions.revokeAllSessions(user._id, { reason: 'role_changed' });
@@ -388,6 +397,21 @@ exports.deleteUser = async (req, res) => {
         }
         const target = await User.findById(req.params.id).select('name email role');
         if (!target) return res.status(404).json({ message: 'User not found.' });
+        // Accounts with history in the management system are never deleted (their records point to them)
+        const Employee = require('../models/Employee');
+        const Customer = require('../models/Customer');
+        if (await Employee.exists({ user: target._id })) {
+            return res.status(400).json({ message: 'هذا الحساب لموظف. استخدم نظام الإدارة ← الموظفون ← إنهاء الخدمة (يحفظ السجل وينقل العملاء).' });
+        }
+        const file = await Customer.findOne({ user: target._id }).select('_id customerNo');
+        if (file) {
+            const Enrollment = require('../models/Enrollment');
+            const Certificate = require('../models/Certificate');
+            const { Payment } = require('../models/finance');
+            const used = (await Enrollment.exists({ customer: file._id })) || (await Payment.exists({ customer: file._id })) || (await Certificate.exists({ $or: [{ customer: file._id }, { userId: target._id }] }));
+            if (used) return res.status(400).json({ message: `للعميل ${file.customerNo} تسجيلات أو مدفوعات أو شهادات؛ لا يمكن حذف حسابه. يمكن أرشفة ملفه من نظام الإدارة.` });
+            await Customer.updateOne({ _id: file._id }, { $set: { user: null } });
+        }
         if (ADMIN_ROLES.includes(normalizeRole(target.role)) && req.user.role !== 'super_admin') {
             return res.status(403).json({ message: 'فقط مدير النظام يمكنه حذف حساب مدير.' });
         }

@@ -819,6 +819,16 @@ export const crmText = {
 };
 
 export const enumText = {
+  eventType: {
+    created: { ar: 'إنشاء الملف', en: 'File created' }, updated: { ar: 'تعديل', en: 'Updated' }, status_changed: { ar: 'تغيير الحالة', en: 'Status changed' },
+    transferred: { ar: 'نقل', en: 'Transferred' }, note: { ar: 'ملاحظة', en: 'Note' }, communication: { ar: 'تواصل', en: 'Contact' },
+    task: { ar: 'مهمة', en: 'Task' }, document: { ar: 'مستند', en: 'Document' }, access: { ar: 'صلاحية وصول', en: 'Access' },
+    identity_revealed: { ar: 'كشف الهوية', en: 'Identity shown' }, merged: { ar: 'دمج', en: 'Merged' }, duplicate: { ar: 'ملف مكرر محتمل', en: 'Possible duplicate' },
+    enrolled: { ar: 'تسجيل في برنامج', en: 'Enrolled' }, enrollment_updated: { ar: 'تحديث التسجيل', en: 'Enrollment updated' },
+    enrollment_completed: { ar: 'إكمال البرنامج', en: 'Program completed' }, module: { ar: 'مقرر', en: 'Module' }, certificate: { ar: 'شهادة', en: 'Certificate' },
+    charge: { ar: 'مستحق', en: 'Charge' }, payment: { ar: 'دفعة', en: 'Payment' }, refund: { ar: 'استرداد', en: 'Refund' },
+    finance_approval: { ar: 'موافقة مالية', en: 'Finance approval' }, complaint: { ar: 'شكوى', en: 'Complaint' }, satisfaction: { ar: 'تقييم رضا', en: 'Satisfaction' }
+  },
   status: {
     lead: { ar: 'عميل محتمل', en: 'Lead' }, interested: { ar: 'مهتم', en: 'Interested' }, customer: { ar: 'عميل', en: 'Customer' },
     lost: { ar: 'مفقود', en: 'Lost' }, inactive: { ar: 'غير نشط', en: 'Inactive' }, merged: { ar: 'مدمج', en: 'Merged' }

@@ -185,7 +185,11 @@ exports.createPayment = async (req, res) => {
         chargeAmount = charge.currency === currency ? amount : M.convert(amount, rate, await L.rateAt(charge.currency, paidAt), chargeDec);
     }
 
-    const collectedBy = oid(req.body.collectedBy) && isFinanceStaff(req) ? oid(req.body.collectedBy) : customer.owner || oid(req.user.id);
+    // The collector earns the commission: the customer's responsible employee, or the employee who
+    // recorded the money. Finance staff recording a payment for an unassigned customer are not collectors.
+    const collectedBy = oid(req.body.collectedBy) && isFinanceStaff(req)
+        ? oid(req.body.collectedBy)
+        : customer.owner || (isFinanceStaff(req) ? null : oid(req.user.id));
     const confirmed = isFinanceStaff(req);
     const { number } = await nextNumber('receipt');
     const payment = await L.inTransaction(async (session) => {

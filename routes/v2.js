@@ -28,9 +28,9 @@ const system = require('../modules/core/systemController');
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
 const tooMany = 'عدد كبير من المحاولات، يرجى المحاولة لاحقاً. / Too many attempts, please try again later.';
-const sensitive = rateLimit({ windowMs: 15 * 60 * 1000, max: 20, message: tooMany });
+const sensitive = rateLimit({ windowMs: 15 * 60 * 1000, max: 20, message: tooMany, keyBy: 'user' });
 // Looking customers up by identity number is limited, so numbers cannot be tried in bulk
-const lookupLimit = rateLimit({ windowMs: 15 * 60 * 1000, max: 60, message: tooMany });
+const lookupLimit = rateLimit({ windowMs: 15 * 60 * 1000, max: 60, message: tooMany, keyBy: 'user' });
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 4 * 1024 * 1024, files: 1, fields: 10 } });
 const uploadFile = (req, res, next) => upload.single('file')(req, res, (err) => (err ? next(err) : next()));
@@ -250,7 +250,7 @@ router.post('/leaves/:id/cancel', validId(), can('leaves.create'), handle(attend
 
 // ---- system health ----
 router.get('/system/health', (req, res, next) => (req.user.role === 'super_admin' ? next() : res.status(403).json({ message: 'Forbidden.' })), handle(system.health));
-router.post('/client-errors', rateLimit({ windowMs: 60 * 1000, max: 20, message: tooMany }), handle(system.clientError));
+router.post('/client-errors', rateLimit({ windowMs: 60 * 1000, max: 20, message: tooMany, keyBy: 'user' }), handle(system.clientError));
 
 // ---- tasks and follow-ups ----
 router.get('/tasks', can('tasks.view'), handle(activity.listTasks));

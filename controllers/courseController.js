@@ -175,7 +175,13 @@ exports.updateCourse = async (req, res) => {
 
 exports.deleteCourse = async (req, res) => {
     try {
-        const course = await Course.findByIdAndDelete(req.params.id);
+        // A program with modules, enrollments, charges or certificates is part of people's records
+        const id = req.params.id;
+        const used = (await require('../models/Enrollment').exists({ program: id }))
+            || (await require('../models/ProgramModule').exists({ program: id }))
+            || (await require('../models/Certificate').exists({ program: id }));
+        if (used) return res.status(409).json({ message: 'البرنامج مستخدم في تسجيلات أو محاور أو شهادات، فلا يمكن حذفه. غيّر حالته إلى «مخفي» بدلاً من الحذف.' });
+        const course = await Course.findByIdAndDelete(id);
         if (!course) return res.status(404).json({ message: 'Program not found.' });
         res.json({ message: 'Program deleted successfully.' });
     } catch (error) {

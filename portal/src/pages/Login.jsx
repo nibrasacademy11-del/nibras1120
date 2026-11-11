@@ -87,6 +87,13 @@ export default function Login() {
           )}
           <button type="button" className="link" onClick={toggle}>{t('language')}</button>
         </div>
+        {step === 'password' && (
+          <div className="login-links">
+            <a href={`/pages/${lang}/forgot-password.html`}>{t('forgotPassword')}</a>
+            <a href={`/pages/${lang}/register.html`}>{t('createAccount')}</a>
+            <a href={lang === 'en' ? '/en/index.html' : '/'}>{t('website')}</a>
+          </div>
+        )}
       </form>
     </div>
   );
