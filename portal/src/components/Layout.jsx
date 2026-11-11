@@ -8,10 +8,12 @@ import Notifications from './Notifications.jsx';
 const NAV = [
   { to: '/', key: 'dashboard', icon: '⌂', end: true, staffOnly: true },
   { to: '/', key: 'myPrograms', icon: '▤', end: true, customerOnly: true },
+  { to: '/my-lectures', key: 'myLectures', icon: '▶', customerOnly: true },
   { to: '/customers', key: 'customers', icon: '◉', permission: 'customers.view' },
   { to: '/lookup', key: 'lookup', icon: '⌕', permission: 'customer_lookup.view' },
   { to: '/enrollments', key: 'enrollmentsNav', icon: '❖', permission: 'enrollments.view', staffOnly: true },
   { to: '/reviews', key: 'reviews', icon: '✔', permission: 'enrollments.approve', minScope: 'team' },
+  { to: '/groups', key: 'groupsNav', icon: '▶', permission: 'programs.view', staffOnly: true },
   { to: '/programs', key: 'programsNav', icon: '▤', permission: 'programs.view', staffOnly: true },
   { to: '/my-payments', key: 'myPayments', icon: '¤', customerOnly: true },
   { to: '/my-certificates', key: 'myCertificates', icon: '✪', customerOnly: true },

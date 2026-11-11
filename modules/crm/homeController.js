@@ -115,7 +115,9 @@ exports.cronReminders = async (req, res) => {
         t.remindedAt = new Date();
         await t.save();
     }
-    res.json({ reminded: due.length });
+    // Lecture reminders, and attendance and recordings from Zoom for finished lectures
+    const lectures = await require('../learning/lectureJobs').run();
+    res.json({ reminded: due.length, lectures });
 };
 
 exports.getSettings = async (req, res) => {
@@ -129,6 +131,7 @@ const VALIDATORS = {
     'enrollments.teamLeaderReview': (v) => typeof v === 'boolean',
     'commissions.defaultEmployeeRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
     'commissions.defaultLeaderRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
+    'lectures.presentPercent': (v) => typeof v === 'number' && v >= 1 && v <= 100,
     'attendance.timeZone': (v) => { try { new Intl.DateTimeFormat('en', { timeZone: v }); return true; } catch { return false; } }
 };
 

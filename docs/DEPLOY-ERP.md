@@ -35,11 +35,13 @@ node tools/test-all.js
    | `ATTENDANCE_SYNC_SECRET` | فقط لو هتستخدموا جهاز الحضور المحلي |
    | `REQUIRE_2FA` | `admins` (موصى به) |
    | `SITE_URL` | `https://www.nibras-ac.com` |
+   | `ZOOM_ACCOUNT_ID` / `ZOOM_CLIENT_ID` / `ZOOM_CLIENT_SECRET` | من تطبيق زوم (الخطوات تحت في "ربط زوم") |
+   | `ZOOM_HOST_USER` | إيميل حساب زوم اللي هيستضيف المحاضرات |
 
 3. **الدمج والنشر**:
    ```
    git checkout main
-   git merge --no-ff erp-phase-8
+   git merge --no-ff erp-phase-9
    git push origin main
    ```
    ثم تأكد من `/api/health` = `ok` ومن فتح `/portal/`.
@@ -55,6 +57,8 @@ node tools/test-all.js
    node data/migrations/002-enrollments-from-legacy.js --production --apply
    node data/migrations/003-link-legacy-certificates.js --production
    node data/migrations/003-link-legacy-certificates.js --production --apply
+   node data/migrations/004-group-members-from-enrollments.js --production
+   node data/migrations/004-group-members-from-enrollments.js --production --apply
    ```
 6. **صفحة صحة النظام** (`/portal/system`): كل الإعدادات المطلوبة ✓.
 7. **النسخ التلقائي**: إعداد أسرار GitHub (انظر `docs/BACKUP-RESTORE.md`) وتشغيله مرة يدوياً.
@@ -69,6 +73,23 @@ node tools/test-all.js
 5. قالب الشهادة (الشعار والتوقيعات) والاعتمادات.
 6. مواعيد الدوام والعطلات وشاشة الحضور.
 7. كل مدير يفعّل التحقق بخطوتين.
+
+## ربط زوم (مرة واحدة، بحساب مدير زوم)
+
+1. ادخل [marketplace.zoom.us](https://marketplace.zoom.us) بحساب الأكاديمية ← **Develop** ← **Build App** ← اختار **Server-to-Server OAuth App**.
+2. سمّيه "Nibras Portal". هتاخد **Account ID** و **Client ID** و **Client Secret**.
+3. في **Scopes** ضيف:
+   - `meeting:write:meeting:admin` و `meeting:update:meeting:admin` و `meeting:delete:meeting:admin` و `meeting:read:meeting:admin` (إنشاء وتعديل وإلغاء المحاضرات)
+   - `meeting:write:registrant:admin` (لينك خاص لكل عميل)
+   - `report:read:list_meeting_participants:admin` (الحضور)
+   - `cloud_recording:read:list_recording_files:admin` (التسجيلات)
+   - `user:read:user:admin` (اختبار الربط)
+4. **Activate** التطبيق.
+5. حط القيم الثلاثة في متغيرات Vercel، و`ZOOM_HOST_USER` = إيميل حساب زوم المضيف. **ما تبعتهمش في شات أو إيميل.**
+6. في البوابة: **المجموعات والمحاضرات** ← "اختبار الربط" لازم يقول "الربط يعمل".
+7. في إعدادات زوم: فعّل **Cloud recording** علشان التسجيلات تظهر للعملاء لوحدها.
+
+من غير الربط ده المحاضرات شغالة برضو: بتلزق لينك زوم والباسكود بإيدك.
 
 ## و. الرجوع في حالة مشكلة
 

@@ -23,6 +23,8 @@ import Analytics from './pages/Analytics.jsx';
 import Complaints, { MyComplaints } from './pages/Complaints.jsx';
 import Attendance, { Attend, Kiosk, Leaves, PairDevice } from './pages/Attendance.jsx';
 import SystemHealth from './pages/SystemHealth.jsx';
+import Groups, { GroupDetail } from './pages/Groups.jsx';
+import MyLectures from './pages/MyLectures.jsx';
 import Certificates, { CertificateDetail, MyCertificates } from './pages/Certificates.jsx';
 import Payments, { AccountStatement, Accounts, Approvals, Currencies, Expenses, FinanceSummary, MyPayments, PaymentDetail, Periods } from './pages/Finance.jsx';
 
@@ -56,6 +58,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={me.user.isStaff ? <Dashboard /> : <MyPrograms />} />
         <Route path="/my-programs" element={<MyPrograms />} />
+        <Route path="/my-lectures" element={<MyLectures />} />
         <Route path="/my-payments" element={<MyPayments />} />
         <Route path="/my-certificates" element={<MyCertificates />} />
         <Route path="/my-complaints" element={<MyComplaints />} />
@@ -80,6 +83,8 @@ export default function App() {
         <Route path="/expenses" element={<Guard permission="expenses.view" minScope="all"><Expenses /></Guard>} />
         <Route path="/currencies" element={<Guard permission="currencies.view" minScope="all"><Currencies /></Guard>} />
         <Route path="/periods" element={<Guard permission="accounts.view" minScope="all"><Periods /></Guard>} />
+        <Route path="/groups" element={<Guard permission="programs.view"><Groups /></Guard>} />
+        <Route path="/groups/:id" element={<Guard permission="programs.view"><GroupDetail /></Guard>} />
         <Route path="/programs" element={<Guard permission="programs.view"><Programs /></Guard>} />
         <Route path="/programs/:id" element={<Guard permission="programs.view"><ProgramDetail /></Guard>} />
         <Route path="/enrollments" element={<Guard permission="enrollments.view"><Enrollments /></Guard>} />

@@ -13,7 +13,9 @@ const cohortSchema = new mongoose.Schema({
     delivery: { type: String, enum: ['online', 'onsite', 'hybrid'], default: 'online' },
     capacity: { type: Number, default: 0, min: 0, max: 10000 },   // 0 = unlimited
     status: { type: String, enum: ['planned', 'open', 'running', 'finished', 'cancelled'], default: 'open', index: true },
-    notes: { type: String, default: '', maxlength: 1000 }
+    notes: { type: String, default: '', maxlength: 1000 },
+    // The modules this group studies; empty means the whole program
+    modules: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ProgramModule' }]
 }, { timestamps: true, optimisticConcurrency: true });
 
 module.exports = mongoose.model('Cohort', cohortSchema);

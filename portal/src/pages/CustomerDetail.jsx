@@ -8,6 +8,7 @@ import { DuplicateList } from './Customers.jsx';
 import { TaskTable, TaskForm } from './Tasks.jsx';
 import { CustomerPrograms, ModuleStatus } from './Enrollments.jsx';
 import { CustomerFinance } from './Finance.jsx';
+import { CustomerGroups } from './Groups.jsx';
 import { PrintButton, PrintHeader } from '../components/Print.jsx';
 
 // Programs on the card: each enrollment with its status and the status of each module
@@ -509,7 +510,7 @@ export default function CustomerDetail() {
             </div>
 
             {tab === 'overview' && <Overview c={c} onReload={reload} />}
-            {tab === 'programs' && <CustomerPrograms c={c} />}
+            {tab === 'programs' && <><CustomerPrograms c={c} /><CustomerGroups c={c} /></>}
             {tab === 'financial' && <CustomerFinance c={c} />}
             {tab === 'timeline' && <Timeline id={c.id} />}
             {tab === 'notes' && <Notes c={c} />}

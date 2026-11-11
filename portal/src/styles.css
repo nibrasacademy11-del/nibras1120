@@ -399,3 +399,24 @@ input[type="month"] { font: inherit; padding: 8px 10px; border: 1px solid var(--
 .break { word-break: break-all; display: block; padding: 8px; }
 
 .login-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; font-size: .88rem; border-top: 1px solid var(--border); padding-top: 12px; }
+
+/* ---- lectures ---- */
+.lec-list { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 10px; }
+.lec-item { display: flex; gap: 16px; justify-content: space-between; align-items: flex-start; border: 1px solid var(--line, #eadfce); border-radius: 12px; padding: 14px 16px; background: #fff; }
+.lec-item--next { border: 2px solid var(--primary, #5a020e); background: linear-gradient(0deg, #fff, #fbf7f0); }
+.lec-item--cancelled { opacity: .65; }
+.lec-item--cancelled .lec-title { text-decoration: line-through; }
+.lec-main { display: grid; gap: 4px; min-width: 0; }
+.lec-when { color: var(--muted, #6b5e63); font-size: .9rem; }
+.lec-title { font-size: 1.05rem; }
+.lec-side { display: grid; gap: 6px; justify-items: end; text-align: end; min-width: 180px; }
+.countdown { color: var(--primary, #5a020e); font-size: .95rem; }
+.countdown b { font-size: 1.2rem; }
+.btn--join { font-size: 1.05rem; padding: 10px 22px; }
+.passcode code { background: #f8efdc; padding: 2px 8px; border-radius: 6px; letter-spacing: .05em; }
+@media (max-width: 640px) {
+  .lec-item { flex-direction: column; }
+  .lec-side { justify-items: stretch; text-align: start; min-width: 0; width: 100%; }
+  .lec-side .pill { justify-self: start; }
+  .btn--join { width: 100%; }
+}

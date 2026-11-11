@@ -91,13 +91,15 @@ function ModuleForm({ programId, mod, onClose, onSaved }) {
   );
 }
 
-function CohortForm({ programId, cohort, onClose, onSaved }) {
-  const { t } = useI18n();
+function CohortForm({ programId, cohort, modules = [], onClose, onSaved }) {
+  const { t, label } = useI18n();
   const d = (v) => (v ? String(v).slice(0, 10) : '');
   const [f, setF] = useState({
     nameAr: cohort?.nameAr || '', nameEn: cohort?.nameEn || '', startDate: d(cohort?.startDate), endDate: d(cohort?.endDate), schedule: cohort?.schedule || '',
-    instructor: cohort?.instructor || '', delivery: cohort?.delivery || 'online', capacity: cohort?.capacity || 0, status: cohort?.status || 'open', notes: cohort?.notes || ''
+    instructor: cohort?.instructor || '', delivery: cohort?.delivery || 'online', capacity: cohort?.capacity || 0, status: cohort?.status || 'open', notes: cohort?.notes || '',
+    modules: cohort?.modules || []
   });
+  const toggleModule = (id) => setF({ ...f, modules: f.modules.includes(id) ? f.modules.filter((m) => m !== id) : [...f.modules, id] });
   const { busy, error, run } = useAction();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const submit = (e) => {
@@ -118,6 +120,12 @@ function CohortForm({ programId, cohort, onClose, onSaved }) {
         <Field label={t('capacity')} hint={t('capacityHint')}><input type="number" min={0} value={f.capacity} onChange={set('capacity')} /></Field>
         <Field label={t('status')}><select value={f.status} onChange={set('status')}>{['planned', 'open', 'running', 'finished', 'cancelled'].map((x) => <option key={x} value={x}>{x}</option>)}</select></Field>
         <Field label={t('note')} wide><input value={f.notes} onChange={set('notes')} /></Field>
+        {modules.length > 0 && (
+          <fieldset className="field--wide checks">
+            <legend>{t('grpModules')} <small className="muted">{t('grpModulesHint')}</small></legend>
+            {modules.map((m) => <label className="check" key={m._id}><input type="checkbox" checked={f.modules.includes(m._id)} onChange={() => toggleModule(m._id)} /> {label({ ar: m.titleAr, en: m.titleEn })}</label>)}
+          </fieldset>
+        )}
         <div className="field--wide"><ErrorBox error={error} /></div>
         <div className="row field--wide"><button className="btn btn--primary" disabled={busy}>{t('save')}</button><button type="button" className="btn btn--ghost" onClick={onClose}>{t('cancel')}</button></div>
       </form>
@@ -214,11 +222,11 @@ export function ProgramDetail() {
                     <tbody>
                       {cohorts.map((c) => (
                         <tr key={c._id}>
-                          <td><strong>{label({ ar: c.nameAr, en: c.nameEn })}</strong><br /><small className="muted">{t(c.delivery)}</small></td>
+                          <td><Link to={`/groups/${c._id}`}><strong>{label({ ar: c.nameAr, en: c.nameEn })}</strong></Link><br /><small className="muted">{t(c.delivery)}</small></td>
                           <td>{fmtDay(c.startDate)}{c.endDate ? ` – ${fmtDay(c.endDate)}` : ''}</td>
                           <td>{c.schedule || '—'}</td>
                           <td>{c.instructor || '—'}</td>
-                          <td><Link to={`/enrollments?cohort=${c._id}`}>{c.enrolled}{c.capacity ? ` / ${c.capacity}` : ''}</Link></td>
+                          <td><Link to={`/groups/${c._id}`}>{c.enrolled}{c.capacity ? ` / ${c.capacity}` : ''}</Link></td>
                           <td><Pill tone={c.status === 'open' || c.status === 'running' ? 'ok' : 'muted'}>{c.status}</Pill></td>
                           <td>{canEdit && <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'cohort', item: c })}>{t('edit')}</button>}</td>
                         </tr>
@@ -229,7 +237,7 @@ export function ProgramDetail() {
               )}
             </section>
             {dialog?.kind === 'module' && <ModuleForm programId={id} mod={dialog.item} onClose={() => setDialog(null)} onSaved={done} />}
-            {dialog?.kind === 'cohort' && <CohortForm programId={id} cohort={dialog.item} onClose={() => setDialog(null)} onSaved={done} />}
+            {dialog?.kind === 'cohort' && <CohortForm programId={id} cohort={dialog.item} modules={modules.filter((m) => m.active)} onClose={() => setDialog(null)} onSaved={done} />}
           </>
         );
       }}

@@ -3,6 +3,7 @@ const Course = require('../../models/Course');
 const ProgramModule = require('../../models/ProgramModule');
 const Cohort = require('../../models/Cohort');
 const Enrollment = require('../../models/Enrollment');
+const CohortMember = require('../../models/CohortMember');
 const audit = require('../../lib/audit');
 const { HttpError, assertVersion, paging } = require('../../lib/http');
 
@@ -48,7 +49,7 @@ exports.get = async (req, res) => {
         ProgramModule.find({ program: program._id }).sort({ active: -1, order: 1, createdAt: 1 }).lean(),
         Cohort.find({ program: program._id }).sort({ startDate: -1, createdAt: -1 }).lean()
     ]);
-    const counts = await Enrollment.aggregate([{ $match: { cohort: { $in: cohorts.map((c) => c._id) }, status: { $in: Enrollment.OPEN_STATUSES } } }, { $group: { _id: '$cohort', n: { $sum: 1 } } }]);
+    const counts = await CohortMember.aggregate([{ $match: { cohort: { $in: cohorts.map((c) => c._id) }, status: 'active' } }, { $group: { _id: '$cohort', n: { $sum: 1 } } }]);
     const byCohort = Object.fromEntries(counts.map((c) => [String(c._id), c.n]));
     res.json({ item: program, modules, cohorts: cohorts.map((c) => ({ ...c, enrolled: byCohort[String(c._id)] || 0 })) });
 };
@@ -122,8 +123,17 @@ function cohortInput(body) {
         delivery: ['online', 'onsite', 'hybrid'].includes(body.delivery) ? body.delivery : 'online',
         capacity: Math.min(Math.max(parseInt(body.capacity, 10) || 0, 0), 10000),
         status: ['planned', 'open', 'running', 'finished', 'cancelled'].includes(body.status) ? body.status : 'open',
-        notes: str(body.notes, 1000)
+        notes: str(body.notes, 1000),
+        modules: (Array.isArray(body.modules) ? body.modules : []).map(oid).filter(Boolean).slice(0, 50)
     };
+}
+
+// Only modules of the group's own program are kept
+async function ownModules(programId, ids) {
+    if (!ids.length) return [];
+    const found = await ProgramModule.find({ _id: { $in: ids }, program: programId }).select('_id').lean();
+    const ok = new Set(found.map((m) => String(m._id)));
+    return ids.filter((id) => ok.has(String(id)));
 }
 
 exports.listCohorts = async (req, res) => {
@@ -137,6 +147,7 @@ exports.addCohort = async (req, res) => {
     const program = await loadProgram(req.params.id);
     const input = cohortInput(req.body);
     if (!input.nameAr) throw new HttpError(400, 'اسم المجموعة مطلوب. / The group name is required.');
+    input.modules = await ownModules(program._id, input.modules);
     const c = await Cohort.create({ ...input, program: program._id });
     await audit.record(req, { action: 'cohort.created', resource: 'programs', resourceId: c._id, summary: `${program.titleAr}: ${c.nameAr}` });
     res.status(201).json({ item: c });
@@ -149,6 +160,7 @@ exports.updateCohort = async (req, res) => {
     const before = c.toObject();
     const input = cohortInput({ ...before, ...req.body });
     if (!input.nameAr) throw new HttpError(400, 'اسم المجموعة مطلوب. / The group name is required.');
+    input.modules = await ownModules(c.program, input.modules);
     c.set(input);
     await c.save();
     await audit.record(req, { action: 'cohort.updated', resource: 'programs', resourceId: c._id, summary: c.nameAr, changes: audit.diff(before, c.toObject(), Object.keys(input)) });

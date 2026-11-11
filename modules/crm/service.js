@@ -52,7 +52,9 @@ const SETTING_DEFAULTS = {
     'commissions.defaultEmployeeRate': 0,
     'commissions.defaultLeaderRate': 0,
     // The time zone attendance days and hours are counted in
-    'attendance.timeZone': 'Africa/Cairo'
+    'attendance.timeZone': 'Africa/Cairo',
+    // A member counts as present when Zoom shows them in at least this share of the lecture (percent)
+    'lectures.presentPercent': 50
 };
 
 async function getSetting(key) {

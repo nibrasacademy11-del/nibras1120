@@ -24,6 +24,7 @@ const reports = require('../modules/reports/reportController');
 const analytics = require('../modules/reports/analyticsController');
 const attendance = require('../modules/hr/attendanceController');
 const system = require('../modules/core/systemController');
+const groupsApi = require('../modules/learning/groupController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -133,6 +134,25 @@ router.put('/modules/:moduleId', validId('moduleId'), all('programs.update'), ha
 router.get('/cohorts', can('programs.view'), handle(programs.listCohorts));
 router.post('/programs/:id/cohorts', validId(), all('programs.create'), handle(programs.addCohort));
 router.put('/cohorts/:cohortId', validId('cohortId'), all('programs.update'), handle(programs.updateCohort));
+
+// ---- groups: members, lectures, Zoom ----
+router.get('/groups', can('programs.view'), handle(groupsApi.list));
+router.get('/groups/:id', validId(), can('programs.view'), handle(groupsApi.get));
+router.get('/groups/:id/members', validId(), can('programs.view'), handle(groupsApi.members));
+router.post('/groups/:id/members/preview', validId(), all('programs.update'), lookupLimit, handle(groupsApi.previewMembers));
+router.post('/groups/:id/members', validId(), all('programs.update'), handle(groupsApi.addMembers));
+router.post('/groups/:id/members/:memberId/remove', validId(), validId('memberId'), all('programs.update'), handle(groupsApi.removeMember));
+router.get('/groups/:id/lectures', validId(), can('programs.view'), handle(groupsApi.lectures));
+router.post('/groups/:id/lectures', validId(), all('programs.update'), handle(groupsApi.addLecture));
+router.put('/lectures/:id', validId(), all('programs.update'), handle(groupsApi.updateLecture));
+router.post('/lectures/:id/cancel', validId(), all('programs.update'), handle(groupsApi.cancelLecture));
+router.post('/lectures/:id/sync', validId(), all('programs.update'), handle(groupsApi.syncLecture));
+router.get('/lectures/:id/attendance', validId(), can('programs.view'), handle(groupsApi.attendance));
+router.post('/lectures/:id/attendance', validId(), all('programs.update'), handle(groupsApi.markAttendance));
+router.get('/zoom/status', all('programs.update'), handle(groupsApi.zoomStatus));
+router.get('/customers/:id/groups', validId(), can('enrollments.view'), handle(groupsApi.forCustomer));
+router.get('/my/lectures', handle(groupsApi.mine));
+router.post('/my/lectures/:id/join', validId(), rateLimit({ windowMs: 60 * 1000, max: 20, message: tooMany, keyBy: 'user' }), handle(groupsApi.join));
 
 // ---- enrollments and module reviews ----
 router.get('/my/enrollments', handle(enrollments.mine));

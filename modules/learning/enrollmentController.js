@@ -14,6 +14,8 @@ const { nextNumber } = require('../../lib/sequence');
 const { customerAccess } = require('../../lib/customerAccess');
 const { HttpError, assertVersion, paging } = require('../../lib/http');
 const { addEvent, notify, getSetting } = require('../crm/service');
+const groups = require('./groups');
+const CohortMember = require('../../models/CohortMember');
 
 // Enrollments: a customer in a program, with each module progressing on its own
 
@@ -153,9 +155,8 @@ exports.create = async (req, res) => {
     if (req.body.cohort) {
         cohort = await Cohort.findOne({ _id: oid(req.body.cohort), program: program._id });
         if (!cohort) throw new HttpError(400, 'المجموعة لا تتبع هذا البرنامج. / The group is not part of this program.');
-        if (cohort.capacity > 0) {
-            const taken = await Enrollment.countDocuments({ cohort: cohort._id, status: { $in: Enrollment.OPEN_STATUSES } });
-            if (taken >= cohort.capacity) throw new HttpError(409, 'المجموعة مكتملة. / The group is full.', 'COHORT_FULL');
+        if (cohort.capacity > 0 && (await groups.activeCount(cohort._id)) >= cohort.capacity) {
+            throw new HttpError(409, 'المجموعة مكتملة. / The group is full.', 'COHORT_FULL');
         }
     }
 
@@ -163,7 +164,13 @@ exports.create = async (req, res) => {
     if (String(owner) !== req.user.id && req.scope === 'own' && String(owner) !== String(customer.owner)) {
         throw new HttpError(403, 'لا يمكنك إسناد التسجيل لموظف آخر. / You cannot assign the enrollment to someone else.');
     }
-    const team = await teamOf(owner);
+    const e = await createEnrollment(req, { customer, program, cohort, owner, enrolledAt: req.body.enrolledAt ? new Date(req.body.enrolledAt) : new Date(), notes: str(req.body.notes, 2000) });
+    res.status(201).json({ item: await view(req, await Enrollment.findById(e._id).populate(POP)) });
+};
+
+// Creates an enrollment with the program's current modules; also used when a group adds members
+async function createEnrollment(req, { customer, program, cohort = null, owner = null, enrolledAt = new Date(), notes = '' }) {
+    const team = owner ? await teamOf(owner) : null;
     const modules = await ProgramModule.find({ program: program._id, active: true }).sort({ order: 1 }).lean();
     const { number } = await nextNumber('enrollment');
 
@@ -179,11 +186,11 @@ exports.create = async (req, res) => {
             cohort: cohort ? cohort._id : null,
             owner,
             team,
-            ownerHistory: [{ owner, team, from: new Date(), by: req.user.id, reason: 'enrolled' }],
-            enrolledAt: req.body.enrolledAt ? new Date(req.body.enrolledAt) : new Date(),
+            ownerHistory: owner ? [{ owner, team, from: new Date(), by: req.user.id, reason: 'enrolled' }] : [],
+            enrolledAt,
             modules: modules.map(snapshot),
             modulesRequired: program.modulesRequired || 0,
-            notes: str(req.body.notes, 2000),
+            notes,
             createdBy: req.user.id
         });
     } catch (err) {
@@ -201,8 +208,10 @@ exports.create = async (req, res) => {
     }
     await addEvent(req, customer._id, 'enrolled', `${e.enrollmentNo}: ${program.titleAr}${cohort ? ` · ${cohort.nameAr}` : ''} (${modules.length} modules)`);
     await audit.record(req, { action: 'enrollment.created', resource: 'enrollments', resourceId: e._id, summary: `${e.enrollmentNo} ${customer.customerNo} → ${program.titleAr}` });
-    res.status(201).json({ item: await view(req, await Enrollment.findById(e._id).populate(POP)) });
-};
+    if (cohort) await groups.addMember({ cohort, customer, enrollment: e._id, by: req.user.id, via: 'enrollment' });
+    return e;
+}
+exports.createEnrollment = createEnrollment;
 
 const STATUS_NEEDS_REASON = ['on_hold', 'withdrawn', 'cancelled'];
 
@@ -225,7 +234,18 @@ exports.update = async (req, res) => {
     if (req.body.cohort !== undefined && String(req.body.cohort || '') !== String(e.cohort?._id || '')) {
         const cohort = req.body.cohort ? await Cohort.findOne({ _id: oid(req.body.cohort), program: e.program }) : null;
         if (req.body.cohort && !cohort) throw new HttpError(400, 'المجموعة لا تتبع هذا البرنامج. / The group is not part of this program.');
+        if (cohort && cohort.capacity > 0 && (await groups.activeCount(cohort._id)) >= cohort.capacity) {
+            throw new HttpError(409, 'المجموعة مكتملة. / The group is full.', 'COHORT_FULL');
+        }
         changes.cohort = { from: e.cohort ? e.cohort.nameAr : null, to: cohort ? cohort.nameAr : null };
+        // Membership follows the enrollment's group, so lectures show in the right place
+        if (e.cohort) {
+            await CohortMember.updateOne(
+                { cohort: e.cohort._id || e.cohort, customer: e.customer._id || e.customer, status: 'active' },
+                { $set: { status: 'removed', removedAt: new Date(), removedBy: req.user.id, removeReason: 'Moved to another group' } }
+            );
+        }
+        if (cohort) await groups.addMember({ cohort, customer: await Customer.findById(e.customer._id || e.customer), enrollment: e._id, by: req.user.id, via: 'enrollment' });
         e.cohort = cohort ? cohort._id : null;
     }
     if (req.body.notes !== undefined) e.notes = str(req.body.notes, 2000);
