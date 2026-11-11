@@ -1,3 +1,4 @@
+import { refreshAcademy } from '../components/Print.jsx';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api.js';
@@ -86,7 +87,7 @@ export function Settings() {
           const val = (k) => (changes[k] !== undefined ? changes[k] : d.settings[k]);
           const change = (k, v) => setChanges({ ...changes, [k]: v });
           return (
-            <form className="card stack" onSubmit={(e) => { e.preventDefault(); setSaved(false); run(() => api('/api/v2/settings', { method: 'PUT', body: { reason, settings: changes } })).then(() => { setSaved(true); setReason(''); setChanges({}); state.reload(); }).catch(() => {}); }}>
+            <form className="card stack" onSubmit={(e) => { e.preventDefault(); setSaved(false); run(() => api('/api/v2/settings', { method: 'PUT', body: { reason, settings: changes } })).then(() => { setSaved(true); setReason(''); setChanges({}); refreshAcademy(); state.reload(); }).catch(() => {}); }}>
               <Field label={t('setPaymentRule')}>
                 <select value={val('certificates.paymentRule')} onChange={(e) => change('certificates.paymentRule', e.target.value)}>
                   {['customer', 'enrollment', 'off'].map((x) => <option key={x} value={x}>{t(`pay_${x}`)}</option>)}
@@ -99,6 +100,15 @@ export function Settings() {
                   <option value="full">{t('nameFull')}</option>
                 </select>
               </Field>
+              <fieldset className="checks form-grid">
+                <legend>{t('academyProfile')}</legend>
+                <p className="muted field--wide"><small>{t('apHint')}</small></p>
+                {[['nameAr', 'apNameAr'], ['nameEn', 'apNameEn', 'ltr'], ['address', 'apAddress'], ['phone', 'apPhone', 'ltr'], ['email', 'apEmail', 'ltr'], ['website', 'apWebsite', 'ltr'], ['taxNumber', 'taxNumber', 'ltr'], ['commercialRegister', 'crNumber', 'ltr']].map(([k, lab, dir]) => (
+                  <Field key={k} label={t(lab)}><input dir={dir} value={val('academy.profile')?.[k] || ''} onChange={(e) => change('academy.profile', { ...val('academy.profile'), [k]: e.target.value })} /></Field>
+                ))}
+                <Field label={t('apVatRate')}><input type="number" min={0} max={100} step="0.01" dir="ltr" value={val('academy.profile')?.vatRate ?? 0} onChange={(e) => change('academy.profile', { ...val('academy.profile'), vatRate: Number(e.target.value) })} /></Field>
+                <label className="check"><input type="checkbox" checked={val('academy.profile')?.pricesIncludeVat !== false} onChange={(e) => change('academy.profile', { ...val('academy.profile'), pricesIncludeVat: e.target.checked })} /> {t('apVatIncluded')}</label>
+              </fieldset>
               <Field label={t('reason')}><input required value={reason} onChange={(e) => setReason(e.target.value)} /></Field>
               <ErrorBox error={error} />
               {saved && <div className="alert alert--ok">{t('saved')}</div>}

@@ -46,8 +46,9 @@ const SETTING_DEFAULTS = {
     'customers.lookupNamePolicy': 'partial',
     // A module goes to the team leader before the admin when the enrollment's team has a leader
     'enrollments.teamLeaderReview': true,
-    // The academy's reporting currency. Changed only from the finance setup page, before any transaction.
-    'finance.baseCurrency': 'SAR',
+    // The academy's main currency: the default in forms and the one exchange rates are written against.
+    // Reports never convert: every currency is shown on its own.
+    'finance.baseCurrency': 'EGP',
     // Rates used for anyone without a rate of their own (percent)
     'commissions.defaultEmployeeRate': 0,
     'commissions.defaultLeaderRate': 0,
@@ -57,7 +58,9 @@ const SETTING_DEFAULTS = {
     'lectures.presentPercent': 50,
     // A certificate is issued only when nothing is owed: on any of the customer's charges (customer),
     // on the enrollment's charges (enrollment), or no check (off)
-    'certificates.paymentRule': 'customer'
+    'certificates.paymentRule': 'customer',
+    // Name, contacts, tax number and VAT printed on receipts, invoices, statements and reports
+    'academy.profile': require('../../lib/academy').PROFILE_DEFAULT
 };
 
 async function getSetting(key) {

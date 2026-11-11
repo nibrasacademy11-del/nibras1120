@@ -80,9 +80,9 @@ test('commission flow', { skip }, async (t) => {
             assert.equal((await e('GET', '/api/v2/commissions/statement')).data.lines.length, 0, 'pending payments earn nothing');
             await f('POST', `/api/v2/payments/${pay._id}/confirm`, { __v: pay.__v });
             const mine = (await e('GET', '/api/v2/commissions/statement')).data;
-            assert.equal(mine.totals.earned, 100);
+            assert.equal(mine.totals[0].earned, 100);
             const lead = (await tl('GET', '/api/v2/commissions/statement')).data;
-            assert.equal(lead.totals.earned, 20);
+            assert.equal(lead.totals[0].earned, 20);
             const teamView = (await tl('GET', `/api/v2/commissions/statement?user=${emp._id}`));
             assert.equal(teamView.status, 200, 'the leader sees team members');
             assert.equal((await e('GET', `/api/v2/commissions/statement?user=${leader._id}`)).status, 404, 'an employee sees only themself');
@@ -90,21 +90,22 @@ test('commission flow', { skip }, async (t) => {
 
         await t.test('a later rate does not touch the earned line', async () => {
             await f('POST', '/api/v2/commissions/rates', { user: emp._id, kind: 'employee', rate: 10, reason: 'raise' });
-            assert.equal((await e('GET', '/api/v2/commissions/statement')).data.totals.earned, 100);
+            assert.equal((await e('GET', '/api/v2/commissions/statement')).data.totals[0].earned, 100);
         });
 
         await t.test('a refund of a quarter reverses a quarter', async () => {
             const r = await e('POST', `/api/v2/payments/${pay._id}/refunds`, { amount: 500, reason: 'partial withdrawal' });
             await f('POST', `/api/v2/approvals/${r.data.approval._id}/decide`, { decision: 'approve', __v: r.data.approval.__v });
             const mine = (await e('GET', '/api/v2/commissions/statement')).data;
-            assert.equal(mine.totals.reversed, -25);
-            assert.equal(mine.totals.net, 75);
+            const cur = mine.totals.find((x) => x.currency === acct.currency);
+            assert.equal(cur.reversed, -25);
+            assert.equal(cur.net, 75);
         });
 
         await t.test('approval and payout', async () => {
             const period = new Date().toISOString().slice(0, 7);
             assert.equal((await f('POST', '/api/v2/commissions/approve', { period })).status, 200);
-            const ov = (await f('GET', `/api/v2/commissions/overview?period=${period}`)).data.items.find((r) => r._id === String(emp._id));
+            const ov = (await f('GET', `/api/v2/commissions/overview?period=${period}`)).data.items.find((r) => String(r._id) === String(emp._id) && r.currency === acct.currency);
             assert.equal(ov.payable, 75);
             const p = await f('POST', '/api/v2/commissions/payouts', { beneficiary: emp._id, account: acct._id });
             assert.equal(p.status, 201, JSON.stringify(p.data));

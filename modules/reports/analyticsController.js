@@ -32,7 +32,9 @@ exports.overview = async (req, res) => {
     const base = await L.baseCurrency();
 
     const count = (model, match) => model.countDocuments(match);
-    const sumBase = async (match) => (await F.Payment.aggregate([{ $match: match }, { $group: { _id: null, v: { $sum: '$baseAmount' } } }]))[0]?.v || 0;
+    // Money KPIs are per currency: [{ currency, amount }], never converted
+    const perCurrency = async (model, match, field = '$amount') => (await model.aggregate([{ $match: match }, { $group: { _id: '$currency', v: { $sum: field } } }, { $sort: { v: -1 } }])).map((r) => ({ currency: r._id, amount: M.round(r.v, 3) }));
+    const sumBase = (match) => perCurrency(F.Payment, match);
 
     const [
         newNow, newPrev, enrNow, enrPrev, collectedNow, collectedPrev,
@@ -50,9 +52,9 @@ exports.overview = async (req, res) => {
         Customer.aggregate([{ $match: { ...own, status: { $ne: 'merged' }, ...between('registeredAt', from, to) } }, { $group: { _id: '$source', n: { $sum: 1 }, converted: { $sum: { $cond: [{ $eq: ['$status', 'customer'] }, 1, 0] } } } }, { $sort: { n: -1 } }]),
         Enrollment.aggregate([{ $match: { ...own, ...between('enrolledAt', from, to) } }, { $group: { _id: '$programTitleAr', n: { $sum: 1 } } }, { $sort: { n: -1 } }, { $limit: 10 }]),
         Enrollment.aggregate([{ $match: { ...own, status: { $in: ['active', 'on_hold', 'completed'] } } }, { $unwind: '$modules' }, { $group: { _id: '$modules.status', n: { $sum: 1 } } }]),
-        F.Payment.aggregate([{ $match: { ...payOwn, status: 'confirmed', ...between('paidAt', from, to) } }, { $group: { _id: '$currency', amount: { $sum: '$amount' }, base: { $sum: '$baseAmount' } } }, { $sort: { base: -1 } }]),
-        F.Refund.aggregate([{ $match: { status: 'paid', ...between('paidAt', from, to) } }, { $group: { _id: null, v: { $sum: '$baseAmount' }, n: { $sum: 1 } } }]),
-        C.CommissionLine.aggregate([{ $match: { ...own, status: { $ne: 'cancelled' }, ...between('date', from, to) } }, { $group: { _id: null, v: { $sum: '$amount' } } }]),
+        F.Payment.aggregate([{ $match: { ...payOwn, status: 'confirmed', ...between('paidAt', from, to) } }, { $group: { _id: '$currency', amount: { $sum: '$amount' }, n: { $sum: 1 } } }, { $sort: { n: -1 } }]),
+        perCurrency(F.Refund, { status: 'paid', ...between('paidAt', from, to) }),
+        perCurrency(C.CommissionLine, { ...own, status: { $ne: 'cancelled' }, ...between('date', from, to) }),
         count(Customer, { ...own, archived: false, status: { $in: ['lead', 'interested'] }, $or: [{ lastContactAt: null }, { lastContactAt: { $lt: new Date(Date.now() - 7 * 864e5) } }] }),
         Customer.aggregate([{ $match: { ...own, status: 'lost', ...between('updatedAt', from, to) } }, { $group: { _id: { $toLower: { $trim: { input: '$lostReason' } } }, n: { $sum: 1 } } }, { $sort: { n: -1 } }, { $limit: 8 }]),
         count(Complaint, { ...own, status: { $in: ['open', 'in_progress'] } }),
@@ -64,22 +66,19 @@ exports.overview = async (req, res) => {
         ])
     ]);
 
-    // What customers still owe, converted to the base currency at today's rates
+    // What customers still owe, per currency
     const charges = await F.Charge.find({ status: 'active', ...(teams ? { team: { $in: teams } } : {}) }).select('netAmount currency').limit(20000).lean();
     const totals = await L.chargeTotals(charges.map((c) => c._id));
-    let outstanding = 0;
-    const rates = {};
+    const owed = {};
     for (const c of charges) {
         const t = totals[String(c._id)] || { applied: 0, refunded: 0 };
         const remaining = c.netAmount - (t.applied - t.refunded);
-        if (remaining <= 0) continue;
-        try {
-            rates[c.currency] = rates[c.currency] ?? (await L.rateAt(c.currency));
-            outstanding += remaining * rates[c.currency];
-        } catch (e) {
-            // a currency without a rate is left out of the total
-        }
+        if (remaining > 0) owed[c.currency] = M.round((owed[c.currency] || 0) + remaining, 3);
     }
+    const outstanding = Object.entries(owed).map(([currency, amount]) => ({ currency, amount })).sort((a, b) => b.amount - a.amount);
+    // Change against the previous period, for the main currency only (the others are shown as they are)
+    const main = base;
+    const mainOf = (list) => (list.find((x) => x.currency === main) || { amount: 0 }).amount;
 
     const modules = Object.fromEntries(moduleStatus.map((m) => [m._id, m.n]));
     res.json({
@@ -87,11 +86,11 @@ exports.overview = async (req, res) => {
         kpis: {
             newCustomers: { value: newNow, previous: newPrev, change: pct(newNow, newPrev) },
             enrollments: { value: enrPrev === undefined ? enrNow : enrNow, previous: enrPrev, change: pct(enrNow, enrPrev) },
-            collected: { value: M.round(collectedNow, 2), previous: M.round(collectedPrev, 2), change: pct(collectedNow, collectedPrev) },
+            collected: { value: collectedNow, previous: collectedPrev, change: pct(mainOf(collectedNow), mainOf(collectedPrev)), main },
             conversionRate: newNow ? M.round((convertedNow * 100) / newNow, 1) : 0,
-            outstanding: M.round(outstanding, 2),
-            refunds: M.round(refunds[0]?.v || 0, 2),
-            commissions: M.round(commissions[0]?.v || 0, 2),
+            outstanding,
+            refunds,
+            commissions,
             staleLeads: stale,
             complaintsOpen,
             satisfaction: satisfaction[0] ? { avg: M.round(satisfaction[0].avg, 2), count: satisfaction[0].n } : null

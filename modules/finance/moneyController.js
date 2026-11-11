@@ -10,7 +10,7 @@ const { teamOf } = require('../../lib/teams');
 const { nextNumber } = require('../../lib/sequence');
 const { customerAccess } = require('../../lib/customerAccess');
 const { HttpError, assertVersion, paging, parseDate } = require('../../lib/http');
-const { addEvent, notify } = require('../crm/service');
+const { addEvent, notify, getSetting } = require('../crm/service');
 const L = require('./ledger');
 const commissions = require('../commission/engine');
 
@@ -84,7 +84,7 @@ exports.createCharge = async (req, res) => {
         listAmount: amount,
         netAmount: amount,
         rate,
-        baseNet: M.toBase(amount, rate, baseDec),
+        baseNet: M.baseOf(amount, rate, baseDec),
         installments: installmentsFrom(req.body, amount, dec),
         owner: customer.owner,
         team: customer.team,
@@ -182,7 +182,17 @@ exports.createPayment = async (req, res) => {
         charge = await F.Charge.findOne({ _id: oid(req.body.charge), customer: customer._id, status: 'active' });
         if (!charge) throw new HttpError(400, 'المستحق غير موجود. / The charge was not found.');
         const chargeDec = await L.decimals(charge.currency);
-        chargeAmount = charge.currency === currency ? amount : M.convert(amount, rate, await L.rateAt(charge.currency, paidAt), chargeDec);
+        if (charge.currency === currency) chargeAmount = amount;
+        else if (req.body.chargeAmount !== undefined && req.body.chargeAmount !== null && req.body.chargeAmount !== '') {
+            // Paid in another currency: the staff member says how much of the charge this covers
+            chargeAmount = (await amountFor(charge.currency, req.body.chargeAmount)).amount;
+        } else {
+            const chargeRate = await L.rateAt(charge.currency, paidAt);
+            if (!rate || !chargeRate) {
+                throw new HttpError(400, `الدفع بعملة ${currency} والمستحق بعملة ${charge.currency}: اكتب كم يغطي من المستحق بـ${charge.currency}. / Paid in ${currency} for a charge in ${charge.currency}: enter how much of the charge it covers, in ${charge.currency}.`, 'CHARGE_AMOUNT_REQUIRED');
+            }
+            chargeAmount = M.convert(amount, rate, chargeRate, chargeDec);
+        }
     }
 
     // The collector earns the commission: the customer's responsible employee, or the employee who
@@ -202,7 +212,7 @@ exports.createPayment = async (req, res) => {
             method,
             reference: str(req.body.reference, 120),
             amount, currency, rate,
-            baseAmount: M.toBase(amount, rate, baseDec),
+            baseAmount: M.baseOf(amount, rate, baseDec),
             chargeAmount,
             paidAt, period,
             collectedBy,
@@ -243,7 +253,7 @@ exports.listPayments = async (req, res) => {
     const [items, total, totals] = await Promise.all([
         F.Payment.find(filter).populate(PAY_POP).sort({ paidAt: -1, createdAt: -1 }).skip(skip).limit(limit).lean(),
         F.Payment.countDocuments(filter),
-        F.Payment.aggregate([{ $match: { ...(await mongoFilter(filter)), status: 'confirmed' } }, { $group: { _id: '$currency', amount: { $sum: '$amount' }, base: { $sum: '$baseAmount' }, n: { $sum: 1 } } }])
+        F.Payment.aggregate([{ $match: { ...(await mongoFilter(filter)), status: 'confirmed' } }, { $group: { _id: '$currency', amount: { $sum: '$amount' }, n: { $sum: 1 } } }, { $sort: { amount: -1 } }])
     ]);
     res.json({ items, total, page, limit, totals });
 };
@@ -276,7 +286,31 @@ async function loadPayment(req, id) {
 exports.getPayment = async (req, res) => {
     const p = await loadPayment(req, req.params.id);
     const refunds = await F.Refund.find({ payment: p._id }).populate('requestedBy', 'name').sort({ createdAt: -1 }).lean();
-    res.json({ item: p, refunds, base: await L.baseCurrency() });
+    const A = require('../../lib/academy');
+    const profile = { ...A.PROFILE_DEFAULT, ...(await getSetting('academy.profile')) };
+    const site = (process.env.SITE_URL || 'https://www.nibras-ac.com').replace(/\/$/, '');
+    res.json({
+        item: p, refunds, base: await L.baseCurrency(),
+        // VAT inside the amount, when the academy is tax registered
+        vat: profile.taxNumber && profile.vatRate > 0 ? A.vatSplit(p.amount, profile.vatRate, profile.pricesIncludeVat, await L.decimals(p.currency)) : null,
+        verifyUrl: `${site}/pages/ar/receipt.html?no=${encodeURIComponent(p.receiptNo)}&k=${A.receiptKey(p.receiptNo)}`
+    });
+};
+
+// Public check of a printed receipt (from its QR code): only what the paper already shows
+exports.verifyReceipt = async (req, res) => {
+    const A = require('../../lib/academy');
+    const no = String(req.params.no || '').toUpperCase().slice(0, 30);
+    if (String(req.query.k || '') !== A.receiptKey(no)) return res.status(404).json({ message: 'Not found.' });
+    const p = await F.Payment.findOne({ receiptNo: no }).populate('customer', 'nameAr').lean();
+    if (!p) return res.status(404).json({ message: 'Not found.' });
+    const profile = { ...A.PROFILE_DEFAULT, ...(await getSetting('academy.profile')) };
+    const { partialName } = require('../../lib/customerAccess');
+    res.json({
+        receiptNo: p.receiptNo, date: p.paidAt, amount: p.amount, currency: p.currency, refunded: p.refundedAmount || 0,
+        status: p.status, customer: partialName(p.customer ? p.customer.nameAr : ''),
+        academy: { nameAr: profile.nameAr, nameEn: profile.nameEn, taxNumber: profile.taxNumber }
+    });
 };
 
 // Finance confirms that money recorded by an employee actually arrived (or rejects it)
@@ -338,7 +372,7 @@ exports.requestRefund = async (req, res) => {
     const { number } = await nextNumber('refund');
     const refund = await F.Refund.create({
         refundNo: number, payment: p._id, customer: p.customer._id, account: p.account._id,
-        amount, currency: p.currency, rate: p.rate, baseAmount: M.toBase(amount, p.rate, baseDec),
+        amount, currency: p.currency, rate: p.rate, baseAmount: M.baseOf(amount, p.rate, baseDec),
         chargeAmount: p.chargeAmount ? M.round((p.chargeAmount * amount) / p.amount, 3) : 0,
         reason, requestedBy: req.user.id
     });
@@ -380,7 +414,7 @@ exports.decideApproval = async (req, res) => {
                 const dec = await L.decimals(charge.currency);
                 const baseDec = await L.decimals(await L.baseCurrency());
                 charge.netAmount = M.round(charge.listAmount - charge.discount.amount, dec);
-                charge.baseNet = M.toBase(charge.netAmount, charge.rate, baseDec);
+                charge.baseNet = M.baseOf(charge.netAmount, charge.rate, baseDec);
                 const first = charge.installments[0]?.dueDate || today;
                 const months = charge.installments.length > 1 ? Math.max(1, Math.round((new Date(charge.installments[1].dueDate) - new Date(first)) / (30 * 864e5))) : 1;
                 charge.installments = M.splitInstallments(charge.netAmount, charge.installments.length || 1, first, months, dec);
@@ -456,7 +490,7 @@ exports.createExpense = async (req, res) => {
     const baseDec = await L.decimals(await L.baseCurrency());
     const { number } = await nextNumber('expense');
     const e = await L.inTransaction(async (session) => {
-        const [x] = await F.Expense.create([{ expenseNo: number, category, account: account._id, amount, currency: account.currency, rate, baseAmount: M.toBase(amount, rate, baseDec), date, period, payee: str(req.body.payee, 160), description: str(req.body.description), recordedBy: req.user.id }], { session });
+        const [x] = await F.Expense.create([{ expenseNo: number, category, account: account._id, amount, currency: account.currency, rate, baseAmount: M.baseOf(amount, rate, baseDec), date, period, payee: str(req.body.payee, 160), description: str(req.body.description), recordedBy: req.user.id }], { session });
         await L.post({ account: account._id, date, direction: 'out', amount, currency: account.currency, rate, source: { kind: 'expense', id: x._id, no: x.expenseNo }, description: `${category}: ${x.description}`.slice(0, 300), by: req.user.id, session });
         return x;
     });
@@ -542,15 +576,8 @@ async function customerStatement(customerId) {
         if (p.status !== 'confirmed' || p.charge) continue;
         unallocated[p.currency] = M.round((unallocated[p.currency] || 0) + p.amount - p.refundedAmount, 3);
     }
-    let remainingBase = 0;
-    for (const c of Object.values(byCurrency)) {
-        try {
-            remainingBase += M.toBase(c.remaining, await L.rateAt(c.currency), 2);
-        } catch (e) {
-            // no rate yet for this currency
-        }
-    }
-    return { base, charges: outCharges, payments, refunds, byCurrency: Object.values(byCurrency), unallocated, remainingBase: M.round(remainingBase, 2) };
+    // Each currency is reported on its own; nothing is converted
+    return { base, charges: outCharges, payments, refunds, byCurrency: Object.values(byCurrency), unallocated };
 }
 
 exports.customerFinance = async (req, res) => {
@@ -571,31 +598,32 @@ exports.myFinance = async (req, res) => {
     res.json(out);
 };
 
-// Collections, refunds and expenses for a period, in each currency and in the base currency
+// Collections, refunds and expenses for a period, each currency on its own (nothing is converted)
 exports.summary = async (req, res) => {
     const from = parseDate(req.query.from) || new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const to = parseDate(req.query.to) || new Date();
     if (/^\d{4}-\d{2}-\d{2}$/.test(String(req.query.to || ''))) to.setHours(23, 59, 59, 999);
     const paid = { status: 'confirmed', paidAt: { $gte: from, $lte: to } };
-    const group = (key) => [{ $match: paid }, { $group: { _id: key, amount: { $sum: '$amount' }, base: { $sum: '$baseAmount' }, n: { $sum: 1 } } }, { $sort: { base: -1 } }];
-    const [byCurrency, byMethod, byAccount, byCollector, byProgram, byCountry, refunds, expenses, pending] = await Promise.all([
-        F.Payment.aggregate(group('$currency')),
-        F.Payment.aggregate(group('$method')),
-        F.Payment.aggregate([...group('$account'), { $lookup: { from: 'financeaccounts', localField: '_id', foreignField: '_id', as: 'a' } }, { $addFields: { name: { $arrayElemAt: ['$a.nameAr', 0] } } }, { $project: { a: 0 } }]),
-        F.Payment.aggregate([...group('$collectedBy'), { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'u' } }, { $addFields: { name: { $arrayElemAt: ['$u.name', 0] } } }, { $project: { u: 0 } }]),
-        F.Payment.aggregate([{ $match: paid }, { $lookup: { from: 'enrollments', localField: 'enrollment', foreignField: '_id', as: 'e' } }, { $group: { _id: { $ifNull: [{ $arrayElemAt: ['$e.programTitleAr', 0] }, '—'] }, base: { $sum: '$baseAmount' }, n: { $sum: 1 } } }, { $sort: { base: -1 } }, { $limit: 20 }]),
-        F.Payment.aggregate([{ $match: paid }, { $lookup: { from: 'customers', localField: 'customer', foreignField: '_id', as: 'c' } }, { $group: { _id: { $ifNull: [{ $arrayElemAt: ['$c.country', 0] }, ''] }, base: { $sum: '$baseAmount' }, n: { $sum: 1 } } }, { $sort: { base: -1 } }, { $limit: 20 }]),
-        F.Refund.aggregate([{ $match: { status: 'paid', paidAt: { $gte: from, $lte: to } } }, { $group: { _id: '$currency', amount: { $sum: '$amount' }, base: { $sum: '$baseAmount' }, n: { $sum: 1 } } }]),
-        F.Expense.aggregate([{ $match: { status: 'posted', date: { $gte: from, $lte: to } } }, { $group: { _id: '$category', base: { $sum: '$baseAmount' }, n: { $sum: 1 } } }, { $sort: { base: -1 } }]),
+    const byKeyCur = (key) => [{ $match: paid }, { $group: { _id: { k: key, c: '$currency' }, amount: { $sum: '$amount' }, n: { $sum: 1 } } }];
+    const named = (from, field) => [{ $lookup: { from, localField: '_id.k', foreignField: '_id', as: 'x' } }, { $addFields: { name: { $arrayElemAt: [`$x.${field}`, 0] } } }, { $project: { x: 0 } }];
+    const [byCurrency, byMethod, byAccount, byCollector, byProgram, byCountry, refunds, expensesByCur, expensesByCat, commissionsPaid, pending] = await Promise.all([
+        F.Payment.aggregate([{ $match: paid }, { $group: { _id: '$currency', amount: { $sum: '$amount' }, n: { $sum: 1 } } }, { $sort: { amount: -1 } }]),
+        F.Payment.aggregate(byKeyCur('$method')),
+        F.Payment.aggregate([...byKeyCur('$account'), ...named('financeaccounts', 'nameAr')]),
+        F.Payment.aggregate([...byKeyCur('$collectedBy'), ...named('users', 'name')]),
+        F.Payment.aggregate([{ $match: paid }, { $lookup: { from: 'enrollments', localField: 'enrollment', foreignField: '_id', as: 'e' } }, { $group: { _id: { k: { $ifNull: [{ $arrayElemAt: ['$e.programTitleAr', 0] }, '—'] }, c: '$currency' }, amount: { $sum: '$amount' }, n: { $sum: 1 } } }]),
+        F.Payment.aggregate([{ $match: paid }, { $lookup: { from: 'customers', localField: 'customer', foreignField: '_id', as: 'cu' } }, { $group: { _id: { k: { $ifNull: [{ $arrayElemAt: ['$cu.country', 0] }, ''] }, c: '$currency' }, amount: { $sum: '$amount' }, n: { $sum: 1 } } }]),
+        F.Refund.aggregate([{ $match: { status: 'paid', paidAt: { $gte: from, $lte: to } } }, { $group: { _id: '$currency', amount: { $sum: '$amount' }, n: { $sum: 1 } } }]),
+        F.Expense.aggregate([{ $match: { status: 'posted', date: { $gte: from, $lte: to } } }, { $group: { _id: '$currency', amount: { $sum: '$amount' }, n: { $sum: 1 } } }]),
+        F.Expense.aggregate([{ $match: { status: 'posted', date: { $gte: from, $lte: to } } }, { $group: { _id: { k: '$category', c: '$currency' }, amount: { $sum: '$amount' }, n: { $sum: 1 } } }]),
+        require('../../models/commission').CommissionPayout.aggregate([{ $match: { paidAt: { $gte: from, $lte: to } } }, { $lookup: { from: 'financeaccounts', localField: 'account', foreignField: '_id', as: 'a' } }, { $group: { _id: { $arrayElemAt: ['$a.currency', 0] }, amount: { $sum: '$accountAmount' } } }]),
         F.Payment.countDocuments({ status: 'pending' })
     ]);
-    const sum = (rows) => M.round(rows.reduce((a, r) => a + r.base, 0), 2);
-    const collected = sum(byCurrency);
-    const refunded = sum(refunds);
-    const spent = sum(expenses);
+    const cut = (rows, n = 20) => M.pivotByCurrency(rows).slice(0, n);
     res.json({
-        base: await L.baseCurrency(), from, to,
-        totals: { collected, refunded, expenses: spent, net: M.round(collected - refunded - spent, 2), pendingPayments: pending },
-        byCurrency, byMethod, byAccount, byCollector, byProgram, byCountry, refunds, expenses
+        main: await L.baseCurrency(), from, to,
+        totals: M.currencyTotals({ collected: byCurrency, refunded: refunds, expenses: expensesByCur, commissions: commissionsPaid }),
+        pendingPayments: pending,
+        byMethod: cut(byMethod), byAccount: cut(byAccount), byCollector: cut(byCollector), byProgram: cut(byProgram), byCountry: cut(byCountry), expenses: cut(expensesByCat)
     });
 };

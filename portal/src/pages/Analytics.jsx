@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n.jsx';
 import { Loading, useLoad } from '../components/ui.jsx';
 import { PrintButton, PrintHeader } from '../components/Print.jsx';
-import { Money } from './Finance.jsx';
+import { Amounts } from './Finance.jsx';
 
 const iso = (d) => d.toISOString().slice(0, 10);
 
@@ -11,7 +11,7 @@ function Kpi({ label, value, change, money, base, to }) {
   const body = (
     <>
       <small>{label}</small>
-      <strong>{money ? <Money amount={value} currency={base} /> : (value ?? '—')}</strong>
+      <strong>{money ? <Amounts list={value} /> : (value ?? '—')}</strong>
       {change !== undefined && change !== null && <small className={change >= 0 ? 'ok' : 'warn'} dir="ltr">{change >= 0 ? '▲' : '▼'} {Math.abs(change)}%</small>}
     </>
   );
@@ -27,7 +27,7 @@ function Bars({ rows, labelOf, valueOf, money, base }) {
         <li key={i}>
           <span className="hbar-label">{labelOf(r) || '—'}</span>
           <span className="bar"><span className="bar-fill" style={{ width: `${(valueOf(r) / max) * 100}%` }} /></span>
-          <strong>{money ? <Money amount={valueOf(r)} currency={base} /> : valueOf(r)}</strong>
+          <strong>{valueOf(r)}</strong>
         </li>
       ))}
     </ul>
@@ -56,11 +56,11 @@ export default function Analytics() {
             <div className="grid grid--4">
               <Kpi label={t('newCustomers')} value={d.kpis.newCustomers.value} change={d.kpis.newCustomers.change} to="/customers" />
               <Kpi label={t('enrollmentsNav')} value={d.kpis.enrollments.value} change={d.kpis.enrollments.change} to="/enrollments" />
-              <Kpi label={t('collected')} value={d.kpis.collected.value} change={d.kpis.collected.change} money base={d.base} />
+              <Kpi label={t('collected')} value={d.kpis.collected.value} change={d.kpis.collected.change} money />
               <Kpi label={t('conversion')} value={`${d.kpis.conversionRate}%`} />
-              <Kpi label={t('outstanding')} value={d.kpis.outstanding} money base={d.base} />
-              <Kpi label={t('refunds')} value={d.kpis.refunds} money base={d.base} />
-              <Kpi label={t('commissionsNav')} value={d.kpis.commissions} money base={d.base} />
+              <Kpi label={t('outstanding')} value={d.kpis.outstanding} money />
+              <Kpi label={t('refunds')} value={d.kpis.refunds} money />
+              <Kpi label={t('commissionsNav')} value={d.kpis.commissions} money />
               <Kpi label={t('staleLeads')} value={d.kpis.staleLeads} to="/customers?noFollowUpDays=7" />
               <Kpi label={t('complaintsOpen')} value={d.kpis.complaintsOpen} to="/complaints" />
               <Kpi label={t('satisfactionAvg')} value={d.kpis.satisfaction ? `${d.kpis.satisfaction.avg} / 5 (${d.kpis.satisfaction.count})` : '—'} />
@@ -69,7 +69,7 @@ export default function Analytics() {
               <section className="card"><h2>{t('bySource')}</h2><Bars rows={d.bySource} labelOf={(r) => `${en('source', r._id)} (${r.n ? Math.round((r.converted * 100) / r.n) : 0}% ${t('conversion')})`} valueOf={(r) => r.n} /></section>
               <section className="card"><h2>{t('byCountry')}</h2><Bars rows={d.byCountry} labelOf={(r) => r._id} valueOf={(r) => r.n} /></section>
               <section className="card"><h2>{t('topPrograms')}</h2><Bars rows={d.topPrograms} labelOf={(r) => r._id} valueOf={(r) => r.n} /></section>
-              <section className="card"><h2>{t('byCurrencyTitle')}</h2><Bars rows={d.byCurrency} labelOf={(r) => `${r._id} · ${Number(r.amount).toLocaleString('en-US')}`} valueOf={(r) => r.base} money base={d.base} /></section>
+              <section className="card"><h2>{t('byCurrencyTitle')}</h2><Bars rows={d.byCurrency} labelOf={(r) => `${Number(r.amount).toLocaleString('en-US')} ${r._id}`} valueOf={(r) => r.n} /></section>
               <section className="card">
                 <h2>{t('modules')}</h2>
                 <Bars rows={[['done', d.modules.done], ['review', d.modules.review], ['inProgress', d.modules.inProgress], ['notStarted', d.modules.notStarted], ['rejected', d.modules.rejected]]} labelOf={(r) => t(`ms_${r[0]}`)} valueOf={(r) => r[1]} />

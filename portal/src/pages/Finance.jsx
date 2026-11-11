@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import QRCode from 'qrcode';
+import { BrandBand, PrintFooter } from '../components/Print.jsx';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
@@ -15,7 +17,20 @@ export function Money({ amount, currency, strong }) {
   return strong ? <strong>{body}</strong> : body;
 }
 
+// Amounts in several currencies, each on its own: 2,500 EGP · 300 SAR
+export function Amounts({ list, strong, empty = '—' }) {
+  const items = (list || []).filter((x) => Number(x.amount) !== 0);
+  if (!items.length) return <span className="muted">{empty}</span>;
+  return <span className="amounts">{items.map((x, i) => <span key={x.currency}>{i > 0 && <span className="muted"> · </span>}<Money amount={x.amount} currency={x.currency} strong={strong} /></span>)}</span>;
+}
+
 const today = () => new Date().toISOString().slice(0, 10);
+
+function QrImg({ text }) {
+  const [src, setSrc] = useState('');
+  useEffect(() => { QRCode.toDataURL(text, { margin: 1, width: 180, color: { dark: '#2f0108', light: '#ffffff' } }).then(setSrc).catch(() => {}); }, [text]);
+  return src ? <img src={src} alt="QR" /> : null;
+}
 
 function ReasonPrompt({ title, onClose, onSubmit, children, label }) {
   const { t } = useI18n();
@@ -78,13 +93,15 @@ export function ChargeForm({ customer, onClose, onSaved }) {
 export function PaymentForm({ customer, charges = [], onClose, onSaved }) {
   const { t, en, label } = useI18n();
   const accounts = useLoad('/api/v2/finance/accounts');
-  const [f, setF] = useState({ account: '', charge: charges.find((c) => c.balance?.remaining > 0)?._id || '', method: 'cash', amount: '', paidAt: today(), reference: '', note: '' });
+  const [f, setF] = useState({ account: '', charge: charges.find((c) => c.balance?.remaining > 0)?._id || '', method: 'cash', amount: '', chargeAmount: '', paidAt: today(), reference: '', note: '' });
   const { busy, error, run } = useAction();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const acc = (accounts.data?.items || []).find((a) => a._id === f.account);
+  const ch = charges.find((c) => c._id === f.charge);
+  const otherCurrency = acc && ch && acc.currency !== ch.currency;
   const submit = (e) => {
     e.preventDefault();
-    run(() => api('/api/v2/payments', { method: 'POST', body: { ...f, customer: customer.id, charge: f.charge || undefined, amount: Number(f.amount), paidAt: new Date(f.paidAt + 'T12:00:00').toISOString() } }))
+    run(() => api('/api/v2/payments', { method: 'POST', body: { ...f, customer: customer.id, charge: f.charge || undefined, amount: Number(f.amount), chargeAmount: otherCurrency && f.chargeAmount !== '' ? Number(f.chargeAmount) : undefined, paidAt: new Date(f.paidAt + 'T12:00:00').toISOString() } }))
       .then((d) => onSaved(d.item)).catch(() => {});
   };
   return (
@@ -105,6 +122,7 @@ export function PaymentForm({ customer, charges = [], onClose, onSaved }) {
             {charges.filter((c) => c.status === 'active').map((c) => <option key={c._id} value={c._id}>{c.chargeNo} · {c.description} ({c.balance?.remaining} {c.currency})</option>)}
           </select>
         </Field>
+        {otherCurrency && <Field label={`${t('coversCharge')} (${ch.currency})`} hint={t('coversChargeHint')}><input type="number" step="0.001" min="0" dir="ltr" value={f.chargeAmount} onChange={set('chargeAmount')} /></Field>}
         <Field label={t('reference')}><input dir="ltr" value={f.reference} onChange={set('reference')} /></Field>
         <Field label={t('note')} wide><input value={f.note} onChange={set('note')} /></Field>
         <div className="field--wide"><ErrorBox error={error} /></div>
@@ -148,7 +166,6 @@ export function CustomerFinance({ c }) {
                 ))}
               </div>
             )}
-            {d.remainingBase > 0 && <p className="muted">{t('remainingBase')}: <Money amount={d.remainingBase} currency={d.base} strong /></p>}
             {Object.keys(d.unallocated).length > 0 && <p className="muted">{t('unallocated')}: {Object.entries(d.unallocated).map(([cur, v]) => <Money key={cur} amount={v} currency={cur} />)}</p>}
           </section>
 
@@ -217,7 +234,7 @@ function PaymentTable({ items, onOpen }) {
   return (
     <div className="table-wrap">
       <table className="table table--hover">
-        <thead><tr><th>{t('receiptNo')}</th><th>{t('paidAt')}</th><th>{t('customer')}</th><th>{t('amount')}</th><th>{t('baseAmount')}</th><th>{t('method')}</th><th>{t('account')}</th><th>{t('collectedBy')}</th><th>{t('status')}</th></tr></thead>
+        <thead><tr><th>{t('receiptNo')}</th><th>{t('paidAt')}</th><th>{t('customer')}</th><th>{t('amount')}</th><th>{t('method')}</th><th>{t('account')}</th><th>{t('collectedBy')}</th><th>{t('status')}</th></tr></thead>
         <tbody>
           {items.map((p) => (
             <tr key={p._id} onClick={() => onOpen(p)}>
@@ -225,7 +242,6 @@ function PaymentTable({ items, onOpen }) {
               <td className="nowrap">{fmtDay(p.paidAt)}</td>
               <td>{p.customer?.customerNo} {p.customer?.nameAr}</td>
               <td><Money amount={p.amount} currency={p.currency} strong />{p.refundedAmount > 0 && <div className="muted">−<Money amount={p.refundedAmount} currency={p.currency} /></div>}</td>
-              <td><Money amount={p.baseAmount} currency="" /></td>
               <td>{en('payMethod', p.method)}</td>
               <td>{p.account?.nameAr}</td>
               <td>{p.collectedBy?.name || '—'}</td>
@@ -262,7 +278,7 @@ export default function Payments() {
           <>
             {d.totals.length > 0 && (
               <div className="grid grid--4">
-                {d.totals.map((x) => <div className="card stat" key={x._id}><small>{x._id} · {x.n}</small><Money amount={x.amount} currency={x._id} strong /><small className="muted">= <Money amount={x.base} currency={t('base')} /></small></div>)}
+                {d.totals.map((x) => <div className="card stat" key={x._id}><small>{x._id} · {x.n}</small><Money amount={x.amount} currency={x._id} strong /></div>)}
               </div>
             )}
             <section className="card">
@@ -286,7 +302,7 @@ export function PaymentDetail() {
   const done = () => { setDialog(null); state.reload(); };
   return (
     <Loading state={state}>
-      {({ item: p, refunds, base }) => (
+      {({ item: p, refunds, vat, verifyUrl }) => (
         <>
           <div className="page-head no-print">
             <Link to={me.user.isStaff ? '/payments' : '/my-payments'} className="muted">← {t('paymentsNav')}</Link>
@@ -303,29 +319,40 @@ export function PaymentDetail() {
             </div>
           </div>
           <section className="card receipt">
-            <div className="receipt-head">
-              <img src="/logo.png" alt="" />
-              <div>
-                <h1>{t('receipt')} <span dir="ltr">{p.receiptNo}</span></h1>
-                <div className="muted">{t('academy')}</div>
+            <BrandBand title={vat ? `${t('taxInvoiceTitle')} / ${t('receiptTitle')}` : t('receiptTitle')}>
+              <div className="receipt-no">
+                <span dir="ltr">{p.receiptNo}</span>
+                <Pill tone={TONE[p.status]}>{en('payStatus', p.status)}</Pill>
               </div>
-              <Pill tone={TONE[p.status]}>{en('payStatus', p.status)}</Pill>
+            </BrandBand>
+            <div className="receipt-body">
+              <p className="receipt-line">{t('receiptFor')}: <strong>{p.customer.nameAr}</strong> <small className="muted">({p.customer.customerNo})</small></p>
+              <p className="receipt-line">{t('theSumOf')}: <Money amount={p.amount} currency={p.currency} strong /></p>
+              <p className="receipt-line">{t('forWhat')}: {p.charge ? p.charge.description : p.enrollment ? p.enrollment.programTitleAr : t('advance')}</p>
+              <table className="table receipt-table">
+                <tbody>
+                  <tr><th>{t('paidAt')}</th><td>{fmtDay(p.paidAt)}</td><th>{t('method')}</th><td>{en('payMethod', p.method)}{p.reference ? ` · ${p.reference}` : ''}</td></tr>
+                  <tr><th>{t('account')}</th><td>{label({ ar: p.account.nameAr, en: p.account.nameEn })}</td><th>{t('collectedBy')}</th><td>{p.collectedBy?.name || '—'}</td></tr>
+                  {(p.charge || p.enrollment) && <tr><th>{t('charge')}</th><td>{p.charge ? p.charge.chargeNo : '—'}</td><th>{t('enrollment')}</th><td>{p.enrollment ? p.enrollment.enrollmentNo : '—'}</td></tr>}
+                  {vat && (
+                    <>
+                      <tr><th>{t('netBeforeVat')}</th><td><Money amount={vat.net} currency={p.currency} /></td><th>{t('vatLabel')} ({vat.rate}%)</th><td><Money amount={vat.vat} currency={p.currency} /></td></tr>
+                      <tr className="receipt-total"><th>{t('totalLabel')}</th><td colSpan={3}><Money amount={vat.total} currency={p.currency} strong /></td></tr>
+                    </>
+                  )}
+                  {!vat && <tr className="receipt-total"><th>{t('totalLabel')}</th><td colSpan={3}><Money amount={p.amount} currency={p.currency} strong /></td></tr>}
+                </tbody>
+              </table>
+              {p.refundedAmount > 0 && <p className="late">{t('refunds')}: <Money amount={p.refundedAmount} currency={p.currency} /></p>}
+              {p.note && <p>{p.note}</p>}
+              {(p.status === 'voided' || p.status === 'rejected') && <div className="alert alert--error">{p.voidReason}</div>}
+              <div className="receipt-bottom">
+                <div className="receipt-sign"><span>{t('signCollector')}</span><span>{t('signStamp')}</span></div>
+                {verifyUrl && <div className="receipt-qr"><QrImg text={verifyUrl} /><small>{t('scanToVerify')}</small></div>}
+              </div>
+              <p className="muted receipt-foot">{t('recordedBy')}: {p.recordedBy?.name}{p.confirmedBy ? ` · ${t('confirmed')}: ${p.confirmedBy.name}` : ''} · {fmtDate(new Date())}</p>
             </div>
-            <div className="info-grid">
-              <div className="info"><small>{t('customer')}</small><div>{p.customer.customerNo} — {p.customer.nameAr}</div></div>
-              <div className="info"><small>{t('paidAt')}</small><div>{fmtDay(p.paidAt)}</div></div>
-              <div className="info"><small>{t('amount')}</small><div><Money amount={p.amount} currency={p.currency} strong /></div></div>
-              {p.currency !== base && <div className="info"><small>{t('rate')}</small><div dir="ltr">1 {p.currency} = {p.rate} {base} → <Money amount={p.baseAmount} currency={base} /></div></div>}
-              <div className="info"><small>{t('method')}</small><div>{en('payMethod', p.method)}{p.reference ? ` · ${p.reference}` : ''}</div></div>
-              <div className="info"><small>{t('account')}</small><div>{label({ ar: p.account.nameAr, en: p.account.nameEn })}</div></div>
-              {p.charge && <div className="info"><small>{t('charge')}</small><div>{p.charge.chargeNo} · {p.charge.description}</div></div>}
-              {p.enrollment && <div className="info"><small>{t('enrollment')}</small><div>{p.enrollment.enrollmentNo} · {p.enrollment.programTitleAr}</div></div>}
-              <div className="info"><small>{t('collectedBy')}</small><div>{p.collectedBy?.name || '—'}</div></div>
-              <div className="info"><small>{t('recordedBy')}</small><div>{p.recordedBy?.name}{p.confirmedBy ? ` · ${t('confirmed')}: ${p.confirmedBy.name}` : ''}</div></div>
-            </div>
-            {p.note && <p>{p.note}</p>}
-            {(p.status === 'voided' || p.status === 'rejected') && <div className="alert alert--error">{p.voidReason}</div>}
-            <p className="muted receipt-foot">{fmtDate(new Date())}</p>
+            <PrintFooter />
           </section>
           {refunds.length > 0 && (
             <section className="card no-print">
@@ -658,7 +685,7 @@ export function Currencies() {
         {(d) => (
           <>
             <section className="card">
-              <p>{t('baseCurrency')}: <strong>{d.base}</strong></p>
+              <p>{t('baseCurrency')}: <strong>{d.base}</strong> <small className="muted">{t('ratesOptionalNote')}</small></p>
               <div className="table-wrap">
                 <table className="table">
                   <thead><tr><th>{t('codeLabel')}</th><th>{t('name')}</th><th>{t('symbol')}</th><th>{t('decimals')}</th><th>{t('rate')}</th><th>{t('effectiveAt')}</th><th>{t('status')}</th></tr></thead>
@@ -751,7 +778,7 @@ export function FinanceSummary() {
   const [range, setRange] = useState({ from: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10), to: today() });
   const state = useLoad(`/api/v2/finance/summary?from=${range.from}&to=${range.to}`);
   const Rows = ({ rows, group, name }) => (!rows.length ? <p className="muted">—</p> : (
-    <ul className="plain-list">{rows.map((r, i) => <li key={i}><span>{name ? r.name || '—' : group ? en(group, r._id) : r._id || '—'}{r.amount !== undefined && <small className="muted"> · <Money amount={r.amount} currency={r._id} /></small>}</span><Money amount={r.base} currency="" strong /></li>)}</ul>
+    <ul className="plain-list">{rows.map((r, i) => <li key={i}><span>{name ? r.name || '—' : group ? en(group, r._id) : r._id || '—'} <small className="muted">({r.n})</small></span><Amounts list={r.amounts} strong /></li>)}</ul>
   ));
   return (
     <>
@@ -765,16 +792,25 @@ export function FinanceSummary() {
       <Loading state={state}>
         {(d) => (
           <>
-            <div className="grid grid--4">
-              <div className="card stat"><small>{t('collected')}</small><Money amount={d.totals.collected} currency={d.base} strong /></div>
-              <div className="card stat"><small>{t('refunds')}</small><Money amount={d.totals.refunded} currency={d.base} strong /></div>
-              <div className="card stat"><small>{t('expensesTotal')}</small><Money amount={d.totals.expenses} currency={d.base} strong /></div>
-              <div className="card stat"><small>{t('netTotal')}</small><Money amount={d.totals.net} currency={d.base} strong /></div>
-            </div>
-            {d.totals.pendingPayments > 0 && <div className="alert alert--warn"><Link to="/payments">{t('pendingConfirm')}: {d.totals.pendingPayments}</Link></div>}
+            {!d.totals.length && <section className="card"><p className="muted">{t('noData')}</p></section>}
+            {d.totals.length > 0 && (
+              <section className="card">
+                <h2>{t('perCurrencyTitle')}</h2>
+                <div className="table-wrap">
+                  <table className="table">
+                    <thead><tr><th>{t('currency')}</th><th>{t('collected')}</th><th>{t('refunds')}</th><th>{t('expensesTotal')}</th><th>{t('commissionsNav')}</th><th>{t('netTotal')}</th></tr></thead>
+                    <tbody>{d.totals.map((x) => (
+                      <tr key={x.currency}><td dir="ltr"><strong>{x.currency}</strong></td><td><Money amount={x.collected} currency={x.currency} /></td><td><Money amount={x.refunded} currency={x.currency} /></td><td><Money amount={x.expenses} currency={x.currency} /></td><td><Money amount={x.commissions} currency={x.currency} /></td><td><Money amount={x.net} currency={x.currency} strong /></td></tr>
+                    ))}</tbody>
+                  </table>
+                </div>
+                <p className="muted"><small>{t('noConversionNote')}</small></p>
+              </section>
+            )}
+            {d.pendingPayments > 0 && <div className="alert alert--warn"><Link to="/payments">{t('pendingConfirm')}: {d.pendingPayments}</Link></div>}
             <div className="grid grid--2">
-              <section className="card"><h2>{t('byCurrencyTitle')}</h2><Rows rows={d.byCurrency} /></section>
-              <section className="card"><h2>{t('byMethod')}</h2><Rows rows={d.byMethod.map((r) => ({ ...r, amount: undefined }))} group="payMethod" /></section>
+              <section className="card"><h2>{t('byMethod')}</h2><Rows rows={d.byMethod} group="payMethod" /></section>
+              <section className="card"><h2>{t('byAccountTitle')}</h2><Rows rows={d.byAccount} name /></section>
               <section className="card"><h2>{t('byCollector')}</h2><Rows rows={d.byCollector} name /></section>
               <section className="card"><h2>{t('byProgram')}</h2><Rows rows={d.byProgram} /></section>
               <section className="card"><h2>{t('byCountry')}</h2><Rows rows={d.byCountry} /></section>

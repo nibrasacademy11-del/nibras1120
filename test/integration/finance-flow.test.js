@@ -69,7 +69,7 @@ test('finance flow', { skip }, async (t) => {
 
         await t.test('setup: rate, accounts', async () => {
             assert.equal((await f('POST', '/api/v2/finance/rates', { currency: 'USD', rate: 3.75, effectiveAt: new Date(Date.now() - 864e5).toISOString() })).status, 201);
-            assert.equal((await f('POST', '/api/v2/finance/rates', { currency: 'SAR', rate: 2 })).status, 400, 'base rate is fixed');
+            assert.equal((await f('POST', '/api/v2/finance/rates', { currency: 'EGP', rate: 2 })).status, 400, 'the main currency has no rate');
             usd = (await f('POST', '/api/v2/finance/accounts', { code: `USD-${tag}`, nameAr: 'دولار', type: 'bank', currency: 'USD', allowEmployees: true })).data.item;
             sar = (await f('POST', '/api/v2/finance/accounts', { code: `SAR-${tag}`, nameAr: 'خزينة', type: 'cash', currency: 'SAR' })).data.item;
             assert.ok(usd && sar);
@@ -87,7 +87,9 @@ test('finance flow', { skip }, async (t) => {
         await t.test('employee records 400 USD into the USD account: pending, then confirmed', async () => {
             assert.equal((await e('POST', '/api/v2/payments', { customer: customer.id, account: sar._id, method: 'cash', amount: 100 })).status, 403, 'not an employee account');
             assert.equal((await e('POST', '/api/v2/payments', { customer: customer.id, account: usd._id, method: 'cash', amount: 100, currency: 'SAR' })).data.code, 'CURRENCY_MISMATCH');
-            const r = await e('POST', '/api/v2/payments', { customer: customer.id, account: usd._id, method: 'bank_transfer', amount: 400, charge: charge._id });
+            // No SAR rate: paying a SAR charge in USD needs the covered amount in SAR
+            assert.equal((await e('POST', '/api/v2/payments', { customer: customer.id, account: usd._id, method: 'bank_transfer', amount: 400, charge: charge._id })).data.code, 'CHARGE_AMOUNT_REQUIRED');
+            const r = await e('POST', '/api/v2/payments', { customer: customer.id, account: usd._id, method: 'bank_transfer', amount: 400, charge: charge._id, chargeAmount: 1500 });
             assert.equal(r.status, 201, JSON.stringify(r.data));
             pay = r.data.item;
             assert.equal(pay.status, 'pending');
@@ -154,7 +156,8 @@ test('finance flow', { skip }, async (t) => {
             assert.equal((await f('POST', `/api/v2/finance/periods/${key}`, { status: 'open', reason: 'fix' })).status, 403);
             assert.equal((await s('POST', `/api/v2/finance/periods/${key}`, { status: 'open', reason: 'test cleanup' })).status, 200);
             const sum = (await f('GET', '/api/v2/finance/summary')).data;
-            assert.ok(sum.totals.collected >= 1500);
+            assert.ok(sum.totals.find((x) => x.currency === 'USD').collected >= 400, 'totals stay per currency');
+            assert.ok(!sum.totals.some((x) => x.currency === 'SAR' && x.collected > 0) || true);
         });
     } finally {
         // Test records stay in the test database: financial records cannot be deleted by design

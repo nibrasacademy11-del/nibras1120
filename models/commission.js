@@ -26,7 +26,7 @@ const splitSchema = new mongoose.Schema({
 }, { timestamps: true, optimisticConcurrency: true });
 
 // One line per beneficiary per payment (or per refund, void or adjustment). Amounts are in the
-// base currency; reversals are negative. Lines are never edited, only moved through statuses.
+// payment's own currency; reversals are negative. Lines are never edited, only moved through statuses.
 const lineSchema = new mongoose.Schema({
     beneficiary: { type: ObjectId, ref: 'User', required: true, index: true },
     team: { type: ObjectId, ref: 'Team', default: null, index: true },
@@ -69,7 +69,7 @@ const payoutSchema = new mongoose.Schema({
     currency: { type: String, required: true },
     account: { type: ObjectId, ref: 'FinanceAccount', required: true },
     accountAmount: { type: Number, required: true },
-    rate: { type: Number, required: true },
+    rate: { type: Number, default: null },
     paidAt: { type: Date, required: true },
     period: { type: String, required: true },
     note: { type: String, default: '' },

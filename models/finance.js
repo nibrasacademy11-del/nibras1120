@@ -6,6 +6,9 @@ const protectRecords = require('../lib/protectRecords');
 
 const { ObjectId } = mongoose.Schema.Types;
 const money = { type: Number, required: true, min: 0 };
+// Optional: filled only when an exchange rate to the main currency is known
+const optRate = { type: Number, default: null };
+const optBase = { type: Number, default: null, min: 0 };
 
 // ---- setup ----
 
@@ -59,8 +62,8 @@ const movementSchema = new mongoose.Schema({
     direction: { type: String, enum: ['in', 'out'], required: true },
     amount: money,
     currency: { type: String, required: true },
-    rate: { type: Number, required: true },
-    baseAmount: money,
+    rate: optRate,
+    baseAmount: optBase,
     source: {
         kind: { type: String, enum: ['payment', 'refund', 'expense', 'transfer', 'opening', 'void', 'commission'], required: true },
         id: { type: ObjectId, required: true },
@@ -90,8 +93,8 @@ const chargeSchema = new mongoose.Schema({
         approval: { type: ObjectId, ref: 'Approval', default: null }
     },
     netAmount: money,
-    rate: { type: Number, required: true },            // rate when the charge was created, for base reporting
-    baseNet: money,
+    rate: optRate,            // rate to the main currency when the charge was created, if one was set
+    baseNet: optBase,
     installments: [installmentSchema],
     status: { type: String, enum: CHARGE_STATUSES, default: 'active', index: true },
     cancelReason: { type: String, default: '' },
@@ -112,8 +115,8 @@ const paymentSchema = new mongoose.Schema({
     reference: { type: String, default: '', maxlength: 120 },   // transfer number, card slip, cheque number
     amount: money,
     currency: { type: String, required: true },
-    rate: { type: Number, required: true },
-    baseAmount: money,
+    rate: optRate,
+    baseAmount: optBase,
     // The part of the charge this payment covers, in the charge's currency (when currencies differ)
     chargeAmount: { type: Number, default: 0, min: 0 },
     paidAt: { type: Date, required: true, index: true },
@@ -141,8 +144,8 @@ const refundSchema = new mongoose.Schema({
     account: { type: ObjectId, ref: 'FinanceAccount', required: true },
     amount: money,                                   // in the payment's currency
     currency: { type: String, required: true },
-    rate: { type: Number, required: true },          // the payment's rate, so revenue reverses at the value it was booked at
-    baseAmount: money,
+    rate: optRate,          // the payment's rate, so revenue reverses at the value it was booked at
+    baseAmount: optBase,
     chargeAmount: { type: Number, default: 0 },
     reason: { type: String, required: true, maxlength: 500 },
     status: { type: String, enum: ['pending', 'paid', 'rejected'], default: 'pending', index: true },
@@ -161,8 +164,8 @@ const expenseSchema = new mongoose.Schema({
     account: { type: ObjectId, ref: 'FinanceAccount', required: true, index: true },
     amount: money,
     currency: { type: String, required: true },
-    rate: { type: Number, required: true },
-    baseAmount: money,
+    rate: optRate,
+    baseAmount: optBase,
     date: { type: Date, required: true, index: true },
     period: { type: String, required: true },
     payee: { type: String, default: '', maxlength: 160 },
@@ -180,8 +183,8 @@ const transferSchema = new mongoose.Schema({
     to: { type: ObjectId, ref: 'FinanceAccount', required: true },
     amountOut: money,
     amountIn: money,
-    rateOut: { type: Number, required: true },
-    rateIn: { type: Number, required: true },
+    rateOut: { type: Number, default: null },
+    rateIn: { type: Number, default: null },
     date: { type: Date, required: true },
     period: { type: String, required: true },
     note: { type: String, default: '', maxlength: 300 },

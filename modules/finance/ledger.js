@@ -31,12 +31,12 @@ async function assertActiveCurrency(code) {
     return c;
 }
 
-// The rate in effect at a moment. The base currency is always 1.
+// The rate to the main currency in effect at a moment, or null when none was set.
+// Rates are optional: amounts are kept and reported in their own currency.
 async function rateAt(code, at = new Date()) {
     if (code === (await baseCurrency())) return 1;
     const r = await F.ExchangeRate.findOne({ currency: code, effectiveAt: { $lte: at } }).sort({ effectiveAt: -1 }).lean();
-    if (!r) throw new HttpError(400, `لا يوجد سعر صرف للعملة ${code} في هذا التاريخ. / No exchange rate for ${code} at that date.`, 'NO_RATE');
-    return r.rate;
+    return r ? r.rate : null;
 }
 
 async function assertOpenPeriod(date) {
@@ -60,7 +60,7 @@ async function post({ account, date, direction, amount, currency, rate, source, 
     const baseDec = await decimals(await baseCurrency());
     const [m] = await F.Movement.create([{
         account, date, period: M.periodKey(date), direction, amount, currency, rate,
-        baseAmount: M.toBase(amount, rate, baseDec), source, description, by
+        baseAmount: M.baseOf(amount, rate, baseDec), source, description, by
     }], { session });
     return m;
 }

@@ -122,6 +122,11 @@ exports.cronReminders = async (req, res) => {
     res.json({ reminded: due.length, lectures, certificates });
 };
 
+// The academy's identity, for printing (any signed-in user, customers included)
+exports.academy = async (req, res) => {
+    res.json({ profile: { ...require('../../lib/academy').PROFILE_DEFAULT, ...(await getSetting('academy.profile')) } });
+};
+
 exports.getSettings = async (req, res) => {
     const out = {};
     for (const key of Object.keys(SETTING_DEFAULTS)) out[key] = await getSetting(key);
@@ -133,6 +138,7 @@ const VALIDATORS = {
     'enrollments.teamLeaderReview': (v) => typeof v === 'boolean',
     'commissions.defaultEmployeeRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
     'commissions.defaultLeaderRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
+    'academy.profile': (v) => !!require('../../lib/academy').cleanProfile(v),
     'certificates.paymentRule': (v) => ['customer', 'enrollment', 'off'].includes(v),
     'lectures.presentPercent': (v) => typeof v === 'number' && v >= 1 && v <= 100,
     'attendance.timeZone': (v) => { try { new Intl.DateTimeFormat('en', { timeZone: v }); return true; } catch { return false; } }
@@ -142,8 +148,9 @@ exports.updateSettings = async (req, res) => {
     const reason = String(req.body.reason || '').trim().slice(0, 300);
     if (!reason) throw new HttpError(400, 'سبب التعديل مطلوب. / A reason is required.', 'REASON_REQUIRED');
     const changes = {};
-    for (const [key, value] of Object.entries(req.body.settings || {})) {
+    for (let [key, value] of Object.entries(req.body.settings || {})) {
         if (!VALIDATORS[key] || !VALIDATORS[key](value)) throw new HttpError(400, `Invalid setting: ${key}`);
+        if (key === 'academy.profile') value = require('../../lib/academy').cleanProfile(value);
         const before = await getSetting(key);
         if (before === value) continue;
         await SystemSetting.findOneAndUpdate({ key }, { key, value, updatedBy: req.user.id }, { upsert: true });

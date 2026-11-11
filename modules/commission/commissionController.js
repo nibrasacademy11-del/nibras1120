@@ -114,7 +114,7 @@ exports.listLines = async (req, res) => {
         C.CommissionLine.find(filter).populate(LINE_POP).sort({ date: -1, createdAt: -1 }).skip(skip).limit(limit).lean(),
         C.CommissionLine.countDocuments(filter)
     ]);
-    res.json({ items, total, page, limit, base: await L.baseCurrency() });
+    res.json({ items, total, page, limit });
 };
 
 // One person's month: every line, the totals by status, and the payouts of that month
@@ -127,11 +127,10 @@ exports.statement = async (req, res) => {
         User.findById(userId).select('name role').lean(),
         C.CommissionLine.find({ beneficiary: userId, period }).populate(LINE_POP).sort({ date: 1 }).lean(),
         C.CommissionPayout.find({ beneficiary: userId, period }).populate('account', 'nameAr currency').lean(),
-        C.CommissionLine.aggregate([{ $match: { beneficiary: userId, period: { $lt: period }, status: { $in: ['due', 'approved'] } } }, { $group: { _id: null, v: { $sum: '$amount' } } }])
+        C.CommissionLine.aggregate([{ $match: { beneficiary: userId, period: { $lt: period }, status: { $in: ['due', 'approved'] } } }, { $group: { _id: '$currency', v: { $sum: '$amount' } } }])
     ]);
     if (!user) throw new HttpError(404, 'Not found.');
-    const base = await L.baseCurrency();
-    res.json({ user, period, base, lines, payouts, totals: rules.summarize(lines), unpaidFromEarlier: M.round(before[0]?.v || 0, 2) });
+    res.json({ user, period, lines, payouts, totals: rules.summarizeByCurrency(lines), unpaidFromEarlier: before.filter((b) => M.round(b.v, 3) !== 0).map((b) => ({ currency: b._id, amount: M.round(b.v, 3) })) });
 };
 
 // Totals per person for a month (finance and team leaders)
@@ -141,7 +140,7 @@ exports.overview = async (req, res) => {
     const rows = await C.CommissionLine.aggregate([
         { $match: { ...match, period } },
         { $group: {
-            _id: '$beneficiary',
+            _id: { b: '$beneficiary', c: '$currency' },
             earned: { $sum: { $cond: [{ $gt: ['$amount', 0] }, '$amount', 0] } },
             reversed: { $sum: { $cond: [{ $lt: ['$amount', 0] }, '$amount', 0] } },
             due: { $sum: { $cond: [{ $eq: ['$status', 'due'] }, '$amount', 0] } },
@@ -150,15 +149,16 @@ exports.overview = async (req, res) => {
             collected: { $sum: { $cond: [{ $and: [{ $eq: ['$kind', 'earned'] }, { $eq: ['$role', 'employee'] }] }, '$commissionable', 0] } },
             lines: { $sum: 1 }
         } },
-        { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'u' } },
-        { $addFields: { name: { $arrayElemAt: ['$u.name', 0] }, role: { $arrayElemAt: ['$u.role', 0] } } },
+        { $lookup: { from: 'users', localField: '_id.b', foreignField: '_id', as: 'u' } },
+        { $addFields: { name: { $arrayElemAt: ['$u.name', 0] }, role: { $arrayElemAt: ['$u.role', 0] }, currency: '$_id.c', user: '$_id.b' } },
         { $project: { u: 0 } },
-        { $sort: { earned: -1 } }
+        { $sort: { lines: -1 } }
     ]);
     // Approved amounts from every month that are still unpaid, ready for payout
-    const payable = await C.CommissionLine.aggregate([{ $match: { ...match, status: 'approved' } }, { $group: { _id: '$beneficiary', v: { $sum: '$amount' } } }]);
-    const byUser = Object.fromEntries(payable.map((p) => [String(p._id), M.round(p.v, 2)]));
-    res.json({ period, base: await L.baseCurrency(), items: rows.map((r) => ({ ...r, payable: byUser[String(r._id)] || 0 })) });
+    const payable = await C.CommissionLine.aggregate([{ $match: { ...match, status: 'approved' } }, { $group: { _id: { b: '$beneficiary', c: '$currency' }, v: { $sum: '$amount' } } }]);
+    const byUser = Object.fromEntries(payable.map((p) => [`${p._id.b}|${p._id.c}`, M.round(p.v, 3)]));
+    // One row per person and currency
+    res.json({ period, items: rows.map((r) => ({ ...r, _id: r.user, payable: byUser[`${r.user}|${r.currency}`] || 0 })) });
 };
 
 async function asAggregate(filter) {
@@ -200,8 +200,9 @@ exports.cancelLine = async (req, res) => {
 exports.addAdjustment = async (req, res) => {
     const user = await User.findById(oid(req.body.beneficiary)).select('name role');
     if (!user || !P.isStaffRole(user.role)) throw new HttpError(400, 'اختر الموظف. / Choose the employee.');
-    const base = await L.baseCurrency();
-    const dec = await L.decimals(base);
+    const currency = M.normalizeCode(req.body.currency) || (await L.baseCurrency());
+    await L.assertActiveCurrency(currency);
+    const dec = await L.decimals(currency);
     const amount = M.round(Number(req.body.amount), dec);
     if (!Number.isFinite(amount) || amount === 0 || Math.abs(amount) > 1e8) throw new HttpError(400, 'المبلغ غير صالح. / Invalid amount.');
     const reason = str(req.body.reason, 500);
@@ -209,9 +210,9 @@ exports.addAdjustment = async (req, res) => {
     const date = L.checkDate(req.body.date);
     const line = await C.CommissionLine.create({
         beneficiary: user._id, team: await teamOf(user._id), role: 'adjustment', kind: 'adjustment',
-        commissionable: 0, amount, currency: base, date, period: M.periodKey(date), note: reason, createdBy: req.user.id
+        commissionable: 0, amount, currency, date, period: M.periodKey(date), note: reason, createdBy: req.user.id
     });
-    await audit.record(req, { action: 'commission.adjustment', resource: 'commissions', resourceId: line._id, summary: `${user.name}: ${amount} ${base}`, reason });
+    await audit.record(req, { action: 'commission.adjustment', resource: 'commissions', resourceId: line._id, summary: `${user.name}: ${amount} ${currency}`, reason });
     res.status(201).json({ item: line });
 };
 
@@ -233,15 +234,16 @@ exports.createPayout = async (req, res) => {
     if (!account || !account.active) throw new HttpError(400, 'اختر الحساب. / Choose the account.');
     const paidAt = L.checkDate(req.body.paidAt);
     const period = await L.assertOpenPeriod(paidAt);
-    const base = await L.baseCurrency();
+    // Approved lines in the account's currency are paid from it; other currencies are paid from an account in that currency
+    const base = account.currency;
     const baseDec = await L.decimals(base);
 
     const payout = await L.inTransaction(async (session) => {
-        const lines = await C.CommissionLine.find({ beneficiary, status: 'approved' }).session(session || null);
+        const lines = await C.CommissionLine.find({ beneficiary, status: 'approved', currency: base }).session(session || null);
         const total = M.round(lines.reduce((a, l) => a + l.amount, 0), baseDec);
         if (!lines.length || total <= 0) throw new HttpError(400, 'لا يوجد مبلغ معتمد للصرف. / There is no approved amount to pay.', 'NOTHING_TO_PAY');
         const rate = await L.rateAt(account.currency, paidAt);
-        const accountAmount = M.fromBase(total, rate, await L.decimals(account.currency));
+        const accountAmount = total;
         const { number } = await nextNumber('payout');
         const [p] = await C.CommissionPayout.create([{
             payoutNo: number, beneficiary, lines: lines.map((l) => l._id), amount: total, currency: base,

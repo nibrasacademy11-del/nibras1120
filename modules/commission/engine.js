@@ -26,8 +26,9 @@ async function beneficiariesFor(payment, session) {
 
 async function onPaymentConfirmed(payment, { session, by } = {}) {
     const at = payment.paidAt;
-    const base = await L.baseCurrency();
-    const dec = await L.decimals(base);
+    // Commission is earned in the currency the money was paid in
+    const currency = payment.currency;
+    const dec = await L.decimals(currency);
     const people = await beneficiariesFor(payment, session);
     const beneficiaries = [];
     for (const p of people) {
@@ -39,11 +40,11 @@ async function onPaymentConfirmed(payment, { session, by } = {}) {
         const team = await Team.findById(payment.team).select('leader').session(session || null).lean();
         if (team && team.leader) leader = { user: team.leader, rate: await rateFor(team.leader, 'team_leader', at, session), team: payment.team };
     }
-    const lines = rules.computeLines({ baseAmount: payment.baseAmount, beneficiaries, leader, decimals: dec });
+    const lines = rules.computeLines({ baseAmount: payment.amount, beneficiaries, leader, decimals: dec });
     if (!lines.length) return [];
     const docs = lines.map((l) => ({
         ...l, kind: 'earned', payment: payment._id, enrollment: payment.enrollment || null, customer: payment.customer?._id || payment.customer,
-        receiptNo: payment.receiptNo, currency: base, date: at, period: M.periodKey(at), createdBy: by || null
+        receiptNo: payment.receiptNo, currency, date: at, period: M.periodKey(at), createdBy: by || null
     }));
     try {
         return await C.CommissionLine.insertMany(docs, { session, ordered: false });
@@ -57,13 +58,12 @@ async function onPaymentConfirmed(payment, { session, by } = {}) {
 async function reverseFor(payment, { kind, refund = null, fraction, date, session, by }) {
     const earned = await C.CommissionLine.find({ payment: payment._id, kind: 'earned', status: { $ne: 'cancelled' } }).session(session || null).lean();
     if (!earned.length) return [];
-    const base = await L.baseCurrency();
-    const dec = await L.decimals(base);
+    const dec = await L.decimals(earned[0].currency || payment.currency);
     const reversals = rules.reverseLines(earned, fraction, dec);
     // A line that was never approved is simply cancelled on a full void instead of being netted
     const docs = reversals.map((l) => ({
         ...l, kind, payment: payment._id, refund: refund ? refund._id : null, enrollment: payment.enrollment || null,
-        customer: payment.customer?._id || payment.customer, receiptNo: payment.receiptNo, currency: base,
+        customer: payment.customer?._id || payment.customer, receiptNo: payment.receiptNo, currency: l.currency || payment.currency,
         date, period: M.periodKey(date), createdBy: by || null,
         note: kind === 'refund' ? `Refund ${refund.refundNo}` : `Void of ${payment.receiptNo}`
     }));

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>التحقق من إيصال | أكاديمية نبراس</title>
+<link rel="icon" href="/favicon.ico">
+<style>
+  :root { --primary: #5a020e; --gold: #b98a35; --gold-light: #f8efdc; --ivory: #fbf7f0; --ink: #2a2023; --muted: #6b5e63; --ok: #1f7a4d; --warn: #a33a1d; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: var(--ivory); color: var(--ink); font-family: "Segoe UI", Tahoma, Arial, sans-serif; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .card { width: min(480px, 100%); background: #fff; border: 1px solid #eadfce; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 36px rgba(90, 2, 14, .08); }
+  .head { background: var(--primary); color: #fff; padding: 18px 22px; display: flex; gap: 14px; align-items: center; }
+  .head img { width: 48px; height: 48px; background: #fff; border-radius: 10px; padding: 4px; }
+  .head strong { display: block; font-size: 1.05rem; }
+  .head small { color: #e0bc72; }
+  .body { padding: 22px; }
+  .state { font-size: 1.15rem; font-weight: 700; margin: 0 0 14px; }
+  .state.ok { color: var(--ok); }
+  .state.bad { color: var(--warn); }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 0; }
+  dt { color: var(--muted); }
+  dd { margin: 0; font-weight: 600; }
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+  .foot { background: var(--gold-light); color: #8a6420; font-size: .8rem; padding: 10px 22px; }
+</style>
+</head>
+<body>
+  <main class="card">
+    <div class="head">
+      <img src="/logo.png" alt="">
+      <div><strong id="academy">أكاديمية نبراس</strong><small>التحقق من إيصال · Receipt check</small></div>
+    </div>
+    <div class="body" id="out"><p>جاري التحقق… / Checking…</p></div>
+    <div class="foot">هذه الصفحة تعرض بيانات الإيصال كما هي مسجلة لدى الأكاديمية. · This page shows the receipt as recorded by the academy.</div>
+  </main>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var out = document.getElementById('out');
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var bad = function (ar, en) { out.innerHTML = '<p class="state bad">' + ar + '</p><p>' + en + '</p>'; };
+  var no = q.get('no'), k = q.get('k');
+  if (!no || !k) return bad('رابط غير صالح.', 'Invalid link.');
+  fetch('/api/v2/public/receipts/' + encodeURIComponent(no) + '?k=' + encodeURIComponent(k))
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function (d) {
+      document.getElementById('academy').textContent = d.academy.nameAr;
+      var states = { confirmed: ['إيصال صحيح ومؤكد ✓', 'Valid, confirmed receipt', 'ok'], pending: ['إيصال مسجل بانتظار تأكيد المالية', 'Recorded, waiting for finance confirmation', 'ok'], voided: ['هذا الإيصال ملغى', 'This receipt was voided', 'bad'], rejected: ['هذا الإيصال مرفوض', 'This receipt was rejected', 'bad'] };
+      var s = states[d.status] || [d.status, d.status, 'bad'];
+      var amount = Number(d.amount).toLocaleString('en-US', { maximumFractionDigits: 3 }) + ' ' + d.currency;
+      out.innerHTML = '<p class="state ' + s[2] + '">' + esc(s[0]) + '<br><small>' + esc(s[1]) + '</small></p>' +
+        '<dl><dt>رقم الإيصال</dt><dd class="ltr">' + esc(d.receiptNo) + '</dd>' +
+        '<dt>التاريخ</dt><dd class="ltr">' + esc(String(d.date).slice(0, 10)) + '</dd>' +
+        '<dt>المبلغ</dt><dd class="ltr">' + esc(amount) + '</dd>' +
+        (d.refunded > 0 ? '<dt>مسترد</dt><dd class="ltr">' + esc(Number(d.refunded).toLocaleString('en-US') + ' ' + d.currency) + '</dd>' : '') +
+        '<dt>العميل</dt><dd>' + esc(d.customer) + '</dd>' +
+        (d.academy.taxNumber ? '<dt>الرقم الضريبي</dt><dd class="ltr">' + esc(d.academy.taxNumber) + '</dd>' : '') + '</dl>';
+    })
+    .catch(function () { bad('لم يتم العثور على هذا الإيصال.', 'This receipt was not found.'); });
+})();
+</script>
+</body>
+</html>

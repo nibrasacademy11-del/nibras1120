@@ -133,13 +133,12 @@ const REPORTS = [
             if (f.method) filter.method = f.method;
             if (oid(f.owner)) filter.collectedBy = oid(f.owner);
             const rows = await F.Payment.find(filter).populate('customer', 'customerNo nameAr').populate('account', 'nameAr').populate('collectedBy', 'name').sort({ paidAt: -1 }).limit(10000).lean();
-            const base = await L.baseCurrency();
             const byCurrency = {};
             for (const p of rows) byCurrency[p.currency] = M.round((byCurrency[p.currency] || 0) + p.amount, 3);
             return {
-                columns: [col('receiptNo', 'الإيصال', 'Receipt'), col('paidAt', 'التاريخ', 'Date', 'date'), col('customer', 'العميل', 'Customer'), col('amount', 'المبلغ', 'Amount', 'money'), col('currency', 'العملة', 'Currency'), col('rate', 'السعر', 'Rate', 'number'), col('baseAmount', `بـ${base}`, `In ${base}`, 'money'), col('refunded', 'مسترد', 'Refunded', 'money'), col('method', 'الطريقة', 'Method'), col('account', 'الحساب', 'Account'), col('collector', 'المحصّل', 'Collector'), col('status', 'الحالة', 'Status')],
-                rows: rows.map((p) => ({ receiptNo: p.receiptNo, paidAt: day(p.paidAt), customer: `${p.customer?.customerNo || ''} ${p.customer?.nameAr || ''}`, amount: p.amount, currency: p.currency, rate: p.rate, baseAmount: p.baseAmount, refunded: p.refundedAmount || 0, method: p.method, account: p.account?.nameAr || '', collector: p.collectedBy?.name || '', status: p.status })),
-                totals: { count: rows.length, base: M.round(rows.reduce((a, p) => a + p.baseAmount, 0), 2), baseCurrency: base, byCurrency }
+                columns: [col('receiptNo', 'الإيصال', 'Receipt'), col('paidAt', 'التاريخ', 'Date', 'date'), col('customer', 'العميل', 'Customer'), col('amount', 'المبلغ', 'Amount', 'money'), col('currency', 'العملة', 'Currency'), col('refunded', 'مسترد', 'Refunded', 'money'), col('method', 'الطريقة', 'Method'), col('account', 'الحساب', 'Account'), col('collector', 'المحصّل', 'Collector'), col('status', 'الحالة', 'Status')],
+                rows: rows.map((p) => ({ receiptNo: p.receiptNo, paidAt: day(p.paidAt), customer: `${p.customer?.customerNo || ''} ${p.customer?.nameAr || ''}`, amount: p.amount, currency: p.currency, refunded: p.refundedAmount || 0, method: p.method, account: p.account?.nameAr || '', collector: p.collectedBy?.name || '', status: p.status })),
+                totals: { count: rows.length, byCurrency }
             };
         }
     },
@@ -175,25 +174,27 @@ const REPORTS = [
         id: 'revenue_expenses', group: 'finance', titleAr: 'الإيرادات والمصروفات', titleEn: 'Revenue and expenses', permission: 'payments.view', minScope: 'all',
         filters: [COMMON.from, COMMON.to],
         async run(req, f) {
-            const base = await L.baseCurrency();
-            const byMonth = (model, dateField, match, valueField = '$baseAmount') => model.aggregate([{ $match: { ...match, ...range(f, dateField) } }, { $group: { _id: { $dateToString: { format: '%Y-%m', date: `$${dateField}` } }, v: { $sum: valueField } } }]);
+            // One row per month and currency: amounts in different currencies are never added together
+            const byMonth = (model, dateField, match, currencyField = '$currency', valueField = '$amount', pre = []) => model.aggregate([{ $match: { ...match, ...range(f, dateField) } }, ...pre, { $group: { _id: { m: { $dateToString: { format: '%Y-%m', date: `${dateField}` } }, c: currencyField }, v: { $sum: valueField } } }]);
             const [pay, ref, exp, com] = await Promise.all([
                 byMonth(F.Payment, 'paidAt', { status: 'confirmed' }),
                 byMonth(F.Refund, 'paidAt', { status: 'paid' }),
                 byMonth(F.Expense, 'date', { status: 'posted' }),
-                byMonth(C.CommissionPayout, 'paidAt', {}, '$amount')
+                byMonth(C.CommissionPayout, 'paidAt', {}, { $arrayElemAt: ['$a.currency', 0] }, '$accountAmount', [{ $lookup: { from: 'financeaccounts', localField: 'account', foreignField: '_id', as: 'a' } }])
             ]);
-            const months = [...new Set([...pay, ...ref, ...exp, ...com].map((r) => r._id))].sort();
-            const get = (list, m) => list.find((r) => r._id === m)?.v || 0;
-            const rows = months.map((m) => {
-                const r = { month: m, collected: M.round(get(pay, m), 2), refunds: M.round(get(ref, m), 2), expenses: M.round(get(exp, m), 2), commissions: M.round(get(com, m), 2) };
-                r.net = M.round(r.collected - r.refunds - r.expenses - r.commissions, 2);
+            const keys = [...new Set([...pay, ...ref, ...exp, ...com].map((r) => `${r._id.m}|${r._id.c}`))].sort();
+            const get = (list, m, c) => list.find((r) => r._id.m === m && r._id.c === c)?.v || 0;
+            const rows = keys.map((key) => {
+                const [m, c] = key.split('|');
+                const r = { month: m, currency: c, collected: M.round(get(pay, m, c), 3), refunds: M.round(get(ref, m, c), 3), expenses: M.round(get(exp, m, c), 3), commissions: M.round(get(com, m, c), 3) };
+                r.net = M.round(r.collected - r.refunds - r.expenses - r.commissions, 3);
                 return r;
             });
-            const sum = (k) => M.round(rows.reduce((a, r) => a + r[k], 0), 2);
+            const byCurrency = {};
+            for (const r of rows) byCurrency[r.currency] = M.round((byCurrency[r.currency] || 0) + r.net, 3);
             return {
-                columns: [col('month', 'الشهر', 'Month'), col('collected', `المحصّل (${base})`, `Collected (${base})`, 'money'), col('refunds', 'الاستردادات', 'Refunds', 'money'), col('expenses', 'المصروفات', 'Expenses', 'money'), col('commissions', 'العمولات المصروفة', 'Commissions paid', 'money'), col('net', 'الصافي', 'Net', 'money')],
-                rows, totals: { collected: sum('collected'), refunds: sum('refunds'), expenses: sum('expenses'), commissions: sum('commissions'), net: sum('net'), baseCurrency: base }
+                columns: [col('month', 'الشهر', 'Month'), col('currency', 'العملة', 'Currency'), col('collected', 'المحصّل', 'Collected', 'money'), col('refunds', 'الاستردادات', 'Refunds', 'money'), col('expenses', 'المصروفات', 'Expenses', 'money'), col('commissions', 'العمولات المصروفة', 'Commissions paid', 'money'), col('net', 'الصافي', 'Net', 'money')],
+                rows, totals: { months: new Set(rows.map((r) => r.month)).size, byCurrency }
             };
         }
     },
@@ -346,14 +347,16 @@ async function performance(req, f, scope, by) {
         Customer.aggregate([{ $match: { owner: { $in: users }, ...range(f, 'registeredAt') } }, { $group: { _id: key, n: { $sum: 1 } } }]),
         Customer.aggregate([{ $match: { owner: { $in: users }, status: 'customer', ...range(f, 'registeredAt') } }, { $group: { _id: key, n: { $sum: 1 } } }]),
         Enrollment.aggregate([{ $match: { owner: { $in: users }, ...range(f, 'enrolledAt') } }, { $group: { _id: key, n: { $sum: 1 } } }]),
-        F.Payment.aggregate([{ $match: { collectedBy: { $in: users }, status: 'confirmed', ...range(f, 'paidAt') } }, { $group: { _id: by === 'team' ? '$team' : '$collectedBy', v: { $sum: '$baseAmount' } } }]),
+        F.Payment.aggregate([{ $match: { collectedBy: { $in: users }, status: 'confirmed', ...range(f, 'paidAt') } }, { $group: { _id: { k: by === 'team' ? '$team' : '$collectedBy', c: '$currency' }, v: { $sum: '$amount' }, n: { $sum: 1 } } }]),
         Task.aggregate([{ $match: { assignee: { $in: users }, status: 'done', ...range(f, 'completedAt') } }, { $group: { _id: by === 'team' ? '$team' : '$assignee', n: { $sum: 1 } } }]),
         Task.aggregate([{ $match: { assignee: { $in: users }, status: 'open', dueAt: { $lt: new Date() } } }, { $group: { _id: by === 'team' ? '$team' : '$assignee', n: { $sum: 1 } } }]),
         Enrollment.aggregate([{ $match: { owner: { $in: users } } }, { $unwind: '$modules' }, { $match: { 'modules.status': { $in: ['approved', 'certificate_issued'] }, ...(Object.keys(created).length ? { 'modules.approvedAt': created.createdAt } : {}) } }, { $group: { _id: key, n: { $sum: 1 } } }]),
         Satisfaction.aggregate([{ $match: { owner: { $in: users } } }, { $group: { _id: by === 'team' ? '$team' : '$owner', avg: { $avg: '$score' }, n: { $sum: 1 } } }])
     ]);
     const val = (list, id, k = 'n') => list.find((r) => String(r._id) === String(id))?.[k] || 0;
-    const base = await L.baseCurrency();
+    // Collections per currency, written out ("2,500 EGP · 300 SAR"), never added across currencies
+    const collectedOf = (id) => pay.filter((r) => String(r._id.k) === String(id)).sort((a, b) => b.v - a.v).map((r) => `${M.round(r.v, 2).toLocaleString('en-US')} ${r._id.c}`).join(' · ');
+    const paymentsOf = (id) => pay.filter((r) => String(r._id.k) === String(id)).reduce((a, r) => a + r.n, 0);
     const units = by === 'team'
         ? [...new Map(employees.filter((e) => e.team).map((e) => [String(e.team._id), { id: e.team._id, name: e.team.nameAr, members: employees.filter((x) => String(x.team?._id) === String(e.team._id)).length }])).values()]
         : employees.map((e) => ({ id: e.user, name: e.nameAr, team: e.team?.nameAr || '' }));
@@ -363,15 +366,15 @@ async function performance(req, f, scope, by) {
         return {
             name: u.name, team: u.team, members: u.members,
             newCustomers, converted, conversion: newCustomers ? M.round((converted * 100) / newCustomers, 1) : 0,
-            enrollments: val(enr, u.id), collected: M.round(val(pay, u.id, 'v'), 2), modules: val(mods, u.id),
+            enrollments: val(enr, u.id), payments: paymentsOf(u.id), collected: collectedOf(u.id) || '—', modules: val(mods, u.id),
             tasksDone: val(done, u.id), tasksLate: val(late, u.id),
             satisfaction: val(sat, u.id, 'avg') ? M.round(val(sat, u.id, 'avg'), 2) : null
         };
-    }).sort((a, b) => b.collected - a.collected);
+    }).sort((a, b) => b.payments - a.payments);
     return {
         columns: [col('name', by === 'team' ? 'الفريق' : 'الموظف', by === 'team' ? 'Team' : 'Employee'), ...(by === 'team' ? [col('members', 'الأعضاء', 'Members', 'number')] : [col('team', 'الفريق', 'Team')]),
             col('newCustomers', 'عملاء جدد', 'New customers', 'number'), col('converted', 'تحولوا لعملاء', 'Converted', 'number'), col('conversion', 'التحويل %', 'Conversion %', 'number'),
-            col('enrollments', 'تسجيلات', 'Enrollments', 'number'), col('collected', `المحصّل (${base})`, `Collected (${base})`, 'money'), col('modules', 'محاور معتمدة', 'Modules approved', 'number'),
+            col('enrollments', 'تسجيلات', 'Enrollments', 'number'), col('payments', 'عدد الدفعات', 'Payments', 'number'), col('collected', 'المحصّل', 'Collected'), col('modules', 'محاور معتمدة', 'Modules approved', 'number'),
             col('tasksDone', 'مهام منجزة', 'Tasks done', 'number'), col('tasksLate', 'مهام متأخرة', 'Tasks late', 'number'), col('satisfaction', 'الرضا', 'Satisfaction', 'number')],
         rows
     };

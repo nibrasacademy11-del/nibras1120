@@ -45,6 +45,8 @@ router.get('/cron/reminders', handle(home.cronReminders));
 // The kiosk screen and the local attendance server use their own keys, not user sessions
 const kioskLimit = rateLimit({ windowMs: 60 * 1000, max: 30, message: tooMany });
 router.get('/attendance/kiosk/:id', validId(), kioskLimit, handle(attendance.kiosk));
+// Anyone holding a printed receipt can check it (the QR carries a signature)
+router.get('/public/receipts/:no', rateLimit({ windowMs: 60 * 1000, max: 30, message: tooMany }), handle(money.verifyReceipt));
 router.post('/attendance/sync', rateLimit({ windowMs: 60 * 1000, max: 30, message: tooMany }), handle(attendance.sync));
 
 router.use(authRequired);
@@ -61,6 +63,7 @@ router.post('/me/sessions/revoke-others', handle(security.revokeOtherSessions));
 router.delete('/me/sessions/:id', validId(), handle(security.revokeSession));
 router.get('/me/login-history', handle(security.loginHistory));
 router.get('/dashboard', handle(home.dashboard));
+router.get('/academy', handle(home.academy));
 router.get('/notifications', handle(home.notifications));
 router.post('/notifications/read', handle(home.markRead));
 

@@ -4,7 +4,7 @@ import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { ErrorBox, Field, Loading, Modal, Pill, StaffSelect, useAction, useLoad } from '../components/ui.jsx';
-import { Money } from './Finance.jsx';
+import { Amounts, Money } from './Finance.jsx';
 
 const thisMonth = () => new Date().toISOString().slice(0, 7);
 const TONE = { due: 'gold', approved: 'info', paid: 'ok', cancelled: 'muted' };
@@ -24,13 +24,15 @@ function Statement({ userId }) {
               <button type="button" className="btn btn--ghost" onClick={() => window.print()}>{t('print')}</button>
             </div>
           </div>
-          <div className="grid grid--4">
-            <div className="card stat"><small>{t('earned')}</small><Money amount={d.totals.earned} currency={d.base} strong /></div>
-            <div className="card stat"><small>{t('reversed')}</small><Money amount={d.totals.reversed} currency={d.base} strong /></div>
-            <div className="card stat"><small>{t('netTotal')}</small><Money amount={d.totals.net} currency={d.base} strong /></div>
-            <div className="card stat"><small>{t('paid')}</small><Money amount={d.totals.paid} currency={d.base} strong /><small className="muted">{t('due_c')}: <Money amount={d.totals.due} currency="" /> · {t('approved')}: <Money amount={d.totals.approved} currency="" /></small></div>
-          </div>
-          {d.unpaidFromEarlier !== 0 && <p className="muted">{t('unpaidEarlier')}: <Money amount={d.unpaidFromEarlier} currency={d.base} /></p>}
+          {d.totals.map((x) => (
+            <div className="grid grid--4" key={x.currency}>
+              <div className="card stat"><small>{t('earned')} · {x.currency}</small><Money amount={x.earned} currency={x.currency} strong /></div>
+              <div className="card stat"><small>{t('reversed')}</small><Money amount={x.reversed} currency={x.currency} strong /></div>
+              <div className="card stat"><small>{t('netTotal')}</small><Money amount={x.net} currency={x.currency} strong /></div>
+              <div className="card stat"><small>{t('paid')}</small><Money amount={x.paid} currency={x.currency} strong /><small className="muted">{t('due_c')}: <Money amount={x.due} currency="" /> · {t('approved')}: <Money amount={x.approved} currency="" /></small></div>
+            </div>
+          ))}
+          {d.unpaidFromEarlier.length > 0 && <p className="muted">{t('unpaidEarlier')}: <Amounts list={d.unpaidFromEarlier} /></p>}
           <section className="card">
             {!d.lines.length ? <p className="muted">{t('noData')}</p> : (
               <div className="table-wrap">
@@ -43,7 +45,7 @@ function Statement({ userId }) {
                         <td>{t(`ck_${l.kind}`)}{l.role === 'team_leader' && <Pill tone="info">{t('leader')}</Pill>}{l.note && <div className="muted">{l.note}</div>}</td>
                         <td dir="ltr">{l.receiptNo || '—'}</td>
                         <td>{l.customer ? `${l.customer.customerNo} ${l.customer.nameAr}` : '—'}{l.enrollment && <div className="muted">{l.enrollment.programTitleAr}</div>}</td>
-                        <td><Money amount={l.commissionable} currency="" /></td>
+                        <td><Money amount={l.commissionable} currency={l.currency} /></td>
                         <td>{l.role === 'adjustment' ? '—' : `${l.share}%`}</td>
                         <td>{l.role === 'adjustment' ? '—' : `${l.rate}%`}</td>
                         <td><Money amount={l.amount} currency={l.currency} strong /></td>
@@ -92,18 +94,19 @@ function Overview({ onOpen }) {
           {(d) => (!d.items.length ? <p className="muted">{t('noData')}</p> : (
             <div className="table-wrap">
               <table className="table">
-                <thead><tr><th>{t('name')}</th><th>{t('collected')}</th><th>{t('earned')}</th><th>{t('reversed')}</th><th>{t('due_c')}</th><th>{t('approved')}</th><th>{t('paid')}</th><th>{t('payable')}</th><th /></tr></thead>
+                <thead><tr><th>{t('name')}</th><th>{t('currency')}</th><th>{t('collected')}</th><th>{t('earned')}</th><th>{t('reversed')}</th><th>{t('due_c')}</th><th>{t('approved')}</th><th>{t('paid')}</th><th>{t('payable')}</th><th /></tr></thead>
                 <tbody>
                   {d.items.map((r) => (
-                    <tr key={r._id}>
+                    <tr key={`${r._id}-${r.currency}`}>
                       <td><button type="button" className="link" onClick={() => onOpen(r._id)}>{r.name}</button></td>
+                      <td dir="ltr">{r.currency}</td>
                       <td><Money amount={r.collected} currency="" /></td>
                       <td><Money amount={r.earned} currency="" /></td>
                       <td><Money amount={r.reversed} currency="" /></td>
                       <td><Money amount={r.due} currency="" /></td>
                       <td><Money amount={r.approved} currency="" /></td>
                       <td><Money amount={r.paid} currency="" /></td>
-                      <td><Money amount={r.payable} currency={d.base} strong /></td>
+                      <td><Money amount={r.payable} currency={r.currency} strong /></td>
                       <td className="nowrap">
                         {can('commissions.manage', 'all') && r.payable > 0 && String(r._id) !== me.user.id && <button type="button" className="btn btn--small btn--primary" onClick={() => setDialog({ kind: 'payout', row: r })}>{t('payout')}</button>}
                       </td>
@@ -115,7 +118,7 @@ function Overview({ onOpen }) {
           ))}
         </Loading>
       </section>
-      {dialog?.kind === 'payout' && <PayoutForm row={dialog.row} base={state.data?.base} onClose={() => setDialog(null)} onDone={done} />}
+      {dialog?.kind === 'payout' && <PayoutForm row={dialog.row} base={dialog.row.currency} onClose={() => setDialog(null)} onDone={done} />}
       {dialog?.kind === 'adjust' && <AdjustmentForm onClose={() => setDialog(null)} onDone={done} />}
       {dialog?.kind === 'generate' && <GenerateForm onClose={() => setDialog(null)} onDone={done} />}
     </>
@@ -131,7 +134,7 @@ function PayoutForm({ row, base, onClose, onDone }) {
     <Modal title={`${t('payout')}: ${row.name}`} onClose={onClose}>
       <form className="stack" onSubmit={(e) => { e.preventDefault(); run(() => api('/api/v2/commissions/payouts', { method: 'POST', body: { beneficiary: row._id, account: f.account, note: f.note } })).then(onDone).catch(() => {}); }}>
         <p>{t('payable')}: <Money amount={row.payable} currency={base} strong /></p>
-        <Field label={t('account')}><select required value={f.account} onChange={(e) => setF({ ...f, account: e.target.value })}><option value="">—</option>{(accounts.data?.items || []).filter((a) => a.active).map((a) => <option key={a._id} value={a._id}>{label({ ar: a.nameAr, en: a.nameEn })} · {a.currency}</option>)}</select></Field>
+        <Field label={t('account')}><select required value={f.account} onChange={(e) => setF({ ...f, account: e.target.value })}><option value="">—</option>{(accounts.data?.items || []).filter((a) => a.active && a.currency === base).map((a) => <option key={a._id} value={a._id}>{label({ ar: a.nameAr, en: a.nameEn })} · {a.currency}</option>)}</select></Field>
         <Field label={t('note')}><input value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} /></Field>
         <ErrorBox error={error} />
         <div className="row"><button className="btn btn--primary" disabled={busy}>{t('confirm')}</button><button type="button" className="btn btn--ghost" onClick={onClose}>{t('cancel')}</button></div>
@@ -142,12 +145,13 @@ function PayoutForm({ row, base, onClose, onDone }) {
 
 function AdjustmentForm({ onClose, onDone }) {
   const { t } = useI18n();
-  const [f, setF] = useState({ beneficiary: '', amount: '', reason: '' });
+  const [f, setF] = useState({ beneficiary: '', amount: '', currency: 'EGP', reason: '' });
   const { busy, error, run } = useAction();
   return (
     <Modal title={t('adjustment')} onClose={onClose}>
       <form className="stack" onSubmit={(e) => { e.preventDefault(); run(() => api('/api/v2/commissions/adjustments', { method: 'POST', body: { ...f, amount: Number(f.amount) } })).then(onDone).catch(() => {}); }}>
         <Field label={t('name')}><StaffSelect value={f.beneficiary} onChange={(v) => setF({ ...f, beneficiary: v })} required /></Field>
+        <Field label={t('currency')}><input dir="ltr" required maxLength={3} value={f.currency} onChange={(e) => setF({ ...f, currency: e.target.value.toUpperCase() })} /></Field>
         <Field label={t('amount')} hint={t('adjustmentHint')}><input type="number" step="0.01" required dir="ltr" value={f.amount} onChange={(e) => setF({ ...f, amount: e.target.value })} /></Field>
         <Field label={t('reason')}><input required value={f.reason} onChange={(e) => setF({ ...f, reason: e.target.value })} /></Field>
         <ErrorBox error={error} />
