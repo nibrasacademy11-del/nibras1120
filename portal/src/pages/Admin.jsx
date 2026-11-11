@@ -100,6 +100,18 @@ export function Settings() {
                   <option value="full">{t('nameFull')}</option>
                 </select>
               </Field>
+              <fieldset className="checks stack stack--full">
+                <legend>{t('waTemplates')}</legend>
+                <p className="muted"><small>{t('waPlaceholders')}</small></p>
+                {(val('crm.whatsappTemplates') || []).map((x, i) => (
+                  <div key={i} className="row tpl-row">
+                    <input aria-label={t('title')} value={x.titleAr} onChange={(e) => change('crm.whatsappTemplates', val('crm.whatsappTemplates').map((y, j) => (j === i ? { ...y, titleAr: e.target.value } : y)))} />
+                    <textarea rows={2} aria-label={t('waMessage')} value={x.text} onChange={(e) => change('crm.whatsappTemplates', val('crm.whatsappTemplates').map((y, j) => (j === i ? { ...y, text: e.target.value } : y)))} />
+                    <button type="button" className="icon-btn" aria-label="Remove" onClick={() => change('crm.whatsappTemplates', val('crm.whatsappTemplates').filter((_, j) => j !== i))}>×</button>
+                  </div>
+                ))}
+                <div><button type="button" className="btn btn--small btn--ghost" onClick={() => change('crm.whatsappTemplates', [...(val('crm.whatsappTemplates') || []), { key: `t${Date.now()}`, titleAr: '', text: '' }])}>{t('lecAddRow')}</button></div>
+              </fieldset>
               <fieldset className="checks form-grid">
                 <legend>{t('setReminders')}</legend>
                 <label className="check field--wide"><input type="checkbox" checked={val('finance.reminders')?.enabled !== false} onChange={(e) => change('finance.reminders', { ...val('finance.reminders'), enabled: e.target.checked })} /> {t('remEnabled')}</label>

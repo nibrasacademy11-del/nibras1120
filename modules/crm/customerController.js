@@ -71,6 +71,12 @@ exports.list = async (req, res) => {
     if (q.country) and.push({ country: String(q.country) });
     if (q.tag) and.push({ tags: String(q.tag) });
     if (q.segment) and.push({ segment: String(q.segment) });
+    // Ready lists: customers who need something (late payment, low attendance, waiting certificate...)
+    if (q.list) {
+        const crm360 = require('./crm360');
+        if (!crm360.LISTS.includes(String(q.list))) throw new HttpError(400, 'Unknown list.');
+        and.push({ _id: { $in: (await crm360.listIds(String(q.list))).slice(0, 5000).map((id) => new mongoose.Types.ObjectId(id)) } });
+    }
     if (q.mine === '1') and.push({ owner: req.user.id });
     if (q.unassigned === '1') and.push({ owner: null });
     if (oid(q.owner)) and.push({ owner: oid(q.owner) });

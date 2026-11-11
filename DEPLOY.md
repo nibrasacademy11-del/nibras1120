@@ -41,7 +41,7 @@ Check the deployment at `/api/health`: it should report `"status":"ok"`.
 - `data/migrateCatalog.js` normalizes specialties and fills English titles. It is safe to run again.
 
 ## 5) Admin panel
-- Sign in from the normal login page with an admin account. The navigation then shows a "لوحة التحكم" button that opens `/pages/ar/admin.html`.
+- Sign in from the normal login page with an admin account. The navigation then shows a "لوحة التحكم" button that opens the management portal (`/portal/`); the website content is managed from its "الموقع الإلكتروني" page (`/portal/website`). The old `/pages/ar/admin.html` now redirects there.
 - Opening the admin page without an admin session sends you to the login page.
 
 ## 6) Security notes

@@ -1,3 +1,4 @@
+import { BulkActions, ReadyLists } from './Crm360.jsx';
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api.js';
@@ -39,6 +40,7 @@ export function CustomerForm({ onClose, onCreated }) {
   const { busy, error, setError, run } = useAction();
   const set = (k) => (e) => setF({ ...f, [k]: e.target ? e.target.value : e });
   const canAssign = can('customers.manage', 'team');
+  const canSelect = canAssign || can('tasks.create');
   const canIdentity = can('customer_identity.create');
 
   async function submit(confirm) {
@@ -183,7 +185,9 @@ export default function Customers() {
         <button className="btn btn--primary">{t('apply')}</button>
       </form>
 
+      <ReadyLists value={params.get('list') || ''} onChange={(v) => setParam('list', v)} />
       {canAssign && selected.length > 0 && <AssignBar ids={selected} onDone={() => { setSelected([]); state.reload(); }} />}
+      {selected.length > 0 && <div className="card assign-bar"><strong>{selected.length} {t('selected')}</strong><BulkActions ids={selected} onDone={() => { setSelected([]); state.reload(); }} /></div>}
 
       <section className="card">
         <Loading state={state}>
@@ -193,14 +197,14 @@ export default function Customers() {
                 <table className="table table--hover">
                   <thead>
                     <tr>
-                      {canAssign && <th />}
+                      {canSelect && <th />}
                       <th>{t('customerNo')}</th><th>{t('name')}</th><th>{t('phone')}</th><th>{t('status')}</th><th>{t('owner')}</th><th>{t('source')}</th><th>{t('registeredAt')}</th><th>{t('nextFollowUp')}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {d.items.map((c) => (
                       <tr key={c.id} onClick={() => navigate(`/customers/${c.id}`)}>
-                        {canAssign && <td onClick={(e) => e.stopPropagation()}><input type="checkbox" aria-label={c.customerNo} checked={selected.includes(c.id)} onChange={() => toggle(c.id)} /></td>}
+                        {canSelect && <td onClick={(e) => e.stopPropagation()}><input type="checkbox" aria-label={c.customerNo} checked={selected.includes(c.id)} onChange={() => toggle(c.id)} /></td>}
                         <td dir="ltr" className="nowrap">{c.customerNo}</td>
                         <td><strong>{c.nameAr || c.name}</strong>{c.tags && c.tags.length > 0 && <div className="tags">{c.tags.map((x) => <span key={x} className="tag">{x}</span>)}</div>}</td>
                         <td dir="ltr" className="nowrap">{c.contact ? c.contact.phone : '—'}</td>

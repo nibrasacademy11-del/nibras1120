@@ -25,6 +25,8 @@ import Attendance, { Attend, Kiosk, Leaves, PairDevice } from './pages/Attendanc
 import SystemHealth from './pages/SystemHealth.jsx';
 import Groups, { GroupDetail } from './pages/Groups.jsx';
 import FinanceHub from './pages/FinanceHub.jsx';
+import Website from './pages/Website.jsx';
+import Leads from './pages/Crm360.jsx';
 import MyLectures from './pages/MyLectures.jsx';
 import Certificates, { CertificateDetail, MyCertificates } from './pages/Certificates.jsx';
 import Payments, { AccountStatement, Accounts, Approvals, Currencies, Expenses, MyPayments, PaymentDetail, Periods } from './pages/Finance.jsx';
@@ -92,6 +94,8 @@ export default function App() {
         <Route path="/enrollments/:id" element={<Guard permission="enrollments.view"><EnrollmentDetail /></Guard>} />
         <Route path="/reviews" element={<Guard permission="enrollments.approve" minScope="team"><Reviews /></Guard>} />
         <Route path="/customers" element={<Guard permission="customers.view"><Customers /></Guard>} />
+        <Route path="/leads" element={<Guard permission="customers.view"><Leads /></Guard>} />
+        <Route path="/website" element={['super_admin', 'admin'].includes(me.user.role) ? <Website /> : <div className="card empty">{t('forbidden')}</div>} />
         <Route path="/customers/:id" element={<Guard permission="customer_lookup.view"><CustomerDetail /></Guard>} />
         <Route path="/lookup" element={<Guard permission="customer_lookup.view"><Lookup /></Guard>} />
         <Route path="/tasks" element={<Guard permission="tasks.view"><Tasks /></Guard>} />

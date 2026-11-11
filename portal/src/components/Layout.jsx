@@ -10,6 +10,7 @@ const NAV = [
   { to: '/', key: 'myPrograms', icon: '▤', end: true, customerOnly: true },
   { to: '/my-lectures', key: 'myLectures', icon: '▶', customerOnly: true },
   { to: '/customers', key: 'customers', icon: '◉', permission: 'customers.view' },
+  { to: '/leads', key: 'leadsNav', icon: '▥', permission: 'customers.view', staffOnly: true },
   { to: '/lookup', key: 'lookup', icon: '⌕', permission: 'customer_lookup.view' },
   { to: '/enrollments', key: 'enrollmentsNav', icon: '❖', permission: 'enrollments.view', staffOnly: true },
   { to: '/reviews', key: 'reviews', icon: '✔', permission: 'enrollments.approve', minScope: 'team' },
@@ -34,6 +35,7 @@ const NAV = [
   { to: '/duplicates', key: 'duplicates', icon: '⧉', permission: 'customers.manage', minScope: 'all' },
   { to: '/roles', key: 'roles', icon: '◈', permission: 'roles.view', minScope: 'all' },
   { to: '/audit', key: 'audit', icon: '☰', permission: 'audit.view', minScope: 'all' },
+  { to: '/website', key: 'websiteNav', icon: '◍', adminOnly: true },
   { to: '/settings', key: 'settings', icon: '⚙', permission: 'settings.manage', minScope: 'all' },
   { to: '/system', key: 'systemNav', icon: '♥', superOnly: true },
   { to: '/security', key: 'security', icon: '⚿' }
@@ -58,7 +60,7 @@ export default function Layout({ children }) {
         </div>
         {!locked && (
           <nav>
-            {NAV.filter((n) => !(n.hideWith && can(n.hideWith, 'all')) && (!n.permission || can(n.permission, n.minScope)) && !(n.staffOnly && !me.user.isStaff) && !(n.customerOnly && me.user.isStaff) && !(n.superOnly && me.user.role !== 'super_admin')).map((n) => (
+            {NAV.filter((n) => !(n.hideWith && can(n.hideWith, 'all')) && (!n.permission || can(n.permission, n.minScope)) && !(n.staffOnly && !me.user.isStaff) && !(n.customerOnly && me.user.isStaff) && !(n.superOnly && me.user.role !== 'super_admin') && !(n.adminOnly && !['super_admin', 'admin'].includes(me.user.role))).map((n) => (
               <NavLink key={n.key} to={n.to} end={n.end} className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
                 <span className="nav-icon" aria-hidden="true">{n.icon}</span>
                 {t(n.key)}

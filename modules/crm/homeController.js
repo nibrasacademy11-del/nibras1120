@@ -140,6 +140,7 @@ const VALIDATORS = {
     'enrollments.teamLeaderReview': (v) => typeof v === 'boolean',
     'commissions.defaultEmployeeRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
     'commissions.defaultLeaderRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
+    'crm.whatsappTemplates': (v) => !!require('../../lib/whatsappTemplates').cleanTemplates(v),
     'finance.reminders': (v) => !!require('../../lib/receivables').cleanReminderSettings(v),
     'academy.profile': (v) => !!require('../../lib/academy').cleanProfile(v),
     'certificates.paymentRule': (v) => ['customer', 'enrollment', 'off'].includes(v),
@@ -155,6 +156,7 @@ exports.updateSettings = async (req, res) => {
         if (!VALIDATORS[key] || !VALIDATORS[key](value)) throw new HttpError(400, `Invalid setting: ${key}`);
         if (key === 'academy.profile') value = require('../../lib/academy').cleanProfile(value);
         if (key === 'finance.reminders') value = require('../../lib/receivables').cleanReminderSettings(value);
+        if (key === 'crm.whatsappTemplates') value = require('../../lib/whatsappTemplates').cleanTemplates(value);
         const before = await getSetting(key);
         if (before === value) continue;
         await SystemSetting.findOneAndUpdate({ key }, { key, value, updatedBy: req.user.id }, { upsert: true });

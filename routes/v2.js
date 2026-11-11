@@ -27,6 +27,7 @@ const system = require('../modules/core/systemController');
 const groupsApi = require('../modules/learning/groupController');
 const groupCerts = require('../modules/learning/groupCertificates');
 const hub = require('../modules/finance/hubController');
+const crm360 = require('../modules/crm/crm360');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -65,6 +66,7 @@ router.delete('/me/sessions/:id', validId(), handle(security.revokeSession));
 router.get('/me/login-history', handle(security.loginHistory));
 router.get('/dashboard', handle(home.dashboard));
 router.get('/academy', handle(home.academy));
+router.get('/website/specialties', all('programs.update'), (req, res) => res.json({ items: require('../assets/js/specialties').map(({ key, ar, en }) => ({ key, ar, en })) }));
 router.get('/notifications', handle(home.notifications));
 router.post('/notifications/read', handle(home.markRead));
 
@@ -102,11 +104,15 @@ router.post('/customers/check-duplicates', can('customers.create'), handle(custo
 router.get('/customers/duplicates', all('customers.manage'), handle(customers.duplicateGroups));
 router.post('/customers/assign', can('customers.manage', 'team'), handle(customers.assign));
 router.get('/customers', can('customers.view'), handle(customers.list));
+router.get('/customers/board', can('customers.view'), handle(crm360.board));
+router.get('/whatsapp-templates', can('customer_lookup.view'), handle(crm360.templates));
 router.post('/customers', can('customers.create'), handle(customers.create));
 router.get('/customers/:id', validId(), can('customer_lookup.view'), handle(customers.get));
 router.put('/customers/:id', validId(), can('customers.view'), handle(customers.update));
 router.post('/customers/:id/archive', validId(), can('customers.archive'), handle(customers.setArchived));
 router.post('/customers/:id/reveal-identity', validId(), sensitive, can('customer_lookup.view'), handle(customers.revealIdentity));
+router.get('/customers/:id/summary', validId(), can('customer_lookup.view'), handle(crm360.summary));
+router.post('/customers/:id/whatsapp', validId(), can('customers.view'), rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: tooMany, keyBy: 'user' }), handle(crm360.whatsapp));
 router.get('/customers/:id/timeline', validId(), can('customer_lookup.view'), handle(customers.timeline));
 router.post('/customers/:id/transfer', validId(), can('customers.manage'), handle(customers.transfer));
 router.post('/customers/:id/merge', validId(), all('customers.manage'), handle(customers.merge));
@@ -292,6 +298,7 @@ router.post('/client-errors', rateLimit({ windowMs: 60 * 1000, max: 20, message:
 // ---- tasks and follow-ups ----
 router.get('/tasks', can('tasks.view'), handle(activity.listTasks));
 router.post('/tasks', can('tasks.create'), handle(activity.createTask));
+router.post('/tasks/bulk', can('tasks.create'), handle(crm360.bulkTasks));
 router.put('/tasks/:taskId', validId('taskId'), can('tasks.update'), handle(activity.updateTask));
 
 router.use((req, res) => res.status(404).json({ message: 'Not found.' }));

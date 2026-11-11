@@ -9,6 +9,7 @@ import { TaskTable, TaskForm } from './Tasks.jsx';
 import { CustomerPrograms, ModuleStatus } from './Enrollments.jsx';
 import { CustomerFinance } from './Finance.jsx';
 import { CustomerGroups } from './Groups.jsx';
+import { Summary360, WhatsAppButton } from './Crm360.jsx';
 import { PrintButton, PrintHeader } from '../components/Print.jsx';
 
 // Programs on the card: each enrollment with its status and the status of each module
@@ -495,6 +496,7 @@ export default function CustomerDetail() {
               </div>
               {c.access === 'full' && c.status !== 'merged' && (
                 <div className="row no-print">
+                  <WhatsAppButton c={c} />
                   <PrintButton what={`customer:${c.customerNo}`} title={c.customerNo} />
                   {(c.permissions.canEdit || c.permissions.canEditSection.contact || c.permissions.canEditSection.identity) && <button type="button" className="btn btn--primary" onClick={() => setDialog('edit')}>{t('edit')}</button>}
                   {c.permissions.canManage && <button type="button" className="btn btn--ghost" onClick={() => setDialog('transfer')}>{t('transfer')}</button>}
@@ -509,6 +511,7 @@ export default function CustomerDetail() {
               {tabs.map((k) => <button key={k} type="button" role="tab" aria-selected={tab === k} className={`tab${tab === k ? ' active' : ''}`} onClick={() => setTab(k)}>{t(k)}</button>)}
             </div>
 
+            {tab === 'overview' && c.access === 'full' && <Summary360 c={c} />}
             {tab === 'overview' && <Overview c={c} onReload={reload} />}
             {tab === 'programs' && <><CustomerPrograms c={c} /><CustomerGroups c={c} /></>}
             {tab === 'financial' && <CustomerFinance c={c} />}

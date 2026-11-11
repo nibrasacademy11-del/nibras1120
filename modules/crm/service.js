@@ -62,7 +62,9 @@ const SETTING_DEFAULTS = {
     // Name, contacts, tax number and VAT printed on receipts, invoices, statements and reports
     'academy.profile': require('../../lib/academy').PROFILE_DEFAULT,
     // Automatic payment reminders: days before the due date, days after it, and the channels
-    'finance.reminders': require('../../lib/receivables').REMINDER_DEFAULTS
+    'finance.reminders': require('../../lib/receivables').REMINDER_DEFAULTS,
+    // Ready WhatsApp messages in the customer file ({name}, {customerNo}, {owner}, {academy}, {owed}, {portal})
+    'crm.whatsappTemplates': require('../../lib/whatsappTemplates').DEFAULT_TEMPLATES
 };
 
 async function getSetting(key) {

@@ -24,9 +24,6 @@ function whatsappLink(text) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const isEN = document.documentElement.lang === 'en';
-    // The admin panel loads this file for its helpers and runs its own setup (admin.js)
-    if (document.body.classList.contains('admin-body')) return;
-
     cleanupDuplicateIds(['cartSidebar', 'cartOverlay', 'cartItems', 'cartTotal', 'cartBadge']);
     initLayout();
     initSiteContent(isEN);
@@ -514,7 +511,7 @@ async function updateNavAuth(isEN) {
     const isAdmin = user.role === 'admin' || user.role === 'super_admin';
     const isStaff = !isAdmin && ['hr_manager', 'finance_manager', 'team_leader', 'employee', 'accountant', 'customer_support'].includes(user.role);
     const firstName = String(user.name || '').split(' ')[0];
-    const profileUrl = isAdmin ? '/pages/ar/admin.html' : '/portal/';
+    const profileUrl = isAdmin ? '/portal/' : '/portal/';
     const label = (isAdmin || isStaff)
         ? `<i class="fas fa-gauge-high"></i> ${isStaff ? (isEN ? 'Staff Portal' : 'بوابة الموظفين') : (isEN ? 'Control Panel' : 'لوحة التحكم')}`
         : `<i class="fas fa-user-circle"></i> ${esc(firstName)}`;
