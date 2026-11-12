@@ -10,6 +10,7 @@ const { checkSecondFactor } = require('../../lib/twoFactor');
 const { HttpError } = require('../../lib/http');
 const { ROLE_LABELS, isStaffRole } = require('../../lib/permissions');
 const { twoFactorRequiredFor } = require('../../middleware/auth');
+const zones = require('../../lib/zones');
 
 // The signed-in user's own account security: profile, two-factor sign-in, devices, sign-in history
 
@@ -48,7 +49,10 @@ exports.me = async (req, res) => {
             recoveryCodesLeft: user.twoFactor?.enabled ? (user.twoFactor.recoveryCodes || []).length : 0
         },
         sessionId: req.user.sid,
-        grants: req.user.grants
+        grants: req.user.grants,
+        // www / staff / cms, and the links between them
+        zone: zones.zoneOf(req),
+        urls: zones.urls(req)
     });
 };
 
@@ -160,7 +164,7 @@ exports.revokeSession = async (req, res) => {
     if (!s) throw new HttpError(404, 'Not found.');
     await sessions.endSession(s._id, 'revoked_by_user');
     await audit.record(req, { action: 'security.session_revoked', resource: 'users', resourceId: req.user.id, summary: 'Signed out a device', meta: { session: String(s._id), ip: s.ip } });
-    if (String(s._id) === String(req.user.sid)) sessions.clearAuthCookie(res);
+    if (String(s._id) === String(req.user.sid)) sessions.clearAuthCookie(req, res);
     res.json({ message: 'تم تسجيل خروج الجهاز. / The device was signed out.' });
 };
 

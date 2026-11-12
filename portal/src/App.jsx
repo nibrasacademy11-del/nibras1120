@@ -25,7 +25,7 @@ import Attendance, { Attend, Kiosk, Leaves, PairDevice } from './pages/Attendanc
 import SystemHealth from './pages/SystemHealth.jsx';
 import Groups, { GroupDetail } from './pages/Groups.jsx';
 import FinanceHub from './pages/FinanceHub.jsx';
-import Website from './pages/Website.jsx';
+import Website, { Accounts as UserAccounts } from './pages/Website.jsx';
 import MyAccess from './pages/MyAccess.jsx';
 import PrintSamples from './pages/PrintSamples.jsx';
 import Leads from './pages/Crm360.jsx';
@@ -41,7 +41,7 @@ function Guard({ permission, minScope = 'own', children }) {
 }
 
 export default function App() {
-  const { loading, me } = useAuth();
+  const { loading, me, zone, urls, can } = useAuth();
   const { t } = useI18n();
   const location = useLocation();
 
@@ -56,6 +56,19 @@ export default function App() {
   }
   if (me.security.mustEnrollTwoFactor && location.pathname !== '/security') {
     return <Navigate to="/security" replace />;
+  }
+
+  // cms.*: the website editor and the account's own security, nothing else
+  if (zone === 'cms') {
+    return (
+      <Layout>
+        <Routes>
+          <Route path="/website" element={can('website.manage', 'all') ? <Website /> : <ElsewhereCard text={t('noCmsAccess')} href={`${urls.staff || ''}/portal/`} label={t('openStaff')} />} />
+          <Route path="/security" element={<Security />} />
+          <Route path="*" element={<Navigate to="/website" replace />} />
+        </Routes>
+      </Layout>
+    );
   }
 
   return (
@@ -99,7 +112,10 @@ export default function App() {
         <Route path="/my-access" element={<MyAccess />} />
         <Route path="/print-samples" element={['super_admin', 'admin'].includes(me.user.role) ? <PrintSamples /> : <div className="card empty">{t('forbidden')}</div>} />
         <Route path="/leads" element={<Guard permission="customers.view"><Leads /></Guard>} />
-        <Route path="/website" element={['super_admin', 'admin'].includes(me.user.role) ? <Website /> : <div className="card empty">{t('forbidden')}</div>} />
+        <Route path="/website" element={zone === 'staff'
+          ? <ElsewhereCard text={t('cmsMoved')} href={`${urls.cms || ''}/portal/website`} label={t('openCms')} />
+          : can('website.manage', 'all') ? <Website /> : <div className="card empty">{t('forbidden')}</div>} />
+        <Route path="/user-accounts" element={['super_admin', 'admin'].includes(me.user.role) ? <><h1 className="page-title">{t('userAccountsNav')}</h1><UserAccounts /></> : <div className="card empty">{t('forbidden')}</div>} />
         <Route path="/customers/:id" element={<Guard permission="customer_lookup.view"><CustomerDetail /></Guard>} />
         <Route path="/lookup" element={<Guard permission="customer_lookup.view"><Lookup /></Guard>} />
         <Route path="/tasks" element={<Guard permission="tasks.view"><Tasks /></Guard>} />
@@ -114,5 +130,15 @@ export default function App() {
         <Route path="*" element={<div className="card empty">{t('notFound')}</div>} />
       </Routes>
     </Layout>
+  );
+}
+
+// A page that lives on another address (staff / cms): says so and links there
+function ElsewhereCard({ text, href, label }) {
+  return (
+    <div className="card empty">
+      <p>{text}</p>
+      <a className="btn btn--primary" href={href}>{label}</a>
+    </div>
   );
 }

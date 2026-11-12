@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { api, pickMessage } from '../api.js';
 import { useI18n } from '../i18n.jsx';
+import { useAuth } from '../auth.jsx';
 import { ErrorBox, Field, Loading, Modal, Pill, useAction, useLoad } from '../components/ui.jsx';
 
 // The public website, managed from the portal (it replaces the old admin page):
@@ -116,6 +117,7 @@ function ProgramForm({ item, specialties, onClose, onSaved }) {
 
 function Catalog() {
   const { t, lang } = useI18n();
+  const { zone, urls } = useAuth();
   const [type, setType] = useState('');
   const state = useLoad(`/api/courses?limit=500${type ? `&type=${type}` : ''}`, [type]);
   const meta = useLoad('/api/v2/website/specialties');
@@ -151,7 +153,9 @@ function Catalog() {
                     <td><button type="button" className={`star-toggle${c.featured ? ' on' : ''}`} aria-label={t('wsFeatured')} onClick={() => toggleFeatured(c)}>★</button></td>
                     <td className="actions nowrap">
                       <button type="button" className="btn btn--small" onClick={() => setDialog({ item: c })}>{t('edit')}</button>
-                      <Link className="btn btn--small btn--ghost" to={`/programs/${c._id}`}>{t('wsModulesGroups')}</Link>
+                      {zone === 'cms'
+                        ? <a className="btn btn--small btn--ghost" href={`${urls.staff}/portal/programs/${c._id}`}>{t('wsModulesGroups')} ↗</a>
+                        : <Link className="btn btn--small btn--ghost" to={`/programs/${c._id}`}>{t('wsModulesGroups')}</Link>}
                       <a className="btn btn--small btn--ghost" href={`/pages/${lang === 'en' ? 'en' : 'ar'}/program-detail.html?id=${c._id}`} target="_blank" rel="noreferrer">{t('wsView')}</a>
                       <button type="button" className="btn btn--small btn--ghost" onClick={() => remove(c)}>{t('wsDelete')}</button>
                     </td>
@@ -373,7 +377,8 @@ function Inquiries() {
 
 // ---- user accounts (website sign-ups and staff logins) ----
 
-function Accounts() {
+// Sign-in accounts (customers and staff): a staff page of its own (/user-accounts), not website work
+export function Accounts() {
   const { t, en, fmtDay, lang } = useI18n();
   const state = useLoad('/api/auth/users');
   const [q, setQ] = useState('');
@@ -414,7 +419,7 @@ function Accounts() {
   );
 }
 
-const TABS = ['catalog', 'heroes', 'pathways', 'cards', 'stats', 'testimonials', 'inquiries', 'accounts'];
+const TABS = ['catalog', 'heroes', 'pathways', 'cards', 'stats', 'testimonials', 'inquiries'];
 
 export default function Website() {
   const { t } = useI18n();
@@ -443,7 +448,6 @@ export default function Website() {
       {tab === 'stats' && <Stats />}
       {tab === 'testimonials' && <Testimonials />}
       {tab === 'inquiries' && <Inquiries />}
-      {tab === 'accounts' && <Accounts />}
     </>
   );
 }

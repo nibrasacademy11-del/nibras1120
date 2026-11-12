@@ -87,6 +87,24 @@ app.use((req, res, next) => {
 });
 app.use(cookieParser());
 
+// ---- www / staff / cms: one deployment, three addresses (lib/zones.js) ----
+const zones = require('./lib/zones');
+app.use((req, res, next) => {
+    const zone = zones.zoneOf(req);
+    req.zone = zone;
+    if (zone !== 'staff' && zone !== 'cms') return next();
+    const p = req.path;
+    if (p === '/' || p === '/index.html') return res.redirect(302, zone === 'cms' ? '/portal/website' : '/portal/');
+    // The public site lives on www; the forgot/reset-password pages stay, so staff reset on staff.*
+    const publicPage = /^\/(pages|en)\//.test(p) && !/(forgot|reset)-password\.html$/.test(p) && p !== '/pages/404.html';
+    if (publicPage || p === '/sitemap.xml') return res.redirect(301, zones.urls(req).site + req.originalUrl);
+    next();
+});
+app.use('/api', (req, res, next) => {
+    if (zones.apiAllowed(req.zone, req.method, req.originalUrl.split('?')[0])) return next();
+    res.status(403).json({ message: 'العملية دي مش متاحة من العنوان ده. / Not available on this address.', code: 'WRONG_PORTAL' });
+});
+
 // The articles section was replaced by the corporate solutions page
 app.get(['/pages/ar/articles.html', '/pages/en/articles.html'], (req, res) => {
     res.redirect(301, req.path.replace('articles.html', 'corporate.html'));

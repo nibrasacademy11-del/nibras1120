@@ -6,7 +6,7 @@ import { useI18n } from '../i18n.jsx';
 import Notifications from './Notifications.jsx';
 
 export default function Layout({ children }) {
-  const { me, signOut } = useAuth();
+  const { me, signOut, zone, urls, can } = useAuth();
   const { t, label, toggle } = useI18n();
   const [open, setOpen] = useState(false);
   const locked = me.security.mustChangePassword;
@@ -17,13 +17,15 @@ export default function Layout({ children }) {
         <div className="brand">
           <img src="/logo.png" alt="" />
           <div>
-            <strong>{t('portal')}</strong>
+            <strong>{zone === 'cms' ? t('signInCms') : t('portal')}</strong>
             <small>{label(me.user.roleLabel)}</small>
           </div>
         </div>
         {!locked && <SideNav />}
         <div className="sidebar-foot">
-          <a className="nav-item" href="/">{t('website')}</a>
+          {zone === 'staff' && can('website.manage', 'all') && <a className="nav-item" href={`${urls.cms}/portal/website`}>{t('openCms')} ↗</a>}
+          {zone === 'cms' && <a className="nav-item" href={`${urls.staff}/portal/`}>{t('openStaff')} ↗</a>}
+          <a className="nav-item" href={zone === 'staff' || zone === 'cms' ? `${urls.site}/` : '/'}>{t('website')}</a>
         </div>
       </aside>
       <div className="backdrop" onClick={() => setOpen(false)} />
@@ -35,7 +37,7 @@ export default function Layout({ children }) {
             <span className="topbar-user__name">{me.user.name}</span>
           </div>
           <div className="topbar-actions">
-            {!locked && me.user.isStaff && <Notifications />}
+            {!locked && me.user.isStaff && zone !== 'cms' && <Notifications />}
             <button type="button" className="btn btn--ghost" onClick={toggle} title={t('language')}>
               <span className="hide-sm">{t('language')}</span><span className="show-sm" aria-hidden="true">{t('language') === 'English' ? 'EN' : 'ع'}</span>
             </button>
@@ -59,7 +61,8 @@ function SideNav() {
   const { me } = useAuth();
   const { t } = useI18n();
   const location = useLocation();
-  const sections = useMemo(() => visibleSections({ role: me.user.role, isStaff: me.user.isStaff, grants: me.grants }), [me]);
+  const { zone } = useAuth();
+  const sections = useMemo(() => visibleSections({ role: me.user.role, isStaff: me.user.isStaff, grants: me.grants, zone }), [me, zone]);
   const [opened, setOpened] = useState(readOpen);
   const [q, setQ] = useState('');
   const path = location.pathname;

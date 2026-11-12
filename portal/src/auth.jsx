@@ -6,6 +6,12 @@ const RANK = { own: 1, team: 2, all: 3 };
 
 export function AuthProvider({ children }) {
   const [state, setState] = useState({ loading: true, me: null });
+  // Which address the portal is open on: site (www, customers), staff, cms, or all (before the subdomains)
+  const [where, setWhere] = useState({ zone: 'all', urls: {} });
+
+  useEffect(() => {
+    api('/api/auth/zone').then((z) => setWhere({ zone: z.zone, urls: z.urls || {} })).catch(() => {});
+  }, []);
 
   const refresh = useCallback(async () => {
     try {
@@ -45,7 +51,7 @@ export function AuthProvider({ children }) {
     [state.me]
   );
 
-  const value = useMemo(() => ({ ...state, refresh, signOut, can }), [state, refresh, signOut, can]);
+  const value = useMemo(() => ({ ...state, zone: where.zone, urls: where.urls, refresh, signOut, can }), [state, where, refresh, signOut, can]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

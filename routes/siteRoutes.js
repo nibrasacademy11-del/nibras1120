@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 const siteController = require('../controllers/siteController');
-const { authRequired, adminRequired } = require('../middleware/auth');
+const { authRequired, requirePermission } = require('../middleware/auth');
 const validId = require('../middleware/validId');
 
 // The admin panel shrinks images before upload; 4MB stays under Vercel's 4.5MB body limit
@@ -15,7 +15,8 @@ function uploadImage(req, res, next) {
     upload.single('image')(req, res, (err) => (err ? next(err) : next()));
 }
 
-const admin = [authRequired, adminRequired];
+// Editing the website needs the website permission (admins and the owner have it; others when granted)
+const admin = [authRequired, requirePermission('website.manage', 'all')];
 
 router.get('/site', siteController.getSite);
 router.get('/media/:id', validId(), siteController.getMedia);

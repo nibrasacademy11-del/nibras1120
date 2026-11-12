@@ -334,6 +334,13 @@ function initPublicAuth(isEN) {
                     window.location.href = afterLoginUrl(data.user, isEN);
                 }, 500);
             } catch (error) {
+                // Staff accounts sign in on staff.nibras-ac.com: say so and take them there
+                if (error.payload && error.payload.code === 'WRONG_PORTAL' && error.payload.url) {
+                    const parts = String(error.message).split(' / ');
+                    showToast(isEN ? (parts[1] || parts[0]) : parts[0], true);
+                    setTimeout(() => { window.location.href = error.payload.url; }, 1800);
+                    return;
+                }
                 showToast(formatAuthError(error.message, isEN), true);
             }
         });
@@ -514,7 +521,7 @@ async function updateNavAuth(isEN) {
     const profileUrl = isAdmin ? '/portal/' : '/portal/';
     const label = (isAdmin || isStaff)
         ? `<i class="fas fa-gauge-high"></i> ${isStaff ? (isEN ? 'Staff Portal' : 'بوابة الموظفين') : (isEN ? 'Control Panel' : 'لوحة التحكم')}`
-        : `<i class="fas fa-user-circle"></i> ${esc(firstName)}`;
+        : `<i class="fas fa-user-circle"></i> ${isEN ? 'My account' : 'حسابي'} · ${esc(firstName)}`;
 
     // 1. Desktop Nav Auth
     let navAuth = document.getElementById('navAuth');

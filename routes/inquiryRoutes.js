@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const inquiryController = require('../controllers/inquiryController');
-const { authRequired, adminRequired } = require('../middleware/auth');
+const { authRequired, requirePermission } = require('../middleware/auth');
+const cms = [authRequired, requirePermission('website.manage', 'all')];
 const rateLimit = require('../middleware/rateLimit');
 const validId = require('../middleware/validId');
 
@@ -15,8 +16,8 @@ router.post('/', inquiryLimiter, inquiryController.createInquiry);
 router.post('/enrollment', inquiryLimiter, inquiryController.createEnrollment);
 
 // Admin only
-router.get('/', authRequired, adminRequired, inquiryController.getAllInquiries);
-router.put('/:id', authRequired, adminRequired, validId(), inquiryController.updateInquiryStatus);
-router.delete('/:id', authRequired, adminRequired, validId(), inquiryController.deleteInquiry);
+router.get('/', ...cms, inquiryController.getAllInquiries);
+router.put('/:id', ...cms, validId(), inquiryController.updateInquiryStatus);
+router.delete('/:id', ...cms, validId(), inquiryController.deleteInquiry);
 
 module.exports = router;

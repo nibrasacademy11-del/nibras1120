@@ -76,7 +76,8 @@ export const SECTIONS = [
   {
     key: 'sec_system',
     items: [
-      { to: '/website', key: 'websiteNav', icon: '◍', adminOnly: true, desc: 'd_website' },
+      { to: '/website', key: 'websiteNav', icon: '◍', permission: 'website.manage', minScope: 'all', zones: ['all', 'cms'], desc: 'd_website' },
+      { to: '/user-accounts', key: 'userAccountsNav', icon: '⚇', adminOnly: true, zones: ['all', 'staff'], desc: 'd_userAccounts' },
       { to: '/settings', key: 'settings', icon: '⚙', permission: 'settings.manage', minScope: 'all', desc: 'd_settings' },
       { to: '/roles', key: 'roles', icon: '◈', permission: 'roles.view', minScope: 'all', desc: 'd_roles' },
       { to: '/audit', key: 'audit', icon: '☰', permission: 'audit.view', minScope: 'all', desc: 'd_audit' },
@@ -96,8 +97,13 @@ export const SECTIONS = [
 const RANK = { own: 1, team: 2, all: 3 };
 
 // Whether a user with these grants and this role sees the item
-export function itemVisible(item, { role, isStaff, grants }) {
+// zone: where the portal is open (all, staff, cms, site). On cms only the website pages and the
+// account's own security show; the website editor is not part of the staff menu.
+const CMS_PAGES = ['/website', '/security'];
+export function itemVisible(item, { role, isStaff, grants, zone = 'all' }) {
   const can = (perm, min = 'own') => !!grants && !!grants[perm] && RANK[grants[perm]] >= RANK[min];
+  if (zone === 'cms' && !CMS_PAGES.includes(item.to)) return false;
+  if (item.zones && !item.zones.includes(zone === 'site' ? 'all' : zone)) return false;
   if (item.staffOnly && !isStaff) return false;
   if (item.customerOnly && isStaff) return false;
   if (item.superOnly && role !== 'super_admin') return false;

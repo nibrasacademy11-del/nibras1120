@@ -7,6 +7,18 @@ const sessions = require('../lib/sessions');
 const audit = require('../lib/audit');
 const { checkSecondFactor } = require('../lib/twoFactor');
 const intake = require('../modules/crm/intake');
+const zones = require('../lib/zones');
+
+// Staff sign in on staff.*, customers on the public site. Says where to go instead.
+function wrongPlace(req, user) {
+    const zone = zones.zoneOf(req);
+    const staff = isStaffRole(user.role);
+    if (zones.accountFits(zone, staff)) return null;
+    const u = zones.urls(req);
+    return staff
+        ? { status: 403, body: { message: `حسابات الموظفين بتدخل من ${u.staff}/portal/login / Staff sign in at ${u.staff}/portal/login`, code: 'WRONG_PORTAL', url: `${u.staff}/portal/login` } }
+        : { status: 403, body: { message: `حسابات العملاء بتدخل من الموقع ${u.site}/portal/login / Customers sign in on the website: ${u.site}/portal/login`, code: 'WRONG_PORTAL', url: `${u.site}/portal/login` } };
+}
 
 const MIN_PASSWORD_LENGTH = 8;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,6 +44,9 @@ const LOCKED_MESSAGE = 'تم إيقاف الدخول مؤقتاً بسبب مح�
 
 exports.register = async (req, res) => {
     try {
+        if (zones.isStaffZone(zones.zoneOf(req))) {
+            return res.status(403).json({ message: 'حسابات الموظفين بيعملها المدير. / Staff accounts are created by the admin.', code: 'WRONG_PORTAL' });
+        }
         const { name, email, phone, password } = req.body;
         if (typeof name !== 'string' || typeof email !== 'string' || typeof password !== 'string'
             || !name.trim() || !email.trim() || !password) {
@@ -70,6 +85,8 @@ exports.register = async (req, res) => {
 };
 
 async function finishLogin(req, res, user, { twoFactor }) {
+    const wrong = wrongPlace(req, user);
+    if (wrong) return res.status(wrong.status).json(wrong.body);
     await sessions.startSession(req, res, user, { twoFactor });
     user.lastLoginAt = new Date();
     await user.save();
@@ -114,6 +131,12 @@ exports.login = async (req, res) => {
         if (user.status === 'disabled') {
             await sessions.logAttempt(req, { email: normalizedEmail, user, success: false, reason: 'disabled' });
             return res.status(403).json({ message: 'هذا الحساب معطل. يرجى التواصل مع الإدارة. / This account is disabled.', code: 'DISABLED' });
+        }
+
+        const wrong = wrongPlace(req, user);
+        if (wrong) {
+            await sessions.logAttempt(req, { email: normalizedEmail, user, success: false, reason: 'wrong_portal' });
+            return res.status(wrong.status).json(wrong.body);
         }
 
         if (user.twoFactor && user.twoFactor.enabled) {
@@ -178,13 +201,13 @@ exports.loginTwoFactor = async (req, res) => {
 exports.logout = async (req, res) => {
     try {
         const { userFromToken } = require('../middleware/auth');
-        const token = req.cookies.nibras_token;
+        const token = sessions.readAuthToken(req);
         const current = token ? await userFromToken(token).catch(() => null) : null;
         if (current && current.sid) await sessions.endSession(current.sid, 'signed_out');
     } catch (e) {
         // Signing out always succeeds for the browser
     }
-    sessions.clearAuthCookie(res);
+    sessions.clearAuthCookie(req, res);
     sessions.clearChallenge(res);
     res.json({ message: 'Logged out.' });
 };
@@ -193,7 +216,7 @@ exports.getMe = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select(PRIVATE_FIELDS);
         if (!user) return res.status(401).json({ message: 'Unauthorized.' });
-        res.json({ user, isStaff: req.user.isStaff });
+        res.json({ user, isStaff: req.user.isStaff, zone: zones.zoneOf(req), urls: zones.urls(req) });
     } catch (error) {
         console.error('GetMe error:', error);
         res.status(500).json({ message: 'Server error.' });
@@ -234,7 +257,9 @@ exports.forgotPassword = async (req, res) => {
         user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
         await user.save();
 
-        const resetUrl = `${siteUrl(req)}/pages/${lang}/reset-password.html?token=${resetToken}`;
+        // Staff reset on the staff address, so the page's "sign in" link takes them to the right place
+        const resetBase = isStaffRole(user.role) ? zones.urls(req).staff : siteUrl(req);
+        const resetUrl = `${resetBase}/pages/${lang}/reset-password.html?token=${resetToken}`;
         const message = isEN
             ? `Hello,\n\nYou requested a password reset for your Nibras Academy account.\n\nOpen this link to choose a new password:\n\n${resetUrl}\n\nThis link is valid for 10 minutes only.`
             : `مرحباً،\n\nلقد طلبت إعادة تعيين كلمة المرور لحسابك في أكاديمية نبراس.\n\nمن فضلك اضغط على الرابط التالي لتغيير كلمة المرور:\n\n${resetUrl}\n\nهذا الرابط صالح لمدة 10 دقائق فقط.`;
@@ -443,4 +468,9 @@ exports.getUserProfile = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error fetching profile.' });
     }
+};
+
+// Public: which place this address is, and the links to the others (the sign-in page needs it)
+exports.getZone = (req, res) => {
+    res.json({ zone: zones.zoneOf(req), urls: zones.urls(req) });
 };

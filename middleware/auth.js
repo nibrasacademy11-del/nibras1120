@@ -5,6 +5,10 @@ const Session = require('../models/Session');
 const { normalizeRole, isStaffRole, isAdminRole, scopeFor, hasScope } = require('../lib/permissions');
 const policyStore = require('../lib/policyStore');
 const { teamIdsFor } = require('../lib/teams');
+const zones = require('../lib/zones');
+
+// The session cookie for the place this request came in on (staff and customers never share one)
+const readAuthToken = (req) => (req.cookies ? req.cookies[zones.cookieName(zones.zoneOf(req))] : undefined);
 
 const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
 const WEAK_SECRETS = ['change-this-secret', 'replace-with-strong-secret'];
@@ -80,7 +84,7 @@ const ENROLLMENT_PATHS = [/^\/api\/v2\/me(\/2fa(\/.*)?|\/password)?$/, /^\/api\/
 
 const authRequired = async (req, res, next) => {
     try {
-        const token = req.cookies.nibras_token;
+        const token = readAuthToken(req);
         req.user = token ? await userFromToken(token) : null;
         if (!req.user) return res.status(401).json({ message: 'Unauthorized.' });
         const path = req.originalUrl.split('?')[0];
@@ -106,7 +110,7 @@ const authRequired = async (req, res, next) => {
 // For public routes that show more to a signed-in admin. Never rejects the request.
 const attachUser = async (req, res, next) => {
     try {
-        const token = req.cookies.nibras_token;
+        const token = readAuthToken(req);
         req.user = token ? (await userFromToken(token)) || undefined : undefined;
     } catch (e) {
         req.user = undefined;

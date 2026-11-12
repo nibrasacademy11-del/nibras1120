@@ -66,7 +66,7 @@ router.delete('/me/sessions/:id', validId(), handle(security.revokeSession));
 router.get('/me/login-history', handle(security.loginHistory));
 router.get('/dashboard', handle(home.dashboard));
 router.get('/academy', handle(home.academy));
-router.get('/website/specialties', all('programs.update'), (req, res) => res.json({ items: require('../assets/js/specialties').map(({ key, ar, en }) => ({ key, ar, en })) }));
+router.get('/website/specialties', all('website.manage'), (req, res) => res.json({ items: require('../assets/js/specialties').map(({ key, ar, en }) => ({ key, ar, en })) }));
 router.get('/notifications', handle(home.notifications));
 router.post('/notifications/read', handle(home.markRead));
 

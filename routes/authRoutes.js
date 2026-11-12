@@ -18,6 +18,7 @@ router.post('/logout', authController.logout);
 router.post('/forgot-password', officeLimiter, authLimiter, authController.forgotPassword);
 router.post('/reset-password', officeLimiter, authController.resetPassword);
 router.get('/me', authRequired, authController.getMe);
+router.get('/zone', authController.getZone);
 router.get('/profile', authRequired, authController.getUserProfile);
 router.get('/users', authRequired, adminRequired, authController.getAllUsers);
 router.get('/users/:id', authRequired, adminRequired, validId(), authController.getSingleUser);
