@@ -8,6 +8,7 @@ const audit = require('../lib/audit');
 const { checkSecondFactor } = require('../lib/twoFactor');
 const intake = require('../modules/crm/intake');
 const zones = require('../lib/zones');
+const owner = require('../lib/owner');
 
 // Staff sign in on staff.*, customers on the public site. Says where to go instead.
 function wrongPlace(req, user) {
@@ -350,6 +351,16 @@ exports.updateUser = async (req, res) => {
         const before = snapshot();
 
         const actorIsSuper = req.user.role === 'super_admin';
+        // The primary owner: only the owner edits their own name and phone; role and email never change here
+        if (owner.isPrimaryOwner(user)) {
+            const self = String(user._id) === String(req.user.id);
+            const emailChanging = email !== undefined && String(email).trim().toLowerCase() !== user.email;
+            const roleTouched = role !== undefined && role !== user.role;
+            if (!self || emailChanging || roleTouched) {
+                await audit.record(req, { action: 'security.primary_owner_change_refused', resource: 'users', resourceId: user._id, summary: `Refused a change to the primary owner account` });
+                return res.status(403).json({ message: owner.MESSAGE, code: 'PRIMARY_OWNER' });
+            }
+        }
         if (normalizeRole(user.role) === 'super_admin' && !actorIsSuper) {
             return res.status(403).json({ message: 'فقط مدير النظام يمكنه تعديل حساب مدير النظام.' });
         }
@@ -420,8 +431,12 @@ exports.deleteUser = async (req, res) => {
         if (String(req.params.id) === String(req.user.id)) {
             return res.status(400).json({ message: 'لا يمكنك حذف حسابك الحالي.' });
         }
-        const target = await User.findById(req.params.id).select('name email role');
+        const target = await User.findById(req.params.id).select('name email role isPrimaryOwner');
         if (!target) return res.status(404).json({ message: 'User not found.' });
+        if (owner.isPrimaryOwner(target)) {
+            await audit.record(req, { action: 'security.primary_owner_change_refused', resource: 'users', resourceId: target._id, summary: 'Refused deleting the primary owner account' });
+            return res.status(403).json({ message: owner.MESSAGE, code: 'PRIMARY_OWNER' });
+        }
         // Accounts with history in the management system are never deleted (their records point to them)
         const Employee = require('../models/Employee');
         const Customer = require('../models/Customer');

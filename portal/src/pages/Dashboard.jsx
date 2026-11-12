@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
-import { Loading, useLoad } from '../components/ui.jsx';
+import { Loading, Pill, useLoad } from '../components/ui.jsx';
+import { Amounts } from './Finance.jsx';
 
 const ORDER = ['lead', 'interested', 'customer', 'lost', 'inactive'];
 
@@ -32,18 +33,91 @@ function CountList({ rows, group }) {
   return <ul className="plain-list">{rows.map((r) => <li key={r._id || 'none'}>{group ? en(group, r._id) : r._id} <strong>{r.n}</strong></li>)}</ul>;
 }
 
+// ---- blocks shown by permission: the same page serves the owner, admins, managers and employees ----
+
+function FinanceToday() {
+  const { t } = useI18n();
+  const state = useLoad('/api/v2/finance/today');
+  return (
+    <Loading state={state}>
+      {(d) => (
+        <section className="card">
+          <div className="card-head"><h2>{t('dbFinance')}</h2><Link className="btn btn--small" to="/finance">{t('fhTitle')}</Link></div>
+          <div className="grid grid--4">
+            <div className="stat"><small>{t('dbCollectedMonth')}</small><strong><Amounts list={d.month} /></strong></div>
+            <div className="stat"><small>{t('dbExpensesMonth')}</small><strong><Amounts list={d.expensesMonth} /></strong></div>
+            <Link className="stat stat--link" to="/finance?tab=receivables"><small>{t('dbOverdue')} · {d.overdue.customers}</small><strong className={d.overdue.customers ? 'warn' : ''}><Amounts list={d.overdue.amounts} /></strong></Link>
+            <Link className="stat stat--link" to="/approvals"><small>{t('dbPendingMoney')}</small><strong className={d.pending.payments + d.pending.approvals ? 'warn' : ''}>{d.pending.payments + d.pending.approvals + d.pending.refunds}</strong></Link>
+          </div>
+        </section>
+      )}
+    </Loading>
+  );
+}
+
+function AttendanceToday() {
+  const { t } = useI18n();
+  const state = useLoad('/api/v2/attendance/today');
+  return (
+    <Loading state={state}>
+      {(d) => (
+        <section className="card">
+          <div className="card-head"><h2>{t('dbAttendance')}</h2><Link className="btn btn--small" to="/attendance">{t('attendanceNav')}</Link></div>
+          <div className="grid grid--4">
+            <div className="stat"><small>{t('dbIn')}</small><strong>{d.counts.in}</strong></div>
+            <div className="stat"><small>{t('dbNotIn')}</small><strong className={d.counts.not_in ? 'warn' : ''}>{d.counts.not_in}</strong></div>
+            <div className="stat"><small>{t('dbLate')}</small><strong className={d.counts.late ? 'warn' : ''}>{d.counts.late}</strong></div>
+            <div className="stat"><small>{t('dbOnLeave')}</small><strong>{d.counts.leave}</strong></div>
+          </div>
+        </section>
+      )}
+    </Loading>
+  );
+}
+
+function MyAttendance() {
+  const { t } = useI18n();
+  const state = useLoad('/api/v2/attendance/me');
+  return (
+    <Loading state={state}>
+      {(d) => (
+        <section className="card">
+          <div className="card-head"><h2>{t('dbMyMonth')}</h2><Link className="btn btn--small" to="/attendance">{t('attendanceNav')}</Link></div>
+          <div className="grid grid--4">
+            <div className="stat"><small>{t('dbPresentDays')}</small><strong>{d.summary.present} / {d.summary.workingDays}</strong></div>
+            <div className="stat"><small>{t('dbAbsentDays')}</small><strong className={d.summary.absent ? 'warn' : ''}>{d.summary.absent}</strong></div>
+            <div className="stat"><small>{t('dbLateMinutes')}</small><strong className={d.summary.lateMinutes ? 'warn' : ''}>{d.summary.lateMinutes}</strong></div>
+            <div className="stat"><small>{t('dbLeaveDays')}</small><strong>{d.summary.leave}</strong></div>
+          </div>
+        </section>
+      )}
+    </Loading>
+  );
+}
+
+const TITLES = { owner: 'dbOwnerTitle', admin: 'dbAdminTitle', manager: 'dbManagerTitle', employee: 'dbEmployeeTitle' };
+
 export default function Dashboard() {
-  const { me } = useAuth();
+  const { me, can } = useAuth();
   const { t, label, lang } = useI18n();
   const state = useLoad('/api/v2/dashboard');
   const { user, security } = me;
+  const level = user.level || 'employee';
 
   return (
     <>
-      <h1 className="page-title">{t('welcome')}{lang === 'ar' ? '، ' : ', '}{user.name.split(' ')[0]} <small className="muted">{label(user.roleLabel)}</small></h1>
+      <div className="page-head">
+        <div>
+          <h1 className="page-title">{t(TITLES[level] || 'dbEmployeeTitle')}</h1>
+          <p className="muted" style={{ margin: 0 }}>{t('welcome')}{lang === 'ar' ? '، ' : ', '}{user.name.split(' ')[0]} · {label(user.roleLabel)}{user.isPrimaryOwner ? <> · <Pill tone="gold">{t('dbPrimaryOwner')}</Pill></> : null}</p>
+        </div>
+      </div>
       {!security.twoFactorEnabled && user.isStaff && (
         <div className="alert alert--warn">{t('twoFactor')}: {t('twoFactorOff')} — <Link to="/security">{t('enable')}</Link></div>
       )}
+      {can('payments.view', 'all') && <FinanceToday />}
+      {can('attendance.view', 'team') && <AttendanceToday />}
+      {level === 'employee' && can('attendance.view') && <MyAttendance />}
       <Loading state={state}>
         {(d) => (
           <>

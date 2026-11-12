@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
     role: { type: String, enum: [...ROLES, ...Object.keys(LEGACY_ROLES)], default: 'student' },
     // A disabled account cannot sign in, and its records stay for transfer to another employee
     status: { type: String, enum: ['active', 'disabled'], default: 'active', index: true },
+    // The academy's primary owner (info@nibras-ac.com). Set only by tools/promote-super-admin.js
+    // --primary on the server, never from the portal; nobody can demote, disable or delete it there.
+    // The role decides permissions; this flag only adds protection (the email alone proves nothing).
+    isPrimaryOwner: { type: Boolean, default: false, index: true },
     enrolledCourses: [{ type: String }],
     // Bumped to sign the user out everywhere: issued tokens carry the value they were signed with
     tokenVersion: { type: Number, default: 0 },

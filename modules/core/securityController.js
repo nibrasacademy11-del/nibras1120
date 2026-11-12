@@ -8,9 +8,10 @@ const sessions = require('../../lib/sessions');
 const audit = require('../../lib/audit');
 const { checkSecondFactor } = require('../../lib/twoFactor');
 const { HttpError } = require('../../lib/http');
-const { ROLE_LABELS, isStaffRole } = require('../../lib/permissions');
+const { ROLE_LABELS, isStaffRole, roleLevel } = require('../../lib/permissions');
 const { twoFactorRequiredFor } = require('../../middleware/auth');
 const zones = require('../../lib/zones');
+const { assertNotPrimaryOwner } = require('../../lib/owner');
 
 // The signed-in user's own account security: profile, two-factor sign-in, devices, sign-in history
 
@@ -27,7 +28,7 @@ async function confirmPassword(user, password) {
 }
 
 exports.me = async (req, res) => {
-    const user = await User.findById(req.user.id).select('name email phone role status createdAt lastLoginAt twoFactor.enabled twoFactor.recoveryCodes');
+    const user = await User.findById(req.user.id).select('name email phone role status createdAt lastLoginAt isPrimaryOwner twoFactor.enabled twoFactor.recoveryCodes');
     if (!user) throw new HttpError(401, 'Unauthorized.');
     res.json({
         user: {
@@ -38,6 +39,9 @@ exports.me = async (req, res) => {
             role: req.user.role,
             roleLabel: ROLE_LABELS[req.user.role],
             isStaff: isStaffRole(req.user.role),
+            // owner / admin / manager / employee / customer: decides the home page
+            level: roleLevel(req.user.role),
+            isPrimaryOwner: !!user.isPrimaryOwner,
             createdAt: user.createdAt,
             lastLoginAt: user.lastLoginAt
         },
@@ -187,8 +191,9 @@ exports.adminListSessions = async (req, res) => {
 };
 
 exports.adminRevokeSessions = async (req, res) => {
-    const target = await User.findById(req.params.id).select('email role');
+    const target = await User.findById(req.params.id).select('email role isPrimaryOwner');
     if (!target) throw new HttpError(404, 'Not found.');
+    if (String(target._id) !== String(req.user.id)) assertNotPrimaryOwner(target);
     if (target.role === 'super_admin' && req.user.role !== 'super_admin') throw new HttpError(403, 'Forbidden.');
     const count = await sessions.revokeAllSessions(target._id, { reason: 'revoked_by_admin' });
     await audit.record(req, { action: 'security.sessions_revoked_by_admin', resource: 'users', resourceId: target._id, summary: `Signed out ${count} devices of ${target.email}`, reason: req.body.reason });
@@ -201,6 +206,7 @@ exports.adminResetTwoFactor = async (req, res) => {
     const target = await User.findById(req.params.id);
     if (!target) throw new HttpError(404, 'Not found.');
     if (String(target._id) === String(req.user.id)) throw new HttpError(400, 'Use your own security page.');
+    assertNotPrimaryOwner(target);
     if (target.role === 'super_admin' && req.user.role !== 'super_admin') throw new HttpError(403, 'Forbidden.');
     target.twoFactor = { enabled: false, secretEnc: '', pendingSecretEnc: '', lastStep: -1, recoveryCodes: [] };
     target.tokenVersion = (target.tokenVersion || 0) + 1;

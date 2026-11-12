@@ -9,6 +9,7 @@ const audit = require('../../lib/audit');
 const sessions = require('../../lib/sessions');
 const { nextNumber } = require('../../lib/sequence');
 const { HttpError, assertVersion, paging } = require('../../lib/http');
+const { assertNotPrimaryOwner } = require('../../lib/owner');
 const P = require('../../lib/permissions');
 const { transferAllFrom } = require('../crm/transfer');
 
@@ -156,6 +157,7 @@ exports.createEmployee = async (req, res) => {
 
     let user = await User.findOne({ email });
     if (user && (await Employee.exists({ user: user._id }))) throw new HttpError(409, 'هذا البريد مسجل لموظف بالفعل. / This email already belongs to an employee.', 'DUPLICATE');
+    if (user) assertNotPrimaryOwner(user);
     if (user && P.isAdminRole(user.role) && req.user.role !== 'super_admin') throw new HttpError(403, 'Forbidden.');
 
     let password = null;
@@ -223,6 +225,7 @@ exports.updateEmployee = async (req, res) => {
         if (req.body.role !== user.role) {
             if (P.scopeFor(req.user.grants, 'users.manage') !== 'all') throw new HttpError(403, 'Forbidden.');
             if (String(user._id) === String(req.user.id)) throw new HttpError(400, 'لا يمكنك تغيير دورك. / You cannot change your own role.');
+            assertNotPrimaryOwner(user);
             checkRoleAssignment(req, req.body.role, user.role);
             const from = user.role;
             user.role = req.body.role;
@@ -253,6 +256,7 @@ exports.offboardEmployee = async (req, res) => {
     if (String(emp.user._id) === String(req.user.id)) throw new HttpError(400, 'Forbidden.');
 
     const user = await User.findById(emp.user._id);
+    assertNotPrimaryOwner(user);
     if (P.isAdminRole(user.role) && req.user.role !== 'super_admin') throw new HttpError(403, 'Forbidden.');
 
     let moved = { customers: 0, tasks: 0, enrollments: 0, complaints: 0 };
