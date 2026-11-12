@@ -5,6 +5,9 @@ import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import ChangePassword from './ChangePassword.jsx';
 
+// Sign-in results in words (the codes come from the server's sign-in log)
+const REASONS = { ok: 'rs_ok', unknown_email: 'rs_unknown_email', bad_password: 'rs_bad_password', locked: 'rs_locked', disabled: 'rs_disabled', '2fa_pending': 'rs_2fa_pending', '2fa_failed': 'rs_2fa_failed', wrong_portal: 'rs_wrong_portal' };
+
 function RecoveryCodes({ codes, onDone }) {
   const { t } = useI18n();
   return (
@@ -253,7 +256,7 @@ function HistoryCard() {
               {list.map((a, i) => (
                 <tr key={i}>
                   <td>{fmtDate(a.at)}</td>
-                  <td><span className={`pill ${a.success ? 'pill--ok' : 'pill--warn'}`}>{a.success ? t('success') : t('failed')}</span> <small className="muted" dir="ltr">{a.reason}</small></td>
+                  <td><span className={`pill ${a.success ? 'pill--ok' : 'pill--warn'}`}>{a.success ? t('success') : t('failed')}</span> <small className="muted">{REASONS[a.reason] ? t(REASONS[a.reason]) : a.reason}</small></td>
                   <td dir="ltr">{a.ip}</td>
                   <td>{shortAgent(a.userAgent)}</td>
                 </tr>
