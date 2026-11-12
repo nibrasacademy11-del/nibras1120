@@ -5,6 +5,7 @@ import { I18nProvider } from './i18n.jsx';
 import { AuthProvider } from './auth.jsx';
 import App from './App.jsx';
 import './styles.css';
+import './refresh.css';
 
 let reported = 0;
 function report(message, stack) {

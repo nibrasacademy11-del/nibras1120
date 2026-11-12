@@ -69,7 +69,7 @@ export default function Groups() {
                       <td>{fmtDay(g.startDate)}{g.endDate ? ` – ${fmtDay(g.endDate)}` : ''}</td>
                       <td>{g.members}{g.capacity ? ` / ${g.capacity}` : ''}</td>
                       <td>{g.nextLecture ? <>{fmtDate(g.nextLecture.startsAt)}<br /><small className="muted">{label({ ar: g.nextLecture.titleAr, en: g.nextLecture.titleEn })}</small></> : <span className="muted">{t('grpNoNext')}</span>}</td>
-                      <td><Pill tone={['open', 'running'].includes(g.status) ? 'ok' : 'muted'}>{g.status}</Pill></td>
+                      <td><Pill tone={['open', 'running'].includes(g.status) ? 'ok' : 'muted'}>{t(`coSt_${g.status}`)}</Pill></td>
                     </tr>
                   ))}
                 </tbody>
@@ -166,7 +166,7 @@ function LecturesTab({ group, modules, zoomConnected, canManage }) {
                     </td>
                     <td><Pill tone={STATE_TONE[l.state]}>{t(`lecState_${l.state}`)}</Pill>{l.recordings?.length ? <><br /><small>{t('lecRecordings')}: {l.recordings.length}</small></> : null}</td>
                     <td>{l.attendance.present} {t('lecPresent')}<br /><small className="muted">{l.attendance.clicked} {t('lecClicks')}</small></td>
-                    <td className="row">
+                    <td className="actions">
                       <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'attendance', item: l })}>{t('lecAttendance')}</button>
                       {canManage && l.status !== 'cancelled' && <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'form', item: l })}>{t('edit')}</button>}
                       {canManage && l.zoom?.managed && l.state === 'ended' && zoomConnected && <button type="button" className="btn btn--small btn--ghost" onClick={() => sync(l)}>{t('lecSync')}</button>}

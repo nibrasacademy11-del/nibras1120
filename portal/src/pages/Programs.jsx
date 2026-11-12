@@ -42,7 +42,7 @@ export default function Programs() {
                         <td>{en('programType', p.type)}</td>
                         <td>{p.modules || <span className="muted">0</span>}</td>
                         <td>{p.openEnrollments}</td>
-                        <td><small className="muted">{p.status}</small></td>
+                        <td><small className="muted">{t(`wsStatus_${p.status}`)}</small></td>
                       </tr>
                     ))}
                   </tbody>
@@ -118,7 +118,7 @@ function CohortForm({ programId, cohort, modules = [], onClose, onSaved }) {
         <Field label={t('instructor')}><input value={f.instructor} onChange={set('instructor')} /></Field>
         <Field label={t('delivery')}><select value={f.delivery} onChange={set('delivery')}>{['online', 'onsite', 'hybrid'].map((x) => <option key={x} value={x}>{t(x)}</option>)}</select></Field>
         <Field label={t('capacity')} hint={t('capacityHint')}><input type="number" min={0} value={f.capacity} onChange={set('capacity')} /></Field>
-        <Field label={t('status')}><select value={f.status} onChange={set('status')}>{['planned', 'open', 'running', 'finished', 'cancelled'].map((x) => <option key={x} value={x}>{x}</option>)}</select></Field>
+        <Field label={t('status')}><select value={f.status} onChange={set('status')}>{['planned', 'open', 'running', 'finished', 'cancelled'].map((x) => <option key={x} value={x}>{t(`coSt_${x}`)}</option>)}</select></Field>
         <Field label={t('note')} wide><input value={f.notes} onChange={set('notes')} /></Field>
         {modules.length > 0 && (
           <fieldset className="field--wide checks">
@@ -227,7 +227,7 @@ export function ProgramDetail() {
                           <td>{c.schedule || '—'}</td>
                           <td>{c.instructor || '—'}</td>
                           <td><Link to={`/groups/${c._id}`}>{c.enrolled}{c.capacity ? ` / ${c.capacity}` : ''}</Link></td>
-                          <td><Pill tone={c.status === 'open' || c.status === 'running' ? 'ok' : 'muted'}>{c.status}</Pill></td>
+                          <td><Pill tone={c.status === 'open' || c.status === 'running' ? 'ok' : 'muted'}>{t(`coSt_${c.status}`)}</Pill></td>
                           <td>{canEdit && <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'cohort', item: c })}>{t('edit')}</button>}</td>
                         </tr>
                       ))}

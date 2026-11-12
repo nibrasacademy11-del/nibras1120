@@ -15,3 +15,6 @@ desktop/config.json
 
 # Sample printouts made locally (regenerate from /portal/print-samples)
 print-samples/
+
+# Keys prepared locally for Vercel (never committed)
+.secrets/

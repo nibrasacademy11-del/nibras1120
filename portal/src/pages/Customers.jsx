@@ -40,7 +40,6 @@ export function CustomerForm({ onClose, onCreated }) {
   const { busy, error, setError, run } = useAction();
   const set = (k) => (e) => setF({ ...f, [k]: e.target ? e.target.value : e });
   const canAssign = can('customers.manage', 'team');
-  const canSelect = canAssign || can('tasks.create');
   const canIdentity = can('customer_identity.create');
 
   async function submit(confirm) {
@@ -153,6 +152,7 @@ export default function Customers() {
   query.set('limit', '50');
   const state = useLoad(`/api/v2/customers?${query}`);
   const canAssign = can('customers.manage', 'team');
+  const canSelect = canAssign || can('tasks.create');
 
   const setParam = (k, v) => {
     const next = new URLSearchParams(params);

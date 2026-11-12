@@ -149,7 +149,7 @@ function Catalog() {
                     <td dir="ltr" className="nowrap">{Number(c.price).toLocaleString('en-US')} {c.currency}{c.discountPercent ? <small className="ok"> −{c.discountPercent}%</small> : null}</td>
                     <td><Pill tone={c.status === 'available' ? 'ok' : c.status === 'hidden' ? 'muted' : 'gold'}>{t(`wsStatus_${c.status}`)}</Pill></td>
                     <td><button type="button" className={`star-toggle${c.featured ? ' on' : ''}`} aria-label={t('wsFeatured')} onClick={() => toggleFeatured(c)}>★</button></td>
-                    <td className="row nowrap">
+                    <td className="actions nowrap">
                       <button type="button" className="btn btn--small" onClick={() => setDialog({ item: c })}>{t('edit')}</button>
                       <Link className="btn btn--small btn--ghost" to={`/programs/${c._id}`}>{t('wsModulesGroups')}</Link>
                       <a className="btn btn--small btn--ghost" href={`/pages/${lang === 'en' ? 'en' : 'ar'}/program-detail.html?id=${c._id}`} target="_blank" rel="noreferrer">{t('wsView')}</a>

@@ -30,11 +30,18 @@ export default function Layout({ children }) {
       <div className="main">
         <header className="topbar">
           <button type="button" className="icon-btn menu-btn" aria-label="Menu" onClick={() => setOpen((o) => !o)}>☰</button>
-          <div className="topbar-user"><span>{me.user.name}</span></div>
+          <div className="topbar-user">
+            <span className="avatar" aria-hidden="true">{(me.user.name || '?').trim().charAt(0)}</span>
+            <span className="topbar-user__name">{me.user.name}</span>
+          </div>
           <div className="topbar-actions">
             {!locked && me.user.isStaff && <Notifications />}
-            <button type="button" className="btn btn--ghost" onClick={toggle}>{t('language')}</button>
-            <button type="button" className="btn btn--ghost" onClick={signOut}>{t('signOut')}</button>
+            <button type="button" className="btn btn--ghost" onClick={toggle} title={t('language')}>
+              <span className="hide-sm">{t('language')}</span><span className="show-sm" aria-hidden="true">{t('language') === 'English' ? 'EN' : 'ع'}</span>
+            </button>
+            <button type="button" className="btn btn--ghost" onClick={signOut} title={t('signOut')} aria-label={t('signOut')}>
+              <svg className="btn-ico" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5" /><path d="M21 12H9" /></svg><span className="hide-sm">{t('signOut')}</span>
+            </button>
           </div>
         </header>
         <main className="content">{children}</main>
