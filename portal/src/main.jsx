@@ -6,6 +6,7 @@ import { AuthProvider } from './auth.jsx';
 import App from './App.jsx';
 import './styles.css';
 import './refresh.css';
+import './motion.css';
 
 let reported = 0;
 function report(message, stack) {

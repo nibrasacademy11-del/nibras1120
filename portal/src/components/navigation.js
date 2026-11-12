@@ -74,6 +74,7 @@ export const SECTIONS = [
     key: 'sec_reports',
     items: [
       { to: '/reports', key: 'reportsNav', icon: '▤', staffOnly: true, resource: 'reports', desc: 'd_reports' },
+      { to: '/insights', key: 'insightsNav', icon: '◈', superOnly: true, desc: 'd_insights' },
       { to: '/analytics', key: 'analyticsNav', icon: '◔', permission: 'reports.view', minScope: 'team', desc: 'd_analytics' }
     ]
   },

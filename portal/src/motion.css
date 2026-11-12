@@ -1,0 +1,126 @@
+/* ====================================================================================
+   Simpler look and light motion for the admin and CRM pages.
+   Every animation is short (150-400 ms), uses only opacity and transform, and is turned off
+   for people who ask their device for less motion (prefers-reduced-motion).
+   ==================================================================================== */
+:root {
+  --ease: cubic-bezier(.22, .8, .32, 1);
+  --t-fast: .15s;
+  --t-mid: .25s;
+  --t-slow: .4s;
+}
+
+/* ---- simpler: calmer surfaces, more space, fewer lines ---- */
+.content { max-width: 1240px; }
+.card { box-shadow: 0 1px 2px rgba(47, 1, 8, .04); border-color: #f0e8db; }
+.card + .card { margin-top: 0; }
+.page-title { font-size: 1.45rem; margin-bottom: 14px; }
+.card-head h2::before, .card > h2::before { width: 3px; }
+.table thead th { background: #faf6ef; border-bottom-color: #efe6d8; }
+.table tbody tr:nth-child(even) { background: transparent; }
+.table tbody tr { transition: background-color var(--t-fast) ease; }
+.table tbody tr:hover { background: #fcf8f1; }
+.table--hover tbody tr:hover { background: var(--primary-light); }
+.btn--ghost { background: var(--surface); }
+.section-title { margin: 26px 0 12px; font-size: 1.15rem; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* the page trail: "section › page" and what the page is for */
+.trail { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; margin: -6px 0 14px; font-size: .82rem; color: var(--muted); }
+.trail__sec { font-weight: 600; color: var(--gold-dark, #8a6420); }
+.trail__sep { opacity: .6; }
+.trail__page { font-weight: 600; color: var(--ink); }
+.trail__desc { flex-basis: 100%; font-size: .8rem; }
+
+/* the menu as an accordion */
+.nav-section__items { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--t-mid) var(--ease); }
+.nav-section__items > div { overflow: hidden; display: flex; flex-direction: column; gap: 2px; min-height: 0; }
+.nav-section--open > .nav-section__items { grid-template-rows: 1fr; }
+.nav-section__chev { transition: transform var(--t-mid) var(--ease); }
+.nav-item { transition: background-color var(--t-fast) ease, color var(--t-fast) ease, transform var(--t-fast) ease; }
+.nav-item:hover { transform: translateX(-2px); }
+[dir='ltr'] .nav-item:hover { transform: translateX(2px); }
+
+/* owner analytics */
+.period-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: inherit; font-size: .85rem; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--ink); cursor: pointer; transition: background-color var(--t-fast) ease, border-color var(--t-fast) ease, color var(--t-fast) ease; }
+.chip:hover { border-color: var(--gold); }
+.chip--on { background: var(--primary); border-color: var(--primary); color: #fff; }
+.period-note { margin: 0 0 12px; font-size: .85rem; }
+.kpi strong { font-size: 1.25rem; }
+.kpi-foot { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; min-height: 20px; }
+.delta { font-size: .75rem; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: #eee8e2; color: var(--muted); }
+.delta--up { background: var(--ok-bg); color: var(--ok); }
+.delta--down { background: var(--danger-bg); color: var(--danger); }
+.trend--tall { height: 160px; gap: 3px; }
+.trend span { transform-origin: bottom; }
+.trend span:hover { background: var(--primary); }
+.trend-axis { display: flex; justify-content: space-between; margin-top: 6px; font-size: .75rem; }
+
+/* skeleton while loading */
+.skeleton { display: grid; gap: 10px; padding: 6px 0; }
+.sk { height: 14px; border-radius: 8px; background: linear-gradient(90deg, #f1eadf 25%, #f9f4ec 50%, #f1eadf 75%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+.sk--title { height: 22px; width: 40%; }
+.sk--short { width: 60%; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* ---- motion ---- */
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes growX { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes growY { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+.page-enter { animation: rise var(--t-slow) var(--ease) both; }
+.fade-in { animation: fade var(--t-mid) ease both; }
+
+/* cards and tiles come in one after another */
+.grid > .card, .stagger > * { animation: rise var(--t-slow) var(--ease) both; }
+.grid > .card:nth-child(2), .stagger > :nth-child(2) { animation-delay: 40ms; }
+.grid > .card:nth-child(3), .stagger > :nth-child(3) { animation-delay: 80ms; }
+.grid > .card:nth-child(4), .stagger > :nth-child(4) { animation-delay: 120ms; }
+.grid > .card:nth-child(5), .stagger > :nth-child(5) { animation-delay: 160ms; }
+.grid > .card:nth-child(6), .stagger > :nth-child(6) { animation-delay: 200ms; }
+.grid > .card:nth-child(n+7), .stagger > :nth-child(n+7) { animation-delay: 240ms; }
+
+/* the first table rows slide in softly */
+.table tbody tr { animation: fade var(--t-mid) ease both; }
+.table tbody tr:nth-child(2) { animation-delay: 20ms; }
+.table tbody tr:nth-child(3) { animation-delay: 40ms; }
+.table tbody tr:nth-child(4) { animation-delay: 60ms; }
+.table tbody tr:nth-child(5) { animation-delay: 80ms; }
+.table tbody tr:nth-child(n+6) { animation-delay: 100ms; }
+
+/* bars grow from their start */
+.bar-fill, .grow-x { transform-origin: right center; animation: growX .6s var(--ease) both; }
+[dir='ltr'] .bar-fill, [dir='ltr'] .grow-x { transform-origin: left center; }
+.grow-y { animation: growY .5s var(--ease) both; }
+
+/* buttons, tiles and tabs answer the pointer */
+.btn { transition: background-color var(--t-fast) ease, border-color var(--t-fast) ease, color var(--t-fast) ease, box-shadow var(--t-fast) ease, transform var(--t-fast) ease; }
+.btn:hover:not(:disabled) { transform: translateY(-1px); }
+.btn:active:not(:disabled) { transform: translateY(0) scale(.98); }
+.tab { position: relative; }
+.tab::after { content: ''; position: absolute; inset-inline: 12px; bottom: -1px; height: 2px; background: var(--primary); transform: scaleX(0); transition: transform var(--t-mid) var(--ease); }
+.tab.active::after { transform: scaleX(1); }
+.tab.active { border-bottom-color: transparent; }
+.stat--link:hover, button.stat:hover { transform: translateY(-2px); }
+
+/* dialogs open with a small lift, the dimmed background fades in */
+.modal[open] { animation: pop var(--t-mid) var(--ease) both; }
+.modal[open]::backdrop { animation: fade var(--t-mid) ease both; }
+
+/* alerts and the notification panel */
+.alert { animation: fade var(--t-mid) ease both; }
+.bell-panel { animation: pop var(--t-fast) var(--ease) both; transform-origin: top; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important; }
+  .sk { animation: none; }
+}
+@media print {
+  .page-enter, .fade-in, .grid > .card, .stagger > *, .table tbody tr, .bar-fill, .grow-x, .grow-y { animation: none !important; }
+  .trail { display: none; }
+}

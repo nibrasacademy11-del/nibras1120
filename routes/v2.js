@@ -30,6 +30,7 @@ const hub = require('../modules/finance/hubController');
 const crm360 = require('../modules/crm/crm360');
 const payroll = require('../modules/hr/payrollController');
 const reviews = require('../modules/hr/reviewController');
+const insights = require('../modules/reports/insightsController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -309,6 +310,9 @@ router.post('/payroll/runs/:id/refresh', validId(), all('payroll.update'), handl
 router.put('/payroll/runs/:id/lines/:userId', validId(), validId('userId'), all('payroll.update'), handle(payroll.updateLine));
 router.post('/payroll/runs/:id/approve', validId(), all('payroll.approve'), handle(payroll.approveRun));
 router.delete('/payroll/runs/:id', validId(), all('payroll.archive'), handle(payroll.deleteRun));
+
+// ---- the owner's analytics (owner only) ----
+router.get('/insights', (req, res, next) => (req.user.role === 'super_admin' ? next() : res.status(403).json({ message: 'ليس لديك صلاحية لهذا الإجراء. / You do not have permission for this action.', code: 'FORBIDDEN' })), handle(insights.overview));
 
 // ---- monthly performance reviews ----
 router.get('/performance/mine', can('reviews.view'), handle(reviews.mine));

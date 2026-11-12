@@ -69,8 +69,16 @@ export const ErrorBox = ({ error }) => (error ? <div className="alert alert--err
 export function Loading({ state, children }) {
   const { t } = useI18n();
   if (state.error) return <div className="alert alert--error">{state.error}</div>;
-  if (!state.data) return <p className="muted">{t('loading')}</p>;
-  return children(state.data);
+  // A soft placeholder in the shape of content, instead of a bare "loading" line
+  if (!state.data) {
+    return (
+      <div className="skeleton" aria-busy="true">
+        <span className="sr-only" role="status">{t('loading')}</span>
+        <div className="sk sk--title" /><div className="sk" /><div className="sk" /><div className="sk sk--short" />
+      </div>
+    );
+  }
+  return <div className="fade-in">{children(state.data)}</div>;
 }
 
 const STATUS_TONE = { customer: 'ok', interested: 'gold', lead: 'info', lost: 'warn', inactive: 'muted', merged: 'muted', approved: 'ok', pending: 'gold', rejected: 'warn', revoked: 'muted', cancelled: 'muted', expired: 'muted', open: 'gold', done: 'ok', active: 'ok', left: 'muted' };
