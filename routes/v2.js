@@ -29,6 +29,7 @@ const groupCerts = require('../modules/learning/groupCertificates');
 const hub = require('../modules/finance/hubController');
 const crm360 = require('../modules/crm/crm360');
 const payroll = require('../modules/hr/payrollController');
+const reviews = require('../modules/hr/reviewController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -308,6 +309,18 @@ router.post('/payroll/runs/:id/refresh', validId(), all('payroll.update'), handl
 router.put('/payroll/runs/:id/lines/:userId', validId(), validId('userId'), all('payroll.update'), handle(payroll.updateLine));
 router.post('/payroll/runs/:id/approve', validId(), all('payroll.approve'), handle(payroll.approveRun));
 router.delete('/payroll/runs/:id', validId(), all('payroll.archive'), handle(payroll.deleteRun));
+
+// ---- monthly performance reviews ----
+router.get('/performance/mine', can('reviews.view'), handle(reviews.mine));
+router.get('/performance/criteria', can('reviews.view'), handle(reviews.getCriteria));
+router.put('/performance/criteria', all('reviews.manage'), handle(reviews.setCriteria));
+router.get('/performance/board', can('reviews.create', 'team'), handle(reviews.board));
+router.get('/performance', can('reviews.view'), handle(reviews.list));
+router.post('/performance', can('reviews.create', 'team'), handle(reviews.create));
+router.get('/performance/:id', validId(), can('reviews.view'), handle(reviews.get));
+router.put('/performance/:id', validId(), can('reviews.update', 'team'), handle(reviews.update));
+router.post('/performance/:id/submit', validId(), can('reviews.update', 'team'), handle(reviews.submit));
+router.post('/performance/:id/acknowledge', validId(), can('reviews.view'), handle(reviews.acknowledge));
 
 // ---- system health ----
 router.get('/system/health', (req, res, next) => (req.user.role === 'super_admin' ? next() : res.status(403).json({ message: 'Forbidden.' })), handle(system.health));

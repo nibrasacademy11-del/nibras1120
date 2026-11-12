@@ -27,6 +27,7 @@ import Groups, { GroupDetail } from './pages/Groups.jsx';
 import FinanceHub from './pages/FinanceHub.jsx';
 import Website, { Accounts as UserAccounts } from './pages/Website.jsx';
 import Payroll, { MyPayslips } from './pages/Payroll.jsx';
+import PerformanceReviews, { MyReviews as MyPerformance } from './pages/Reviews.jsx';
 import MyAccess from './pages/MyAccess.jsx';
 import PrintSamples from './pages/PrintSamples.jsx';
 import Leads from './pages/Crm360.jsx';
@@ -87,6 +88,8 @@ export default function App() {
         <Route path="/attendance" element={<Guard permission="attendance.view"><Attendance /></Guard>} />
         <Route path="/leaves" element={<Guard permission="leaves.view"><Leaves /></Guard>} />
         <Route path="/payroll" element={<Guard permission="payroll.view" minScope="all"><Payroll /></Guard>} />
+        <Route path="/performance" element={<Guard permission="reviews.create" minScope="team"><PerformanceReviews /></Guard>} />
+        <Route path="/my-performance" element={<Guard permission="reviews.view"><MyPerformance /></Guard>} />
         <Route path="/my-payslips" element={<Guard permission="payroll.view"><MyPayslips /></Guard>} />
         <Route path="/my-payslips/:month" element={<Guard permission="payroll.view"><MyPayslips /></Guard>} />
         <Route path="/complaints" element={<Guard permission="complaints.view"><Complaints /></Guard>} />

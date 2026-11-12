@@ -65,6 +65,8 @@ export const SECTIONS = [
       { to: '/attendance', key: 'attendanceNav', icon: '◷', permission: 'attendance.view', desc: 'd_attendance' },
       { to: '/leaves', key: 'leavesNav', icon: '☂', permission: 'leaves.view', desc: 'd_leaves' },
       { to: '/payroll', key: 'payrollNav', icon: '₤', permission: 'payroll.view', minScope: 'all', desc: 'd_payroll' },
+      { to: '/performance', key: 'reviewsNav', icon: '★', permission: 'reviews.create', minScope: 'team', desc: 'd_reviews' },
+      { to: '/my-performance', key: 'myReviewsNav', icon: '☆', permission: 'reviews.view', staffOnly: true, desc: 'd_myReviews' },
       { to: '/my-payslips', key: 'myPayslipsNav', icon: '₤', permission: 'payroll.view', staffOnly: true, hideWith: 'payroll.view', desc: 'd_myPayslips' }
     ]
   },
