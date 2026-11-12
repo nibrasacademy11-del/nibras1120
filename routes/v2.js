@@ -28,6 +28,7 @@ const groupsApi = require('../modules/learning/groupController');
 const groupCerts = require('../modules/learning/groupCertificates');
 const hub = require('../modules/finance/hubController');
 const crm360 = require('../modules/crm/crm360');
+const payroll = require('../modules/hr/payrollController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -290,6 +291,23 @@ router.get('/leaves', can('leaves.view'), handle(attendance.listLeaves));
 router.post('/leaves', can('leaves.create'), handle(attendance.requestLeave));
 router.post('/leaves/:id/decide', validId(), can('leaves.approve', 'team'), handle(attendance.decideLeave));
 router.post('/leaves/:id/cancel', validId(), can('leaves.create'), handle(attendance.cancelLeave));
+
+// ---- payroll: salaries, advances, the monthly sheet, payslips ----
+router.get('/payroll/mine', can('payroll.view'), handle(payroll.myPayslips));
+router.get('/payroll/runs/:id/payslip', validId(), can('payroll.view'), handle(payroll.payslip));
+router.get('/payroll/runs/:id/payslip/:userId', validId(), validId('userId'), all('payroll.view'), handle(payroll.payslip));
+router.get('/payroll/salaries', all('payroll.view'), handle(payroll.listSalaries));
+router.put('/payroll/salaries/:id', validId(), all('payroll.update'), handle(payroll.setSalary));
+router.get('/payroll/advances', all('payroll.view'), handle(payroll.listAdvances));
+router.post('/payroll/advances', all('payroll.create'), handle(payroll.createAdvance));
+router.post('/payroll/advances/:id/cancel', validId(), all('payroll.update'), handle(payroll.cancelAdvance));
+router.get('/payroll/runs', all('payroll.view'), handle(payroll.listRuns));
+router.post('/payroll/runs', all('payroll.create'), handle(payroll.createRun));
+router.get('/payroll/runs/:id', validId(), all('payroll.view'), handle(payroll.getRun));
+router.post('/payroll/runs/:id/refresh', validId(), all('payroll.update'), handle(payroll.refreshRun));
+router.put('/payroll/runs/:id/lines/:userId', validId(), validId('userId'), all('payroll.update'), handle(payroll.updateLine));
+router.post('/payroll/runs/:id/approve', validId(), all('payroll.approve'), handle(payroll.approveRun));
+router.delete('/payroll/runs/:id', validId(), all('payroll.archive'), handle(payroll.deleteRun));
 
 // ---- system health ----
 router.get('/system/health', (req, res, next) => (req.user.role === 'super_admin' ? next() : res.status(403).json({ message: 'Forbidden.' })), handle(system.health));

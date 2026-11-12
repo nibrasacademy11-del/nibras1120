@@ -63,7 +63,9 @@ export const SECTIONS = [
       { to: '/employees', key: 'employees', icon: '☺', permission: 'employees.view', minScope: 'team', desc: 'd_employees' },
       { to: '/teams', key: 'teams', icon: '▦', permission: 'teams.view', minScope: 'team', desc: 'd_teams' },
       { to: '/attendance', key: 'attendanceNav', icon: '◷', permission: 'attendance.view', desc: 'd_attendance' },
-      { to: '/leaves', key: 'leavesNav', icon: '☂', permission: 'leaves.view', desc: 'd_leaves' }
+      { to: '/leaves', key: 'leavesNav', icon: '☂', permission: 'leaves.view', desc: 'd_leaves' },
+      { to: '/payroll', key: 'payrollNav', icon: '₤', permission: 'payroll.view', minScope: 'all', desc: 'd_payroll' },
+      { to: '/my-payslips', key: 'myPayslipsNav', icon: '₤', permission: 'payroll.view', staffOnly: true, hideWith: 'payroll.view', desc: 'd_myPayslips' }
     ]
   },
   {

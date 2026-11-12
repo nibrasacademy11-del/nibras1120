@@ -23,6 +23,16 @@ const employeeSchema = new mongoose.Schema({
     // Working hours for attendance; empty means the default shift
     shift: { type: mongoose.Schema.Types.ObjectId, ref: 'Shift', default: null },
     hireDate: { type: Date, default: null },
+    // Monthly basic salary, for the payroll sheet (models/payroll.js). Never loaded unless asked for
+    // with .select('+salary'), so employee lists and files do not show it; payroll code reads it.
+    salary: {
+        type: new mongoose.Schema({
+            basic: { type: Number, default: 0, min: 0 },
+            currency: { type: String, default: 'EGP' }
+        }, { _id: false }),
+        default: () => ({ basic: 0, currency: 'EGP' }),
+        select: false
+    },
     // active, or left (account disabled, customers transferred, history kept)
     status: { type: String, enum: ['active', 'left'], default: 'active', index: true },
     leftAt: { type: Date, default: null },
