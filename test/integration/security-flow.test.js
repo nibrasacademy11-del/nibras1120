@@ -27,6 +27,11 @@ const skip = !TEST_URI ? 'TEST_MONGO_URI is not set' : TEST_URI === liveUri() ? 
 test('security flow', { skip }, async (t) => {
     process.env.MONGO_URI = TEST_URI;
     process.env.JWT_SECRET = 'integration-' + Math.random();
+    // No real emails from tests: empty (not deleted), so loading .env cannot fill them back in
+    process.env.EMAIL_USER = '';
+    process.env.EMAIL_PASS = '';
+    process.env.ADMIN_EMAIL = '';
+    process.env.ADMIN_PASSWORD = '';
     delete process.env.MONGO_URI_FALLBACK;
     const mongoose = require('mongoose');
     const bcrypt = require('bcryptjs');
@@ -172,7 +177,9 @@ test('security flow', { skip }, async (t) => {
             const adm = client();
             assert.equal((await adm('POST', '/api/auth/login', { email: emails.emp, password: pw })).status, 200);
             assert.equal((await adm('PUT', `/api/auth/users/${target._id}`, { role: 'admin' })).status, 403);
-            assert.equal((await adm('PUT', `/api/auth/users/${target._id}`, { role: 'team_leader' })).status, 200);
+            // staff roles are given from Employees (with the HR file and team), not from the accounts page
+            assert.equal((await adm('PUT', `/api/auth/users/${target._id}`, { role: 'team_leader' })).status, 400);
+            assert.equal((await adm('PUT', `/api/auth/users/${target._id}`, { name: 'اسم جديد' })).status, 200);
             const sa = await User.findOne({ email: emails.sup });
             assert.equal((await adm('PUT', `/api/auth/users/${sa._id}`, { name: 'x' })).status, 403);
         });

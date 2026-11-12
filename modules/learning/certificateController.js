@@ -178,7 +178,10 @@ async function issueOne(req, { enrollmentId, moduleId, templateId, names, replac
     const hours = kind === 'module' ? programModule?.hours || 0 : 0;
     const template = await templateFor(kind, templateId);
     const now = new Date();
-    const number = replaces ? design.versionedNumber(replaces.cert_num.replace(/-\d+$/, ''), version) : (await nextNumber('certificate')).number;
+    // A reissue keeps the original number and adds the version: NC-0000001 -> NC-0000001-2 -> -3.
+    // Only a number that already carries a version (version 2 or more) drops its last part first.
+    const baseNumber = replaces && (replaces.version || 1) > 1 ? replaces.cert_num.replace(/-\d+$/, '') : replaces ? replaces.cert_num : '';
+    const number = replaces ? design.versionedNumber(baseNumber, version) : (await nextNumber('certificate')).number;
     const nameAr = (names && names.nameAr) || customer.nameAr;
     const nameEn = (names && names.nameEn) || customer.nameEn || '';
     const data = {

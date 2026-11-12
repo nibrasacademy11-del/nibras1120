@@ -172,6 +172,10 @@ exports.create = async (req, res) => {
 async function createEnrollment(req, { customer, program, cohort = null, owner = null, enrolledAt = new Date(), notes = '' }) {
     const team = owner ? await teamOf(owner) : null;
     const modules = await ProgramModule.find({ program: program._id, active: true }).sort({ order: 1 }).lean();
+    // Checked here too, not only by the unique index: a new database may not have built the index yet
+    if (await Enrollment.exists({ customer: customer._id, program: program._id, status: { $in: Enrollment.OPEN_STATUSES } })) {
+        throw new HttpError(409, 'العميل مسجل في هذا البرنامج بالفعل. / The customer is already enrolled in this program.', 'ALREADY_ENROLLED');
+    }
     const { number } = await nextNumber('enrollment');
 
     let e;

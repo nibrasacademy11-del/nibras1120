@@ -21,7 +21,11 @@ const skip = !TEST_URI ? 'TEST_MONGO_URI is not set' : TEST_URI === liveUri() ? 
 test('group certificates flow', { skip }, async (t) => {
     process.env.MONGO_URI = TEST_URI;
     process.env.JWT_SECRET = 'integration-' + Math.random();
-    delete process.env.EMAIL_USER;   // no real emails from tests
+    // No real emails from tests: empty (not deleted), so loading .env cannot fill them back in
+    process.env.EMAIL_USER = '';
+    process.env.EMAIL_PASS = '';
+    process.env.ADMIN_EMAIL = '';
+    process.env.ADMIN_PASSWORD = '';
     const mongoose = require('mongoose');
     const bcrypt = require('bcryptjs');
     const app = require('../../server.js');

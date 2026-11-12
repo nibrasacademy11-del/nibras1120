@@ -20,6 +20,11 @@ const skip = !TEST_URI ? 'TEST_MONGO_URI is not set' : TEST_URI === liveUri() ? 
 test('groups and lectures flow', { skip }, async (t) => {
     process.env.MONGO_URI = TEST_URI;
     process.env.JWT_SECRET = 'integration-' + Math.random();
+    // No real emails from tests: empty (not deleted), so loading .env cannot fill them back in
+    process.env.EMAIL_USER = '';
+    process.env.EMAIL_PASS = '';
+    process.env.ADMIN_EMAIL = '';
+    process.env.ADMIN_PASSWORD = '';
     for (const k of ['ZOOM_ACCOUNT_ID', 'ZOOM_CLIENT_ID', 'ZOOM_CLIENT_SECRET']) delete process.env[k];
     const mongoose = require('mongoose');
     const bcrypt = require('bcryptjs');
@@ -89,13 +94,13 @@ test('groups and lectures flow', { skip }, async (t) => {
             const c1 = await a('POST', '/api/v2/customers', { nameAr: 'متدرب الهوية', identity: { nationalId: nid }, contact: { phone: `0105${String(Date.now()).slice(-7)}` } });
             assert.equal(c1.status, 201);
             customerIds.push(c1.data.item.id);
-            const file = await Customer.create({ customerNo: `NB-T${tag}`, internalId: `i-${tag}`, nameAr: 'متدرب البوابة', user: learner._id, status: 'customer', contact: { email: learner.email } });
+            const file = await Customer.create({ customerNo: `NB-8${String(Date.now()).slice(-8)}`, internalId: `i-${tag}`, nameAr: 'متدرب البوابة', user: learner._id, status: 'customer', contact: { email: learner.email } });
             customerIds.push(String(file._id));
 
             assert.equal((await w('POST', `/api/v2/groups/${cohortId}/members/preview`, { text: nid })).status, 403, 'an employee cannot add members');
             const p = await a('POST', `/api/v2/groups/${cohortId}/members/preview`, { text: `${nid}\n${file.customerNo}\n00000000000099\n${nid}` });
             assert.equal(p.status, 200);
-            assert.equal(p.data.found.length, 2);
+            assert.equal(p.data.found.length, 2, JSON.stringify(p.data));
             assert.equal(p.data.found.find((f) => f.customerNo === c1.data.item.customerNo).matchedBy, 'national_id');
             assert.deepEqual(p.data.notFound, ['00000000000099']);
             assert.ok(p.data.found.every((f) => !f.enrollmentNo), 'neither is enrolled yet');

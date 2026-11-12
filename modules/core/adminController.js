@@ -46,7 +46,7 @@ exports.updateRole = async (req, res) => {
         after = P.sanitizeGrants(req.body.grants);
         await RolePolicy.findOneAndUpdate(
             { role },
-            { role, grants: after, updatedBy: req.user.id },
+            { $set: { role, entries: RolePolicy.toEntries(after), updatedBy: req.user.id }, $unset: { grants: 1 } },
             { upsert: true, new: true, runValidators: true }
         );
     }

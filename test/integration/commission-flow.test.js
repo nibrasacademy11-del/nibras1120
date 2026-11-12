@@ -20,6 +20,11 @@ const skip = !TEST_URI ? 'TEST_MONGO_URI is not set' : TEST_URI === liveUri() ? 
 test('commission flow', { skip }, async (t) => {
     process.env.MONGO_URI = TEST_URI;
     process.env.JWT_SECRET = 'integration-' + Math.random();
+    // No real emails from tests: empty (not deleted), so loading .env cannot fill them back in
+    process.env.EMAIL_USER = '';
+    process.env.EMAIL_PASS = '';
+    process.env.ADMIN_EMAIL = '';
+    process.env.ADMIN_PASSWORD = '';
     const mongoose = require('mongoose');
     const bcrypt = require('bcryptjs');
     const app = require('../../server.js');
@@ -111,7 +116,8 @@ test('commission flow', { skip }, async (t) => {
             assert.equal(p.status, 201, JSON.stringify(p.data));
             assert.equal(p.data.item.amount, 75);
             assert.equal((await f('POST', '/api/v2/commissions/payouts', { beneficiary: emp._id, account: acct._id })).data.code, 'NOTHING_TO_PAY');
-            assert.equal((await e('GET', '/api/v2/commissions/statement')).data.totals.paid, 75);
+            // totals are per currency (phase 11)
+            assert.equal((await e('GET', '/api/v2/commissions/statement')).data.totals.find((x) => x.currency === acct.currency).paid, 75);
         });
 
         await t.test('a void after payout leaves a negative line for the next month', async () => {

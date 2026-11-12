@@ -207,7 +207,7 @@ const REPORTS = [
         filters: [COMMON.from, COMMON.to],
         async run(req, f) {
             // One row per month and currency: amounts in different currencies are never added together
-            const byMonth = (model, dateField, match, currencyField = '$currency', valueField = '$amount', pre = []) => model.aggregate([{ $match: { ...match, ...range(f, dateField) } }, ...pre, { $group: { _id: { m: { $dateToString: { format: '%Y-%m', date: `${dateField}` } }, c: currencyField }, v: { $sum: valueField } } }]);
+            const byMonth = (model, dateField, match, currencyField = '$currency', valueField = '$amount', pre = []) => model.aggregate([{ $match: { ...match, ...range(f, dateField) } }, ...pre, { $group: { _id: { m: { $dateToString: { format: '%Y-%m', date: `$${dateField}` } }, c: currencyField }, v: { $sum: valueField } } }]);
             const [pay, ref, exp, com] = await Promise.all([
                 byMonth(F.Payment, 'paidAt', { status: 'confirmed' }),
                 byMonth(F.Refund, 'paidAt', { status: 'paid' }),

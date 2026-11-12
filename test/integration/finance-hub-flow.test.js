@@ -20,7 +20,11 @@ const skip = !TEST_URI ? 'TEST_MONGO_URI is not set' : TEST_URI === liveUri() ? 
 test('finance hub flow', { skip }, async (t) => {
     process.env.MONGO_URI = TEST_URI;
     process.env.JWT_SECRET = 'integration-' + Math.random();
-    delete process.env.EMAIL_USER;
+    // No real emails from tests: empty (not deleted), so loading .env cannot fill them back in
+    process.env.EMAIL_USER = '';
+    process.env.EMAIL_PASS = '';
+    process.env.ADMIN_EMAIL = '';
+    process.env.ADMIN_PASSWORD = '';
     const mongoose = require('mongoose');
     const bcrypt = require('bcryptjs');
     const app = require('../../server.js');
@@ -77,7 +81,7 @@ test('finance hub flow', { skip }, async (t) => {
             assert.equal(wa.status, 200, JSON.stringify(wa.data));
             assert.ok(wa.data.link.startsWith('https://wa.me/201112220796?text='));
             assert.equal((await a('POST', `/api/v2/finance/receivables/${file._id}/remind`, { channel: 'portal' })).status, 200);
-            assert.equal((await a('POST', `/api/v2/finance/receivables/${file._id}/remind`, { channel: 'email' })).data.code, 'NO_EMAIL');
+            assert.equal((await a('POST', `/api/v2/finance/receivables/${file._id}/remind`, { channel: 'email' })).data.code, 'NO_MAIL', 'no email on the file: the portal account email is used, and email is off in tests');
             const again = await a('GET', '/api/v2/finance/receivables?state=overdue');
             assert.ok(again.data.items.find((x) => x.customer._id === String(file._id)).lastReminderAt);
         });
