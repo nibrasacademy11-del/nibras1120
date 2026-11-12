@@ -35,20 +35,25 @@ node tools/test-all.js
    | `ATTENDANCE_SYNC_SECRET` | فقط لو هتستخدموا جهاز الحضور المحلي |
    | `REQUIRE_2FA` | `admins` (موصى به) |
    | `SITE_URL` | `https://www.nibras-ac.com` |
+   | `STAFF_HOST` | `staff.nibras-ac.com` (بعد ما الدومين الفرعي يشتغل، انظر `docs/DOMAINS.md`) |
+   | `CMS_HOST` | `cms.nibras-ac.com` |
+   | `STAFF_COOKIE_DOMAIN` | `.nibras-ac.com` |
    | `ZOOM_ACCOUNT_ID` / `ZOOM_CLIENT_ID` / `ZOOM_CLIENT_SECRET` | من تطبيق زوم (الخطوات تحت في "ربط زوم") |
    | `ZOOM_HOST_USER` | إيميل حساب زوم اللي هيستضيف المحاضرات |
 
 3. **الدمج والنشر**:
    ```
    git checkout main
-   git merge --no-ff erp-admin-ux
+   git merge --no-ff erp-staff-portal
    git push origin main
    ```
    ثم تأكد من `/api/health` = `ok` ومن فتح `/portal/`.
-4. **مدير النظام**:
+4. **المالك الأساسي** (info@nibras-ac.com). جرّب الأول بـ `--dry-run`:
    ```
-   node tools/promote-super-admin.js <إيميل صاحب الأكاديمية> --production
+   node tools/promote-super-admin.js info@nibras-ac.com --primary --dry-run --production
+   node tools/promote-super-admin.js info@nibras-ac.com --primary --production
    ```
+   لو مفيش حساب بالإيميل ده، ضيف `--create "اسم المالك"`: الحساب بيتعمل من غير كلمة سر، والمالك يحط كلمة السر من «نسيت كلمة السر». لو الحساب موجود، بياناته وكلمة سره بتفضل زي ما هي.
 5. **نقل البيانات القديمة** (كل سكريبت: تجربة أولاً ثم `--apply`):
    ```
    node data/migrations/001-crm-from-legacy.js --production
