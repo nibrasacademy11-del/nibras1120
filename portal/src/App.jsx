@@ -28,7 +28,6 @@ import FinanceHub from './pages/FinanceHub.jsx';
 import Website, { Accounts as UserAccounts } from './pages/Website.jsx';
 import Payroll, { MyPayslips } from './pages/Payroll.jsx';
 import PerformanceReviews, { MyReviews as MyPerformance } from './pages/Reviews.jsx';
-import Insights from './pages/Insights.jsx';
 import MyAccess from './pages/MyAccess.jsx';
 import PrintSamples from './pages/PrintSamples.jsx';
 import Leads from './pages/Crm360.jsx';
@@ -96,7 +95,7 @@ export default function App() {
         <Route path="/complaints" element={<Guard permission="complaints.view"><Complaints /></Guard>} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/reports/:id" element={<ReportView />} />
-        <Route path="/insights" element={me.user.role === 'super_admin' ? <Insights /> : <div className="card empty">{t('forbidden')}</div>} />
+        <Route path="/insights" element={<Navigate to="/" replace />} />
         <Route path="/analytics" element={<Guard permission="reports.view" minScope="team"><Analytics /></Guard>} />
         <Route path="/certificates" element={<Guard permission="certificates.view"><Certificates /></Guard>} />
         <Route path="/certificates/:id" element={<CertificateDetail />} />

@@ -7,6 +7,7 @@ import App from './App.jsx';
 import './styles.css';
 import './refresh.css';
 import './motion.css';
+import './charts.css';
 
 let reported = 0;
 function report(message, stack) {

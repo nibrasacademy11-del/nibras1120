@@ -23,6 +23,9 @@ const { _evaluate: evaluateAttendance } = require('../hr/attendanceController');
 const { _unpaidRows: unpaidRows } = require('../finance/hubController');
 
 const DAY = 864e5;
+// Day or month buckets, in Cairo time
+const bucket = (p, field) => ({ $dateToString: { format: p.days > 62 ? '%Y-%m' : '%Y-%m-%d', date: '$' + field, timezone: 'Africa/Cairo' } });
+const series = (rows) => rows.map((r) => ({ d: r._id, v: r.n }));
 const ymd = (d) => d.toISOString().slice(0, 10);
 
 // from / to are days (YYYY-MM-DD, Cairo); the previous period has the same number of days
@@ -65,13 +68,21 @@ async function money(p, a, b) {
         F.Payment.aggregate([{ $match: pay(a, b) }, { $group: { _id: { d: { $dateToString: { format: p.days > 62 ? '%Y-%m' : '%Y-%m-%d', date: '$paidAt', timezone: 'Africa/Cairo' } }, c: '$currency' }, v: { $sum: '$amount' } } }, { $sort: { '_id.d': 1 } }]),
         perCurrency(C.CommissionLine, { status: { $ne: 'cancelled' }, ...between('date', a, b) })
     ]);
+    const [expenseTrend, pending, topCustomers] = await Promise.all([
+        F.Expense.aggregate([{ $match: exp(a, b) }, { $group: { _id: { d: bucket(p, 'date'), c: '$currency' }, v: { $sum: '$amount' } } }, { $sort: { '_id.d': 1 } }]),
+        perCurrency(F.Payment, { status: 'pending' }),
+        F.Payment.aggregate([{ $match: pay(a, b) }, { $group: { _id: { k: '$customer', c: '$currency' }, v: { $sum: '$amount' }, n: { $sum: 1 } } }, { $sort: { v: -1 } }, { $limit: 6 }, { $lookup: { from: 'customers', localField: '_id.k', foreignField: '_id', as: 'x' } }])
+    ]);
     // What customers owe today (not limited to the period)
     const rows = await unpaidRows({}, new Date());
     const owed = {};
     const overdue = {};
+    const soon = {};
+    const in30 = Date.now() + 30 * DAY;
     for (const r of rows) {
         owed[r.currency] = M.round((owed[r.currency] || 0) + r.remaining, 3);
         if (r.late) overdue[r.currency] = M.round((overdue[r.currency] || 0) + r.remaining, 3);
+        else if (r.dueDate && new Date(r.dueDate).getTime() <= in30) soon[r.currency] = M.round((soon[r.currency] || 0) + r.remaining, 3);
     }
     const list = (o) => Object.entries(o).map(([currency, amount]) => ({ currency, amount }));
     const kv = (rowsIn) => rowsIn.map((r) => ({ key: r._id.k || '—', currency: r._id.c, amount: M.round(r.v, 3), n: r.n }));
@@ -83,6 +94,9 @@ async function money(p, a, b) {
         trend: trendRows.map((r) => ({ d: r._id.d, currency: r._id.c, amount: M.round(r.v, 3) })),
         trendUnit: p.days > 62 ? 'month' : 'day',
         commissions,
+        expenseTrend: expenseTrend.map((r) => ({ d: r._id.d, currency: r._id.c, amount: M.round(r.v, 3) })),
+        pending, dueNext30: list(soon),
+        topCustomers: topCustomers.map((r) => ({ name: r.x[0] ? r.x[0].nameAr : '—', customerNo: r.x[0] ? r.x[0].customerNo : '', id: r._id.k, currency: r._id.c, amount: M.round(r.v, 3), n: r.n })),
         owedNow: list(owed), overdueNow: list(overdue), lateCustomersNow: new Set(rows.filter((r) => r.late).map((r) => String(r.customerId))).size
     };
 }
@@ -102,6 +116,11 @@ async function sales(p, a, b) {
         Customer.aggregate([{ $match: reg(a, b) }, { $group: { _id: '$owner', n: { $sum: 1 }, won: { $sum: { $cond: [{ $eq: ['$status', 'customer'] }, 1, 0] } } } }, { $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'u' } }, { $sort: { won: -1, n: -1 } }]),
         F.Payment.aggregate([{ $match: { status: 'confirmed', ...between('paidAt', a, b) } }, { $group: { _id: { u: '$collectedBy', c: '$currency' }, v: { $sum: '$amount' } } }])
     ]);
+    const [funnel, leadTrend, allNow] = await Promise.all([
+        groupCount(Customer, reg(a, b), '$status'),
+        Customer.aggregate([{ $match: reg(a, b) }, { $group: { _id: bucket(p, 'registeredAt'), n: { $sum: 1 } } }, { $sort: { _id: 1 } }]),
+        groupCount(Customer, { status: { $ne: 'merged' }, archived: { $ne: true } }, '$status')
+    ]);
     const collected = {};
     for (const r of collectedByOwner) (collected[String(r._id.u)] = collected[String(r._id.u)] || []).push({ currency: r._id.c, amount: M.round(r.v, 3) });
     return {
@@ -110,6 +129,8 @@ async function sales(p, a, b) {
         conversionPrev: leadsPrev ? Math.round((convertedPrev / leadsPrev) * 1000) / 10 : 0,
         bySource: bySource.map((r) => ({ key: r._id || '—', n: r.n, won: r.won })),
         byCountry, lost, lostReasons,
+        funnel: Object.fromEntries(funnel.map((r) => [r.key, r.n])), statusNow: Object.fromEntries(allNow.map((r) => [r.key, r.n])),
+        trend: series(leadTrend),
         byEmployee: byOwner.map((r) => ({ name: r.u[0] ? r.u[0].name : null, n: r.n, won: r.won, collected: collected[String(r._id)] || [] }))
     };
 }
@@ -127,28 +148,36 @@ async function learning(p, a, b) {
         Lecture.find({ status: 'scheduled', ...between('startsAt', a, b < new Date() ? b : new Date()) }).select('_id cohort').lean(),
         Cohort.countDocuments({ status: { $in: ['open', 'running'] } })
     ]);
+    const [enrollTrend, paper] = await Promise.all([
+        Enrollment.aggregate([{ $match: between('enrolledAt', a, b) }, { $group: { _id: bucket(p, 'enrolledAt'), n: { $sum: 1 } } }, { $sort: { _id: 1 } }]),
+        groupCount(Certificate, { kind: { $in: ['module', 'program'] }, status: 'Valid' }, '$delivery.paper.status')
+    ]);
+    let byGroup = [];
     let attendanceRate = null;
     if (lectures.length) {
+        const att = await LectureAttendance.aggregate([{ $match: { lecture: { $in: lectures.map((l) => l._id) } } }, { $lookup: { from: 'lectures', localField: 'lecture', foreignField: '_id', as: 'l' } }, { $group: { _id: { $arrayElemAt: ['$l.cohort', 0] }, present: { $sum: { $cond: ['$present', 1, 0] } }, n: { $sum: 1 } } }, { $lookup: { from: 'cohorts', localField: '_id', foreignField: '_id', as: 'c' } }]);
+        byGroup = att.map((r) => ({ key: r.c[0] ? r.c[0].nameAr : '—', rate: r.n ? Math.round((r.present / r.n) * 100) : 0, n: r.n })).sort((x, y) => y.rate - x.rate);
         const ids = lectures.map((l) => l._id);
         const [present, marked] = await Promise.all([LectureAttendance.countDocuments({ lecture: { $in: ids }, present: true }), LectureAttendance.countDocuments({ lecture: { $in: ids } })]);
         attendanceRate = marked ? Math.round((present / marked) * 100) : null;
     }
-    return { enrolled, enrolledPrev, byProgram, completed, certificates: certs, certificatesTotal: certs.reduce((s, r) => s + r.n, 0), certificatesPrev: certsPrev, paperDelivered, lecturesHeld: lectures.length, lectureAttendanceRate: attendanceRate, activeGroups };
+    return { trend: series(enrollTrend), byGroup, paper: Object.fromEntries(paper.map((r) => [r.key || 'none', r.n])), enrolled, enrolledPrev, byProgram, completed, certificates: certs, certificatesTotal: certs.reduce((s, r) => s + r.n, 0), certificatesPrev: certsPrev, paperDelivered, lecturesHeld: lectures.length, lectureAttendanceRate: attendanceRate, activeGroups };
 }
 
 // ---- customer service ----
 async function service(p, a, b) {
-    const [opened, openedPrev, resolved, byCategory, openNow, satisfaction, resolveTimes] = await Promise.all([
+    const [opened, openedPrev, resolved, byCategory, openNow, byStatus, satisfaction, resolveTimes] = await Promise.all([
         Complaint.countDocuments(between('createdAt', a, b)),
         Complaint.countDocuments(between('createdAt', p.prevFrom, p.prevTo)),
         Complaint.countDocuments(between('resolvedAt', a, b)),
         groupCount(Complaint, between('createdAt', a, b), '$category'),
         Complaint.countDocuments({ status: { $in: ['open', 'in_progress'] } }),
+        groupCount(Complaint, {}, '$status'),
         Satisfaction.aggregate([{ $match: between('updatedAt', a, b) }, { $group: { _id: null, avg: { $avg: '$score' }, n: { $sum: 1 } } }]),
         Complaint.aggregate([{ $match: { ...between('resolvedAt', a, b), resolvedAt: { $ne: null } } }, { $group: { _id: null, h: { $avg: { $divide: [{ $subtract: ['$resolvedAt', '$createdAt'] }, 3600e3] } } } }])
     ]);
     return {
-        opened, openedPrev, resolved, byCategory, openNow,
+        opened, openedPrev, resolved, byCategory, openNow, byStatus: Object.fromEntries(byStatus.map((r) => [r.key, r.n])),
         satisfaction: satisfaction[0] ? { avg: Math.round(satisfaction[0].avg * 10) / 10, n: satisfaction[0].n } : null,
         avgResolveHours: resolveTimes[0] ? Math.round(resolveTimes[0].h) : null
     };
@@ -204,10 +233,26 @@ async function staff(p, a, b) {
     };
 }
 
+// What waits for the owner right now (not limited to the period)
+async function attention() {
+    const now = new Date();
+    const A = require('../../models/attendance');
+    const [payments, approvals, refunds, tasksOverdue, complaintsOpen, leaves, reviewsDraft] = await Promise.all([
+        F.Payment.countDocuments({ status: 'pending' }),
+        F.Approval.countDocuments({ status: 'pending' }),
+        F.Refund.countDocuments({ status: 'pending' }),
+        Task.countDocuments({ status: 'open', dueAt: { $lt: now } }),
+        Complaint.countDocuments({ status: { $in: ['open', 'in_progress'] } }),
+        A.LeaveRequest.countDocuments({ status: 'pending' }),
+        Review.countDocuments({ status: 'draft' })
+    ]);
+    return { payments, approvals, refunds, tasksOverdue, complaintsOpen, leaves, reviewsDraft };
+}
+
 exports.overview = async (req, res) => {
     const p = periodOf(req.query);
-    const [m, s, l, sv, st] = await Promise.all([money(p, p.from, p.to), sales(p, p.from, p.to), learning(p, p.from, p.to), service(p, p.from, p.to), staff(p, p.from, p.to)]);
-    res.json({ from: ymd(new Date(p.from.getTime() + 2 * 3600e3)), to: ymd(new Date(p.to.getTime() + 2 * 3600e3)), days: p.days, prevFrom: ymd(new Date(p.prevFrom.getTime() + 2 * 3600e3)), prevTo: ymd(new Date(p.prevTo.getTime() + 2 * 3600e3)), money: m, sales: s, learning: l, service: sv, staff: st, generatedAt: new Date() });
+    const [m, s, l, sv, st, att] = await Promise.all([money(p, p.from, p.to), sales(p, p.from, p.to), learning(p, p.from, p.to), service(p, p.from, p.to), staff(p, p.from, p.to), attention()]);
+    res.json({ from: ymd(new Date(p.from.getTime() + 2 * 3600e3)), to: ymd(new Date(p.to.getTime() + 2 * 3600e3)), days: p.days, prevFrom: ymd(new Date(p.prevFrom.getTime() + 2 * 3600e3)), prevTo: ymd(new Date(p.prevTo.getTime() + 2 * 3600e3)), money: m, sales: s, learning: l, service: sv, staff: st, attention: att, unit: p.days > 62 ? 'month' : 'day', generatedAt: new Date() });
 };
 
 exports._periodOf = periodOf;

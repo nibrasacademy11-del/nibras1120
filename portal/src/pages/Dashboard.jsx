@@ -3,6 +3,7 @@ import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { Loading, Pill, useLoad } from '../components/ui.jsx';
 import { Amounts } from './Finance.jsx';
+import OwnerHome from './OwnerHome.jsx';
 
 const ORDER = ['lead', 'interested', 'customer', 'lost', 'inactive'];
 
@@ -103,6 +104,8 @@ export default function Dashboard() {
   const state = useLoad('/api/v2/dashboard');
   const { user, security } = me;
   const level = user.level || 'employee';
+  // The owner's home is the full analytics of the academy
+  if (level === 'owner') return <OwnerHome />;
 
   return (
     <>
