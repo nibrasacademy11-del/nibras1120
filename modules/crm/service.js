@@ -46,6 +46,8 @@ const SETTING_DEFAULTS = {
     'customers.lookupNamePolicy': 'partial',
     // A module goes to the team leader before the admin when the enrollment's team has a leader
     'enrollments.teamLeaderReview': true,
+    // after a person accepts a team invitation: 'approval' (the owner or HR approves) or 'auto'
+    'teams.invitePolicy': 'approval',
     // The academy's main currency: the default in forms and the one exchange rates are written against.
     // Reports never convert: every currency is shown on its own.
     'finance.baseCurrency': 'EGP',

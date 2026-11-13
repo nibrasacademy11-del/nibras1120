@@ -192,6 +192,11 @@ exports.approveRun = async (req, res) => {
     } finally {
         await session.endSession();
     }
+    // Each employee is told their payslip is ready (no amounts in the notice)
+    const { notify } = require('../crm/service');
+    for (const line of run.lines) {
+        await notify(line.user, { type: 'payroll.published', titleAr: `قسيمة مرتبك لشهر ${run.month} جاهزة`, titleEn: `Your ${run.month} payslip is ready`, link: '/my-payslips', dedupeKey: `payslip:${run._id}:${line.user}` });
+    }
     await audit.record(req, { action: 'payroll.run_approved', resource: 'payroll', resourceId: run._id, summary: `Payroll sheet ${run.month} approved: ${run.lines.length} employees`, meta: { totals: PR.totals(run.lines) } });
     res.json({ item: runView(run) });
 };
@@ -222,4 +227,10 @@ exports.payslip = async (req, res) => {
     const line = run.lines.find((l) => String(l.user) === String(userId));
     if (!line) throw new HttpError(404, 'Not found.');
     res.json({ month: run.month, approvedAt: run.approvedAt, line });
+};
+
+// The employee's own advances (only theirs)
+exports.myAdvances = async (req, res) => {
+    const items = await Advance.find({ user: oid(req.user.id) }).select('amount currency installments startMonth repaid repayments status reason createdAt').sort({ createdAt: -1 }).lean();
+    res.json({ items });
 };

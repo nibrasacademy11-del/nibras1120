@@ -209,6 +209,21 @@ exports.updateEmployee = async (req, res) => {
         jobTitle: req.body.jobTitle !== undefined ? str(req.body.jobTitle, 120) : emp.jobTitle
     };
     const moved = String(next.department || '') !== before.department || String(next.team || '') !== before.team || next.jobTitle !== before.jobTitle;
+    // Moving someone to another team needs teams.assign: everywhere (all), or within the actor's
+    // department (both teams in it). The team id from the request is checked, never trusted.
+    const teamChanged = String(next.team || '') !== before.team;
+    if (teamChanged) {
+        const scope = P.scopeFor(req.user.grants, 'teams.assign');
+        const deptTeams = (req.user.departmentTeamIds || []).map(String);
+        const inDept = scope === 'department' && (!before.team || deptTeams.includes(before.team)) && (!next.team || deptTeams.includes(String(next.team)));
+        if (scope !== 'all' && !inDept) throw new HttpError(403, 'نقل الموظفين بين الفرق للمالك والموارد البشرية. / Only the owner and HR move employees between teams.', 'FORBIDDEN');
+        if (String(emp.user._id || emp.user) === String(req.user.id) && req.user.role !== 'super_admin') throw new HttpError(403, 'لا يمكنك نقل نفسك. / You cannot move yourself.', 'SELF_APPROVAL');
+        if (next.team) {
+            const target = await Team.findById(next.team).select('active department');
+            if (!target || !target.active) throw new HttpError(400, 'الفريق مش موجود أو موقوف. / The team does not exist or is inactive.');
+            if (req.body.department === undefined) next.department = target.department || next.department;
+        }
+    }
     if (moved) {
         const now = new Date();
         const open = emp.history.find((h) => !h.to);
@@ -237,6 +252,12 @@ exports.updateEmployee = async (req, res) => {
     }
 
     await emp.save();
+    if (teamChanged) {
+        const { notify } = require('../crm/service');
+        const newTeam = next.team ? await Team.findById(next.team).select('nameAr leader').lean() : null;
+        await notify(emp.user._id || emp.user, { type: 'team.moved', titleAr: newTeam ? `اتنقلت لفريق ${newTeam.nameAr}` : 'اتشلت من فريقك', titleEn: newTeam ? `You moved to the team ${newTeam.nameAr}` : 'You were removed from your team', link: '/', dedupeKey: `moved:${emp._id}:${Date.now()}` });
+        if (newTeam && newTeam.leader) await notify(newTeam.leader, { type: 'team.member_added', titleAr: `${emp.nameAr} انضم لفريقك`, titleEn: `${emp.nameAr} joined your team`, link: '/my-team', dedupeKey: `moved-in:${emp._id}:${Date.now()}` });
+    }
     const after = { nameAr: emp.nameAr, nameEn: emp.nameEn, jobTitle: emp.jobTitle, phone: emp.phone, department: String(emp.department?._id || emp.department || ''), team: String(emp.team?._id || emp.team || '') };
     const changes = audit.diff(before, after);
     if (Object.keys(changes).length) {
@@ -299,4 +320,12 @@ exports.staffDirectory = async (req, res) => {
             team: byUser[String(u._id)]?.team || null
         }))
     });
+};
+
+// The signed-in person's own HR file: team, leader, department, job; nothing about others
+exports.myFile = async (req, res) => {
+    const emp = await Employee.findOne({ user: req.user.id }).select('employeeNo nameAr nameEn jobTitle team department phone hireDate status').populate('team', 'nameAr leader').populate('department', 'nameAr').lean();
+    if (!emp) return res.json({ item: null });
+    const leader = emp.team && emp.team.leader ? await User.findById(emp.team.leader).select('name').lean() : null;
+    res.json({ item: { ...emp, team: emp.team ? { _id: emp.team._id, nameAr: emp.team.nameAr } : null, leader: leader ? leader.name : '', iAmLeader: !!(emp.team && String(emp.team.leader) === String(req.user.id)) } });
 };

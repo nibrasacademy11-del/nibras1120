@@ -89,3 +89,28 @@ exports.listAudit = async (req, res) => {
     ]);
     res.json({ items, total, page, limit });
 };
+
+// ---- extra permissions for one person (owner only: roles.manage) ----
+// They add to the person's role, never remove; read on every request, so they apply at once.
+exports.getExtraGrants = async (req, res) => {
+    const user = await User.findById(req.params.id).select('name role extraGrants isPrimaryOwner').lean();
+    if (!user) throw new HttpError(404, 'Not found.');
+    res.json({ user: { id: String(user._id), name: user.name, role: user.role }, extra: Object.fromEntries((user.extraGrants || []).map((g) => [g.key, g.scope])), role: P.effectiveGrants(user.role, await policyStore.loadOverrides()) });
+};
+
+exports.setExtraGrants = async (req, res) => {
+    const user = await User.findById(req.params.id).select('name email role extraGrants isPrimaryOwner');
+    if (!user) throw new HttpError(404, 'Not found.');
+    if (!P.isStaffRole(user.role)) throw new HttpError(400, 'الصلاحيات الإضافية للموظفين بس. / Extra permissions are for staff only.');
+    if (String(user._id) === String(req.user.id)) throw new HttpError(403, 'لا يمكنك تعديل صلاحياتك. / You cannot change your own permissions.', 'SELF_APPROVAL');
+    const reason = String(req.body.reason || '').trim();
+    if (!reason) throw new HttpError(400, 'السبب مطلوب. / A reason is required.', 'REASON_REQUIRED');
+    const clean = P.sanitizeGrants(req.body.grants);
+    // the role management itself never goes to someone through extras
+    for (const k of Object.keys(clean)) if (k.startsWith('roles.')) delete clean[k];
+    const before = Object.fromEntries((user.extraGrants || []).map((g) => [g.key, g.scope]));
+    user.extraGrants = Object.entries(clean).map(([key, scope]) => ({ key, scope }));
+    await user.save();
+    await audit.record(req, { action: 'roles.extra_grants_changed', resource: 'roles', resourceId: user._id, summary: `Extra permissions of ${user.email}`, reason, changes: { extraGrants: { from: JSON.stringify(before), to: JSON.stringify(clean) } } });
+    res.json({ extra: clean });
+};

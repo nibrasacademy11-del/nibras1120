@@ -89,7 +89,8 @@ test('commission flow', { skip }, async (t) => {
             const lead = (await tl('GET', '/api/v2/commissions/statement')).data;
             assert.equal(lead.totals[0].earned, 20);
             const teamView = (await tl('GET', `/api/v2/commissions/statement?user=${emp._id}`));
-            assert.equal(teamView.status, 200, 'the leader sees team members');
+            // a member's commissions are their private money: not even the team leader sees them (RBAC-MATRIX)
+            assert.ok([403, 404].includes(teamView.status), 'the leader does not see team members');
             assert.equal((await e('GET', `/api/v2/commissions/statement?user=${leader._id}`)).status, 404, 'an employee sees only themself');
         });
 

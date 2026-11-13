@@ -115,6 +115,8 @@ exports.cronReminders = async (req, res) => {
         t.remindedAt = new Date();
         await t.save();
     }
+    // Team invitations past their date expire, and their inviters are told
+    await require('../hr/invitationController').expireOld();
     // Lecture reminders, and attendance and recordings from Zoom for finished lectures
     const lectures = await require('../learning/lectureJobs').run();
     // Groups whose certificate rule is due get their certificates (only when nothing is owed)
@@ -138,6 +140,7 @@ exports.getSettings = async (req, res) => {
 const VALIDATORS = {
     'customers.lookupNamePolicy': (v) => ['full', 'partial'].includes(v),
     'enrollments.teamLeaderReview': (v) => typeof v === 'boolean',
+    'teams.invitePolicy': (v) => ['approval', 'auto'].includes(v),
     'commissions.defaultEmployeeRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
     'commissions.defaultLeaderRate': (v) => typeof v === 'number' && v >= 0 && v <= 100,
     'crm.whatsappTemplates': (v) => !!require('../../lib/whatsappTemplates').cleanTemplates(v),

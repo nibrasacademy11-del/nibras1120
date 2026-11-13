@@ -29,6 +29,7 @@ const groupCerts = require('../modules/learning/groupCertificates');
 const hub = require('../modules/finance/hubController');
 const crm360 = require('../modules/crm/crm360');
 const payroll = require('../modules/hr/payrollController');
+const invitations = require('../modules/hr/invitationController');
 const reviews = require('../modules/hr/reviewController');
 const insights = require('../modules/reports/insightsController');
 
@@ -64,6 +65,12 @@ router.get('/attendance/kiosk/:id', validId(), kioskLimit, handle(attendance.kio
 router.get('/public/receipts/:no', rateLimit({ windowMs: 60 * 1000, max: 30, message: tooMany }), handle(money.verifyReceipt));
 router.post('/attendance/sync', rateLimit({ windowMs: 60 * 1000, max: 30, message: tooMany }), handle(attendance.sync));
 
+// The person who received a team invitation answers it from the link, without an account yet
+const inviteLimit = rateLimit({ windowMs: 15 * 60 * 1000, max: 30, message: tooMany });
+router.get('/invitations/:token', inviteLimit, handle(invitations.publicView));
+router.post('/invitations/:token/accept', inviteLimit, handle(invitations.publicAccept));
+router.post('/invitations/:token/reject', inviteLimit, handle(invitations.publicReject));
+
 router.use(authRequired);
 
 // ---- the signed-in user's own account ----
@@ -92,6 +99,8 @@ router.get('/login-attempts', all('audit.view'), handle(security.adminLoginAttem
 // ---- roles, settings, audit ----
 router.get('/roles', all('roles.view'), handle(admin.listRoles));
 router.put('/roles/:role', all('roles.manage'), handle(admin.updateRole));
+router.get('/users/:id/extra-grants', validId(), all('roles.manage'), handle(admin.getExtraGrants));
+router.put('/users/:id/extra-grants', validId(), all('roles.manage'), handle(admin.setExtraGrants));
 router.get('/settings', all('settings.view'), handle(home.getSettings));
 router.put('/settings', all('settings.manage'), handle(home.updateSettings));
 router.get('/audit', all('audit.view'), handle(admin.listAudit));
@@ -304,8 +313,20 @@ router.post('/leaves', can('leaves.create'), handle(attendance.requestLeave));
 router.post('/leaves/:id/decide', validId(), can('leaves.approve', 'team'), handle(attendance.decideLeave));
 router.post('/leaves/:id/cancel', validId(), can('leaves.create'), handle(attendance.cancelLeave));
 
+// ---- my team, team invitations ----
+router.get('/my-team', can('teams.view', 'team'), handle(invitations.myTeam));
+router.get('/team-invitations/teams', can('teams.invite', 'team'), handle(invitations.teams));
+router.get('/team-invitations', can('teams.invite', 'team'), handle(invitations.list));
+router.post('/team-invitations', can('teams.invite', 'team'), rateLimit({ windowMs: 60 * 60 * 1000, max: 40, message: tooMany, keyBy: 'user' }), handle(invitations.create));
+router.post('/team-invitations/:id/resend', validId(), can('teams.invite', 'team'), handle(invitations.resend));
+router.post('/team-invitations/:id/cancel', validId(), can('teams.invite', 'team'), handle(invitations.cancel));
+router.post('/team-invitations/:id/approve', validId(), all('teams.assign'), handle(invitations.approve));
+router.post('/team-invitations/:id/decline', validId(), all('teams.assign'), handle(invitations.decline));
+
 // ---- payroll: salaries, advances, the monthly sheet, payslips ----
 router.get('/payroll/mine', can('payroll.view'), handle(payroll.myPayslips));
+router.get('/payroll/my-advances', can('payroll.view'), handle(payroll.myAdvances));
+router.get('/me/employee', staffOnly, handle(hr.myFile));
 router.get('/payroll/runs/:id/payslip', validId(), can('payroll.view'), handle(payroll.payslip));
 router.get('/payroll/runs/:id/payslip/:userId', validId(), validId('userId'), all('payroll.view'), handle(payroll.payslip));
 router.get('/payroll/salaries', all('payroll.view'), handle(payroll.listSalaries));

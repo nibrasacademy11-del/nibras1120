@@ -106,15 +106,19 @@ test('attendance flow', { skip }, async (t) => {
             assert.ok(month.days.find((d) => d.date === date).corrected);
         });
 
-        await t.test('leave requested by the employee, approved by the team leader', async () => {
+        await t.test('leave requested by the employee; HR decides, a team leader only when the owner allows it', async () => {
             const d = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10);
             const r = await e('POST', '/api/v2/leaves', { type: 'annual', from: d, to: d, reason: 'family' });
             assert.equal(r.status, 201);
             assert.equal((await e('POST', '/api/v2/leaves', { type: 'sick', from: d, to: d })).data.code, 'DUPLICATE');
-            const inbox = await l('GET', '/api/v2/leaves?box=approvals');
+            const inbox = await h('GET', '/api/v2/leaves?box=approvals');
             const item = inbox.data.items.find((x) => x._id === r.data.item._id);
             assert.ok(item);
             assert.equal((await e('POST', `/api/v2/leaves/${item._id}/decide`, { decision: 'approve', __v: item.__v })).status, 403);
+            // a team leader is not an approver by default (docs/RBAC-MATRIX.md)
+            assert.equal((await l('POST', `/api/v2/leaves/${item._id}/decide`, { decision: 'approve', __v: item.__v })).status, 403);
+            // ...until the owner gives them the permission for their team
+            await User.updateOne({ _id: leader._id }, { extraGrants: [{ key: 'leaves.view', scope: 'team' }, { key: 'leaves.approve', scope: 'team' }] });
             assert.equal((await l('POST', `/api/v2/leaves/${item._id}/decide`, { decision: 'approve', __v: item.__v })).status, 200);
         });
 

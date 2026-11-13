@@ -140,7 +140,7 @@ test('security flow', { skip }, async (t) => {
             assert.equal((await sup('POST', '/api/auth/login', { email: emails.sup, password: pw })).status, 200);
             const roles = await sup('GET', '/api/v2/roles');
             assert.equal(roles.status, 200);
-            assert.equal(roles.data.roles.length, 9);
+            assert.equal(roles.data.roles.length, 10, 'nine roles plus the website manager');
             assert.equal((await sup('PUT', '/api/v2/roles/employee', { grants: { 'customers.view': 'team' } })).status, 400, 'reason required');
             assert.equal((await sup('PUT', '/api/v2/roles/super_admin', { grants: {}, reason: 'x' })).status, 400);
             const upd = await sup('PUT', '/api/v2/roles/employee', { grants: { 'customers.view': 'team', 'bad.key': 'all' }, reason: 'integration test' });

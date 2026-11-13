@@ -132,8 +132,10 @@ test('learning flow', { skip }, async (t) => {
             assert.equal(stale.status, 409);
         });
 
-        await t.test('the lookup card shows programs and module statuses', async () => {
-            const look = await tl('GET', `/api/v2/customers/${customerId}`);
+        await t.test('the customer card shows programs and module statuses (to those allowed to open it)', async () => {
+            // a team leader reviews the modules but does not open team customers' files by default
+            assert.equal((await tl('GET', `/api/v2/customers/${customerId}`)).status, 404);
+            const look = await a('GET', `/api/v2/customers/${customerId}`);
             assert.equal(look.data.item.programs[0].modules.every((m) => m.status === 'approved'), true);
         });
     } finally {

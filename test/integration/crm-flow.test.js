@@ -106,8 +106,8 @@ test('CRM flow', { skip }, async (t) => {
             created.customers.push(cust.id);
             assert.match(cust.customerNo, /^NB-\d{6}$/);
             assert.equal(cust.owner.name !== undefined, true);
-            assert.equal(cust.identity.nationalId.endsWith('999'), true);
-            assert.ok(cust.identity.nationalId.startsWith('•'));
+            // the identity number is stored (encrypted) but an employee never sees it back (RBAC-MATRIX)
+            assert.equal(cust.identity, undefined);
 
             const dupPhone = await emp2('POST', '/api/v2/customers', { nameAr: 'نفس الرقم', contact: { phone: `0100${num.slice(-3)}1234` } });
             assert.equal(dupPhone.status, 409);
@@ -118,8 +118,12 @@ test('CRM flow', { skip }, async (t) => {
             assert.equal(dupId.data.code, 'DUPLICATE');
         });
 
-        await t.test('another employee sees the basic card only, then asks for access', async () => {
+        await t.test('another employee sees nothing; with search allowed by the owner, a basic card and an access request', async () => {
             assert.equal((await emp2('GET', '/api/v2/customers')).data.items.some((c) => c.id === cust.id), false);
+            assert.equal((await emp2('GET', `/api/v2/customers/${cust.id}`)).status, 404, 'a direct link opens nothing');
+            assert.equal((await emp2('GET', `/api/v2/customers/lookup?q=${cust.customerNo}`)).status, 403, 'no academy-wide search by default');
+            const e2 = await User.findOne({ email: emails.e2 });
+            assert.equal((await admin('PUT', `/api/v2/users/${e2._id}/extra-grants`, { grants: { 'customer_lookup.view': 'all' }, reason: 'customer service duty' })).status, 200);
             const look = await emp2('GET', `/api/v2/customers/lookup?q=${encodeURIComponent(`2980101${num}999`)}`);
             assert.equal(look.status, 200);
             assert.equal(look.data.items[0].customerNo, cust.customerNo);
