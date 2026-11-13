@@ -172,3 +172,6 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 .stack:has(.tpl-row) { max-width: 760px; }
 .checks .tpl-row { width: 100%; flex-wrap: nowrap; }
 @media (max-width: 640px) { .checks .tpl-row { flex-wrap: wrap; } .tpl-row input { max-width: none; flex: 1; } }
+.invite-box { background: var(--gold-light); border: 1px solid #f0dcb4; border-radius: 12px; padding: 12px 14px; }
+.quick-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.code-box { width: 100%; font: inherit; font-size: .9rem; padding: 10px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); resize: vertical; }

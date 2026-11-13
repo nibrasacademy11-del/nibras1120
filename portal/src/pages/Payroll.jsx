@@ -316,6 +316,7 @@ export function MyPayslips() {
   const { t } = useI18n();
   const { month } = useParams();
   const state = useLoad('/api/v2/payroll/mine');
+  const advances = useLoad('/api/v2/payroll/my-advances');
   return (
     <>
       <h1 className="page-title no-print">{t('myPayslipsNav')}</h1>
@@ -326,6 +327,7 @@ export function MyPayslips() {
           if (open) return (<><p className="no-print"><Link to="/my-payslips">← {t('myPayslipsNav')}</Link></p><section className="card"><Payslip month={open.month} line={open.line} /></section><button type="button" className="btn btn--primary no-print" onClick={() => window.print()}>{t('printPdf')}</button></>);
           return (
             <section className="card">
+              <h2>{t('pr_payslips')}</h2>
               <div className="table-wrap">
                 <table className="table table--hover">
                   <thead><tr><th>{t('pr_month')}</th><th>{t('pr_net')}</th><th /></tr></thead>
@@ -336,6 +338,18 @@ export function MyPayslips() {
           );
         }}
       </Loading>
+      <section className="card">
+        <h2>{t('pr_myAdvances')}</h2>
+        <Loading state={advances}>
+          {(d) => (!d.items.length ? <p className="muted">{t('pr_noAdvances')}</p> : (
+            <div className="table-wrap"><table className="table">
+              <thead><tr><th>{t('amount')}</th><th>{t('pr_installments')}</th><th>{t('pr_repaid')}</th><th>{t('status')}</th></tr></thead>
+              <tbody>{d.items.map((a) => <tr key={a._id}><td><Money amount={a.amount} currency={a.currency} /></td><td>{a.installments} · {t('pr_from')} <span dir="ltr">{a.startMonth}</span></td><td><Money amount={a.repaid} currency={a.currency} /></td><td><Pill tone={a.status === 'active' ? 'gold' : a.status === 'repaid' ? 'ok' : 'muted'}>{t(`pr_adv_${a.status}`)}</Pill></td></tr>)}</tbody>
+            </table></div>
+          ))}
+        </Loading>
+        <p className="muted" style={{ marginBottom: 0 }}><small>{t('pr_myMoneyNote')}</small></p>
+      </section>
     </>
   );
 }

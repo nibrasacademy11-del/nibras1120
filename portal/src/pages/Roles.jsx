@@ -3,7 +3,7 @@ import { api, pickMessage } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 
-const SCOPE_KEYS = { '': 'scopeNone', own: 'scopeOwn', team: 'scopeTeam', all: 'scopeAll' };
+const SCOPE_KEYS = { '': 'scopeNone', own: 'scopeOwn', team: 'scopeTeam', department: 'scopeDepartment', all: 'scopeAll' };
 
 export default function Roles() {
   const { can } = useAuth();

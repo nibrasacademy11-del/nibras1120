@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { api, setUnauthorizedHandler } from './api.js';
 
 const AuthContext = createContext(null);
-const RANK = { own: 1, team: 2, all: 3 };
+const RANK = { own: 1, team: 2, department: 3, all: 4 };
 
 export function AuthProvider({ children }) {
   const [state, setState] = useState({ loading: true, me: null });

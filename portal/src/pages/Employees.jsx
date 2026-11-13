@@ -4,7 +4,7 @@ import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { ErrorBox, Field, Loading, Modal, Pill, StaffSelect, useAction, useLoad } from '../components/ui.jsx';
 
-const STAFF_ROLES = ['employee', 'team_leader', 'customer_support', 'accountant', 'finance_manager', 'hr_manager', 'admin', 'super_admin'];
+const STAFF_ROLES = ['employee', 'team_leader', 'customer_support', 'accountant', 'finance_manager', 'hr_manager', 'cms_manager', 'admin', 'super_admin'];
 
 function useOrg() {
   const teams = useLoad('/api/v2/teams');
@@ -119,8 +119,9 @@ function History({ emp, onClose }) {
 }
 
 export default function Employees() {
+  // the signed-in person (never edits their own extra permissions)
   const { t, en, label, fmtDate } = useI18n();
-  const { can } = useAuth();
+  const { can, me } = useAuth();
   const [status, setStatus] = useState('active');
   const [dialog, setDialog] = useState(null);
   const state = useLoad(`/api/v2/employees?status=${status}`);
@@ -154,7 +155,8 @@ export default function Employees() {
                       <td className="nowrap">
                         <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'history', emp: e })}>{t('history')}</button>{' '}
                         {e.status === 'active' && can('employees.update') && <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'edit', emp: e })}>{t('edit')}</button>}{' '}
-                        {e.status === 'active' && can('employees.manage', 'all') && <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'offboard', emp: e })}>{t('offboard')}</button>}
+                        {e.status === 'active' && can('employees.manage', 'all') && <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'offboard', emp: e })}>{t('offboard')}</button>}{' '}
+                        {e.status === 'active' && can('roles.manage', 'all') && e.user && String(e.user._id) !== me.user.id && <button type="button" className="btn btn--small btn--ghost" onClick={() => setDialog({ kind: 'grants', emp: e })}>{t('xg_button')}</button>}
                       </td>
                     </tr>
                   ))}
@@ -168,6 +170,7 @@ export default function Employees() {
       {dialog?.kind === 'edit' && <EmployeeForm emp={dialog.emp} onClose={close} onSaved={done} />}
       {dialog?.kind === 'offboard' && <Offboard emp={dialog.emp} onClose={close} onDone={done} />}
       {dialog?.kind === 'history' && <History emp={dialog.emp} onClose={close} />}
+      {dialog?.kind === 'grants' && <ExtraGrants emp={dialog.emp} onClose={close} />}
     </>
   );
 }
@@ -259,5 +262,67 @@ function OrgForm({ kind, item, departments, onClose, onSaved }) {
         <div className="row"><button className="btn btn--primary" disabled={busy}>{t('save')}</button><button type="button" className="btn btn--ghost" onClick={onClose}>{t('cancel')}</button></div>
       </form>
     </Modal>
+  );
+}
+
+// ---- extra permissions for one person (owner only) ----
+// They add to the person's role (never remove), apply at once, and need a reason.
+const SCOPE_OPTS = ['own', 'team', 'department', 'all'];
+export function ExtraGrants({ emp, onClose }) {
+  const { t, label } = useI18n();
+  const state = useLoad(`/api/v2/users/${emp.user._id || emp.user}/extra-grants`);
+  const roles = useLoad('/api/v2/roles');
+  return (
+    <Modal title={`${t('xg_title')}: ${emp.nameAr}`} wide onClose={onClose}>
+      <Loading state={state}>
+        {(d) => (
+          <Loading state={roles}>
+            {(r) => <ExtraGrantsForm d={d} catalog={r.catalog} t={t} label={label} userId={emp.user._id || emp.user} onClose={onClose} />}
+          </Loading>
+        )}
+      </Loading>
+    </Modal>
+  );
+}
+
+function ExtraGrantsForm({ d, catalog, t, label, userId, onClose }) {
+  const [rows, setRows] = useState(Object.entries(d.extra).map(([key, scope]) => ({ key, scope })));
+  const [reason, setReason] = useState('');
+  const [done, setDone] = useState(false);
+  const { busy, error, run } = useAction();
+  const resources = Object.keys(catalog.resources).filter((r) => r !== 'roles');
+  const save = (e) => {
+    e.preventDefault();
+    const grants = Object.fromEntries(rows.filter((x) => x.key && x.scope).map((x) => [x.key, x.scope]));
+    run(async () => { await api(`/api/v2/users/${userId}/extra-grants`, { method: 'PUT', body: { grants, reason } }); setDone(true); });
+  };
+  return (
+    <form className="stack stack--full" onSubmit={save}>
+      <p className="muted" style={{ margin: 0 }}>{t('xg_hint')}</p>
+      {rows.map((x, i) => {
+        const [res, act] = x.key.split('.');
+        const roleHas = d.role[x.key];
+        return (
+          <div key={i} className="row">
+            <select value={res || ''} onChange={(e) => setRows(rows.map((y, j) => (j === i ? { ...y, key: `${e.target.value}.${act || 'view'}` } : y)))}>
+              <option value="">—</option>{resources.map((k) => <option key={k} value={k}>{label(catalog.resources[k])}</option>)}
+            </select>
+            <select value={act || ''} onChange={(e) => setRows(rows.map((y, j) => (j === i ? { ...y, key: `${res}.${e.target.value}` } : y)))}>
+              {catalog.actions.map((a) => <option key={a} value={a}>{label(catalog.actionLabels[a])}</option>)}
+            </select>
+            <select value={x.scope} onChange={(e) => setRows(rows.map((y, j) => (j === i ? { ...y, scope: e.target.value } : y)))}>
+              {SCOPE_OPTS.map((s) => <option key={s} value={s}>{t(`scope_${s}`)}</option>)}
+            </select>
+            {roleHas && <small className="muted">{t('xg_roleHas')} {t(`scope_${roleHas}`)}</small>}
+            <button type="button" className="icon-btn" aria-label="Remove" onClick={() => setRows(rows.filter((_, j) => j !== i))}>×</button>
+          </div>
+        );
+      })}
+      <div><button type="button" className="btn btn--small btn--ghost" onClick={() => setRows([...rows, { key: 'customers.view', scope: 'own' }])}>{t('lecAddRow')}</button></div>
+      <Field label={t('reason')}><input required value={reason} onChange={(e) => setReason(e.target.value)} placeholder={t('xg_reasonHint')} /></Field>
+      <ErrorBox error={error} />
+      {done && <div className="alert alert--ok" style={{ margin: 0 }}>{t('xg_saved')}</div>}
+      <div className="row"><button className="btn btn--primary" disabled={busy}>{t('save')}</button><button type="button" className="btn btn--ghost" onClick={onClose}>{t('close')}</button></div>
+    </form>
   );
 }

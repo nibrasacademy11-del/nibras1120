@@ -28,6 +28,9 @@ import FinanceHub from './pages/FinanceHub.jsx';
 import Website, { Accounts as UserAccounts } from './pages/Website.jsx';
 import Payroll, { MyPayslips } from './pages/Payroll.jsx';
 import PerformanceReviews, { MyReviews as MyPerformance } from './pages/Reviews.jsx';
+import MyTeam from './pages/MyTeam.jsx';
+import MyProfile from './pages/MyProfile.jsx';
+import InviteResponse from './pages/InviteResponse.jsx';
 import MyAccess from './pages/MyAccess.jsx';
 import PrintSamples from './pages/PrintSamples.jsx';
 import Leads from './pages/Crm360.jsx';
@@ -49,6 +52,8 @@ export default function App() {
 
   // The reception screen runs without a sign-in, on its station key
   if (location.pathname.startsWith('/kiosk/')) return <Routes><Route path="/kiosk/:id" element={<Kiosk />} /></Routes>;
+  // A team invitation is answered without an account
+  if (location.pathname.startsWith('/invite/')) return <Routes><Route path="/invite/:token" element={<InviteResponse />} /></Routes>;
   if (loading) return <div className="splash">{t('loading')}</div>;
   if (!me) return <Login />;
 
@@ -88,6 +93,8 @@ export default function App() {
         <Route path="/attendance" element={<Guard permission="attendance.view"><Attendance /></Guard>} />
         <Route path="/leaves" element={<Guard permission="leaves.view"><Leaves /></Guard>} />
         <Route path="/payroll" element={<Guard permission="payroll.view" minScope="all"><Payroll /></Guard>} />
+        <Route path="/my-team" element={<Guard permission="teams.invite" minScope="team"><MyTeam /></Guard>} />
+        <Route path="/my-profile" element={me.user.isStaff ? <MyProfile /> : <Navigate to="/" replace />} />
         <Route path="/performance" element={<Guard permission="reviews.create" minScope="team"><PerformanceReviews /></Guard>} />
         <Route path="/my-performance" element={<Guard permission="reviews.view"><MyPerformance /></Guard>} />
         <Route path="/my-payslips" element={<Guard permission="payroll.view"><MyPayslips /></Guard>} />

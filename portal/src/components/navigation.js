@@ -13,6 +13,8 @@ export const SECTIONS = [
     key: 'sec_home',
     items: [
       { to: '/', key: 'dashboard', icon: '⌂', end: true, staffOnly: true, desc: 'd_dashboard' },
+      { to: '/my-profile', key: 'mp_title', icon: '☺', staffOnly: true, desc: 'd_myProfile' },
+      { to: '/my-team', key: 'mt_title', icon: '⚑', permission: 'teams.invite', minScope: 'team', desc: 'd_myTeam' },
       { to: '/my-access', key: 'myAccessNav', icon: '◎', staffOnly: true, desc: 'd_myAccess' }
     ]
   },
@@ -98,7 +100,7 @@ export const SECTIONS = [
   }
 ];
 
-const RANK = { own: 1, team: 2, all: 3 };
+const RANK = { own: 1, team: 2, department: 3, all: 4 };
 
 // Whether a user with these grants and this role sees the item
 // zone: where the portal is open (all, staff, cms, site). On cms only the website pages and the
