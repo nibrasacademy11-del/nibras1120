@@ -43,6 +43,16 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 4 *
 const uploadFile = (req, res, next) => upload.single('file')(req, res, (err) => (err ? next(err) : next()));
 
 const can = requirePermission;
+// Opening one customer: anyone who works on customers (the file itself is checked against their
+// scope and approved access requests; anything outside answers "not found"), or who may search
+// the academy. Searching itself stays with customer_lookup.view.
+const customerReader = (req, res, next) => {
+    const g = req.user && req.user.grants;
+    if (g && (g['customers.view'] || g['customer_lookup.view'])) return next();
+    return res.status(403).json({ message: 'ليس لديك صلاحية لهذا الإجراء. / You do not have permission for this action.', code: 'FORBIDDEN' });
+};
+// Names of the staff, for pickers: any staff account
+const staffOnly = (req, res, next) => (req.user && req.user.isStaff ? next() : res.status(403).json({ message: 'Forbidden.', code: 'FORBIDDEN' }));
 const all = (perm) => requirePermission(perm, 'all');
 
 // The reminder job is called by Vercel Cron with its own secret, not a user session
@@ -87,7 +97,7 @@ router.put('/settings', all('settings.manage'), handle(home.updateSettings));
 router.get('/audit', all('audit.view'), handle(admin.listAudit));
 
 // ---- HR ----
-router.get('/staff', can('customer_lookup.view'), handle(hr.staffDirectory));
+router.get('/staff', staffOnly, handle(hr.staffDirectory));
 router.get('/departments', can('teams.view'), handle(hr.listDepartments));
 router.post('/departments', all('teams.create'), handle(hr.saveDepartment));
 router.put('/departments/:id', validId(), all('teams.update'), handle(hr.saveDepartment));
@@ -101,36 +111,36 @@ router.put('/employees/:id', validId(), can('employees.update'), handle(hr.updat
 router.post('/employees/:id/offboard', validId(), all('employees.manage'), handle(hr.offboardEmployee));
 
 // ---- customers ----
-router.get('/customers/meta', can('customer_lookup.view'), handle(customers.meta));
+router.get('/customers/meta', customerReader, handle(customers.meta));
 router.get('/customers/lookup', lookupLimit, can('customer_lookup.view'), handle(customers.lookup));
 router.post('/customers/check-duplicates', can('customers.create'), handle(customers.checkDuplicates));
 router.get('/customers/duplicates', all('customers.manage'), handle(customers.duplicateGroups));
 router.post('/customers/assign', can('customers.manage', 'team'), handle(customers.assign));
 router.get('/customers', can('customers.view'), handle(customers.list));
 router.get('/customers/board', can('customers.view'), handle(crm360.board));
-router.get('/whatsapp-templates', can('customer_lookup.view'), handle(crm360.templates));
+router.get('/whatsapp-templates', customerReader, handle(crm360.templates));
 router.post('/customers', can('customers.create'), handle(customers.create));
-router.get('/customers/:id', validId(), can('customer_lookup.view'), handle(customers.get));
+router.get('/customers/:id', validId(), customerReader, handle(customers.get));
 router.put('/customers/:id', validId(), can('customers.view'), handle(customers.update));
 router.post('/customers/:id/archive', validId(), can('customers.archive'), handle(customers.setArchived));
-router.post('/customers/:id/reveal-identity', validId(), sensitive, can('customer_lookup.view'), handle(customers.revealIdentity));
-router.get('/customers/:id/summary', validId(), can('customer_lookup.view'), handle(crm360.summary));
+router.post('/customers/:id/reveal-identity', validId(), sensitive, customerReader, handle(customers.revealIdentity));
+router.get('/customers/:id/summary', validId(), customerReader, handle(crm360.summary));
 router.post('/customers/:id/whatsapp', validId(), can('customers.view'), rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: tooMany, keyBy: 'user' }), handle(crm360.whatsapp));
-router.get('/customers/:id/timeline', validId(), can('customer_lookup.view'), handle(customers.timeline));
+router.get('/customers/:id/timeline', validId(), customerReader, handle(customers.timeline));
 router.post('/customers/:id/transfer', validId(), can('customers.manage'), handle(customers.transfer));
 router.post('/customers/:id/merge', validId(), all('customers.manage'), handle(customers.merge));
 
-router.get('/customers/:id/notes', validId(), can('customer_lookup.view'), handle(activity.listNotes));
+router.get('/customers/:id/notes', validId(), customerReader, handle(activity.listNotes));
 router.post('/customers/:id/notes', validId(), can('customer_notes.create'), handle(activity.addNote));
 router.put('/notes/:noteId', validId('noteId'), can('customer_notes.update'), handle(activity.updateNote));
-router.get('/customers/:id/communications', validId(), can('customer_lookup.view'), handle(activity.listCommunications));
+router.get('/customers/:id/communications', validId(), customerReader, handle(activity.listCommunications));
 router.post('/customers/:id/communications', validId(), can('customers.update'), handle(activity.addCommunication));
 
-router.get('/customers/:id/documents', validId(), can('customer_lookup.view'), handle(documents.list));
+router.get('/customers/:id/documents', validId(), customerReader, handle(documents.list));
 router.post('/customers/:id/documents', validId(), can('customer_documents.create'), uploadFile, handle(documents.upload));
 router.post('/documents/:docId/versions', validId('docId'), can('customer_documents.update'), uploadFile, handle(documents.addVersion));
 router.put('/documents/:docId', validId('docId'), can('customer_documents.update'), handle(documents.update));
-router.get('/documents/:docId/versions/:version', validId('docId'), can('customer_lookup.view'), handle(documents.download));
+router.get('/documents/:docId/versions/:version', validId('docId'), customerReader, handle(documents.download));
 
 // ---- access requests ----
 router.post('/customers/:id/access-requests', validId(), can('access_requests.create'), handle(access.create));

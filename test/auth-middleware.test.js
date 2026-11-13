@@ -23,7 +23,7 @@ let sessions = {};
 let policies = [];
 
 const query = (value) => {
-    const q = { select: () => q, lean: () => Promise.resolve(value), then: (r, j) => Promise.resolve(value).then(r, j) };
+    const q = { select: () => q, populate: () => q, lean: () => Promise.resolve(value), then: (r, j) => Promise.resolve(value).then(r, j) };
     return q;
 };
 

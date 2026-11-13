@@ -21,23 +21,23 @@ const customer = {
 
 const grants = (role) => P.effectiveGrants(role);
 
-test('the owner sees the whole file but not the full identity number', () => {
+test('the responsible employee sees the file, never the identity section (RBAC-MATRIX)', () => {
     const a = customerAccess({ actor: emp, grants: grants('employee'), customer });
     assert.equal(a.level, 'full');
-    assert.deepEqual(a.sections, { contact: true, identity: true, financial: true, documents: true, notes: true });
+    assert.deepEqual(a.sections, { contact: true, identity: false, financial: true, documents: true, notes: true });
     assert.equal(a.canRevealIdentity, false);
     assert.equal(a.canEdit, true);
     assert.equal(a.canManage, false);
     const out = serializeCustomer(customer, a);
     assert.equal(out.contact.phone, '01112220796');
-    assert.equal(out.identity.nationalId, '••••••••••4567');
+    assert.equal(out.identity, undefined, 'no identity data at all for an employee');
     assert.ok(!JSON.stringify(out).includes('v1.secret'));
 });
 
-test('another employee only gets the basic card', () => {
+test('another employee gets nothing: no lookup, so the server answers "not found"', () => {
     const a = customerAccess({ actor: other, grants: grants('employee'), customer });
     assert.equal(a.level, 'basic');
-    assert.equal(a.canLookup, true);
+    assert.equal(a.canLookup, false);
     assert.equal(Object.values(a.sections).some(Boolean), false);
     const out = serializeCustomer(customer, a, { namePolicy: 'partial', programs: ['PMP'] });
     assert.equal(out.name, 'محمد أ.');
@@ -61,10 +61,13 @@ test('an approved request opens only the requested sections', () => {
     assert.equal(withId.canRevealIdentity, true);
 });
 
-test('team leader sees the team file and can transfer it; admin reveals identity', () => {
+test('a team leader does not see team customers by default (the owner can open it); admin reveals identity', () => {
     const tl = customerAccess({ actor: leader, grants: grants('team_leader'), customer });
-    assert.equal(tl.level, 'full');
-    assert.equal(tl.canManage, true);
+    assert.equal(tl.level, 'basic');
+    assert.equal(tl.canManage, false);
+    const opened = customerAccess({ actor: leader, grants: P.withExtras(grants('team_leader'), { 'customers.view': 'team', 'customers.manage': 'team' }), customer });
+    assert.equal(opened.level, 'full', 'extra permission from the owner');
+    assert.equal(opened.canManage, true);
     const outsider = customerAccess({ actor: leader, grants: grants('team_leader'), customer: { ...customer, team: { _id: 't9' } } });
     assert.equal(outsider.level, 'basic');
     const admin = customerAccess({ actor: { id: 'a', teamIds: [] }, grants: grants('admin'), customer });

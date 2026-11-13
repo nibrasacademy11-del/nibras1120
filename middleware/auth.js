@@ -2,9 +2,9 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Session = require('../models/Session');
-const { normalizeRole, isStaffRole, isAdminRole, scopeFor, hasScope } = require('../lib/permissions');
+const { normalizeRole, isStaffRole, isAdminRole, scopeFor, hasScope, withExtras } = require('../lib/permissions');
 const policyStore = require('../lib/policyStore');
-const { teamIdsFor } = require('../lib/teams');
+const { teamIdsFor, departmentTeamIdsFor } = require('../lib/teams');
 const zones = require('../lib/zones');
 
 // The session cookie for the place this request came in on (staff and customers never share one)
@@ -42,7 +42,7 @@ const SESSION_TOUCH_MS = 5 * 60 * 1000;
 async function userFromToken(token) {
     const payload = jwt.verify(token, getJwtSecret());
     if (payload.purpose) return null; // a 2FA challenge token is not a sign-in
-    const user = await User.findById(payload.id).select('name email role status tokenVersion twoFactor.enabled mustChangePassword');
+    const user = await User.findById(payload.id).select('name email role status tokenVersion twoFactor.enabled mustChangePassword extraGrants');
     if (!user || (user.tokenVersion || 0) !== (payload.tv || 0)) return null;
     if (user.status === 'disabled') return null;
 
@@ -74,7 +74,9 @@ async function userFromToken(token) {
         mustChangePassword: !!user.mustChangePassword,
         // Teams the user belongs to or leads: team-scoped permissions cover their records
         teamIds: isStaffRole(role) ? await teamIdsFor(user._id) : [],
-        grants: await policyStore.grantsForRole(role)
+        departmentTeamIds: isStaffRole(role) ? await departmentTeamIdsFor(user._id) : [],
+        // the role's permissions plus any the owner gave this person (re-read on every request)
+        grants: withExtras(await policyStore.grantsForRole(role), Object.fromEntries((user.extraGrants || []).map((g) => [g.key, g.scope])))
     };
 }
 

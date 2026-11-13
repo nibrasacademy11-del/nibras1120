@@ -22,7 +22,7 @@ test('reports follow the role permissions', () => {
     assert.ok(!ids('employee').includes('audit'));
     assert.ok(!ids('employee').includes('revenue_expenses'));
     assert.ok(!ids('employee').includes('employee_performance'));
-    assert.ok(ids('team_leader').includes('team_performance'));
+    assert.ok(!ids('team_leader').includes('team_performance'), 'team leaders get no reports unless the owner opens them');
     assert.ok(ids('finance_manager').includes('revenue_expenses'));
     assert.ok(!ids('hr_manager').includes('payments'));
     assert.ok(ids('admin').includes('audit'));

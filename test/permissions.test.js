@@ -29,10 +29,12 @@ test('admin cannot edit role definitions by default', () => {
     assert.equal(g['payments.approve'], 'all');
 });
 
-test('employees are limited to their own customers, team leaders to their team', () => {
+test('employees and team leaders work on their own customers; no academy-wide search (RBAC-MATRIX)', () => {
     assert.equal(P.effectiveGrants('employee')['customers.view'], 'own');
-    assert.equal(P.effectiveGrants('team_leader')['customers.view'], 'team');
-    assert.equal(P.effectiveGrants('employee')['customer_lookup.view'], 'all');
+    assert.equal(P.effectiveGrants('team_leader')['customers.view'], 'own');
+    assert.equal(P.effectiveGrants('employee')['customer_lookup.view'], undefined);
+    assert.equal(P.effectiveGrants('team_leader')['customer_lookup.view'], undefined);
+    assert.equal(P.effectiveGrants('employee')['customer_identity.view'], undefined);
     assert.equal(P.effectiveGrants('employee')['customers.export'], undefined);
     assert.equal(P.effectiveGrants('employee')['audit.view'], undefined);
 });

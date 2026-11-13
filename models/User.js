@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema({
     // --primary on the server, never from the portal; nobody can demote, disable or delete it there.
     // The role decides permissions; this flag only adds protection (the email alone proves nothing).
     isPrimaryOwner: { type: Boolean, default: false, index: true },
+    // Extra permissions the owner gave this person on top of their role ({ key, scope } pairs).
+    // Only the owner changes them (roles.manage); they add access, never remove it.
+    extraGrants: { type: [{ key: String, scope: { type: String, enum: ['own', 'team', 'department', 'all'] }, _id: false }], default: [] },
     enrolledCourses: [{ type: String }],
     // Bumped to sign the user out everywhere: issued tokens carry the value they were signed with
     tokenVersion: { type: Number, default: 0 },
