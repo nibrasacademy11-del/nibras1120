@@ -114,7 +114,8 @@ export function Columns({ points, color = 'var(--s1)', format = fmtNum, height =
 }
 
 // ---- part of a whole: a donut with a legend that carries the numbers ----
-export function Donut({ items, format = fmtNum, centerLabel, size = 170, empty = '—' }) {
+// values={false}: the legend names the parts only; their numbers are in the table under the chart
+export function Donut({ items, format = fmtNum, centerLabel, size = 170, empty = '—', values = true }) {
   const [active, setActive] = useState(null);
   const list = items.filter((i) => i.value > 0);
   const total = list.reduce((s, i) => s + i.value, 0);
@@ -141,22 +142,23 @@ export function Donut({ items, format = fmtNum, centerLabel, size = 170, empty =
         <text x="80" y="76" textAnchor="middle" className="viz-donut__big">{shown ? `${Math.round((shown.value / total) * 100)}%` : format(total)}</text>
         <text x="80" y="96" textAnchor="middle" className="viz-donut__small">{shown ? shown.label.slice(0, 16) : centerLabel}</text>
       </svg>
-      <Legend items={arcs.map((a) => ({ label: a.label, color: a.color, value: `${format(a.value)} · ${Math.round((a.value / total) * 100)}%` }))} />
+      <Legend items={arcs.map((a) => ({ label: a.label, color: a.color, value: values ? `${format(a.value)} · ${Math.round((a.value / total) * 100)}%` : undefined }))} />
     </div>
   );
 }
 
-// ---- ranked horizontal bars, the value written at the end of each ----
-export function HBars({ rows, color = 'var(--s1)', format = fmtNum, empty = '—', max: forcedMax }) {
+// ---- ranked horizontal bars; one series, one colour. values={false} leaves the numbers to the
+// table under the chart (the owner's pages), each value still shown on hover ----
+export function HBars({ rows, color = 'var(--s1)', format = fmtNum, empty = '—', max: forcedMax, values = true }) {
   if (!rows.length) return <p className="muted viz-empty">{empty}</p>;
   const max = forcedMax || Math.max(...rows.map((r) => r.value), 1);
   return (
     <ul className="viz-hbars">
       {rows.map((r, i) => (
-        <li key={`${r.label}-${i}`}>
-          <span className="viz-hbars__label" title={r.label}>{r.label}</span>
+        <li key={`${r.label}-${i}`} title={`${r.label}: ${r.display !== undefined ? r.display : format(r.value)}`} className={values ? '' : 'viz-hbars--bare'}>
+          <span className="viz-hbars__label">{r.label}</span>
           <span className="viz-hbars__track"><span className="viz-hbars__fill" style={{ width: `${Math.max(1.5, (r.value / max) * 100)}%`, background: r.color || color, animationDelay: `${i * 50}ms` }} /></span>
-          <span className="viz-hbars__value" dir="ltr">{r.display !== undefined ? r.display : format(r.value)}</span>
+          {values && <span className="viz-hbars__value" dir="ltr">{r.display !== undefined ? r.display : format(r.value)}</span>}
         </li>
       ))}
     </ul>
@@ -240,5 +242,103 @@ export function Sparkline({ points, color = 'var(--s1)' }) {
       <path d={`${d} L${W},${H} L0,${H} Z`} fill={color} opacity=".12" />
       <path d={d} fill="none" stroke={color} strokeWidth="1.8" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
     </svg>
+  );
+}
+
+// ---- the numbers of a chart, under it: each row's value and its share of the total ----
+export function ValueTable({ rows, format = fmtNum, labels = { item: '', value: '', share: '%' }, share = true, limit = 8 }) {
+  const list = rows.filter((r) => r.value !== null && r.value !== undefined);
+  if (!list.length) return null;
+  const total = list.reduce((a, r) => a + (Number(r.value) || 0), 0);
+  return (
+    <table className="viz-table">
+      <thead><tr><th>{labels.item}</th><th>{labels.value}</th>{share && <th>{labels.share}</th>}</tr></thead>
+      <tbody>{list.slice(0, limit).map((r, i) => (
+        <tr key={`${r.label}-${i}`}>
+          <td>{r.color && <i className="viz-key" style={{ background: r.color }} />}{r.label}</td>
+          <td dir="ltr">{r.display !== undefined ? r.display : format(r.value)}</td>
+          {share && <td dir="ltr">{total ? `${Math.round((r.value / total) * 100)}%` : '—'}</td>}
+        </tr>
+      ))}</tbody>
+    </table>
+  );
+}
+
+// ---- months side by side: one group per period, one column per series (one axis, one unit) ----
+export function GroupedColumns({ keys, series, format = fmtNum, height = 220, empty = '—' }) {
+  const wrap = useRef(null);
+  const [tip, setTip] = useState(null);
+  if (!keys.length) return <p className="muted viz-empty">{empty}</p>;
+  const W = 640; const H = height; const L = 48; const R = 8; const T = 10; const B = 24;
+  const valueAt = (sr, k) => (sr.points.find((p) => p.d === k) || {}).v || 0;
+  const max = niceMax(Math.max(...series.flatMap((sr) => keys.map((k) => valueAt(sr, k))), 0));
+  const band = (W - L - R) / keys.length;
+  const inner = Math.min(band - 6, 18 * series.length + 2 * (series.length - 1));
+  const bw = Math.max(3, (inner - 2 * (series.length - 1)) / series.length);
+  const y = (v) => T + (1 - v / max) * (H - T - B);
+  const show = (e, k) => { const wb = wrap.current.getBoundingClientRect(); setTip({ x: e.clientX - wb.left, y: e.clientY - wb.top, title: k, rows: series.map((sr) => ({ label: sr.name, color: sr.color, value: format(valueAt(sr, k)) })) }); };
+  const every = Math.ceil(keys.length / 12);
+  return (
+    <div className="viz" ref={wrap} dir="ltr">
+      <svg viewBox={`0 0 ${W} ${H}`} className="viz-svg" role="img" onMouseLeave={() => setTip(null)}>
+        {[0, 0.5, 1].map((fr) => <g key={fr}><line x1={L} x2={W - R} y1={y(fr * max)} y2={y(fr * max)} className="viz-grid" /><text x={L - 6} y={y(fr * max) + 4} className="viz-axis" textAnchor="end">{fmtNum(fr * max)}</text></g>)}
+        {keys.map((k, i) => {
+          const x0 = L + band * i + (band - inner) / 2;
+          return (
+            <g key={k} onMouseMove={(e) => show(e, k)}>
+              <rect x={L + band * i} y={T} width={band} height={H - T - B} fill="transparent" />
+              {series.map((sr, si) => {
+                const v = valueAt(sr, k);
+                const h = Math.max(v ? 2 : 0, y(0) - y(v));
+                const cx = x0 + si * (bw + 2);
+                const rr = Math.min(4, h, bw / 2);
+                return <path key={sr.name} className="viz-col" fill={sr.color} d={`M${cx},${y(0)} V${y(0) - h + rr} Q${cx},${y(0) - h} ${cx + rr},${y(0) - h} H${cx + bw - rr} Q${cx + bw},${y(0) - h} ${cx + bw},${y(0) - h + rr} V${y(0)} Z`} />;
+              })}
+              {i % every === 0 && <text x={L + band * i + band / 2} y={H - 6} className="viz-axis" textAnchor="middle">{k}</text>}
+            </g>
+          );
+        })}
+      </svg>
+      <Tip tip={tip} />
+      <Legend items={series.map((sr) => ({ label: sr.name, color: sr.color }))} />
+    </div>
+  );
+}
+
+// ---- attendance by day: a coloured calendar, one square per working day (one hue, darker = more came) ----
+export function CalendarHeat({ days, empty = '—', label = (d) => d.date, scale = ['', ''] }) {
+  if (!days.length) return <p className="muted viz-empty">{empty}</p>;
+  const shade = (r) => (r === null ? 'var(--viz-none)' : r >= 95 ? 'var(--seq-700)' : r >= 85 ? 'var(--seq-550)' : r >= 70 ? 'var(--seq-400)' : 'var(--seq-250)');
+  // weeks as columns, Saturday to Friday as rows
+  const first = new Date(`${days[0].date}T00:00:00Z`);
+  const offset = (first.getUTCDay() + 1) % 7;
+  const cells = days.map((d) => {
+    const idx = Math.round((new Date(`${d.date}T00:00:00Z`) - first) / 864e5) + offset;
+    return { ...d, col: Math.floor(idx / 7), row: idx % 7 };
+  });
+  const cols = Math.max(...cells.map((c) => c.col)) + 1;
+  return (
+    <div className="viz viz-cal">
+      <div className="viz-cal__grid" style={{ gridTemplateColumns: `repeat(${cols}, 16px)` }} dir="ltr">
+        {cells.map((c) => <span key={c.date} className="viz-cal__day" style={{ gridColumn: c.col + 1, gridRow: c.row + 1, background: shade(c.rate) }} title={label(c)} />)}
+      </div>
+      <div className="viz-cal__scale"><small>{scale[0]}</small>{['var(--seq-250)', 'var(--seq-400)', 'var(--seq-550)', 'var(--seq-700)'].map((x) => <i key={x} style={{ background: x }} />)}<small>{scale[1]}</small></div>
+    </div>
+  );
+}
+
+// ---- progress of each program: a bar per program, its percent and how many learners ----
+export function ProgressBars({ rows, empty = '—', unit = '' }) {
+  if (!rows.length) return <p className="muted viz-empty">{empty}</p>;
+  return (
+    <ul className="viz-progress">
+      {rows.map((r) => (
+        <li key={r.label} title={`${r.label}: ${r.value}%`}>
+          <div className="viz-progress__head"><span>{r.label}</span><b dir="ltr">{r.value}%</b></div>
+          <span className="viz-progress__track"><span style={{ width: `${Math.max(1.5, r.value)}%` }} /></span>
+          {r.n !== undefined && <small className="muted">{r.n} {unit}</small>}
+        </li>
+      ))}
+    </ul>
   );
 }
