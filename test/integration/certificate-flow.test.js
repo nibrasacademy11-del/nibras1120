@@ -69,16 +69,16 @@ test('certificate flow', { skip }, async (t) => {
         });
 
         let cert;
-        await t.test('module approved → certificate issued once', async () => {
+        await t.test('module approved → its certificate and the final one issue themselves, once (PLAN-V2 §5)', async () => {
             for (const action of ['start', 'submit', 'approve']) {
                 const cur = (await a('GET', `/api/v2/enrollments/${e._id}`)).data.item;
                 assert.equal((await a('POST', `/api/v2/enrollments/${e._id}/modules/${mod}`, { action, __v: cur.__v })).status, 200, action);
             }
-            const eligible = (await a('GET', '/api/v2/certificates/eligible')).data.items.filter((i) => i.enrollment === e._id);
-            assert.deepEqual(eligible.map((i) => i.kind).sort(), ['module', 'program']);
-            const r = await a('POST', '/api/v2/certificates/issue', { enrollment: e._id, module: mod });
-            assert.equal(r.status, 201, JSON.stringify(r.data));
-            cert = r.data.item;
+            const auto = await Certificate.find({ enrollment: e._id, status: 'Valid' }).lean();
+            assert.deepEqual(auto.map((c) => c.kind).sort(), ['module', 'program'], 'nothing owed: issued at once');
+            cert = auto.find((c) => c.kind === 'module');
+            assert.equal(cert.issuedBy, null, 'issued by the system');
+            assert.equal((await a('GET', '/api/v2/certificates/eligible')).data.items.filter((i) => i.enrollment === e._id).length, 0, 'nothing left waiting');
             assert.match(cert.cert_num, /^NC-\d{7}$/);
             assert.equal(cert.design.titleAr, 'شهادة محور الشهادة');
             assert.equal(cert.hours, 10);
@@ -113,10 +113,10 @@ test('certificate flow', { skip }, async (t) => {
             assert.equal(mods[0].status, 'approved', 'cancelling frees the module for a new certificate');
         });
 
-        await t.test('final certificate for the completed program', async () => {
-            const r = await a('POST', '/api/v2/certificates/issue', { enrollment: e._id });
-            assert.equal(r.status, 201, JSON.stringify(r.data));
-            assert.equal(r.data.item.kind, 'program');
+        await t.test('the final certificate came with the completed program', async () => {
+            const fin = await Certificate.findOne({ enrollment: e._id, kind: 'program', status: 'Valid' });
+            assert.ok(fin, 'issued by itself when the program completed');
+            assert.equal((await a('POST', '/api/v2/certificates/issue', { enrollment: e._id })).data.code, 'DUPLICATE');
         });
     } finally {
         await User.updateOne({ _id: admin._id }, { status: 'disabled' });

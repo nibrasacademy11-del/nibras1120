@@ -131,7 +131,8 @@ test('learning flow', { skip }, async (t) => {
             // a team leader reviews the modules but does not open team customers' files by default
             assert.equal((await tl('GET', `/api/v2/customers/${customerId}`)).status, 404);
             const look = await a('GET', `/api/v2/customers/${customerId}`);
-            assert.equal(look.data.item.programs[0].modules.every((m) => m.status === 'approved'), true);
+            // approved, and with nothing owed their certificates issued themselves (PLAN-V2 §5)
+            assert.equal(look.data.item.programs[0].modules.every((m) => ['approved', 'certificate_issued'].includes(m.status)), true);
         });
     } finally {
         await Enrollment.deleteMany({ program: program._id });

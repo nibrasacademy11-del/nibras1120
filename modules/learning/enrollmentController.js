@@ -386,6 +386,7 @@ exports.transition = async (req, res) => {
         e.completedAt = null;
     }
     await e.save();
+    if (result.to === 'approved') await require('./autoCertificates').afterProgress([e._id]);
 
     const label = `${e.enrollmentNo} · ${mod.titleAr}`;
     await addEvent(req, e.customer._id, 'module', `${mod.titleAr}: ${from} → ${result.to}${note ? ` — ${note.slice(0, 120)}` : ''}`, { meta: { enrollment: String(e._id), action } });

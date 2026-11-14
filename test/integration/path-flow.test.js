@@ -36,6 +36,7 @@ test('learning path flow', { skip }, async (t) => {
     const Lecture = require('../../models/Lecture');
     const ProgramModule = require('../../models/ProgramModule');
     const CohortMember = require('../../models/CohortMember');
+    const Certificate = require('../../models/Certificate');
     await require('../../config/db')();
     await require('../../models/RateHit').deleteMany({});
 
@@ -120,8 +121,9 @@ test('learning path flow', { skip }, async (t) => {
             assert.deepEqual(past.data.completed.map((c) => c.titleAr), ['المحور الأول'], 'all its lectures entered: the module completes');
             e = await Enrollment.findById(enrollment._id);
             const mod = e.modules.find((m) => String(m.module) === m1);
-            assert.equal(mod.status, 'approved');
-            assert.equal(mod.history.at(-1).byName, 'system');
+            assert.ok(mod.history.some((h) => h.to === 'approved' && h.byName === 'system'), 'completed by the system');
+            assert.equal(mod.status, 'certificate_issued', 'nothing owed: its certificate issued itself');
+            assert.ok(await Certificate.exists({ enrollment: enrollment._id, module: m1, status: 'Valid' }));
             assert.equal(e.status, 'active', 'the second module is still open');
             assert.equal((await me('POST', `/api/v2/my/lectures/${lec.past}/join`)).data.completed.length, 0, 'entering again changes nothing');
         });

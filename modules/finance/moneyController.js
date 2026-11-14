@@ -231,6 +231,8 @@ exports.createPayment = async (req, res) => {
     });
 
     await addEvent(req, customer._id, 'payment', `${payment.receiptNo}: ${amount} ${currency} (${method})${confirmed ? '' : ' — pending confirmation'}`, { section: 'financial' });
+    // Paid in full now: certificates that waited for the payment are issued
+    if (confirmed) await require('../learning/autoCertificates').afterPayment(customer._id);
     await audit.record(req, { action: confirmed ? 'payment.recorded' : 'payment.recorded_pending', resource: 'payments', resourceId: payment._id, summary: `${payment.receiptNo} ${customer.customerNo} ${amount} ${currency}` });
     res.status(201).json({ item: await F.Payment.findById(payment._id).populate(PAY_POP) });
 };
@@ -342,6 +344,7 @@ exports.confirmPayment = async (req, res) => {
         await commissions.onPaymentConfirmed(p, { session, by: req.user.id });
     });
     await addEvent(req, p.customer, 'payment', `${p.receiptNo} confirmed`, { section: 'financial' });
+    await require('../learning/autoCertificates').afterPayment(p.customer);
     await audit.record(req, { action: 'payment.confirmed', resource: 'payments', resourceId: p._id, summary: `${p.receiptNo} ${p.amount} ${p.currency}` });
     res.json({ item: p });
 };

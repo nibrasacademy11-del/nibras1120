@@ -277,8 +277,15 @@ router.put('/certificate-templates/:id', validId(), all('certificates.manage'), 
 router.get('/accreditations', all('certificates.view'), handle(certs.listAccreditations));
 router.post('/accreditations', all('certificates.manage'), handle(certs.saveAccreditation));
 router.put('/accreditations/:id', validId(), all('certificates.manage'), handle(certs.saveAccreditation));
-router.get('/certificates/eligible', all('certificates.create'), handle(certs.eligible));
-router.post('/certificates/issue', all('certificates.create'), handle(certs.issue));
+// What waits for a certificate (customer service sees it too, to release one before full payment)
+const issuesOrReleases = (req, res, next) => {
+    const g = req.user.grants || {};
+    const release = typeof req.body?.waivePayment === 'string' && req.body.waivePayment.trim();
+    if (g['certificates.create'] === 'all' || ((req.method === 'GET' || release) && g['certificates.approve'] === 'all')) return next();
+    return res.status(403).json({ message: 'ليس لديك صلاحية لهذا الإجراء. / You do not have permission for this action.', code: 'FORBIDDEN' });
+};
+router.get('/certificates/eligible', issuesOrReleases, handle(certs.eligible));
+router.post('/certificates/issue', issuesOrReleases, handle(certs.issue));
 router.post('/certificates/issue-bulk', all('certificates.create'), handle(certs.issueBulk));
 router.get('/certificates', can('certificates.view'), handle(certs.list));
 router.get('/certificates/:id', validId(), handle(certs.get));

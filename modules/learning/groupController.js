@@ -527,6 +527,8 @@ async function countEntry(lecture, customerId, via, now = new Date()) {
     const isNew = await progress.markEntered(lecture, customerId, via, now);
     if (!isNew) return { completed: [] };
     const changes = await progress.refresh({ customerId, cohortId: lecture.cohort });
+    // A module (or the program) just completed: its certificate follows if the program is paid
+    if (changes.length) await require('./autoCertificates').afterProgress(changes.map((c) => c.enrollment._id));
     return { completed: changes.flatMap((c) => c.completed.map((m) => ({ enrollment: c.enrollment._id, module: m.module, titleAr: m.titleAr, titleEn: m.titleEn }))) };
 }
 

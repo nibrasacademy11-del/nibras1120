@@ -135,7 +135,8 @@ test('customer profile flow', { skip }, async (t) => {
             const cur = (await o('GET', `/api/v2/enrollments/${e._id}`)).data.item;
             assert.equal((await o('POST', `/api/v2/enrollments/${e._id}/modules/${mod}`, { action, __v: cur.__v })).status, 200, action);
         }
-        const cert = (await o('POST', '/api/v2/certificates/issue', { enrollment: e._id, module: mod })).data.item;
+        // nothing owed: the certificate issued itself when the module was approved (PLAN-V2 §5)
+        const cert = await require('../../models/Certificate').findOne({ enrollment: e._id, module: mod, status: 'Valid' }).lean();
         assert.ok(cert && cert.cert_num, 'a certificate to reissue');
 
         let request;
@@ -165,7 +166,9 @@ test('customer profile flow', { skip }, async (t) => {
             const cs = await login(support);
             const r = await cs('POST', `/api/v2/profile-requests/${request._id}/decide`, { decision: 'approve', note: 'matches the passport', __v: request.__v });
             assert.equal(r.status, 200, JSON.stringify(r.data));
-            assert.deepEqual(r.data.reissued, [`${cert.cert_num}-2`]);
+            // the module certificate and the final one (a one-module program completes with it)
+            assert.equal(r.data.reissued.length, 2);
+            assert.ok(r.data.reissued.includes(`${cert.cert_num}-2`));
             const f = Object.fromEntries((await me('GET', '/api/v2/my/profile')).data.fields.map((x) => [x.field, x]));
             assert.equal(f.nameEn.value, 'Sarah Ahmed Mahmoud');
             assert.equal(f.passport.value, '••••5432');

@@ -258,7 +258,7 @@ export default function Certificates() {
   if (filter.status) q.set('status', filter.status);
   if (filter.delivery) q.set('delivery', filter.delivery);
   const state = useLoad(tab === 'issued' ? `/api/v2/certificates?${q}` : null, [tab]);
-  const tabs = ['issued', ...(can('certificates.create', 'all') ? ['eligibleTab'] : []), ...(can('certificates.manage', 'all') ? ['templatesTab', 'accreditationsTab'] : [])];
+  const tabs = ['issued', ...(can('certificates.create', 'all') || can('certificates.approve', 'all') ? ['eligibleTab'] : []), ...(can('certificates.manage', 'all') ? ['templatesTab', 'accreditationsTab'] : [])];
   return (
     <>
       <h1 className="page-title">{t('certificatesNav')}</h1>
@@ -306,7 +306,10 @@ function Eligible() {
   const [email, setEmail] = useState(true);
   const [waive, setWaive] = useState(null);
   const state = useLoad('/api/v2/certificates/eligible');
-  const templates = useLoad('/api/v2/certificate-templates');
+  const canIssue = can('certificates.create', 'all');
+  // customer service may release a certificate before full payment (PLAN-V2 decision 1); issuing is the owner's
+  const canRelease = can('certificates.manage', 'all') || can('certificates.approve', 'all');
+  const templates = useLoad(canIssue ? '/api/v2/certificate-templates' : null);
   const [selected, setSelected] = useState([]);
   const [results, setResults] = useState(null);
   const { busy, error, run } = useAction();
@@ -315,22 +318,23 @@ function Eligible() {
     .then((d) => { setResults(d.results); setSelected([]); state.reload(); }).catch(() => {});
   return (
     <section className="card">
-      {(templates.data?.items || []).length === 0 && <div className="alert alert--info">{t('noTemplateHint')}</div>}
+      <p className="muted">{t('cdAutoHint')}</p>
+      {canIssue && templates.data && (templates.data.items || []).length === 0 && <div className="alert alert--info">{t('noTemplateHint')}</div>}
       <Loading state={state}>
         {(d) => (!d.items.length ? <p className="muted">{t('noData')}</p> : (
           <>
-            <div className="card-head"><span>{selected.length} {t('selected')}</span><div className="row"><label className="check"><input type="checkbox" checked={email} onChange={(e) => setEmail(e.target.checked)} /> {t('cdIssueEmail')}</label><button type="button" className="btn btn--primary" disabled={busy || !selected.length} onClick={issue}>{t('issueSelected')}</button></div></div>
+            {canIssue && <div className="card-head"><span>{selected.length} {t('selected')}</span><div className="row"><label className="check"><input type="checkbox" checked={email} onChange={(e) => setEmail(e.target.checked)} /> {t('cdIssueEmail')}</label><button type="button" className="btn btn--primary" disabled={busy || !selected.length} onClick={issue}>{t('issueSelected')}</button></div></div>}
             <div className="table-wrap">
               <table className="table">
-                <thead><tr><th><input type="checkbox" aria-label="all" checked={selected.length > 0 && selected.length === d.items.filter((i) => !i.unpaid).length} onChange={(e) => setSelected(e.target.checked ? d.items.filter((i) => !i.unpaid).map(key) : [])} /></th><th>{t('customer')}</th><th>{t('program')}</th><th>{t('certificate')}</th><th>{t('approved')}</th><th>{t('cdUnpaid')}</th></tr></thead>
+                <thead><tr>{canIssue && <th><input type="checkbox" aria-label="all" checked={selected.length > 0 && selected.length === d.items.filter((i) => !i.unpaid).length} onChange={(e) => setSelected(e.target.checked ? d.items.filter((i) => !i.unpaid).map(key) : [])} /></th>}<th>{t('customer')}</th><th>{t('program')}</th><th>{t('certificate')}</th><th>{t('approved')}</th><th>{t('cdUnpaid')}</th></tr></thead>
                 <tbody>{d.items.map((i) => (
                   <tr key={key(i)}>
-                    <td><input type="checkbox" aria-label={i.title} disabled={!!i.unpaid} checked={selected.includes(key(i))} onChange={() => setSelected((s) => (s.includes(key(i)) ? s.filter((x) => x !== key(i)) : [...s, key(i)]))} /></td>
+                    {canIssue && <td><input type="checkbox" aria-label={i.title} disabled={!!i.unpaid} checked={selected.includes(key(i))} onChange={() => setSelected((s) => (s.includes(key(i)) ? s.filter((x) => x !== key(i)) : [...s, key(i)]))} /></td>}
                     <td>{i.customer?.customerNo} {i.customer?.nameAr}</td>
                     <td>{i.program}<br /><small className="muted" dir="ltr">{i.enrollmentNo}</small></td>
                     <td>{i.kind === 'program' ? <Pill tone="ok">{t('finalCert')}</Pill> : i.title}</td>
                     <td>{fmtDay(i.approvedAt)}</td>
-                    <td>{i.unpaid ? <><small className="late" dir="ltr">{owed(i.unpaid)}</small>{can('certificates.manage', 'all') && <><br /><button type="button" className="btn btn--small btn--ghost" onClick={() => setWaive(i)}>{t('cdWaive')}</button></>}</> : '—'}</td>
+                    <td>{i.unpaid ? <><small className="late" dir="ltr">{owed(i.unpaid)}</small>{canRelease && <><br /><button type="button" className="btn btn--small btn--ghost" onClick={() => setWaive(i)}>{t('cdWaive')}</button></>}</> : '—'}</td>
                   </tr>
                 ))}</tbody>
               </table>

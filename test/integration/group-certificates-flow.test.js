@@ -93,7 +93,7 @@ test('group certificates flow', { skip }, async (t) => {
             assert.equal((await a('POST', `/api/v2/groups/${cohortId}/approve-module`, { module: modA })).data.already, 1);
         });
 
-        await t.test('no certificate while money is owed; the customer is told how much', async () => {
+        await t.test('no certificate while money is owed; the customer sees nothing (PLAN-V2 decision 1)', async () => {
             const g = await a('GET', `/api/v2/groups/${cohortId}/certificates`);
             const item = g.data.items.find((i) => i.module === modA);
             assert.equal(item.reason, 'unpaid');
@@ -103,22 +103,23 @@ test('group certificates flow', { skip }, async (t) => {
             const issued = await a('POST', `/api/v2/groups/${cohortId}/certificates/issue`, {});
             assert.equal(issued.data.results.length, 0, 'nothing ready');
             const mine = await me('GET', '/api/v2/my/certificates');
-            assert.equal(mine.data.pending.length, 1);
-            assert.deepEqual(mine.data.pending[0].remaining, [{ currency: 'SAR', remaining: 1000 }]);
+            assert.equal(mine.data.items.length, 0);
+            assert.equal(mine.data.pending, undefined, 'not even that a certificate is waiting');
         });
 
-        await t.test('after paying, the daily run issues it under an "on approval" rule', async () => {
+        await t.test('paying the balance issues the waiting certificate at once', async () => {
             assert.equal((await a('PUT', `/api/v2/groups/${cohortId}/certificate-rule`, { mode: 'on_approval', issue: 'modules', sendEmail: false })).status, 200);
             const pay = await a('POST', '/api/v2/payments', { customer: String(file._id), charge: charge.data.item._id, account: acct._id, method: 'cash', amount: 1000 });
             assert.equal(pay.status, 201, JSON.stringify(pay.data));
-            const run = await groupCerts.runDue();
-            assert.ok(run.issued >= 1, JSON.stringify(run));
             const cert = await Certificate.findOne({ customer: file._id, module: modA, status: 'Valid' });
-            assert.ok(cert);
+            assert.ok(cert, 'issued with the payment, not the next day');
+            assert.equal(await Certificate.countDocuments({ customer: file._id, kind: 'program' }), 0, 'the group rule issues modules only');
+            const run = await groupCerts.runDue();
+            assert.equal(run.issued, 0, 'the daily run finds nothing left');
             assert.equal(cert.issuedBy, null, 'issued by the system');
             const g = await a('GET', `/api/v2/groups/${cohortId}/certificates`);
             assert.equal(g.data.items.find((i) => i.module === modA).reason, 'issued');
-            assert.equal((await me('GET', '/api/v2/my/certificates')).data.pending.length, 0);
+            assert.equal((await me('GET', '/api/v2/my/certificates')).data.items.length, 1, 'now it shows');
         });
 
         await t.test('paper delivery moves forward only and needs the receiver', async () => {
@@ -139,8 +140,9 @@ test('group certificates flow', { skip }, async (t) => {
 
         await t.test('a waiver issues despite a balance, and is recorded', async () => {
             const modB = (await a('GET', `/api/v2/groups/${cohortId}/certificates`)).data.modules[1].module;
-            await a('POST', `/api/v2/groups/${cohortId}/approve-module`, { module: modB });
+            // owed before the approval, so the certificate waits instead of issuing itself
             await a('POST', '/api/v2/charges', { customer: String(file._id), description: 'رسوم إضافية', currency: 'SAR', listAmount: 200 });
+            await a('POST', `/api/v2/groups/${cohortId}/approve-module`, { module: modB });
             const item = (await a('GET', `/api/v2/groups/${cohortId}/certificates`)).data.items.find((i) => i.module === modB);
             assert.equal(item.reason, 'unpaid');
             const w = await a('POST', '/api/v2/certificates/issue', { enrollment: item.enrollment, module: modB, waivePayment: 'منحة' });

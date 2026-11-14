@@ -35,7 +35,7 @@
         remaining: 'Remaining', paid: 'Paid', installments: 'Installments', payments: 'Payments', noPayments: 'No payments yet.', print: 'Print', receipt: 'Receipt',
         instStatus: { paid: 'Paid', partial: 'Partly paid', due: 'Due', overdue: 'Overdue' },
         method: { cash: 'Cash', bank_transfer: 'Bank transfer', card: 'Card', wallet: 'Wallet', gateway: 'Online payment', cheque: 'Cheque', other: 'Other' },
-        certsEmpty: 'Your certificates appear here when they are issued.', verifyCert: 'Verify', certNo: 'Certificate no.', issued: 'Issued', certKind: { module: 'Module certificate', program: 'Program certificate', legacy: 'Certificate' },
+        certsEmpty: 'Your certificates appear here when they are issued.', openCert: 'View and download PDF', verifyCert: 'Verify', certNo: 'Certificate no.', issued: 'Issued', certKind: { module: 'Module certificate', program: 'Program certificate', legacy: 'Certificate' },
         complaintsTitle: 'My requests and complaints', newComplaint: 'New request', noComplaints: 'No requests yet.', subject: 'Subject', category: 'About', details: 'Details',
         categories: { service: 'Service', program: 'The program', trainer: 'The trainer', finance: 'Payments', certificate: 'Certificates', technical: 'A technical problem', other: 'Other' },
         cStatus: { open: 'Open', in_progress: 'Being handled', resolved: 'Resolved', closed: 'Closed' }, sentComplaint: 'Your request was sent.',
@@ -69,7 +69,7 @@
         remaining: 'المتبقي', paid: 'المدفوع', installments: 'الأقساط', payments: 'المدفوعات', noPayments: 'لا توجد مدفوعات بعد.', print: 'طباعة', receipt: 'إيصال',
         instStatus: { paid: 'مدفوع', partial: 'مدفوع جزئياً', due: 'مستحق', overdue: 'متأخر' },
         method: { cash: 'نقدي', bank_transfer: 'تحويل بنكي', card: 'بطاقة', wallet: 'محفظة', gateway: 'دفع إلكتروني', cheque: 'شيك', other: 'أخرى' },
-        certsEmpty: 'تظهر شهاداتك هنا عند صدورها.', verifyCert: 'تحقق', certNo: 'رقم الشهادة', issued: 'تاريخ الإصدار', certKind: { module: 'شهادة محور', program: 'شهادة إتمام البرنامج', legacy: 'شهادة' },
+        certsEmpty: 'تظهر شهاداتك هنا عند صدورها.', openCert: 'عرض وتحميل PDF', verifyCert: 'تحقق', certNo: 'رقم الشهادة', issued: 'تاريخ الإصدار', certKind: { module: 'شهادة محور', program: 'شهادة إتمام البرنامج', legacy: 'شهادة' },
         complaintsTitle: 'طلباتي وشكاواي', newComplaint: 'طلب جديد', noComplaints: 'لا توجد طلبات بعد.', subject: 'الموضوع', category: 'بخصوص', details: 'التفاصيل',
         categories: { service: 'الخدمة', program: 'البرنامج', trainer: 'المحاضر', finance: 'المدفوعات', certificate: 'الشهادات', technical: 'مشكلة تقنية', other: 'أخرى' },
         cStatus: { open: 'مفتوح', in_progress: 'قيد المعالجة', resolved: 'تم الحل', closed: 'مغلق' }, sentComplaint: 'تم إرسال طلبك.',
@@ -476,7 +476,10 @@
                     ${c.kind === 'module' ? `<p class="pf-small">${h(pick(c.program_name, c.programNameEn))}</p>` : ''}
                     <p class="pf-small">${h(T.certNo)} <b dir="ltr">${h(c.cert_num)}</b> · ${h(T.issued)} ${h(fmtDay(c.issuedAt || c.issue_date))}</p>
                 </div>
-                <a class="pf-btn pf-btn--ghost" href="/pages/${L}/verify.html?code=${encodeURIComponent(c.cert_num)}"><i class="fas fa-shield-halved" aria-hidden="true"></i> ${h(T.verifyCert)}</a>
+                <div class="pf-row">
+                    <a class="pf-btn pf-btn--ghost" href="/pages/${L}/verify.html?code=${encodeURIComponent(c.cert_num)}"><i class="fas fa-shield-halved" aria-hidden="true"></i> ${h(T.verifyCert)}</a>
+                    ${c.kind !== 'legacy' ? `<a class="pf-btn" href="/pages/${L}/certificate.html?id=${encodeURIComponent(c._id)}"><i class="fas fa-file-arrow-down" aria-hidden="true"></i> ${h(T.openCert)}</a>` : ''}
+                </div>
             </article>`).join('')}</div>`;
     }
 

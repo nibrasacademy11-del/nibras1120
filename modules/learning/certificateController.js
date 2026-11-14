@@ -15,7 +15,6 @@ const User = require('../../models/User');
 const R = require('../../lib/certificateRules');
 const { outstandingFor } = require('../finance/balances');
 const { brandedEmail } = require('../../lib/brandEmail');
-const { isMailConfigured, createTransporter } = require('../../config/mailer');
 
 // Issuing, listing, revoking and reissuing certificates; templates and accreditations
 
@@ -116,31 +115,33 @@ async function paymentCheck(enrollment) {
     return rule === 'enrollment' ? outstandingFor({ enrollment: enrollment._id }) : outstandingFor({ customer: enrollment.customer });
 }
 
-const portalCertUrl = (id) => `${siteUrl()}/portal/certificates/${id}`;
+// The certificate on the customer's page of the website, where it is viewed and downloaded as PDF
+const siteCertUrl = (id, lang = 'ar') => `${siteUrl()}/pages/${lang}/certificate.html?id=${id}`;
 
 // Sends the certificate link to the customer and records it on the certificate
 async function emailCertificate(req, cert) {
-    if (!isMailConfigured()) throw new HttpError(400, 'إعدادات البريد غير مكتملة. / Email is not set up.', 'NO_MAIL');
+    const mail = require('../../lib/mail');
     const customer = await Customer.findById(cert.customer).select('nameAr contact.email user');
     let to = customer && customer.contact && customer.contact.email;
     if (!to && customer && customer.user) to = (await User.findById(customer.user).select('email').lean() || {}).email;
     if (!to) throw new HttpError(400, 'لا يوجد إيميل لهذا العميل. / This customer has no email.', 'NO_EMAIL');
     const title = cert.kind === 'module' ? cert.moduleName : cert.program_name;
-    await createTransporter().sendMail({
-        from: `"أكاديمية نبراس" <${process.env.EMAIL_USER}>`,
+    const sent = await mail.send({
+        kind: 'certificate-ready',
         to,
-        subject: `شهادتك من أكاديمية نبراس - ${cert.cert_num}`,
+        subject: `شهادتك جاهزة - أكاديمية نبراس / Your certificate is ready - ${cert.cert_num}`,
         html: brandedEmail({
             heading: `مبروك يا ${cert.trainee_name}!`,
             lines: ['صدرت شهادتك:', title],
             highlight: `رقم الشهادة: ${cert.cert_num}`,
-            button: { label: 'عرض وطباعة الشهادة', url: portalCertUrl(cert._id) },
+            button: { label: 'عرض الشهادة وتحميلها PDF', url: siteCertUrl(cert._id) },
             secondary: { label: 'رابط التحقق من الشهادة', url: verifyUrl(cert.cert_num) },
-            noteEn: `Congratulations! Your certificate ${cert.cert_num} is ready in the Nibras portal, where you can view, print or save it as PDF.`,
+            noteEn: `Congratulations! Your certificate ${cert.cert_num} is ready on your Nibras profile, where you can view it and download it as PDF.`,
             footer: 'يمكن لأي جهة التحقق من الشهادة برقمها أو بمسح رمز QR المطبوع عليها.'
         }),
-        text: `مبروك! صدرت شهادتك ${cert.cert_num} (${title}). اعرضها واطبعها من بوابة نبراس: ${portalCertUrl(cert._id)}`
+        text: `مبروك! صدرت شهادتك ${cert.cert_num} (${title}). اعرضها وحمّلها من صفحتك: ${siteCertUrl(cert._id)}`
     });
+    if (!mail.delivered(sent)) throw new HttpError(400, 'تعذر إرسال الإيميل (إعدادات البريد غير مكتملة). / The email could not be sent (email is not set up).', 'NO_MAIL');
     const now = new Date();
     await Certificate.updateOne({ _id: cert._id }, {
         $set: { 'delivery.emailedAt': now, 'delivery.emailedTo': to },
@@ -256,7 +257,8 @@ exports.issue = async (req, res) => {
 function waiverOf(req) {
     const reason = str(req.body.waivePayment, 300);
     if (!reason) return '';
-    if (P.scopeFor(req.user.grants, 'certificates.manage') !== 'all') throw new HttpError(403, 'Forbidden.');
+    const g = req.user.grants || {};
+    if (g['certificates.manage'] !== 'all' && g['certificates.approve'] !== 'all') throw new HttpError(403, 'Forbidden.');
     return reason;
 }
 
@@ -355,18 +357,9 @@ exports.mine = async (req, res) => {
         $or: [{ customer: { $in: files.map((f) => f._id) } }, { userId: req.user.id }],
         status: { $in: ['Valid', 'Expired'] }
     }).select('-pdf_data -design').sort({ createdAt: -1 }).lean();
-    // Approved work whose certificate is waiting, and why (usually a balance to pay)
-    const pending = [];
-    const enrollments = await Enrollment.find({ customer: { $in: files.map((f) => f._id) }, status: { $in: ['active', 'on_hold', 'completed'] } }).lean();
-    for (const e of enrollments) {
-        const waiting = [];
-        for (const m of e.modules) if (m.status === 'approved' && m.certificate) waiting.push({ titleAr: m.titleAr, titleEn: m.titleEn });
-        if (e.eligibleForFinalCertificate && !items.some((c) => c.kind === 'program' && String(c.enrollment) === String(e._id))) waiting.push({ titleAr: e.programTitleAr, titleEn: e.programTitleEn, final: true });
-        if (!waiting.length) continue;
-        const pay = await paymentCheck(e);
-        for (const w of waiting) pending.push({ ...w, program: e.programTitleAr, remaining: pay.clear ? [] : pay.byCurrency });
-    }
-    res.json({ items, pending });
+    // Only issued certificates: one waiting for payment is not shown, not even that it exists
+    // (PLAN-V2 decision 1); it is issued and appears here once the program is paid
+    res.json({ items });
 };
 
 // ---- status changes ----

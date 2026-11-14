@@ -152,6 +152,7 @@ exports.approveModule = async (req, res) => {
     const note = str(req.body.note, 500) || `Approved for group ${cohort.nameAr}`;
     const only = Array.isArray(req.body.enrollments) ? new Set(req.body.enrollments.map(String)) : null;
     const out = { approved: 0, already: 0, skipped: 0 };
+    const approvedIds = [];
     const now = new Date();
     for (const e of await memberEnrollments(cohort)) {
         if (only && !only.has(String(e._id))) continue;
@@ -177,7 +178,10 @@ exports.approveModule = async (req, res) => {
         await e.save();
         await addEvent(req, e.customer._id, 'module', `${mod.titleAr}: ${from} → approved (${cohort.nameAr})`, { meta: { enrollment: String(e._id), action: 'group_approve' } });
         out.approved++;
+        approvedIds.push(e._id);
     }
+    // Paid-up members get their certificates now; the others when they pay
+    if (approvedIds.length) await require('./autoCertificates').afterProgress(approvedIds);
     await audit.record(req, { action: 'module.group_approved', resource: 'enrollments', resourceId: cohort._id, summary: `${cohort.nameAr}: ${out.approved} approved`, reason: note, meta: { module: moduleId, ...out } });
     res.json(out);
 };
