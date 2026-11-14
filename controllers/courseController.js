@@ -50,7 +50,7 @@ function saveError(res, error, fallback) {
 exports.getAllCourses = async (req, res) => {
     try {
         const { type, specialty, status, search, featured, ids, limit, page } = req.query;
-        const isAdmin = !!req.user && ['admin', 'super_admin'].includes(req.user.role);
+        const isAdmin = !!req.user && req.user.role === 'super_admin';
         const query = {};
 
         // The cart and checkout ask for the programs they hold, to show current prices
@@ -137,7 +137,7 @@ exports.getCourseById = async (req, res) => {
             course = await Course.findOne({ slug: identifier });
         }
 
-        const isAdmin = !!req.user && ['admin', 'super_admin'].includes(req.user.role);
+        const isAdmin = !!req.user && req.user.role === 'super_admin';
         if (!course || (course.status === 'hidden' && !isAdmin)) {
             return res.status(404).json({ message: 'Program not found.' });
         }

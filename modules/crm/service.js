@@ -45,7 +45,8 @@ async function approvedSections(userId, customerId) {
 const SETTING_DEFAULTS = {
     'customers.lookupNamePolicy': 'partial',
     // A module goes to the team leader before the admin when the enrollment's team has a leader
-    'enrollments.teamLeaderReview': true,
+    // off: team leaders do not review modules (PLAN-V2); progress comes from the lectures
+    'enrollments.teamLeaderReview': false,
     // after a person accepts a team invitation: 'approval' (the owner or HR approves) or 'auto'
     'teams.invitePolicy': 'approval',
     // The academy's main currency: the default in forms and the one exchange rates are written against.

@@ -39,7 +39,7 @@ exports.health = async (req, res) => {
     const C = require('../../models/commission');
     const [superAdmins, admins2fa, pendingPayments, pendingApprovals, dueCommissions, errors] = await Promise.all([
         User.countDocuments({ role: 'super_admin', status: 'active' }),
-        User.aggregate([{ $match: { role: { $in: ['super_admin', 'admin'] }, status: 'active' } }, { $group: { _id: '$twoFactor.enabled', n: { $sum: 1 } } }]),
+        User.aggregate([{ $match: { role: 'super_admin', status: 'active' } }, { $group: { _id: '$twoFactor.enabled', n: { $sum: 1 } } }]),
         F.Payment.countDocuments({ status: 'pending' }),
         F.Approval.countDocuments({ status: 'pending' }),
         C.CommissionLine.countDocuments({ status: 'due' }),

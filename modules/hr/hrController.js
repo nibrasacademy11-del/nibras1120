@@ -19,7 +19,7 @@ const { transferAllFrom } = require('../crm/transfer');
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const oid = (v) => (v && mongoose.Types.ObjectId.isValid(v) ? new mongoose.Types.ObjectId(String(v)) : null);
 const str = (v, max = 160) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
-const ADMIN_ROLES = ['super_admin', 'admin'];
+const ADMIN_ROLES = ['super_admin'];
 
 // ---- departments ----
 

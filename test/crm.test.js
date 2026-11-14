@@ -61,7 +61,7 @@ test('an approved request opens only the requested sections', () => {
     assert.equal(withId.canRevealIdentity, true);
 });
 
-test('a team leader does not see team customers by default (the owner can open it); admin reveals identity', () => {
+test('a team leader does not see team customers by default (the owner can open it); the owner reveals identity', () => {
     const tl = customerAccess({ actor: leader, grants: grants('team_leader'), customer });
     assert.equal(tl.level, 'basic');
     assert.equal(tl.canManage, false);
@@ -70,7 +70,7 @@ test('a team leader does not see team customers by default (the owner can open i
     assert.equal(opened.canManage, true);
     const outsider = customerAccess({ actor: leader, grants: grants('team_leader'), customer: { ...customer, team: { _id: 't9' } } });
     assert.equal(outsider.level, 'basic');
-    const admin = customerAccess({ actor: { id: 'a', teamIds: [] }, grants: grants('admin'), customer });
+    const admin = customerAccess({ actor: { id: 'a', teamIds: [] }, grants: grants('super_admin'), customer });
     assert.equal(admin.canRevealIdentity, true);
     assert.equal(admin.canArchive, true);
 });
@@ -79,7 +79,7 @@ test('customers and roles without lookup see nothing', () => {
     const a = customerAccess({ actor: { id: 'x', teamIds: [] }, grants: grants('customer'), customer });
     assert.equal(a.level, 'basic');
     assert.equal(a.canLookup, false);
-    const hr = customerAccess({ actor: { id: 'h', teamIds: [] }, grants: grants('hr_manager'), customer });
+    const hr = customerAccess({ actor: { id: 'h', teamIds: [] }, grants: grants('employee'), customer });
     assert.equal(hr.inFile, false);
 });
 

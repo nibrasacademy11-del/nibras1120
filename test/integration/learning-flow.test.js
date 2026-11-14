@@ -105,25 +105,20 @@ test('learning flow', { skip }, async (t) => {
             return c('POST', `/api/v2/enrollments/${e._id}/modules/${mod}`, { action, note, __v: cur.__v });
         };
 
-        await t.test('review chain: employee → team leader → admin', async () => {
+        await t.test('module review: employee -> owner (team leaders do not review modules, PLAN-V2)', async () => {
             const [m1, m2] = e.modules.map((m) => m.module);
             assert.equal((await act(w, m1, 'start')).status, 200);
             assert.equal((await act(w, m1, 'submit')).status, 200);
-            assert.equal((await act(a, m1, 'approve')).data.code, 'NEEDS_TEAM_LEADER_REVIEW');
-            assert.equal((await act(w, m1, 'team_leader_approve')).status, 403);
-            const queue = await tl('GET', '/api/v2/reviews');
-            assert.ok(queue.data.items.some((r) => r.module.id === m1));
-            assert.equal((await act(tl, m1, 'team_leader_approve')).status, 200);
-            assert.equal((await act(tl, m1, 'approve')).status, 403);
+            assert.ok([403, 404].includes((await act(tl, m1, 'team_leader_approve')).status), 'not the team leader');
+            assert.equal((await act(w, m1, 'approve')).status, 403, 'the employee cannot approve');
             assert.equal((await act(a, m1, 'approve')).status, 200);
 
             await act(w, m2, 'start');
             await act(w, m2, 'submit');
-            assert.equal((await act(tl, m2, 'team_leader_reject')).data.code, 'REASON_REQUIRED');
-            assert.equal((await act(tl, m2, 'team_leader_reject', 'ناقص')).status, 200);
+            assert.equal((await act(a, m2, 'reject')).data.code, 'REASON_REQUIRED');
+            assert.equal((await act(a, m2, 'reject', 'ناقص')).status, 200);
             await act(w, m2, 'rework');
             await act(w, m2, 'submit');
-            await act(tl, m2, 'team_leader_approve');
             const done = await act(a, m2, 'approve');
             assert.equal(done.data.item.status, 'completed');
             assert.equal(done.data.item.eligibleForFinalCertificate, true);

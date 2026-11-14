@@ -22,11 +22,16 @@ test('super admin holds every permission, whatever is saved for it', () => {
     }
 });
 
-test('admin cannot edit role definitions by default', () => {
-    const g = P.effectiveGrants('admin');
-    assert.equal(g['roles.view'], 'all');
-    assert.equal(g['roles.manage'], undefined);
-    assert.equal(g['payments.approve'], 'all');
+test('five roles only; the removed ones are read as employee (PLAN-V2)', () => {
+    assert.deepEqual(P.ROLES, ['super_admin', 'team_leader', 'employee', 'customer_support', 'customer']);
+    for (const old of ['admin', 'hr_manager', 'finance_manager', 'accountant', 'cms_manager']) {
+        assert.equal(P.normalizeRole(old), 'employee', old);
+        assert.equal(P.isAdminRole(old), false, old);
+    }
+    assert.equal(P.effectiveGrants('admin')['payments.approve'], undefined, 'an old admin account gets no admin rights');
+    assert.equal(P.effectiveGrants('customer_support')['customers.view'], 'all', 'customer service sees every customer');
+    assert.equal(P.effectiveGrants('customer_support')['customers.update'], undefined, 'read only');
+    assert.equal(P.effectiveGrants('customer_support')['certificates.approve'], 'all', 'may release a certificate before payment');
 });
 
 test('employees and team leaders work on their own customers; no academy-wide search (RBAC-MATRIX)', () => {

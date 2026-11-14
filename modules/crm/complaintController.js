@@ -83,7 +83,7 @@ exports.create = async (req, res) => {
     const message = { type: 'complaint', titleAr: `شكوى جديدة ${c.complaintNo}: ${subject}`, titleEn: `New complaint ${c.complaintNo}: ${subject}`, link: '/complaints' };
     if (assignee && String(assignee) !== req.user.id) await notify(assignee, message);
     if (!assignee) {
-        const support = await User.find({ role: { $in: ['customer_support', 'admin', 'super_admin'] }, status: 'active' }).select('_id').lean();
+        const support = await User.find({ role: { $in: ['customer_support', 'super_admin'] }, status: 'active' }).select('_id').lean();
         for (const u of support) await notify(u._id, message);
     }
     res.status(201).json({ item: await Complaint.findById(c._id).populate(POP) });

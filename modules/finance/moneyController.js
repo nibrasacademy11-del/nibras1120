@@ -40,7 +40,7 @@ async function amountFor(currency, raw) {
 }
 
 async function notifyApprovers(message) {
-    const users = await User.find({ role: { $in: ['super_admin', 'admin', 'finance_manager'] }, status: 'active' }).select('_id').lean();
+    const users = await User.find({ role: 'super_admin', status: 'active' }).select('_id').lean();
     for (const u of users) await notify(u._id, message);
 }
 

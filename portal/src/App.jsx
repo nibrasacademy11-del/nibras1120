@@ -5,7 +5,6 @@ import Layout from './components/Layout.jsx';
 import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Security from './pages/Security.jsx';
-import Roles from './pages/Roles.jsx';
 import Audit from './pages/Audit.jsx';
 import Customers from './pages/Customers.jsx';
 import CustomerDetail from './pages/CustomerDetail.jsx';
@@ -31,7 +30,6 @@ import PerformanceReviews, { MyReviews as MyPerformance } from './pages/Reviews.
 import MyTeam from './pages/MyTeam.jsx';
 import MyProfile from './pages/MyProfile.jsx';
 import InviteResponse from './pages/InviteResponse.jsx';
-import MyAccess from './pages/MyAccess.jsx';
 import PrintSamples from './pages/PrintSamples.jsx';
 import Leads from './pages/Crm360.jsx';
 import MyLectures from './pages/MyLectures.jsx';
@@ -124,13 +122,12 @@ export default function App() {
         <Route path="/enrollments/:id" element={<Guard permission="enrollments.view"><EnrollmentDetail /></Guard>} />
         <Route path="/reviews" element={<Guard permission="enrollments.approve" minScope="team"><Reviews /></Guard>} />
         <Route path="/customers" element={<Guard permission="customers.view"><Customers /></Guard>} />
-        <Route path="/my-access" element={<MyAccess />} />
-        <Route path="/print-samples" element={['super_admin', 'admin'].includes(me.user.role) ? <PrintSamples /> : <div className="card empty">{t('forbidden')}</div>} />
+        <Route path="/print-samples" element={me.user.role === 'super_admin' ? <PrintSamples /> : <div className="card empty">{t('forbidden')}</div>} />
         <Route path="/leads" element={<Guard permission="customers.view"><Leads /></Guard>} />
-        <Route path="/website" element={zone === 'staff'
+        <Route path="/website" element={zone === 'staff' && urls.cms
           ? <ElsewhereCard text={t('cmsMoved')} href={`${urls.cms || ''}/portal/website`} label={t('openCms')} />
           : can('website.manage', 'all') ? <Website /> : <div className="card empty">{t('forbidden')}</div>} />
-        <Route path="/user-accounts" element={['super_admin', 'admin'].includes(me.user.role) ? <><h1 className="page-title">{t('userAccountsNav')}</h1><UserAccounts /></> : <div className="card empty">{t('forbidden')}</div>} />
+        <Route path="/user-accounts" element={me.user.role === 'super_admin' ? <><h1 className="page-title">{t('userAccountsNav')}</h1><UserAccounts /></> : <div className="card empty">{t('forbidden')}</div>} />
         <Route path="/customers/:id" element={<Guard permission="customer_lookup.view"><CustomerDetail /></Guard>} />
         <Route path="/lookup" element={<Guard permission="customer_lookup.view"><Lookup /></Guard>} />
         <Route path="/tasks" element={<Guard permission="tasks.view"><Tasks /></Guard>} />
@@ -140,7 +137,6 @@ export default function App() {
         <Route path="/duplicates" element={<Guard permission="customers.manage" minScope="all"><Duplicates /></Guard>} />
         <Route path="/settings" element={<Guard permission="settings.manage" minScope="all"><Settings /></Guard>} />
         <Route path="/security" element={<Security />} />
-        <Route path="/roles" element={<Guard permission="roles.view" minScope="all"><Roles /></Guard>} />
         <Route path="/audit" element={<Guard permission="audit.view" minScope="all"><Audit /></Guard>} />
         <Route path="*" element={<div className="card empty">{t('notFound')}</div>} />
       </Routes>

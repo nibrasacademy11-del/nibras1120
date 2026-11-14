@@ -40,7 +40,8 @@ test('finance flow', { skip }, async (t) => {
     const pw = 'Test-password-123';
     const hash = await bcrypt.hash(pw, 10);
     const mk = (role) => User.create({ name: `${role} ${tag}`, email: `ff-${role}-${tag}@test.local`, password: hash, role });
-    const [sup, fin, emp] = [await mk('super_admin'), await mk('finance_manager'), await mk('employee')];
+    // finance work is the owner's (PLAN-V2): a second owner account plays the one who confirms
+    const [sup, fin, emp] = [await mk('super_admin'), await User.create({ name: `owner2 ${tag}`, email: `ff-owner2-${tag}@test.local`, password: hash, role: 'super_admin' }), await mk('employee')];
 
     const client = () => {
         const jar = {};
@@ -158,7 +159,7 @@ test('finance flow', { skip }, async (t) => {
             assert.equal((await f('POST', `/api/v2/finance/periods/${key}`, { status: 'closed', reason: 'month end' })).status, 200);
             const back = await f('POST', '/api/v2/payments', { customer: customer.id, account: sar._id, method: 'cash', amount: 10, paidAt: last.toISOString() });
             assert.equal(back.data.code, 'PERIOD_CLOSED');
-            assert.equal((await f('POST', `/api/v2/finance/periods/${key}`, { status: 'open', reason: 'fix' })).status, 403);
+            assert.equal((await e('POST', `/api/v2/finance/periods/${key}`, { status: 'open', reason: 'fix' })).status, 403, 'an employee cannot reopen a closed month');
             assert.equal((await s('POST', `/api/v2/finance/periods/${key}`, { status: 'open', reason: 'test cleanup' })).status, 200);
             const sum = (await f('GET', '/api/v2/finance/summary')).data;
             assert.ok(sum.totals.find((x) => x.currency === 'USD').collected >= 400, 'totals stay per currency');

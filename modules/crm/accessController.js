@@ -60,7 +60,7 @@ exports.create = async (req, res) => {
     if (customer.owner) await notify(customer.owner, message);
     else {
         // A file without a responsible employee goes to the admins
-        const admins = await User.find({ role: { $in: ['super_admin', 'admin'] }, status: 'active' }).select('_id').lean();
+        const admins = await User.find({ role: 'super_admin', status: 'active' }).select('_id').lean();
         for (const a of admins) await notify(a._id, message);
     }
     res.status(201).json({ item: view(await r.populate(POP)) });

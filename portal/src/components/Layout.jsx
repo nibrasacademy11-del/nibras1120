@@ -24,7 +24,7 @@ export default function Layout({ children }) {
         </div>
         {!locked && <SideNav />}
         <div className="sidebar-foot">
-          {zone === 'staff' && can('website.manage', 'all') && <a className="nav-item" href={`${urls.cms}/portal/website`}>{t('openCms')} ↗</a>}
+          {zone === 'staff' && urls.cms && can('website.manage', 'all') && <a className="nav-item" href={`${urls.cms}/portal/website`}>{t('openCms')} ↗</a>}
           {zone === 'cms' && <a className="nav-item" href={`${urls.staff}/portal/`}>{t('openStaff')} ↗</a>}
           <a className="nav-item" href={zone === 'staff' || zone === 'cms' ? `${urls.site}/` : '/'}>{t('website')}</a>
         </div>

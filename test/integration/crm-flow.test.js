@@ -123,7 +123,10 @@ test('CRM flow', { skip }, async (t) => {
             assert.equal((await emp2('GET', `/api/v2/customers/${cust.id}`)).status, 404, 'a direct link opens nothing');
             assert.equal((await emp2('GET', `/api/v2/customers/lookup?q=${cust.customerNo}`)).status, 403, 'no academy-wide search by default');
             const e2 = await User.findOne({ email: emails.e2 });
-            assert.equal((await admin('PUT', `/api/v2/users/${e2._id}/extra-grants`, { grants: { 'customer_lookup.view': 'all' }, reason: 'customer service duty' })).status, 200);
+            // search and access requests are not part of the employee role; the owner can open them for one person
+            assert.equal((await admin('PUT', `/api/v2/users/${e2._id}/extra-grants`, { grants: { 'customer_lookup.view': 'all', 'access_requests.view': 'own', 'access_requests.create': 'own' }, reason: 'customer service duty' })).status, 200);
+            const e1u = await User.findOne({ email: emails.e1 });
+            assert.equal((await admin('PUT', `/api/v2/users/${e1u._id}/extra-grants`, { grants: { 'access_requests.view': 'own', 'access_requests.approve': 'own' }, reason: 'answers access requests' })).status, 200);
             const look = await emp2('GET', `/api/v2/customers/lookup?q=${encodeURIComponent(`2980101${num}999`)}`);
             assert.equal(look.status, 200);
             assert.equal(look.data.items[0].customerNo, cust.customerNo);

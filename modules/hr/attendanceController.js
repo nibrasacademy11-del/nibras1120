@@ -262,7 +262,7 @@ exports.requestLeave = async (req, res) => {
     const message = { type: 'leave', titleAr: `طلب ${type === 'permission' ? 'استئذان' : 'إجازة'} من ${req.user.name}`, titleEn: `${type === 'permission' ? 'Permission' : 'Leave'} request from ${req.user.name}`, bodyAr: `${from}${to !== from ? ` → ${to}` : ''}`, bodyEn: `${from}${to !== from ? ` → ${to}` : ''}`, link: '/leaves' };
     if (leader && String(leader) !== req.user.id) await notify(leader, message);
     else {
-        const hr = await User.find({ role: { $in: ['hr_manager', 'admin', 'super_admin'] }, status: 'active' }).select('_id').lean();
+        const hr = await User.find({ role: 'super_admin', status: 'active' }).select('_id').lean();
         for (const u of hr) if (String(u._id) !== req.user.id) await notify(u._id, message);
     }
     await audit.record(req, { action: 'leave.requested', resource: 'leaves', resourceId: l._id, summary: `${type} ${from}→${to}` });

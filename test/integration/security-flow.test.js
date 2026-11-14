@@ -140,7 +140,7 @@ test('security flow', { skip }, async (t) => {
             assert.equal((await sup('POST', '/api/auth/login', { email: emails.sup, password: pw })).status, 200);
             const roles = await sup('GET', '/api/v2/roles');
             assert.equal(roles.status, 200);
-            assert.equal(roles.data.roles.length, 10, 'nine roles plus the website manager');
+            assert.equal(roles.data.roles.length, 5, 'five roles (PLAN-V2)');
             assert.equal((await sup('PUT', '/api/v2/roles/employee', { grants: { 'customers.view': 'team' } })).status, 400, 'reason required');
             assert.equal((await sup('PUT', '/api/v2/roles/super_admin', { grants: {}, reason: 'x' })).status, 400);
             const upd = await sup('PUT', '/api/v2/roles/employee', { grants: { 'customers.view': 'team', 'bad.key': 'all' }, reason: 'integration test' });
@@ -171,15 +171,14 @@ test('security flow', { skip }, async (t) => {
             assert.equal(r.data.code, 'LOCKED');
         });
 
-        await t.test('only the super admin hands out admin roles', async () => {
+        await t.test('only the owner changes accounts; an old "admin" account is an employee now', async () => {
             const target = await User.findOne({ email: emails.lock });
             await User.updateOne({ email: emails.emp }, { role: 'admin', 'twoFactor.enabled': false });
             const adm = client();
             assert.equal((await adm('POST', '/api/auth/login', { email: emails.emp, password: pw })).status, 200);
-            assert.equal((await adm('PUT', `/api/auth/users/${target._id}`, { role: 'admin' })).status, 403);
-            // staff roles are given from Employees (with the HR file and team), not from the accounts page
-            assert.equal((await adm('PUT', `/api/auth/users/${target._id}`, { role: 'team_leader' })).status, 400);
-            assert.equal((await adm('PUT', `/api/auth/users/${target._id}`, { name: 'اسم جديد' })).status, 200);
+            assert.equal((await adm('PUT', `/api/auth/users/${target._id}`, { role: 'team_leader' })).status, 403);
+            assert.equal((await adm('PUT', `/api/auth/users/${target._id}`, { name: 'x' })).status, 403);
+            assert.equal((await adm('GET', '/api/v2/audit')).status, 403);
             const sa = await User.findOne({ email: emails.sup });
             assert.equal((await adm('PUT', `/api/auth/users/${sa._id}`, { name: 'x' })).status, 403);
         });

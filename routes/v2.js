@@ -181,7 +181,7 @@ router.put('/lectures/:id', validId(), all('programs.update'), handle(groupsApi.
 router.post('/lectures/:id/cancel', validId(), all('programs.update'), handle(groupsApi.cancelLecture));
 router.post('/lectures/:id/sync', validId(), all('programs.update'), handle(groupsApi.syncLecture));
 router.get('/lectures/:id/attendance', validId(), can('programs.view'), handle(groupsApi.attendance));
-router.post('/lectures/:id/attendance', validId(), all('programs.update'), handle(groupsApi.markAttendance));
+router.post('/lectures/:id/attendance', validId(), (req, res, next) => { const g = req.user.grants || {}; return g['programs.update'] === 'all' || g['programs.approve'] === 'all' ? next() : res.status(403).json({ message: 'Forbidden.', code: 'FORBIDDEN' }); }, handle(groupsApi.markAttendance));
 router.get('/groups/:id/certificates', validId(), can('certificates.view'), handle(groupCerts.get));
 router.put('/groups/:id/certificate-rule', validId(), all('certificates.create'), handle(groupCerts.saveRule));
 router.post('/groups/:id/certificates/issue', validId(), all('certificates.create'), handle(groupCerts.issue));

@@ -334,7 +334,7 @@ exports.getSingleUser = async (req, res) => {
     }
 };
 
-const ADMIN_ROLES = ['super_admin', 'admin'];
+const ADMIN_ROLES = ['super_admin'];
 
 exports.updateUser = async (req, res) => {
     try {

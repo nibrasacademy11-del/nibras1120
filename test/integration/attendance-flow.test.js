@@ -43,7 +43,7 @@ test('attendance flow', { skip }, async (t) => {
     const pw = 'Test-password-123';
     const hash = await bcrypt.hash(pw, 10);
     const mk = (role) => User.create({ name: `${role} ${tag}`, email: `at-${role}-${tag}@test.local`, password: hash, role });
-    const [hr, leader, emp] = [await mk('hr_manager'), await mk('team_leader'), await mk('employee')];
+    const [hr, leader, emp] = [await mk('super_admin') /* HR work is the owner's (PLAN-V2) */, await mk('team_leader'), await mk('employee')];
     const team = await Team.create({ nameAr: `فريق ${tag}`, leader: leader._id });
     await Employee.create({ user: emp._id, employeeNo: `A-${tag}-1`, nameAr: emp.name, team: team._id });
     await Employee.create({ user: leader._id, employeeNo: `A-${tag}-2`, nameAr: leader.name, team: team._id });

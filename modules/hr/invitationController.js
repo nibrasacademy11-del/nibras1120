@@ -284,7 +284,7 @@ exports.publicAccept = async (req, res) => {
         return res.json({ status: 'active' });
     }
     // Tell the inviter and everyone who approves invitations
-    const approvers = await User.find({ role: { $in: ['super_admin', 'admin', 'hr_manager'] }, status: 'active' }).select('_id').lean();
+    const approvers = await User.find({ role: 'super_admin', status: 'active' }).select('_id').lean();
     for (const to of new Set([String(idOf(inv.invitedBy)), ...approvers.map((u) => String(u._id))])) {
         await notify(to, { type: 'invitation.accepted', titleAr: `${inv.name} قبل دعوة الفريق`, titleEn: `${inv.name} accepted the team invitation`, bodyAr: 'مستنية موافقة الإدارة', link: '/my-team', dedupeKey: `inv-acc:${inv._id}:${to}` });
     }

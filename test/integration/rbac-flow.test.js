@@ -60,7 +60,7 @@ test('roles, invitations and data isolation', { skip }, async (t) => {
     const leader = await mk('team_leader', 'Leader Mona');
     const emp1 = await mk('employee', 'Emp Ahmed');
     const emp2 = await mk('employee', 'Emp Khaled');
-    const hr = await mk('hr_manager', 'Hr Sara');
+    const hr = await mk('super_admin', 'Owner Two'); // HR work is the owner's (PLAN-V2)
     const teamA = await Team.create({ nameAr: `فريق أ ${tag}`, leader: leader._id });
     const teamB = await Team.create({ nameAr: `فريق ب ${tag}` });
     let n = 0;
@@ -204,7 +204,7 @@ test('roles, invitations and data isolation', { skip }, async (t) => {
             assert.equal((await E2('GET', `/api/v2/customers/${c1._id}/notes`)).status, 404);
         });
 
-        await t.test('14. a team leader cannot move people between teams; HR can', async () => {
+        await t.test('14. a team leader cannot move people between teams; the owner can', async () => {
             const cur = await Employee.findById(e1._id);
             assert.ok([403, 404].includes((await L('PUT', `/api/v2/employees/${e1._id}`, { team: String(teamB._id), __v: cur.__v })).status));
             const moved = await H('PUT', `/api/v2/employees/${e1._id}`, { team: String(teamB._id), reason: 'إعادة توزيع', __v: cur.__v });

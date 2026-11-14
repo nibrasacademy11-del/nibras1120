@@ -51,13 +51,21 @@ test('staff sign in on staff and cms only, customers on the website only', () =>
     assert.equal(zones.accountFits('site', true), false);
 });
 
-test('website editing answers on cms only', () => {
+test('without a cms address, the owner edits the website from staff (PLAN-V2)', () => {
+    withEnv({ STAFF_HOST: 'staff.nibras-ac.com', CMS_HOST: undefined }, () => {
+        assert.equal(zones.apiAllowed('staff', 'PUT', '/api/admin/site/heroes'), true);
+        assert.equal(zones.apiAllowed('site', 'PUT', '/api/admin/site/heroes'), false);
+        assert.equal(zones.urls({ headers: { host: 'staff.nibras-ac.com' }, protocol: 'https' }).cms, '');
+    });
+});
+
+test('website editing answers on cms only (when cms exists)', () => withEnv(SET, () => {
     for (const [m, p] of [['PUT', '/api/admin/site/heroes'], ['POST', '/api/admin/media'], ['POST', '/api/courses'], ['DELETE', '/api/courses/1'], ['GET', '/api/inquiries'], ['PUT', '/api/inquiries/1'], ['GET', '/api/v2/website/specialties']]) {
         assert.equal(zones.apiAllowed('cms', m, p), true, `${m} ${p} on cms`);
         assert.equal(zones.apiAllowed('staff', m, p), false, `${m} ${p} on staff`);
         assert.equal(zones.apiAllowed('site', m, p), false, `${m} ${p} on site`);
     }
-});
+}));
 
 test('the public site keeps its public calls (contact form, course list)', () => {
     assert.equal(zones.apiAllowed('site', 'POST', '/api/inquiries'), true);
