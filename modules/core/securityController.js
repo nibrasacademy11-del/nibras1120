@@ -78,6 +78,7 @@ exports.changePassword = async (req, res) => {
     await sessions.revokeAllSessions(user._id, { reason: 'password_changed' });
     await sessions.startSession(req, res, user, { twoFactor: !!user.twoFactor?.enabled });
     await audit.record(req, { action: 'security.password_changed', resource: 'users', resourceId: user._id, summary: 'Password changed' });
+    await require('../../controllers/authController')._tellPasswordChanged(req, user, req.body.lang);
     res.json({ message: 'تم تغيير كلمة المرور. / Password changed.' });
 };
 

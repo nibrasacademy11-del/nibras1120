@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema({
     tokenVersion: { type: Number, default: 0 },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
+    // Set when the person opens the link emailed after signing up (or resets the password by email,
+    // which proves the same). Accounts from before this field simply have it empty.
+    emailVerifiedAt: { type: Date, default: null },
+    emailVerifyToken: String,            // sha256 of the emailed token
+    emailVerifyExpire: Date,
     twoFactor: {
         enabled: { type: Boolean, default: false },
         secretEnc: { type: String, default: '' },        // encrypted with lib/fieldCrypto
@@ -36,6 +41,6 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Fields never sent to the browser
-userSchema.statics.PRIVATE_FIELDS = '-password -resetPasswordToken -resetPasswordExpire -tokenVersion -twoFactor';
+userSchema.statics.PRIVATE_FIELDS = '-password -resetPasswordToken -resetPasswordExpire -emailVerifyToken -emailVerifyExpire -tokenVersion -twoFactor';
 
 module.exports = mongoose.model('User', userSchema);

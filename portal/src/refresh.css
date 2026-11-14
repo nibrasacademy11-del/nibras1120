@@ -175,3 +175,18 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 .invite-box { background: var(--gold-light); border: 1px solid #f0dcb4; border-radius: 12px; padding: 12px 14px; }
 .quick-links { display: flex; flex-wrap: wrap; gap: 8px; }
 .code-box { width: 100%; font: inherit; font-size: .9rem; padding: 10px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); resize: vertical; }
+
+/* Data change requests (PLAN-V2 §3) */
+.prq-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.prq-item { display: flex; gap: 16px; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.prq-item:last-child { border-bottom: 0; }
+.prq-main { flex: 1 1 420px; min-width: 0; display: grid; gap: 6px; }
+.prq-who { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.prq-changes { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.prq-from { color: var(--muted); text-decoration: line-through; }
+.prq-to { color: var(--primary); font-weight: 600; }
+.prq-reason { margin: 0; }
+.prq-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.prq-banner { display: flex; align-items: center; gap: 12px; padding: 12px 18px; margin-bottom: 14px; text-decoration: none; color: inherit; border-inline-start: 4px solid var(--gold, #b98a35); }
+.prq-banner:hover { box-shadow: var(--shadow, 0 6px 20px rgba(0,0,0,.08)); }
+.prq-banner__count { display: inline-grid; place-items: center; min-width: 30px; height: 30px; padding: 0 8px; border-radius: 999px; background: var(--primary); color: #fff; font-weight: 700; }

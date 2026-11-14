@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261116" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261118" />
 </head>
 <body>
 
@@ -85,8 +85,13 @@
         <p>قم بإنشاء حساب للبدء في مسارك التعليمي</p>
         <form class="auth-form" id="registerForm">
           <div class="form-group">
-            <label>الاسم الكامل</label>
-            <input type="text" id="regName" placeholder="الاسم الرباعي" required />
+            <label for="regNameAr">الاسم بالعربي كما في الهوية</label>
+            <input type="text" id="regNameAr" placeholder="الاسم الرباعي بالعربي" autocomplete="name" required minlength="5" />
+          </div>
+          <div class="form-group">
+            <label for="regNameEn">الاسم بالإنجليزي كما في الجواز</label>
+            <input type="text" id="regNameEn" placeholder="Full name in English" dir="ltr" required pattern="[A-Za-z][A-Za-z .'\-]{3,}" title="حروف إنجليزية فقط" />
+            <small class="form-hint"><i class="fas fa-award"></i> الاسم يُكتب على شهاداتك كما تكتبه هنا بالضبط.</small>
           </div>
           <div class="form-group">
             <label>البريد الإلكتروني</label>
@@ -179,6 +184,6 @@
   <script src="/assets/js/site-content.js?v=20261116"></script>
 
   <script src="/assets/js/specialties.js?v=20261101"></script>
-  <script src="/assets/js/script.js?v=20261116"></script>
+  <script src="/assets/js/script.js?v=20261118"></script>
 </body>
 </html>

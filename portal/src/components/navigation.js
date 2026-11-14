@@ -22,6 +22,7 @@ export const MENUS = {
     ] },
     { key: 'sec_crm', items: [
       { to: '/customers', key: 'customers', icon: '◉', desc: 'd_customers' },
+      { to: '/profile-requests', key: 'prq_title', icon: '✎', desc: 'd_profileRequests' },
       { to: '/tasks', key: 'tasks', icon: '✓', desc: 'd_tasks' },
       { to: '/complaints', key: 'complaintsNav', icon: '✉', desc: 'd_complaints' }
     ] },

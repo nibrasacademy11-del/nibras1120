@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <meta http-equiv="refresh" content="0; url=/portal/" />
-  <script>window.location.replace('/portal/');</script>
   <title>Student Profile | Nibras Academy</title>
   <meta name="description" content="Student Profile | Nibras Academy" />
   <meta name="theme-color" content="#5a020e" />
@@ -20,7 +18,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261116" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261118" />
+  <link rel="stylesheet" href="/assets/css/profile.css?v=20261121" />
 </head>
 <body>
 
@@ -79,61 +78,24 @@
     </ul>
   </div>
 
-  <div class="profile-header">
-        <div class="profile-avatar">
-            <i class="fas fa-user-graduate"></i>
+    <main class="pf" id="pf">
+    <section class="pf-hero">
+      <div class="pf-hero__in">
+        <div class="pf-avatar" id="pfAvatar" aria-hidden="true"></div>
+        <div class="pf-hero__text">
+          <p class="pf-hello" id="pfHello"></p>
+          <h1 id="pfName">My profile</h1>
+          <p class="pf-meta" id="pfMeta"></p>
         </div>
-        <h1 id="profName">...</h1>
-        <p id="profEmail">...</p>
+        <button type="button" class="pf-logout" id="pfLogout"><i class="fas fa-arrow-right-from-bracket" aria-hidden="true"></i> <span></span></button>
+      </div>
+    </section>
+    <div class="pf-body">
+      <div id="pfNotice"></div>
+      <nav class="pf-tabs" id="pfTabs" role="tablist" aria-label="My profile"></nav>
+      <div id="pfPanel" class="pf-panel" role="tabpanel" aria-live="polite"></div>
     </div>
-
-    <div class="profile-container">
-        <div class="profile-info-grid">
-            <!-- Sidebar Info -->
-            <div class="info-card">
-                <div class="section-header">
-                    <h2><i class="fas fa-id-card"></i> Personal Info</h2>
-                </div>
-                <div class="input-group">
-                    <label>Full Name</label>
-                    <p class="tagline" id="infoName">...</p>
-                </div>
-                <div class="input-group">
-                    <label>Phone Number</label>
-                    <p id="infoPhone">...</p>
-                </div>
-                <div class="input-group">
-                    <label>Registration Date</label>
-                    <p id="infoJoined">...</p>
-                </div>
-                <button class="login-btn" onclick="window.logout()" style="margin-top: 20px">Logout</button>
-                <a class="nav-link" href="../../en/index.html" style="margin-top: 10px"><i class="fas fa-home"></i> Back to Home</a>
-            </div>
-
-            <!-- Main Content -->
-            <div class="main-profile">
-                <!-- Courses -->
-                <div class="info-card" style="margin-bottom: 25px">
-                    <div class="section-header">
-                        <h2><i class="fas fa-graduation-cap"></i> Enrolled Courses</h2>
-                    </div>
-                    <div id="courseContainer" class="course-list">
-                        <p>No courses found.</p>
-                    </div>
-                </div>
-
-                <!-- Certificates -->
-                <div class="info-card">
-                    <div class="section-header">
-                        <h2><i class="fas fa-award"></i> Verified Certificates</h2>
-                    </div>
-                    <div id="certsContainer" class="table-container">
-                        <p style="text-align: center">Loading certificates...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  </main>
 
   <!-- Footer -->
   <footer class="footer">
@@ -201,62 +163,7 @@
   <script src="/assets/js/site-content.js?v=20261116"></script>
 
   <script src="/assets/js/specialties.js?v=20261101"></script>
-  <script src="/assets/js/script.js?v=20261116"></script>
-  <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const response = await fetch('/api/auth/profile', { credentials: 'include' });
-                if (!response.ok) throw new Error('Unauthorized');
-                const data = await response.json();
-                const user = data.user;
-                const certs = data.certificates;
-
-                document.getElementById('profName').textContent = user.name;
-                document.getElementById('profEmail').textContent = user.email;
-                document.getElementById('infoName').textContent = user.name;
-                document.getElementById('infoPhone').textContent = user.phone || 'N/A';
-                document.getElementById('infoJoined').textContent = new Date(user.createdAt).toLocaleDateString('en-US');
-
-                // Enrolled Courses
-                const courseContainer = document.getElementById('courseContainer');
-                if (user.enrolledCourses && user.enrolledCourses.length > 0) {
-                    courseContainer.innerHTML = user.enrolledCourses.map(c => `<span class="course-badge">${esc(c)}</span>`).join('');
-                }
-
-                // Certificates
-                const certsContainer = document.getElementById('certsContainer');
-                if (!certs || certs.length === 0) {
-                    certsContainer.innerHTML = '<p style="text-align:center; padding:20px; color: var(--text-muted);">No certificates linked to your account yet.</p>';
-                } else {
-                    const rows = certs.map(c => `
-                        <tr>
-                            <td data-label="Program">${esc(c.program_name)}</td>
-                            <td data-label="Cert No.">${esc(c.cert_num)}</td>
-                            <td data-label="Date">${esc(c.issue_date)}</td>
-                            <td data-label="Download">
-                                ${c.pdf_url && c.status === 'Valid' ? `<a href="${safeUrl(c.pdf_url)}" target="_blank" class="badge admin" style="text-decoration:none;"><i class="fas fa-file-pdf"></i> PDF</a>` : '---'}
-                            </td>
-                        </tr>
-                    `).join('');
-                    certsContainer.innerHTML = `
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Program</th>
-                                    <th>Cert No.</th>
-                                    <th>Date</th>
-                                    <th>Download</th>
-                                </tr>
-                            </thead>
-                            <tbody>${rows}</tbody>
-                        </table>
-                    `;
-                }
-
-            } catch (err) {
-                window.location.href = 'login.html';
-            }
-        });
-    </script>
+  <script src="/assets/js/script.js?v=20261118"></script>
+  <script src="/assets/js/profile.js?v=20261121"></script>
 </body>
 </html>

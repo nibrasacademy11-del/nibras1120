@@ -32,6 +32,7 @@ const payroll = require('../modules/hr/payrollController');
 const invitations = require('../modules/hr/invitationController');
 const reviews = require('../modules/hr/reviewController');
 const insights = require('../modules/reports/insightsController');
+const profiles = require('../modules/crm/profileController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -189,6 +190,15 @@ router.post('/groups/:id/approve-module', validId(), all('enrollments.approve'),
 router.get('/zoom/status', all('programs.update'), handle(groupsApi.zoomStatus));
 router.get('/customers/:id/groups', validId(), can('enrollments.view'), handle(groupsApi.forCustomer));
 router.get('/my/lectures', handle(groupsApi.mine));
+
+// ---- the customer's personal data (website profile) and the requests to change it ----
+const profileLimit = rateLimit({ windowMs: 60 * 60 * 1000, max: 20, message: tooMany, keyBy: 'user' });
+router.get('/my/profile', handle(profiles.mine));
+router.post('/my/profile', profileLimit, handle(profiles.complete));
+router.post('/my/profile/requests', profileLimit, handle(profiles.request));
+router.post('/my/profile/requests/:id/cancel', validId(), handle(profiles.cancel));
+router.get('/profile-requests', all('profile_requests.view'), handle(profiles.list));
+router.post('/profile-requests/:id/decide', validId(), all('profile_requests.approve'), handle(profiles.decide));
 router.post('/my/lectures/:id/join', validId(), rateLimit({ windowMs: 60 * 1000, max: 20, message: tooMany, keyBy: 'user' }), handle(groupsApi.join));
 
 // ---- enrollments and module reviews ----

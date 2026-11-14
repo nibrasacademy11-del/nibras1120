@@ -269,6 +269,12 @@ exports.update = async (req, res) => {
     if (generalChanged && !access.canEdit) throw new HttpError(403, 'Forbidden.');
     if (hasAny(input.contact) && !access.canEditSection.contact) throw new HttpError(403, 'ليس لديك صلاحية تعديل بيانات التواصل. / You may not edit contact data.');
     if (hasAny(input.identity) && !access.canEditSection.identity) throw new HttpError(403, 'ليس لديك صلاحية تعديل بيانات الهوية. / You may not edit identity data.');
+    // Once the name is printed on a certificate, only the owner changes it (or the customer, by a request they approve)
+    const namesChanging = (input.nameAr && input.nameAr !== customer.nameAr) || (input.nameEn !== undefined && input.nameEn !== (customer.nameEn || ''));
+    if (namesChanging && req.user.role !== 'super_admin'
+        && await require('../../models/Certificate').exists({ customer: customer._id, status: { $in: ['Valid', 'Suspended'] } })) {
+        throw new HttpError(403, 'الاسم مكتوب على شهادات صادرة: يعدّله المالك، أو يطلبه العميل من صفحته. / The name is on issued certificates: the owner changes it, or the customer asks from their profile.', 'NAME_LOCKED');
+    }
 
     const keys = data.duplicateKeys({
         phone: input.contact.phone, phone2: input.contact.phone2, email: input.contact.email,
@@ -317,10 +323,13 @@ exports.update = async (req, res) => {
         reason: str(req.body.reason, 300),
         changes: { ...visible, ...Object.fromEntries(Object.entries(contactChanges).map(([k, v]) => [`contact.${k}`, v])), ...(identityChanged.length ? { identity: { from: 'hidden', to: identityChanged.join(', ') } } : {}) }
     });
+    // The name printed on certificates changed: the certificates in force get a new version with it
+    const reissued = (visible.nameAr || visible.nameEn) ? await require('./profileController')._reissueForName(req, customer, 'Name corrected in the customer file') : [];
     const saved = await Customer.findById(customer._id).populate(POPULATE);
     res.json({
         item: serializeCustomer(saved, await accessFor(req, saved)),
-        possibleDuplicates: matches.length ? await duplicateCards(req, matches) : undefined
+        possibleDuplicates: matches.length ? await duplicateCards(req, matches) : undefined,
+        reissued: reissued.length ? reissued : undefined
     });
 };
 

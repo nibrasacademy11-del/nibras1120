@@ -33,6 +33,7 @@ import InviteResponse from './pages/InviteResponse.jsx';
 import PrintSamples from './pages/PrintSamples.jsx';
 import Leads from './pages/Crm360.jsx';
 import MyLectures from './pages/MyLectures.jsx';
+import ProfileRequests from './pages/ProfileRequests.jsx';
 import Certificates, { CertificateDetail, MyCertificates } from './pages/Certificates.jsx';
 import Payments, { AccountStatement, Accounts, Approvals, Currencies, Expenses, MyPayments, PaymentDetail, Periods } from './pages/Finance.jsx';
 
@@ -76,9 +77,17 @@ export default function App() {
     );
   }
 
+  // Customers have their page on the website (PLAN-V2 §3): the portal sends them there
+  if (!me.user.isStaff) {
+    const lang = document.documentElement.lang === 'en' ? 'en' : 'ar';
+    window.location.replace(`${urls?.site || ''}/pages/${lang}/profile.html`);
+    return <div className="splash">{t('loading')}</div>;
+  }
+
   return (
     <Layout>
       <Routes>
+        <Route path="/profile-requests" element={<Guard permission="profile_requests.view" minScope="all"><ProfileRequests /></Guard>} />
         <Route path="/" element={me.user.isStaff ? <Dashboard /> : <MyPrograms />} />
         <Route path="/my-programs" element={<MyPrograms />} />
         <Route path="/my-lectures" element={<MyLectures />} />

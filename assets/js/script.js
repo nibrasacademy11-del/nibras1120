@@ -258,27 +258,26 @@ function formatAuthError(msg, isEN) {
     return msg;
 }
 
+// The customer's own page on the website
+const profilePage = (isEN) => (isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html');
+
 // Where to go after signing in: a same-site ?next= link if one was given, otherwise the
-// student's profile, or the home page for an admin (the nav then shows the control panel button)
+// customer's profile (staff work in the management portal)
 function afterLoginUrl(user, isEN) {
     const next = new URLSearchParams(window.location.search).get('next') || '';
     if (next.startsWith('/') && !next.startsWith('//')) return next;
-    if (user && (user.role === 'admin' || user.role === 'super_admin')) return isEN ? '/en/index.html' : '/index.html';
-    // Employees, team leaders and the other staff roles work in the management portal
     if (user && user.isStaff) return '/portal/';
-    // Customers follow their programs, payments and certificates in the portal
-    return '/portal/';
+    return profilePage(isEN);
 }
 
 function initPublicAuth(isEN) {
     const registerForm = document.getElementById('registerForm');
     const loginForm = document.getElementById('loginForm');
-    const homeUrl = isEN ? '/en/index.html' : '/index.html';
-
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('regName')?.value.trim();
+            const name = (document.getElementById('regNameAr') || document.getElementById('regName'))?.value.trim();
+            const nameEn = document.getElementById('regNameEn')?.value.trim() || '';
             const email = document.getElementById('regEmail')?.value.trim();
             const phone = document.getElementById('regPhone')?.value.trim();
             const password = document.getElementById('regPassword')?.value;
@@ -295,15 +294,15 @@ function initPublicAuth(isEN) {
                 const data = await apiFetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, phone, password })
+                    body: JSON.stringify({ nameAr: name, nameEn, email, phone, password, lang: isEN ? 'en' : 'ar' })
                 });
-                showToast(isEN ? 'Account created successfully.' : 'تم إنشاء الحساب بنجاح.');
+                showToast(isEN ? 'Account created. Check your email to confirm it.' : 'تم إنشاء الحساب. افتح إيميلك لتأكيده.');
                 if (data.user && data.user.name) {
                     localStorage.setItem('nibras_user_name', data.user.name);
                 }
                 setTimeout(() => {
-                    window.location.href = homeUrl;
-                }, 600);
+                    window.location.href = `${profilePage(isEN)}?welcome=1`;
+                }, 900);
             } catch (error) {
                 showToast(formatAuthError(error.message, isEN), true);
             }
@@ -402,7 +401,7 @@ function initPublicAuth(isEN) {
                 await apiFetch('/api/auth/reset-password', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token, password })
+                    body: JSON.stringify({ token, password, lang: isEN ? 'en' : 'ar' })
                 });
                 showToast(isEN ? 'Password updated successfully.' : 'تم تغيير كلمة المرور بنجاح.');
                 setTimeout(() => window.location.href = 'login.html', 1500);
@@ -504,48 +503,43 @@ window.logout = async () => {
     window.location.href = document.documentElement.lang === 'en' ? '/pages/en/login.html' : '/pages/ar/login.html';
 };
 
-// Signed-in visitors see their name in the nav; an admin sees the way into the control panel
+// Signed in: the header shows the customer's initial and first name, opening their profile.
+// Staff accounts see the way into the management portal.
 async function updateNavAuth(isEN) {
     if (!localStorage.getItem('nibras_user_name')) return;
-    let user;
+    let me;
     try {
-        user = (await apiFetch('/api/auth/me')).user;
+        me = await apiFetch('/api/auth/me');
     } catch (e) {
         localStorage.removeItem('nibras_user_name');
         return;
     }
+    const user = me.user || {};
+    const isStaff = !!me.isStaff;
+    const firstName = String(user.name || '').trim().split(/\s+/)[0] || '';
+    const initial = esc(firstName.charAt(0) || '؟');
+    const href = isStaff ? '/portal/' : profilePage(isEN);
+    const title = isStaff ? (isEN ? 'Staff portal' : 'بوابة الموظفين') : (isEN ? 'My profile' : 'صفحتي');
+    const desktop = isStaff
+        ? `<a href="${href}" class="nav-btn nav-btn--admin"><i class="fas fa-gauge-high"></i> ${title}</a>`
+        : `<a href="${href}" class="nav-user" title="${title}"><span class="nav-user__avatar" aria-hidden="true">${initial}</span><span class="nav-user__name">${esc(firstName)}</span></a>`;
+    const mobile = `<a href="${href}" class="mobile-btn">${isStaff ? '<i class="fas fa-gauge-high"></i>' : `<span class="nav-user__avatar nav-user__avatar--sm" aria-hidden="true">${initial}</span>`} ${title}</a>`;
 
-    const isAdmin = user.role === 'admin' || user.role === 'super_admin';
-    const isStaff = !isAdmin && ['hr_manager', 'finance_manager', 'team_leader', 'employee', 'accountant', 'customer_support'].includes(user.role);
-    const firstName = String(user.name || '').split(' ')[0];
-    const profileUrl = isAdmin ? '/portal/' : '/portal/';
-    const label = (isAdmin || isStaff)
-        ? `<i class="fas fa-gauge-high"></i> ${isStaff ? (isEN ? 'Staff Portal' : 'بوابة الموظفين') : (isEN ? 'Control Panel' : 'لوحة التحكم')}`
-        : `<i class="fas fa-user-circle"></i> ${isEN ? 'My account' : 'حسابي'} · ${esc(firstName)}`;
-
-    // 1. Desktop Nav Auth
     let navAuth = document.getElementById('navAuth');
     if (!navAuth) {
         const loginLinks = Array.from(document.querySelectorAll('.nav-links a[href*="login.html"]'));
         const desktopLogin = loginLinks.find(l => !l.classList.contains('mobile-btn') && !l.classList.contains('lang-switch-btn'));
         if (desktopLogin) navAuth = desktopLogin.parentElement;
     }
-    
-    // 2. Mobile Nav Auth
     let mobileNavAuth = document.getElementById('mobileNavAuth');
     if (!mobileNavAuth) {
         const mobileLoginLinks = Array.from(document.querySelectorAll('.mobile-menu a[href*="login.html"], .mobile-menu .mobile-btn'));
         const mobileLogin = mobileLoginLinks.find(l => !l.classList.contains('lang-switch-btn') && !l.href.includes('program-detail'));
         if (mobileLogin) mobileNavAuth = mobileLogin.parentElement;
     }
-
-    // Safeguard: NEVER overwrite a language switcher button!
-    if (navAuth && !navAuth.querySelector('.lang-switch-btn') && !navAuth.classList.contains('lang-switch-btn')) {
-        navAuth.innerHTML = `<a href="${profileUrl}" class="nav-btn${isAdmin ? ' nav-btn--admin' : ''}">${label}</a>`;
-    }
-    if (mobileNavAuth && !mobileNavAuth.querySelector('.lang-switch-btn') && !mobileNavAuth.classList.contains('lang-switch-btn')) {
-        mobileNavAuth.innerHTML = `<a href="${profileUrl}" class="mobile-btn">${label}</a>`;
-    }
+    // Never overwrite a language switcher
+    if (navAuth && !navAuth.querySelector('.lang-switch-btn') && !navAuth.classList.contains('lang-switch-btn')) navAuth.innerHTML = desktop;
+    if (mobileNavAuth && !mobileNavAuth.querySelector('.lang-switch-btn') && !mobileNavAuth.classList.contains('lang-switch-btn')) mobileNavAuth.innerHTML = mobile;
 }
 
 function showToast(message, isError = false) {

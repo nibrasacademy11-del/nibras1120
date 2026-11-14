@@ -17,6 +17,10 @@ router.post('/login/2fa', officeLimiter, authController.loginTwoFactor);
 router.post('/logout', authController.logout);
 router.post('/forgot-password', officeLimiter, authLimiter, authController.forgotPassword);
 router.post('/reset-password', officeLimiter, authController.resetPassword);
+router.post('/verify-email', officeLimiter, authController.verifyEmail);
+// A new confirmation link: a few an hour per account
+const resendLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, message: tooMany, keyBy: 'user' });
+router.post('/resend-verification', authRequired, officeLimiter, resendLimiter, authController.resendVerification);
 router.get('/me', authRequired, authController.getMe);
 router.get('/zone', authController.getZone);
 router.get('/profile', authRequired, authController.getUserProfile);

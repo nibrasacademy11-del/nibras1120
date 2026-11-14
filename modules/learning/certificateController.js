@@ -399,8 +399,17 @@ exports.setStatus = async (req, res) => {
 exports.reissue = async (req, res) => {
     const old = await Certificate.findById(req.params.id);
     if (!old || old.kind === 'legacy') throw new HttpError(404, 'Not found.');
+    const cert = await reissueOne(req, old, {
+        reason: str(req.body.reason, 500), templateId: req.body.template,
+        names: { nameAr: str(req.body.nameAr, 200), nameEn: str(req.body.nameEn, 200) }
+    });
+    res.status(201).json({ item: cert });
+};
+
+// A new version of a certificate (same number plus the version); the old one becomes Replaced.
+// Empty names take the customer's current ones, so a corrected name reaches the new copy.
+async function reissueOne(req, old, { reason, names = {}, templateId } = {}) {
     if (!['Valid', 'Suspended'].includes(old.status)) throw new HttpError(400, 'يمكن إعادة إصدار الشهادات السارية أو المعلقة فقط. / Only valid or suspended certificates can be reissued.');
-    const reason = str(req.body.reason, 500);
     if (!reason) throw new HttpError(400, 'السبب مطلوب. / A reason is required.', 'REASON_REQUIRED');
     const now = new Date();
     old.status = 'Replaced';
@@ -410,8 +419,8 @@ exports.reissue = async (req, res) => {
     let cert;
     try {
         cert = await issueOne(req, {
-            enrollmentId: old.enrollment, moduleId: old.kind === 'module' ? old.module : null, templateId: req.body.template,
-            names: { nameAr: str(req.body.nameAr, 200), nameEn: str(req.body.nameEn, 200) }, replaces: old, version: (old.version || 1) + 1
+            enrollmentId: old.enrollment, moduleId: old.kind === 'module' ? old.module : null, templateId,
+            names, replaces: old, version: (old.version || 1) + 1
         });
     } catch (err) {
         // Put the old certificate back if the new one could not be created
@@ -422,8 +431,8 @@ exports.reissue = async (req, res) => {
     }
     old.replacedBy = cert._id;
     await old.save();
-    res.status(201).json({ item: cert });
-};
+    return cert;
+}
 
 // ---- delivery: email and the paper copy ----
 
@@ -482,5 +491,6 @@ exports.delivery = async (req, res) => {
 
 exports._verifyUrl = verifyUrl;
 exports._issueOne = issueOne;
+exports.reissueOne = reissueOne;
 exports._paymentCheck = paymentCheck;
 exports._emailCertificate = emailCertificate;

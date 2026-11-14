@@ -5,6 +5,7 @@ import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { EnumSelect, ErrorBox, Field, Loading, Modal, Pager, Pill, StaffSelect, useAction, useLoad, useStaff } from '../components/ui.jsx';
+import { ProfileRequestsBanner } from './ProfileRequests.jsx';
 
 const STATUSES = ['lead', 'interested', 'customer', 'lost', 'inactive'];
 const SOURCES = ['website', 'facebook', 'instagram', 'tiktok', 'whatsapp', 'phone', 'referral', 'walk_in', 'corporate', 'event', 'other'];
@@ -170,6 +171,7 @@ export default function Customers() {
         <h1 className="page-title">{t('customers')}</h1>
         {can('customers.create') && <button type="button" className="btn btn--primary" onClick={() => setCreating(true)}>+ {t('newCustomer')}</button>}
       </div>
+      <ProfileRequestsBanner />
 
       <form className="card filters" onSubmit={(e) => { e.preventDefault(); setParam('q', q.trim()); }}>
         <Field label={t('search')}><input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('searchHint')} /></Field>
