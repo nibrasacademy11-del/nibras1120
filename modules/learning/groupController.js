@@ -297,7 +297,10 @@ exports.updateLecture = async (req, res) => {
         const manual = req.body.recordings.map((r) => ({ title: str(r.title, 200), url: L.safeUrl(r.url), passcode: str(r.passcode, 100), source: 'manual' })).filter((r) => r.url).slice(0, 20);
         l.recordings = [...l.recordings.filter((r) => r.source === 'zoom'), ...manual];
     }
-    if (+before.startsAt !== +l.startsAt) l.remindedAt = null;
+    if (+before.startsAt !== +l.startsAt) {
+        l.remindedAt = null;
+        l.remindedSoonAt = null;
+    }
     await l.save();
     await audit.record(req, { action: 'lecture.updated', resource: 'programs', resourceId: l._id, summary: l.titleAr, changes: audit.diff(before, l.toObject(), ['titleAr', 'startsAt', 'durationMin', 'module']) });
     res.json({ item: staffLecture(l.toObject()) });

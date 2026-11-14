@@ -43,6 +43,8 @@ const lectureSchema = new mongoose.Schema({
     materials: [materialSchema],
     notes: { type: String, default: '', maxlength: 1000 },
     remindedAt: { type: Date, default: null },
+    // the reminder about an hour before (needs the reminder job to run hourly)
+    remindedSoonAt: { type: Date, default: null },
     attendanceSyncedAt: { type: Date, default: null },
     createdBy: { type: ObjectId, ref: 'User', default: null }
 }, { timestamps: true, optimisticConcurrency: true });

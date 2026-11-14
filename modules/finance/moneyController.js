@@ -232,7 +232,10 @@ exports.createPayment = async (req, res) => {
 
     await addEvent(req, customer._id, 'payment', `${payment.receiptNo}: ${amount} ${currency} (${method})${confirmed ? '' : ' — pending confirmation'}`, { section: 'financial' });
     // Paid in full now: certificates that waited for the payment are issued
-    if (confirmed) await require('../learning/autoCertificates').afterPayment(customer._id);
+    if (confirmed) {
+        await emailReceipt(payment);
+        await require('../learning/autoCertificates').afterPayment(customer._id);
+    }
     await audit.record(req, { action: confirmed ? 'payment.recorded' : 'payment.recorded_pending', resource: 'payments', resourceId: payment._id, summary: `${payment.receiptNo} ${customer.customerNo} ${amount} ${currency}` });
     res.status(201).json({ item: await F.Payment.findById(payment._id).populate(PAY_POP) });
 };
@@ -315,6 +318,31 @@ exports.verifyReceipt = async (req, res) => {
     });
 };
 
+// The receipt by email once a payment is confirmed: its number, its verification link and what
+// the customer still owes (PLAN-V2 §6 #6). Never fails the payment.
+async function emailReceipt(payment) {
+    try {
+        const customerEmails = require('../../lib/customerEmails');
+        const A = require('../../lib/academy');
+        const customer = await Customer.findById(payment.customer._id || payment.customer).select('nameAr contact.email user').lean();
+        const to = await customerEmails.emailOf(customer);
+        if (!to) return null;
+        const rows = await require('./hubController')._unpaidRows({ customer: customer._id });
+        const owed = {};
+        for (const r of rows) owed[r.currency] = (owed[r.currency] || 0) + r.remaining;
+        const site = (process.env.SITE_URL || 'https://www.nibras-ac.com').replace(/\/$/, '');
+        return customerEmails.receipt(to, {
+            name: customer.nameAr, receiptNo: payment.receiptNo, amount: payment.amount, currency: payment.currency, method: payment.method, paidAt: payment.paidAt,
+            remaining: Object.entries(owed).map(([currency, remaining]) => ({ currency, remaining })),
+            verifyLink: `${site}/pages/ar/receipt.html?no=${encodeURIComponent(payment.receiptNo)}&k=${A.receiptKey(payment.receiptNo)}`
+        });
+    } catch (err) {
+        console.error('Receipt email failed:', payment.receiptNo, err.message);
+        return null;
+    }
+}
+exports._emailReceipt = emailReceipt;
+
 // Finance confirms that money recorded by an employee actually arrived (or rejects it)
 exports.confirmPayment = async (req, res) => {
     const p = await F.Payment.findById(req.params.id);
@@ -344,6 +372,7 @@ exports.confirmPayment = async (req, res) => {
         await commissions.onPaymentConfirmed(p, { session, by: req.user.id });
     });
     await addEvent(req, p.customer, 'payment', `${p.receiptNo} confirmed`, { section: 'financial' });
+    await emailReceipt(p);
     await require('../learning/autoCertificates').afterPayment(p.customer);
     await audit.record(req, { action: 'payment.confirmed', resource: 'payments', resourceId: p._id, summary: `${p.receiptNo} ${p.amount} ${p.currency}` });
     res.json({ item: p });

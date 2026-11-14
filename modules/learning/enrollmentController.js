@@ -173,8 +173,7 @@ exports.create = async (req, res) => {
     if (String(owner) !== req.user.id && req.scope === 'own' && String(owner) !== String(customer.owner)) {
         throw new HttpError(403, 'لا يمكنك إسناد التسجيل لموظف آخر. / You cannot assign the enrollment to someone else.');
     }
-    const e = await createEnrollment(req, { customer, program, cohort, owner, enrolledAt: req.body.enrolledAt ? new Date(req.body.enrolledAt) : new Date(), notes: str(req.body.notes, 2000) });
-    if (waiting) await Enrollment.updateOne({ _id: e._id }, { $set: { waitingSince: new Date() } });
+    const e = await createEnrollment(req, { customer, program, cohort, owner, enrolledAt: req.body.enrolledAt ? new Date(req.body.enrolledAt) : new Date(), notes: str(req.body.notes, 2000), waiting });
     res.status(201).json({ item: await view(req, await Enrollment.findById(e._id).populate(POP)) });
 };
 
@@ -189,7 +188,7 @@ async function singleModule(program) {
 }
 
 // Creates an enrollment with the program's current modules; also used when a group adds members
-async function createEnrollment(req, { customer, program, cohort = null, owner = null, enrolledAt = new Date(), notes = '' }) {
+async function createEnrollment(req, { customer, program, cohort = null, owner = null, enrolledAt = new Date(), notes = '', waiting = false }) {
     const team = owner ? await teamOf(owner) : null;
     let modules = await ProgramModule.find({ program: program._id, active: true }).sort({ order: 1 }).lean();
     if (!modules.length) modules = [await singleModule(program)];
@@ -215,6 +214,7 @@ async function createEnrollment(req, { customer, program, cohort = null, owner =
             enrolledAt,
             modules: modules.map(snapshot),
             modulesRequired: program.modulesRequired || 0,
+            waitingSince: waiting ? new Date() : null,
             notes,
             createdBy: req.user.id
         });
@@ -234,6 +234,10 @@ async function createEnrollment(req, { customer, program, cohort = null, owner =
     await addEvent(req, customer._id, 'enrolled', `${e.enrollmentNo}: ${program.titleAr}${cohort ? ` · ${cohort.nameAr}` : ''} (${modules.length} modules)`);
     await audit.record(req, { action: 'enrollment.created', resource: 'enrollments', resourceId: e._id, summary: `${e.enrollmentNo} ${customer.customerNo} → ${program.titleAr}` });
     if (cohort) await groups.addMember({ cohort, customer, enrollment: e._id, by: req.user.id, via: 'enrollment' });
+    // The customer is told by email: the program, the group and when it starts (PLAN-V2 §6 #5)
+    const customerEmails = require('../../lib/customerEmails');
+    const to = await customerEmails.emailOf(customer).catch(() => '');
+    if (to) await customerEmails.enrolled(to, { name: customer.nameAr, program: program.titleAr, group: cohort && cohort.nameAr, startDate: cohort && cohort.startDate, waiting });
     return e;
 }
 exports.createEnrollment = createEnrollment;

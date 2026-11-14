@@ -65,7 +65,7 @@ async function placeWaiting(cohort, by = null) {
     if (!cohort || cohort.status !== 'open') return 0;
     const Enrollment = require('../../models/Enrollment');
     const waiting = await Enrollment.find({ program: cohort.program, waitingSince: { $ne: null }, cohort: null, status: { $in: Enrollment.OPEN_STATUSES } })
-        .sort({ waitingSince: 1 }).populate('customer', 'user');
+        .sort({ waitingSince: 1 }).populate('customer', 'user nameAr contact.email');
     let placed = 0;
     for (const e of waiting) {
         if (cohort.capacity && (await activeCount(cohort._id)) >= cohort.capacity) break;
@@ -75,6 +75,9 @@ async function placeWaiting(cohort, by = null) {
         await e.save();
         await addMember({ cohort, customer: e.customer, enrollment: e._id, by, via: 'enrollment' });
         placed += 1;
+        const customerEmails = require('../../lib/customerEmails');
+        const to = await customerEmails.emailOf(e.customer).catch(() => '');
+        if (to) await customerEmails.groupJoined(to, { name: e.customer.nameAr, program: e.programTitleAr, group: cohort.nameAr, startDate: cohort.startDate });
     }
     return placed;
 }

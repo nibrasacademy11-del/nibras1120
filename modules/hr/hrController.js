@@ -144,10 +144,12 @@ function checkRoleAssignment(req, role, currentRole) {
     }
 }
 
-const tempPassword = () => crypto.randomBytes(9).toString('base64url');
+const SETUP_HOURS = 72;
 
 // Creates the sign-in account and the HR file together. An existing customer account can be
-// turned into a staff account by using its email. The temporary password is shown once.
+// turned into a staff account by using its email. A new person gets an email with a link to choose
+// their password (PLAN-V2 §6 #12): nobody ever sees or passes on a password. Without email set up,
+// the link comes back once for the owner to send by hand.
 exports.createEmployee = async (req, res) => {
     const email = str(req.body.email, 200).toLowerCase();
     const nameAr = str(req.body.nameAr);
@@ -160,14 +162,20 @@ exports.createEmployee = async (req, res) => {
     if (user) assertNotPrimaryOwner(user);
     if (user && P.isAdminRole(user.role) && req.user.role !== 'super_admin') throw new HttpError(403, 'Forbidden.');
 
-    let password = null;
+    let setupToken = null;
     if (user) {
         user.role = role;
         user.status = 'active';
         user.tokenVersion = (user.tokenVersion || 0) + 1;
     } else {
-        password = tempPassword();
-        user = new User({ name: nameAr, email, phone: str(req.body.phone, 30), role, password: await bcrypt.hash(password, 10), mustChangePassword: true });
+        // an unusable random password until the person chooses theirs from the emailed link
+        setupToken = crypto.randomBytes(32).toString('hex');
+        user = new User({
+            name: nameAr, email, phone: str(req.body.phone, 30), role,
+            password: await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 10),
+            resetPasswordToken: crypto.createHash('sha256').update(setupToken).digest('hex'),
+            resetPasswordExpire: new Date(Date.now() + SETUP_HOURS * 3600e3)
+        });
     }
     await user.save();
 
@@ -189,7 +197,16 @@ exports.createEmployee = async (req, res) => {
         createdBy: req.user.id
     });
     await audit.record(req, { action: 'employee.created', resource: 'employees', resourceId: emp._id, summary: `Employee ${emp.employeeNo} ${nameAr} (${role})`, meta: { email, role } });
-    res.status(201).json({ item: emp, temporaryPassword: password });
+    let setup = {};
+    if (setupToken) {
+        const zones = require('../../lib/zones');
+        const staffUrl = zones.urls(req).staff || process.env.SITE_URL || `${req.protocol}://${req.get('host')}`;
+        const link = `${staffUrl}/pages/ar/reset-password.html?token=${setupToken}`;
+        const sent = await require('../../lib/accountEmails').staffAccount(user, link, { role: (P.ROLE_LABELS[role] || {}).ar || '', loginUrl: `${staffUrl}/portal/` }).catch(() => null);
+        const delivered = require('../../lib/mail').delivered(sent);
+        setup = { emailed: delivered, setupLink: delivered ? undefined : link };
+    }
+    res.status(201).json({ item: emp, ...setup });
 };
 
 exports.updateEmployee = async (req, res) => {

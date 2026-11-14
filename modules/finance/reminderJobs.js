@@ -2,8 +2,6 @@ const Customer = require('../../models/Customer');
 const User = require('../../models/User');
 const ReminderLog = require('../../models/ReminderLog');
 const R = require('../../lib/receivables');
-const A = require('../../lib/academy');
-const { isMailConfigured } = require('../../config/mailer');
 const { notify, getSetting } = require('../crm/service');
 
 // Run once a day by the reminder job: each unpaid installment gets a reminder a few days before
@@ -37,9 +35,8 @@ async function run(now = new Date()) {
     const byId = Object.fromEntries(customers.map((c) => [String(c._id), c]));
     const users = await User.find({ _id: { $in: customers.map((c) => c.user).filter(Boolean) } }).select('email').lean();
     const userEmail = Object.fromEntries(users.map((u) => [String(u._id), u.email]));
-    const profile = { ...A.PROFILE_DEFAULT, ...(await getSetting('academy.profile')) };
-    const mail = cfg.email && isMailConfigured();
-    const { _sendEmail } = require('./hubController');
+    const mail = cfg.email;
+    const customerEmails = require('../../lib/customerEmails');
 
     for (const r of due) {
         const c = byId[String(r.customerId)];
@@ -61,9 +58,8 @@ async function run(now = new Date()) {
             }
             const to = (c.contact && c.contact.email) || (c.user && userEmail[String(c.user)]);
             if (mail && to && out.emails < MAX_EMAILS && await once(`${key}:email`, c._id, 'email')) {
-                await _sendEmail(to, late ? `تذكير بقسط متأخر - ${profile.nameAr}` : `تذكير بقسط مستحق - ${profile.nameAr}`, `مرحباً ${c.nameAr}`,
-                    [late ? `نذكّرك بقسط متأخر منذ ${r.daysLate} يوم:` : `نذكّرك بقسط مستحق يوم ${day}:`, `${amount} — ${r.description}`, 'للاستفسار أو السداد تواصل معنا. شكراً لك.'], profile);
-                out.emails++;
+                const sent = await customerEmails.installment(to, { name: c.nameAr, amount, description: r.description, dueDate: r.dueDate, late, daysLate: r.daysLate });
+                if (sent.sent || sent.kept) out.emails++;
             }
             if (late && cfg.notifyOwner && (r.owner || c.owner) && await once(`${key}:owner`, c._id, 'owner')) {
                 await notify(r.owner || c.owner, {

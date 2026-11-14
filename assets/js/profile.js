@@ -169,6 +169,14 @@
             a.classList.toggle('is-active', on);
             a.setAttribute('aria-selected', on ? 'true' : 'false');
         });
+        // on a phone the tab bar scrolls sideways: bring the open tab into it
+        const bar = $('pfTabs');
+        const act = bar && bar.querySelector('.pf-tab.is-active');
+        if (act) {
+            const r = act.getBoundingClientRect();
+            const b = bar.getBoundingClientRect();
+            if (r.left < b.left || r.right > b.right) bar.scrollLeft += (r.left + r.width / 2) - (b.left + b.width / 2);
+        }
         const panel = $('pfPanel');
         panel.innerHTML = `<div class="pf-loading"><span class="pf-spinner" aria-hidden="true"></span>${h(T.loading)}</div>`;
         try {

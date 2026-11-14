@@ -78,24 +78,28 @@ test('CRM flow', { skip }, async (t) => {
         let emp2;
         const emails = { e1: `crm-e1-${tag}@test.local`, e2: `crm-e2-${tag}@test.local`, tl: `crm-tl-${tag}@test.local` };
 
-        await t.test('HR: team and employees with temporary passwords', async () => {
+        await t.test('HR: team and employees who choose their password from a link (PLAN-V2 §6)', async () => {
             const tr = await admin('POST', '/api/v2/teams', { nameAr: `فريق ${tag}` });
             assert.equal(tr.status, 200);
             team = tr.data.item;
             const a = await admin('POST', '/api/v2/employees', { nameAr: 'موظف أول', email: emails.e1, role: 'employee', team: team._id });
             assert.equal(a.status, 201);
-            assert.ok(a.data.temporaryPassword);
+            assert.equal(a.data.temporaryPassword, undefined, 'no password is ever shown');
+            assert.match(a.data.setupLink, /reset-password\.html\?token=[a-f0-9]{64}$/, 'without email the owner gets the link once');
             const b = await admin('POST', '/api/v2/employees', { nameAr: 'موظف ثاني', email: emails.e2, role: 'employee' });
             const l = await admin('POST', '/api/v2/employees', { nameAr: 'قائد', email: emails.tl, role: 'team_leader', team: team._id });
             assert.equal((await admin('PUT', `/api/v2/teams/${team._id}`, { nameAr: team.nameAr, leader: l.data.item.user, __v: team.__v })).status, 200);
             created.users.push(a.data.item.user, b.data.item.user, l.data.item.user);
 
-            emp1 = await login(emails.e1, a.data.temporaryPassword);
-            assert.equal((await emp1('GET', '/api/v2/customers')).data.code, 'PASSWORD_CHANGE_REQUIRED');
-            assert.equal((await emp1('POST', '/api/v2/me/password', { currentPassword: a.data.temporaryPassword, newPassword: pw })).status, 200);
-            assert.equal((await emp1('GET', '/api/v2/customers')).status, 200);
-            emp2 = await login(emails.e2, b.data.temporaryPassword);
-            await emp2('POST', '/api/v2/me/password', { currentPassword: b.data.temporaryPassword, newPassword: pw });
+            const choose = async (res) => {
+                const token = res.data.setupLink.split('token=')[1];
+                assert.equal((await fetch(`${base}/api/auth/reset-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token, password: pw }) })).status, 200);
+            };
+            await choose(a);
+            await choose(b);
+            emp1 = await login(emails.e1, pw);
+            assert.equal((await emp1('GET', '/api/v2/customers')).status, 200, 'works at once, no forced change');
+            emp2 = await login(emails.e2, pw);
         });
 
         let cust;

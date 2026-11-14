@@ -36,10 +36,11 @@ node tools/test-all.js
    | `REQUIRE_2FA` | `admins` (موصى به) |
    | `SITE_URL` | `https://www.nibras-ac.com` |
    | `STAFF_HOST` | `staff.nibras-ac.com` (بعد ما الدومين الفرعي يشتغل، انظر `docs/DOMAINS.md`) |
-   | `CMS_HOST` | `cms.nibras-ac.com` |
+   | `CMS_HOST` | **اتركه فاضي** (PLAN-V2: المالك بيعدّل الموقع من قسم «الموقع» في لوحته، ومفيش عنوان cms منفصل) |
    | `STAFF_COOKIE_DOMAIN` | `.nibras-ac.com` |
    | `ZOOM_ACCOUNT_ID` / `ZOOM_CLIENT_ID` / `ZOOM_CLIENT_SECRET` | من تطبيق زوم (الخطوات تحت في "ربط زوم") |
    | `ZOOM_HOST_USER` | إيميل حساب زوم اللي هيستضيف المحاضرات |
+   | `EMAIL_HOST` / `EMAIL_PORT` / `EMAIL_SECURE` / `EMAIL_USER` / `EMAIL_PASS` | إيميل الأكاديمية على Hostinger. **من غيرها مفيش ولا إيميل بيتبعت** (تأكيد الحساب، والترحيب، والإيصالات، والشهادات، والتذكيرات، وحسابات الموظفين) |
 
 3. **الدمج والنشر**:
    ```
@@ -64,10 +65,23 @@ node tools/test-all.js
    node data/migrations/003-link-legacy-certificates.js --production --apply
    node data/migrations/004-group-members-from-enrollments.js --production
    node data/migrations/004-group-members-from-enrollments.js --production --apply
+   node data/migrations/005-five-roles.js --production
+   node data/migrations/005-five-roles.js --production --apply
+   node data/migrations/006-lecture-entries.js --production
+   node data/migrations/006-lecture-entries.js --production --apply
    ```
+   - **005:** الأدوار الخمسة. أي حساب بدور اتشال (مدير، موارد بشرية، مالية، محاسب، مدير موقع) بيبقى «موظف»، إلا لو حددت غير كده بـ `--map admin=team_leader`. الحسابات اللي اتنقلت بيتعملها تسجيل خروج.
+   - **006:** الحضور القديم بيتحسب «دخول» للمحاضرة (المسار التعليمي). المحاور ما بتتقفلش هنا. لو عاوزها تتقفل وتطلع شهاداتها دلوقتي، ضيف `--refresh` مع `--apply`.
 6. **صفحة صحة النظام** (`/portal/system`): كل الإعدادات المطلوبة ✓.
 7. **النسخ التلقائي**: إعداد أسرار GitHub (انظر `docs/BACKUP-RESTORE.md`) وتشغيله مرة يدوياً.
 8. **مراقبة توقف الموقع**: حساب مجاني على UptimeRobot (أو مثيله) يراقب `https://www.nibras-ac.com/api/health` كل 5 دقائق ويبعت إيميل/رسالة عند التوقف.
+
+## إيميلات الأكاديمية (PLAN-V2)
+
+1. **الإعداد:** متغيرات `EMAIL_*` فوق. بعد النشر جرّب «نسيت كلمة السر» على إيميلك، لازم توصل رسالة بشكل نبراس.
+2. **علشان ما تقعش في السبام:** في لوحة الدومين (Hostinger ← DNS) فعّل **SPF** و**DKIM** لإيميل الأكاديمية. لو العدد كبر بعدين (مئات الإيميلات في اليوم)، انقلوا الإرسال لـ Brevo أو Resend.
+3. **الإيميلات اللي بتتبعت لوحدها:** تأكيد الحساب، والترحيب، ونسيت كلمة السر، وكلمة السر اتغيرت، وتأكيد التسجيل في برنامج، وانضمامه لمجموعة، وإيصال الدفع، وتذكير القسط، وتذكير المحاضرة، والشهادة جاهزة، ورد طلب تعديل البيانات، ودعوة الفريق، وحساب الموظف الجديد (فيه لينك يختار منه كلمة السر).
+4. **تذكير المحاضرة قبلها بساعة** محتاج المهمة اليومية تشتغل كل ساعة. ده مش متاح غير على **Vercel Pro**. لو اشتركتم فيه، غيّر `schedule` في `vercel.json` لـ `"0 * * * *"`. على الخطة المجانية بيوصل التذكير قبلها بيوم بس.
 
 ## هـ. الإعداد الأولي داخل البوابة (الإدارة)
 

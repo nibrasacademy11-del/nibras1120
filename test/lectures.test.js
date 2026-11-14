@@ -3,7 +3,8 @@ const assert = require('node:assert/strict');
 const L = require('../lib/lectures');
 const zoom = require('../lib/zoom');
 const fieldCrypto = require('../lib/fieldCrypto');
-const { reminderHtml } = require('../modules/learning/lectureJobs');
+const customerEmails = require('../lib/customerEmails');
+const mail = require('../lib/mail');
 
 const lecture = (startsAt, durationMin = 60, status = 'scheduled') => ({ startsAt: new Date(startsAt), durationMin, status });
 
@@ -96,11 +97,14 @@ test('names and links', () => {
     assert.equal(L.safeUrl('https://us02web.zoom.us/j/123?pwd=abc'), 'https://us02web.zoom.us/j/123?pwd=abc');
 });
 
-test('the reminder email links to the portal and escapes text', () => {
-    const html = reminderHtml({ group: 'G<1>', title: 'Intro "1"', at: { ar: 'الثلاثاء', en: 'Tuesday' } });
-    assert.ok(html.includes('/portal/my-lectures'));
+test('the lecture reminder links to the customer page, escapes text and never shows Zoom', async () => {
+    process.env.MAIL_CAPTURE = '1';
+    await customerEmails.lecture(['a@x.test'], { group: 'G<1>', title: 'Intro "1"', at: { ar: 'الثلاثاء', en: 'Tuesday' } });
+    const html = mail.outbox.at(-1).html;
+    assert.ok(html.includes('/pages/ar/profile.html#lectures'));
     assert.ok(html.includes('G&lt;1&gt;'));
     assert.ok(!html.includes('zoom.us'));
+    assert.deepEqual(mail.outbox.at(-1).bcc, ['a@x.test'], 'the group is in BCC');
 });
 
 test('Zoom client: signs in once, reuses the token, and retries once on 401', async () => {

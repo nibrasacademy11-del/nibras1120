@@ -642,6 +642,9 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); widt
   .nav-actions { margin-inline-start: auto; }
   .hamburger { display: flex; }
   .nav-actions .nav-btn { display: none; }
+  /* signed in: only the round initial, so the menu button keeps its place */
+  .nav-actions .nav-user { padding: 3px; gap: 0; }
+  .nav-actions .nav-user__name { display: none; }
   .floating-cart { display: grid; }
   .nav-cart { display: none; }
 }

@@ -32,15 +32,21 @@ function EmployeeForm({ emp, onClose, onSaved }) {
     const body = { ...f, department: f.department || null, team: f.team || null };
     if (emp && (!canRole || f.role === emp.user?.role)) delete body.role;
     const req = emp ? api(`/api/v2/employees/${emp._id}`, { method: 'PUT', body: { ...body, __v: emp.__v } }) : api('/api/v2/employees', { method: 'POST', body });
-    run(() => req).then((d) => (d.temporaryPassword ? setTemp(d.temporaryPassword) : onSaved())).catch(() => {});
+    // a new person gets an email with a link to choose their password; without email the link shows here once
+    run(() => req).then((d) => (d.emailed || d.setupLink ? setTemp(d) : onSaved())).catch(() => {});
   };
 
   if (temp) {
     return (
-      <Modal title={t('tempPassword')} onClose={onSaved}>
+      <Modal title={t('staffSetupTitle')} onClose={onSaved}>
         <div className="stack">
-          <p className="muted">{t('tempPasswordHint')}</p>
-          <code className="big-code" dir="ltr">{temp}</code>
+          {temp.emailed ? <div className="alert alert--ok">{t('staffSetupEmailed')}</div> : (
+            <>
+              <p className="muted">{t('staffSetupHint')}</p>
+              <code className="big-code" dir="ltr" style={{ wordBreak: 'break-all', fontSize: '.85rem' }}>{temp.setupLink}</code>
+              <div><button type="button" className="btn" onClick={() => navigator.clipboard?.writeText(temp.setupLink)}>{t('staffSetupCopy')}</button></div>
+            </>
+          )}
           <div><button type="button" className="btn btn--primary" onClick={onSaved}>{t('done')}</button></div>
         </div>
       </Modal>
