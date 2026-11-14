@@ -143,3 +143,45 @@ test('Zoom client: signs in once, reuses the token, and retries once on 401', as
         zoom.resetToken();
     }
 });
+
+// ---- the learning path (PLAN-V2 decisions 3 to 5) ----
+
+test('every lecture is open to members; entering counts once its time has come', () => {
+    const l = { startsAt: '2026-12-01T18:00:00Z', durationMin: 90, status: 'scheduled' };
+    assert.equal(L.customerCanJoin(l), true);
+    assert.equal(L.customerCanJoin({ ...l, status: 'cancelled' }), false);
+    assert.equal(L.entryCounts(l, new Date('2026-11-20T10:00:00Z')), false, 'days before: opens, not counted');
+    assert.equal(L.entryCounts(l, new Date('2026-12-01T17:45:00Z')), true, 'from 15 minutes before');
+    assert.equal(L.entryCounts(l, new Date('2027-01-10T10:00:00Z')), true, 'a missed lecture still counts later');
+    assert.equal(L.entryCounts({ ...l, status: 'cancelled' }, new Date('2026-12-01T18:00:00Z')), false);
+});
+
+test('module progress comes from the lectures entered; a course has one module', () => {
+    const modules = [{ module: 'm1', required: true, status: 'in_progress' }, { module: 'm2', required: true, status: 'not_started' }];
+    const lectures = [
+        { _id: 'a', module: 'm1', status: 'scheduled' }, { _id: 'b', module: 'm1', status: 'scheduled' },
+        { _id: 'c', module: 'm2', status: 'scheduled' }, { _id: 'd', module: 'm2', status: 'cancelled' }
+    ];
+    const rows = L.lectureProgress(modules, lectures, new Set(['a', 'b', 'd']));
+    assert.deepEqual(rows.m1, { total: 2, entered: 2, percent: 100, complete: true });
+    assert.deepEqual(rows.m2, { total: 1, entered: 0, percent: 0, complete: false }, 'cancelled lectures do not count');
+    assert.equal(L.programPercent(modules, rows), 50);
+    assert.equal(L.programPercent([{ ...modules[0], status: 'approved' }, modules[1]], {}), 50, 'a completed module counts 100');
+
+    const course = L.lectureProgress([{ module: 'only' }], [{ _id: 'x', module: null, status: 'scheduled' }, { _id: 'y', module: null, status: 'scheduled' }], new Set(['x']));
+    assert.equal(course.only.total, 2, 'lectures without a module belong to the only module');
+    assert.equal(course.only.percent, 50);
+    assert.equal(L.lectureProgress([{ module: 'm1' }], [], new Set()).m1.complete, false, 'no lectures, not complete');
+});
+
+test('the next lecture is the first one that has not ended', () => {
+    const now = new Date('2026-12-01T19:00:00Z');
+    const ls = [
+        { _id: 'past', startsAt: '2026-11-30T18:00:00Z', durationMin: 60, status: 'scheduled' },
+        { _id: 'now', startsAt: '2026-12-01T18:30:00Z', durationMin: 90, status: 'scheduled' },
+        { _id: 'off', startsAt: '2026-12-01T18:45:00Z', durationMin: 90, status: 'cancelled' },
+        { _id: 'later', startsAt: '2026-12-03T18:00:00Z', durationMin: 90, status: 'scheduled' }
+    ];
+    assert.equal(L.nextLecture(ls, now)._id, 'now');
+    assert.equal(L.nextLecture([ls[0]], now), null);
+});

@@ -200,6 +200,7 @@ router.post('/my/profile/requests/:id/cancel', validId(), handle(profiles.cancel
 router.get('/profile-requests', all('profile_requests.view'), handle(profiles.list));
 router.post('/profile-requests/:id/decide', validId(), all('profile_requests.approve'), handle(profiles.decide));
 router.post('/my/lectures/:id/join', validId(), rateLimit({ windowMs: 60 * 1000, max: 20, message: tooMany, keyBy: 'user' }), handle(groupsApi.join));
+router.post('/my/lectures/:id/recordings/:recordingId', validId(), validId('recordingId'), rateLimit({ windowMs: 60 * 1000, max: 20, message: tooMany, keyBy: 'user' }), handle(groupsApi.joinRecording));
 
 // ---- enrollments and module reviews ----
 router.get('/my/enrollments', handle(enrollments.mine));

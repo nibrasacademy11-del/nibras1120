@@ -61,7 +61,8 @@ function ImagePick({ value, onChange }) {
 
 // ---- programs catalog ----
 
-function ProgramForm({ item, specialties, onClose, onSaved }) {
+// Also used on the program page, so a program is set up in one place (PLAN-V2 §4)
+export function ProgramForm({ item, specialties, onClose, onSaved }) {
   const { t } = useI18n();
   const [f, setF] = useState({
     titleAr: item?.titleAr || '', titleEn: item?.titleEn || '', slug: item?.slug || '', type: item?.type || 'course', specialty: item?.specialty || '',

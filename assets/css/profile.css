@@ -199,3 +199,23 @@
     .pf-body { margin-top: 0; }
 }
 .pf-current { font-weight: 400; }
+
+/* ---- the learning path (stage 3) ---- */
+.pf-bar { display: block; height: 6px; margin-top: 6px; border-radius: 99px; background: var(--primary-light); overflow: hidden; }
+.pf-bar > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--gold), var(--primary)); transition: width .6s ease; }
+[dir="rtl"] .pf-bar > span { background: linear-gradient(270deg, var(--gold), var(--primary)); }
+.pf-module__title { display: grid; gap: 2px; }
+.pf-module__title small { font-weight: 400; color: var(--text-muted); font-size: .84rem; }
+.pf-module.is-done .pf-bar > span { background: var(--success); }
+.pf-single { display: grid; gap: 4px; padding: 14px 16px; border-radius: var(--radius-sm); background: var(--ivory); border: 1px solid var(--border); font-weight: 600; }
+.pf-single .pf-bar { height: 8px; }
+.pf-next { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 14px; padding: 14px 16px; border-radius: var(--radius-sm); background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; }
+.pf-next > i { font-size: 1.6rem; color: var(--gold-bright); }
+.pf-next > div { flex: 1 1 220px; display: grid; gap: 2px; }
+.pf-next small { color: var(--gold-bright); font-weight: 600; }
+.pf-next b { font-size: 1.05rem; }
+.pf-next span { color: var(--on-dark-muted); font-size: .9rem; }
+.pf-next .pf-btn { background: var(--gold-bright); border-color: var(--gold-bright); color: var(--primary-dark); }
+.pf-next .pf-btn:hover { background: #fff; color: var(--primary-dark); }
+.pf-hint { margin: 6px 0 0; font-size: .82rem; color: var(--gold-dark); }
+.pf-lecture.is-entered { border-color: #a9dcbf; }

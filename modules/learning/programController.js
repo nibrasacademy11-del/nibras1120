@@ -51,7 +51,9 @@ exports.get = async (req, res) => {
     ]);
     const counts = await CohortMember.aggregate([{ $match: { cohort: { $in: cohorts.map((c) => c._id) }, status: 'active' } }, { $group: { _id: '$cohort', n: { $sum: 1 } } }]);
     const byCohort = Object.fromEntries(counts.map((c) => [String(c._id), c.n]));
-    res.json({ item: program, modules, cohorts: cohorts.map((c) => ({ ...c, enrolled: byCohort[String(c._id)] || 0 })) });
+    // enrolled while no group was open: they join the next group opened for the program
+    const waiting = await require('../../models/Enrollment').countDocuments({ program: program._id, waitingSince: { $ne: null }, cohort: null, status: { $in: ['active', 'on_hold'] } });
+    res.json({ item: program, modules, waiting, cohorts: cohorts.map((c) => ({ ...c, enrolled: byCohort[String(c._id)] || 0 })) });
 };
 
 exports.updateRules = async (req, res) => {
@@ -150,7 +152,8 @@ exports.addCohort = async (req, res) => {
     input.modules = await ownModules(program._id, input.modules);
     const c = await Cohort.create({ ...input, program: program._id });
     await audit.record(req, { action: 'cohort.created', resource: 'programs', resourceId: c._id, summary: `${program.titleAr}: ${c.nameAr}` });
-    res.status(201).json({ item: c });
+    const placed = await require('./groups').placeWaiting(c, req.user.id);
+    res.status(201).json({ item: c, placed });
 };
 
 exports.updateCohort = async (req, res) => {
@@ -164,5 +167,7 @@ exports.updateCohort = async (req, res) => {
     c.set(input);
     await c.save();
     await audit.record(req, { action: 'cohort.updated', resource: 'programs', resourceId: c._id, summary: c.nameAr, changes: audit.diff(before, c.toObject(), Object.keys(input)) });
-    res.json({ item: c });
+    // A group that opens (or gets more seats) takes the program's waiting list
+    const placed = c.status === 'open' ? await require('./groups').placeWaiting(c, req.user.id) : 0;
+    res.json({ item: c, placed });
 };

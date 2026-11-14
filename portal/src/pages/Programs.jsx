@@ -4,6 +4,7 @@ import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { ErrorBox, Field, Loading, Modal, Pager, Pill, useAction, useLoad } from '../components/ui.jsx';
+import { ProgramForm } from './Website.jsx';
 
 export default function Programs() {
   const { t, en, label } = useI18n();
@@ -138,6 +139,7 @@ export function ProgramDetail() {
   const { t, en, label, fmtDay } = useI18n();
   const { can } = useAuth();
   const state = useLoad(`/api/v2/programs/${id}`, [id]);
+  const specialties = useLoad(can('website.manage', 'all') ? '/api/v2/website/specialties' : null);
   const [dialog, setDialog] = useState(null);
   const [rule, setRule] = useState(null);
   const canEdit = can('programs.update', 'all');
@@ -154,7 +156,7 @@ export function ProgramDetail() {
 
   return (
     <Loading state={state}>
-      {({ item: p, modules, cohorts }) => {
+      {({ item: p, modules, cohorts, waiting = 0 }) => {
         const active = modules.filter((m) => m.active);
         const retired = modules.filter((m) => !m.active);
         const required = rule ?? p.modulesRequired ?? 0;
@@ -162,6 +164,24 @@ export function ProgramDetail() {
           <>
             <Link to="/programs" className="muted">← {t('programsNav')}</Link>
             <h1 className="page-title">{label({ ar: p.titleAr, en: p.titleEn })} <small className="muted">{en('programType', p.type)}</small></h1>
+
+            {/* How the program shows on the website: edited here, not in a second place */}
+            <section className="card program-site">
+              <div className="card-head">
+                <h2>{t('pg_site')}</h2>
+                {can('website.manage', 'all') && <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'site' })}>{t('edit')}</button>}
+              </div>
+              <div className="program-site__row">
+                {p.image ? <img src={p.image} alt="" className="program-site__img" loading="lazy" /> : <div className="program-site__img program-site__img--empty" aria-hidden="true">▤</div>}
+                <div className="program-site__info">
+                  <div><strong>{t('wsPrice')}:</strong> <span dir="ltr">{p.price} {p.currency}</span>{p.discountPercent ? ` (−${p.discountPercent}%)` : ''}</div>
+                  <div><strong>{t('status')}:</strong> {t(`wsStatus_${p.status}`)}{p.featured ? ` · ${t('wsFeatured')}` : ''}</div>
+                  {p.descriptionAr && <p className="muted program-site__desc">{p.descriptionAr}</p>}
+                  <a href={`/pages/ar/program-detail.html?slug=${encodeURIComponent(p.slug || p._id)}`} target="_blank" rel="noopener noreferrer">{t('pg_viewOnSite')} ↗</a>
+                </div>
+              </div>
+            </section>
+            {waiting > 0 && <div className="alert alert--info">{waiting} {t('pg_waiting')}</div>}
 
             <section className="card">
               <div className="card-head">
@@ -236,6 +256,7 @@ export function ProgramDetail() {
                 </div>
               )}
             </section>
+            {dialog?.kind === 'site' && <ProgramForm item={p} specialties={specialties.data?.items || []} onClose={() => setDialog(null)} onSaved={done} />}
             {dialog?.kind === 'module' && <ModuleForm programId={id} mod={dialog.item} onClose={() => setDialog(null)} onSaved={done} />}
             {dialog?.kind === 'cohort' && <CohortForm programId={id} cohort={dialog.item} modules={modules.filter((m) => m.active)} onClose={() => setDialog(null)} onSaved={done} />}
           </>

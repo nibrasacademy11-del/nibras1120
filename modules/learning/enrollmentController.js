@@ -15,6 +15,7 @@ const { customerAccess } = require('../../lib/customerAccess');
 const { HttpError, assertVersion, paging } = require('../../lib/http');
 const { addEvent, notify, getSetting } = require('../crm/service');
 const groups = require('./groups');
+const progress = require('./progress');
 const CohortMember = require('../../models/CohortMember');
 
 // Enrollments: a customer in a program, with each module progressing on its own
@@ -138,7 +139,8 @@ exports.mine = async (req, res) => {
     const files = await Customer.find({ user: req.user.id }).select('_id').lean();
     const items = await Enrollment.find({ customer: { $in: files.map((f) => f._id) }, status: { $ne: 'cancelled' } })
         .populate({ path: 'cohort', select: 'nameAr nameEn startDate schedule' }).sort({ enrolledAt: -1 });
-    res.json({ items: await Promise.all(items.map((e) => view(req, e))) });
+    const paths = await progress.pathFor(items, files.map((f) => f._id));
+    res.json({ items: await Promise.all(items.map(async (e) => ({ ...(await view(req, e)), path: paths[String(e._id)] }))) });
 };
 
 // ---- create and change ----
@@ -160,18 +162,37 @@ exports.create = async (req, res) => {
         }
     }
 
+    // No group chosen: the nearest open group of the program, or the waiting list until one opens
+    let waiting = false;
+    if (!cohort && req.body.autoGroup !== false) {
+        cohort = await groups.nearestOpenGroup(program._id);
+        waiting = !cohort;
+    }
+
     const owner = oid(req.body.owner) || customer.owner || oid(req.user.id);
     if (String(owner) !== req.user.id && req.scope === 'own' && String(owner) !== String(customer.owner)) {
         throw new HttpError(403, 'لا يمكنك إسناد التسجيل لموظف آخر. / You cannot assign the enrollment to someone else.');
     }
     const e = await createEnrollment(req, { customer, program, cohort, owner, enrolledAt: req.body.enrolledAt ? new Date(req.body.enrolledAt) : new Date(), notes: str(req.body.notes, 2000) });
+    if (waiting) await Enrollment.updateOne({ _id: e._id }, { $set: { waitingSince: new Date() } });
     res.status(201).json({ item: await view(req, await Enrollment.findById(e._id).populate(POP)) });
 };
+
+// A program without modules (a course) studies as one module named after it, made once
+async function singleModule(program) {
+    const p = program.titleAr ? program : await Course.findById(program._id).select('titleAr titleEn');
+    return ProgramModule.findOneAndUpdate(
+        { program: program._id, auto: true },
+        { $setOnInsert: { program: program._id, auto: true, order: 1, titleAr: p.titleAr, titleEn: p.titleEn || '', required: true, certificate: true, active: true } },
+        { upsert: true, returnDocument: 'after' }
+    ).lean();
+}
 
 // Creates an enrollment with the program's current modules; also used when a group adds members
 async function createEnrollment(req, { customer, program, cohort = null, owner = null, enrolledAt = new Date(), notes = '' }) {
     const team = owner ? await teamOf(owner) : null;
-    const modules = await ProgramModule.find({ program: program._id, active: true }).sort({ order: 1 }).lean();
+    let modules = await ProgramModule.find({ program: program._id, active: true }).sort({ order: 1 }).lean();
+    if (!modules.length) modules = [await singleModule(program)];
     // Checked here too, not only by the unique index: a new database may not have built the index yet
     if (await Enrollment.exists({ customer: customer._id, program: program._id, status: { $in: Enrollment.OPEN_STATUSES } })) {
         throw new HttpError(409, 'العميل مسجل في هذا البرنامج بالفعل. / The customer is already enrolled in this program.', 'ALREADY_ENROLLED');

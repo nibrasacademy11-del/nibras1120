@@ -13,6 +13,10 @@ const lectureAttendanceSchema = new mongoose.Schema({
     clicks: { type: Number, default: 0 },
     firstClickAt: { type: Date, default: null },
     lastClickAt: { type: Date, default: null },
+    // The first entry that counts toward the module (from the lecture's time, or a recording):
+    // "entered" in the learning path (PLAN-V2 decision 3)
+    enteredAt: { type: Date, default: null },
+    enteredVia: { type: String, enum: ['', 'live', 'recording', 'staff'], default: '' },
     minutes: { type: Number, default: 0 },
     joinedAt: { type: Date, default: null },
     leftAt: { type: Date, default: null },

@@ -54,6 +54,8 @@ const enrollmentSchema = new mongoose.Schema({
     programTitleAr: { type: String, required: true },
     programTitleEn: { type: String, default: '' },
     cohort: { type: ObjectId, ref: 'Cohort', default: null, index: true },
+    // Enrolled while the program had no open group: joins the next group opened for it
+    waitingSince: { type: Date, default: null, index: true },
     owner: { type: ObjectId, ref: 'User', default: null, index: true },   // employee responsible for this enrollment
     team: { type: ObjectId, ref: 'Team', default: null, index: true },
     ownerHistory: [{ _id: false, owner: { type: ObjectId, ref: 'User' }, team: { type: ObjectId, ref: 'Team' }, from: Date, to: Date, by: { type: ObjectId, ref: 'User' }, reason: String }],

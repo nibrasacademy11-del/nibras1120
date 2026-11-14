@@ -18,6 +18,8 @@ const programModuleSchema = new mongoose.Schema({
     // A separate certificate is issued for this module once it is approved
     certificate: { type: Boolean, default: true },
     active: { type: Boolean, default: true },
+    // The one module made for a program without modules (a course): the customer never sees the word "module"
+    auto: { type: Boolean, default: false },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true, optimisticConcurrency: true });
 

@@ -1,4 +1,5 @@
 const CohortMember = require('../../models/CohortMember');
+const Cohort = require('../../models/Cohort');
 const Customer = require('../../models/Customer');
 const Lecture = require('../../models/Lecture');
 const LectureAttendance = require('../../models/LectureAttendance');
@@ -48,4 +49,34 @@ async function attendanceStats(cohortId) {
     return { held: heldIds.length, byCustomer: Object.fromEntries(rows.map((r) => [String(r._id), r])) };
 }
 
-module.exports = { activeCount, addMember, customerIdsOfUser, attendanceStats };
+// The group a new enrollment joins: the open group of the program that starts soonest and still
+// has seats (PLAN-V2 §13: a purchase joins the nearest open group, or waits for the next one)
+async function nearestOpenGroup(programId) {
+    const open = await Cohort.find({ program: programId, status: 'open' }).lean();
+    open.sort((a, b) => (a.startDate ? new Date(a.startDate).getTime() : Infinity) - (b.startDate ? new Date(b.startDate).getTime() : Infinity));
+    for (const c of open) {
+        if (!c.capacity || (await activeCount(c._id)) < c.capacity) return c;
+    }
+    return null;
+}
+
+// A group that opens takes the program's waiting enrollments, first come first served, up to its seats
+async function placeWaiting(cohort, by = null) {
+    if (!cohort || cohort.status !== 'open') return 0;
+    const Enrollment = require('../../models/Enrollment');
+    const waiting = await Enrollment.find({ program: cohort.program, waitingSince: { $ne: null }, cohort: null, status: { $in: Enrollment.OPEN_STATUSES } })
+        .sort({ waitingSince: 1 }).populate('customer', 'user');
+    let placed = 0;
+    for (const e of waiting) {
+        if (cohort.capacity && (await activeCount(cohort._id)) >= cohort.capacity) break;
+        if (!e.customer) continue;
+        e.cohort = cohort._id;
+        e.waitingSince = null;
+        await e.save();
+        await addMember({ cohort, customer: e.customer, enrollment: e._id, by, via: 'enrollment' });
+        placed += 1;
+    }
+    return placed;
+}
+
+module.exports = { activeCount, addMember, customerIdsOfUser, attendanceStats, nearestOpenGroup, placeWaiting };

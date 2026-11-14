@@ -26,6 +26,9 @@
         reason: 'Why do you need the change?', reasonPh: 'For example: my name is spelled differently in my passport', send: 'Send the request', sentReq: 'Your request was sent. We will email you the answer.', close: 'Close',
         pathEmpty: 'You are not enrolled in a program yet.', browse: 'Browse the programs', enrolled: 'Enrolled', group: 'Group', progress: 'Progress', modules: 'Modules',
         moduleStatus: { not_started: 'Not started', in_progress: 'In progress', ready_for_review: 'Under review', approved: 'Completed', rejected: 'To redo', certificate_issued: 'Completed' },
+        nextLecture: 'Next lecture', lecturesEntered: (a, b) => `Lectures: entered ${a} of ${b}`, noLectures: 'No lectures yet',
+        countsLater: 'Counts when you enter it at its time', moduleDone: (t) => `Well done! You completed ${t}.`,
+        waiting: 'You are on the list for the next group of this program. We will tell you as soon as it starts.',
         lecturesEmpty: 'No lectures yet. When your group starts, its lectures appear here.', join: 'Enter the lecture', recording: 'Watch the recording', cancelledL: 'Cancelled',
         state: { upcoming: 'Upcoming', open: 'Open now', ended: 'Held', cancelled: 'Cancelled' }, attended: 'You entered',
         passTitle: 'The lecture passcode', passText: 'Zoom may ask for this passcode. Copy it, then continue to Zoom.', copy: 'Copy', copied: 'Copied', goZoom: 'Continue to Zoom', minutes: 'min',
@@ -57,6 +60,9 @@
         reason: 'لماذا تحتاج التعديل؟', reasonPh: 'مثلاً: اسمي مكتوب بشكل مختلف في الجواز', send: 'إرسال الطلب', sentReq: 'تم إرسال طلبك، وستصلك الإجابة على إيميلك.', close: 'إغلاق',
         pathEmpty: 'لم تُسجَّل في أي برنامج بعد.', browse: 'تصفح البرامج', enrolled: 'تاريخ التسجيل', group: 'المجموعة', progress: 'التقدم', modules: 'المحاور',
         moduleStatus: { not_started: 'لم يبدأ', in_progress: 'جارٍ', ready_for_review: 'قيد المراجعة', approved: 'مكتمل', rejected: 'يحتاج إعادة', certificate_issued: 'مكتمل' },
+        nextLecture: 'المحاضرة القادمة', lecturesEntered: (a, b) => `المحاضرات: دخلت ${a} من ${b}`, noLectures: 'لا توجد محاضرات بعد',
+        countsLater: 'تُحسب عندما تدخلها في موعدها', moduleDone: (t) => `أحسنت! أكملت ${t}.`,
+        waiting: 'أنت في قائمة المجموعة القادمة لهذا البرنامج، وسنبلغك فور بدئها.',
         lecturesEmpty: 'لا توجد محاضرات بعد. عندما تبدأ مجموعتك تظهر محاضراتها هنا.', join: 'ادخل المحاضرة', recording: 'شاهد التسجيل', cancelledL: 'ملغاة',
         state: { upcoming: 'قادمة', open: 'متاحة الآن', ended: 'انعقدت', cancelled: 'ملغاة' }, attended: 'دخلتها',
         passTitle: 'كود دخول المحاضرة', passText: 'قد يطلب زوم هذا الكود. انسخه ثم تابع إلى زوم.', copy: 'نسخ', copied: 'تم النسخ', goZoom: 'المتابعة إلى زوم', minutes: 'دقيقة',
@@ -318,7 +324,10 @@
         dlg.showModal();
     }
 
-    // ---- my path ----
+    // ---- my path: the program, each module's lectures entered, the next lecture ----
+    const bar = (pct) => `<span class="pf-bar" role="img" aria-label="${pct}%"><span style="width:${pct}%"></span></span>`;
+    const when = (d) => `${fmtDay(d)} · ${fmtTime(d)}`;
+
     async function renderPath(panel) {
         const { items } = await apiFetch('/api/v2/my/enrollments');
         if (!items.length) {
@@ -326,7 +335,26 @@
             return;
         }
         panel.innerHTML = items.map((e) => {
-            const pct = (e.progress && e.progress.percent) || 0;
+            const p = e.path || { modules: {}, percent: (e.progress && e.progress.percent) || 0, lectures: { total: 0, entered: 0 } };
+            const pct = p.percent || 0;
+            const next = p.next ? `
+                <div class="pf-next">
+                    <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                    <div><small>${h(T.nextLecture)}</small><b>${h(pick(p.next.titleAr, p.next.titleEn))}</b><span>${h(when(p.next.startsAt))}</span></div>
+                    <button type="button" class="pf-btn" data-join="${h(p.next._id)}"><i class="fas fa-video" aria-hidden="true"></i> ${h(T.join)}</button>
+                </div>` : '';
+            const body = p.single
+                ? `<div class="pf-single"><span>${p.lectures.total ? h(T.lecturesEntered(p.lectures.entered, p.lectures.total)) : h(T.noLectures)}</span>${bar(pct)}</div>`
+                : `<ol class="pf-modules">${(e.modules || []).map((m, i) => {
+                    const done = ['approved', 'certificate_issued'].includes(m.status);
+                    const r = p.modules[String(m.module)] || { total: 0, entered: 0, percent: 0 };
+                    const mp = done ? 100 : r.percent;
+                    return `<li class="pf-module${done ? ' is-done' : ''}">
+                        <span class="pf-module__no">${done ? '<i class="fas fa-check" aria-hidden="true"></i>' : i + 1}</span>
+                        <span class="pf-module__title">${h(pick(m.titleAr, m.titleEn))}<small>${r.total ? h(T.lecturesEntered(r.entered, r.total)) : h(T.noLectures)}</small>${bar(mp)}</span>
+                        ${done ? pill(T.moduleStatus.approved, 'ok') : pill(`${mp}%`, mp ? 'info' : '')}
+                    </li>`;
+                }).join('')}</ol>`;
             return `
             <section class="pf-card pf-program">
                 <div class="pf-program__head">
@@ -336,15 +364,15 @@
                     </div>
                     <div class="pf-ring" style="--p:${pct}" role="img" aria-label="${h(T.progress)} ${pct}%"><span>${pct}%</span></div>
                 </div>
-                <ol class="pf-modules">${(e.modules || []).map((m, i) => {
-                    const done = ['approved', 'certificate_issued'].includes(m.status);
-                    return `<li class="pf-module${done ? ' is-done' : ''}"><span class="pf-module__no">${done ? '<i class="fas fa-check" aria-hidden="true"></i>' : i + 1}</span><span class="pf-module__title">${h(pick(m.titleAr, m.titleEn))}</span>${pill(T.moduleStatus[m.status] || m.status, done ? 'ok' : m.status === 'rejected' ? 'bad' : m.status === 'not_started' ? '' : 'info')}</li>`;
-                }).join('')}</ol>
+                ${e.waitingSince && !e.cohort ? `<p class="pf-note"><i class="fas fa-hourglass-half" aria-hidden="true"></i> ${h(T.waiting)}</p>` : ''}
+                ${next}
+                ${body}
             </section>`;
         }).join('');
+        panel.querySelectorAll('[data-join]').forEach((b) => b.addEventListener('click', () => join(b)));
     }
 
-    // ---- my lectures ----
+    // ---- my lectures: all open, in any order (PLAN-V2 decision 4) ----
     async function renderLectures(panel) {
         const { groups } = await apiFetch('/api/v2/my/lectures');
         const all = groups.flatMap((g) => g.lectures);
@@ -355,11 +383,7 @@
                 <div class="pf-lectures">${g.lectures.map((l) => lectureCard(l)).join('')}</div>
             </section>`).join('');
         panel.querySelectorAll('[data-join]').forEach((b) => b.addEventListener('click', () => join(b)));
-        panel.querySelectorAll('[data-rec]').forEach((b) => b.addEventListener('click', () => {
-            const l = all.find((x) => x._id === b.dataset.lecture);
-            const r = l && l.recordings.find((x) => x._id === b.dataset.rec);
-            if (r) openZoom(r.url, r.passcode);
-        }));
+        panel.querySelectorAll('[data-rec]').forEach((b) => b.addEventListener('click', () => join(b, `/api/v2/my/lectures/${b.dataset.lecture}/recordings/${b.dataset.rec}`)));
     }
 
     function lectureCard(l) {
@@ -367,30 +391,36 @@
         const tone = { open: 'ok', upcoming: 'info', ended: '', cancelled: 'bad' }[l.state];
         const rec = (l.recordings || [])[0];
         let action = '';
-        if (l.state === 'cancelled') action = '';
-        else if (l.state === 'ended' && rec) action = `<button type="button" class="pf-btn pf-btn--ghost" data-rec="${h(rec._id)}" data-lecture="${h(l._id)}"><i class="fas fa-circle-play" aria-hidden="true"></i> ${h(T.recording)}</button>`;
-        else if (l.hasLink) action = `<button type="button" class="pf-btn" data-join="${h(l._id)}"${l.state === 'open' ? '' : ' disabled'}><i class="fas fa-video" aria-hidden="true"></i> ${h(T.join)}</button>`;
+        if (l.state !== 'cancelled') {
+            if (rec) action = `<button type="button" class="pf-btn pf-btn--ghost" data-rec="${h(rec._id)}" data-lecture="${h(l._id)}"><i class="fas fa-circle-play" aria-hidden="true"></i> ${h(T.recording)}</button>`;
+            else if (l.hasLink) action = `<button type="button" class="pf-btn" data-join="${h(l._id)}"><i class="fas fa-video" aria-hidden="true"></i> ${h(T.join)}</button>`;
+        }
+        const hint = l.state === 'upcoming' && !l.entered && !l.counts ? `<p class="pf-hint"><i class="fas fa-circle-info" aria-hidden="true"></i> ${h(T.countsLater)}</p>` : '';
         return `
-            <article class="pf-lecture pf-lecture--${h(l.state)}">
+            <article class="pf-lecture pf-lecture--${h(l.state)}${l.entered ? ' is-entered' : ''}">
                 <div class="pf-date"><b>${d.toLocaleDateString(locale, { day: 'numeric' })}</b><span>${h(d.toLocaleDateString(locale, { month: 'short' }))}</span></div>
                 <div class="pf-lecture__body">
                     <h3>${h(pick(l.titleAr, l.titleEn))}</h3>
                     <p class="pf-small">${l.module ? `${h(pick(l.module.titleAr, l.module.titleEn))} · ` : ''}${h(fmtTime(l.startsAt))} · ${h(l.durationMin)} ${h(T.minutes)}</p>
-                    <div class="pf-lecture__foot">${pill(T.state[l.state] || l.state, tone)}${l.attended ? pill(T.attended, 'ok') : ''}${action}</div>
+                    ${hint}
+                    <div class="pf-lecture__foot">${pill(T.state[l.state] || l.state, tone)}${l.entered ? pill(T.attended, 'ok') : ''}${action}</div>
                 </div>
             </article>`;
     }
 
-    async function join(btn) {
+    // Join a lecture (or open its recording): the server checks membership, counts the entry and
+    // gives the link; a module completed by this entry is celebrated
+    async function join(btn, url) {
         busy(btn, true);
         try {
-            const r = await post(`/api/v2/my/lectures/${btn.dataset.join}/join`);
-            openZoom(r.url, r.passcode);
+            const r = await post(url || `/api/v2/my/lectures/${btn.dataset.join}/join`);
+            if (r.completed && r.completed.length) showToast(T.moduleDone(r.completed.map((c) => pick(c.titleAr, c.titleEn)).join('، ')));
+            openZoom(r.url, r.passcode, () => show());
         } catch (e) { showToast(errText(e), true); } finally { busy(btn, false); }
     }
 
     // The link itself is never shown: with a passcode, a card to copy it first, then Zoom
-    function openZoom(url, passcode) {
+    function openZoom(url, passcode, after) {
         if (!url) return;
         if (!passcode) { window.location.assign(url); return; }
         const dlg = document.createElement('dialog');
@@ -404,7 +434,7 @@
                 <button type="button" class="pf-btn pf-btn--ghost" data-close>${h(T.close)}</button>
             </div>`;
         document.body.appendChild(dlg);
-        dlg.addEventListener('close', () => dlg.remove());
+        dlg.addEventListener('close', () => { dlg.remove(); if (after) after(); });
         dlg.querySelector('[data-close]').addEventListener('click', () => dlg.close());
         dlg.querySelector('[data-go]').addEventListener('click', () => setTimeout(() => dlg.close(), 300));
         dlg.querySelector('[data-copy]').addEventListener('click', async (ev) => {

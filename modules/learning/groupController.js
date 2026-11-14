@@ -16,6 +16,7 @@ const { customerAccess, displayName } = require('../../lib/customerAccess');
 const { HttpError, assertVersion } = require('../../lib/http');
 const { addEvent, getSetting } = require('../crm/service');
 const groups = require('./groups');
+const progress = require('./progress');
 const { createEnrollment } = require('./enrollmentController');
 
 // Training groups: members, lectures (Zoom), joining from the portal and attendance
@@ -349,6 +350,7 @@ async function syncLecture(l) {
             { $set: { cohort: l.cohort, minutes: p.minutes, joinedAt: p.joinedAt, leftAt: p.leftAt, ...(keepManual ? {} : { present, source: 'zoom' }) } },
             { upsert: true }
         );
+        if (present) await countEntry(l, customer, 'staff');
         result.attendance++;
     }
     const rec = await zoom.getRecording(l.zoom.meetingId);
@@ -406,6 +408,8 @@ exports.markAttendance = async (req, res) => {
     if (!customer || !(await CohortMember.exists({ cohort: l.cohort, customer }))) throw new HttpError(400, 'العميل ليس في المجموعة. / The customer is not in the group.');
     const present = req.body.present === true;
     await LectureAttendance.updateOne({ lecture: l._id, customer }, { $set: { cohort: l.cohort, present, source: 'manual', markedBy: req.user.id } }, { upsert: true });
+    // Attendance recorded by staff counts as entering the lecture (the learning path)
+    if (present) await countEntry(l, customer, 'staff');
     await audit.record(req, { action: 'lecture.attendance_marked', resource: 'programs', resourceId: l._id, summary: `${l.titleAr}: ${present ? 'present' : 'absent'}`, meta: { customer: String(customer) } });
     res.json({ ok: true });
 };
@@ -445,7 +449,7 @@ exports.mine = async (req, res) => {
     const [cohorts, lectures, seats] = await Promise.all([
         Cohort.find({ _id: { $in: cohortIds }, status: { $ne: 'cancelled' } }).populate('program', 'titleAr titleEn').populate('modules', 'titleAr titleEn order').lean(),
         Lecture.find({ cohort: { $in: cohortIds } }).populate('module', 'titleAr titleEn').sort({ startsAt: 1 }).lean(),
-        LectureAttendance.find({ customer: { $in: files }, cohort: { $in: cohortIds } }).select('lecture present minutes').lean()
+        LectureAttendance.find({ customer: { $in: files }, cohort: { $in: cohortIds } }).select('lecture present minutes enteredAt').lean()
     ]);
     const mySeat = Object.fromEntries(seats.map((s) => [String(s.lecture), s]));
     const now = new Date();
@@ -463,8 +467,11 @@ exports.mine = async (req, res) => {
                     hasLink: !!(l.zoom.joinUrl || l.zoom.managed),
                     // A personal Zoom link carries the passcode; the passcode is still shown in case Zoom asks
                     passcode: state === 'cancelled' ? '' : l.zoom.passcode,
-                    recordings: state === 'ended' ? l.recordings.map((r) => ({ _id: r._id, title: r.title, url: r.url, passcode: r.passcode })) : [],
+                    // recordings open through the join step too: their links are never listed
+                    recordings: state === 'ended' ? l.recordings.map((r) => ({ _id: r._id, title: r.title })) : [],
                     materials: l.materials,
+                    entered: !!(seat && seat.enteredAt),
+                    counts: L.entryCounts(l, now),
                     attended: seat ? { present: seat.present, minutes: seat.minutes } : null
                 };
             })
@@ -479,9 +486,8 @@ exports.join = async (req, res) => {
     const files = await groups.customerIdsOfUser(req.user.id);
     const member = await CohortMember.findOne({ cohort: l.cohort, customer: { $in: files }, status: 'active' });
     if (!member) throw new HttpError(404, 'Not found.');
-    if (!L.canJoinAt(l)) {
-        throw new HttpError(409, l.status === 'cancelled' ? 'المحاضرة ملغاة. / The lecture is cancelled.' : 'الدخول متاح قبل المحاضرة بربع ساعة. / Joining opens 15 minutes before the lecture.', 'NOT_OPEN');
-    }
+    // Every lecture is open to the group's members, in any order (PLAN-V2 decision 4)
+    if (!L.customerCanJoin(l)) throw new HttpError(409, 'المحاضرة ملغاة. / The lecture is cancelled.', 'CANCELLED');
     const now = new Date();
     const seat = await LectureAttendance.findOneAndUpdate(
         { lecture: l._id, customer: member.customer },
@@ -510,5 +516,35 @@ exports.join = async (req, res) => {
         }
     }
     if (!url) throw new HttpError(409, 'رابط المحاضرة لم يُضف بعد. / The lecture link has not been added yet.', 'NO_LINK');
-    res.json({ url, passcode: l.zoom.passcode });
+    const counted = await countEntry(l, member.customer, 'live', now);
+    res.json({ url, passcode: l.zoom.passcode, counted, completed: counted ? counted.completed : [] });
+};
+
+// The entry counts toward the module once the lecture's time has come (or for a recording);
+// a module whose lectures are all entered completes by itself. Returns false when nothing counted.
+async function countEntry(lecture, customerId, via, now = new Date()) {
+    if (via === 'live' && !L.entryCounts(lecture, now)) return false;
+    const isNew = await progress.markEntered(lecture, customerId, via, now);
+    if (!isNew) return { completed: [] };
+    const changes = await progress.refresh({ customerId, cohortId: lecture.cohort });
+    return { completed: changes.flatMap((c) => c.completed.map((m) => ({ enrollment: c.enrollment._id, module: m.module, titleAr: m.titleAr, titleEn: m.titleEn }))) };
+}
+
+// A recording opens like the live lecture: membership checked, the entry counted, then the link
+exports.joinRecording = async (req, res) => {
+    const l = await loadLecture(req.params.id);
+    const files = await groups.customerIdsOfUser(req.user.id);
+    const member = await CohortMember.findOne({ cohort: l.cohort, customer: { $in: files }, status: 'active' });
+    if (!member) throw new HttpError(404, 'Not found.');
+    if (!L.customerCanJoin(l)) throw new HttpError(409, 'المحاضرة ملغاة. / The lecture is cancelled.', 'CANCELLED');
+    const rec = l.recordings.id(req.params.recordingId);
+    if (!rec || !rec.url) throw new HttpError(404, 'Not found.');
+    const now = new Date();
+    await LectureAttendance.updateOne(
+        { lecture: l._id, customer: member.customer },
+        { $set: { cohort: l.cohort, lastClickAt: now }, $setOnInsert: { firstClickAt: now }, $inc: { clicks: 1 } },
+        { upsert: true }
+    );
+    const counted = await countEntry(l, member.customer, 'recording', now);
+    res.json({ url: rec.url, passcode: rec.passcode || '', counted, completed: counted ? counted.completed : [] });
 };

@@ -139,14 +139,15 @@ test('groups and lectures flow', { skip }, async (t) => {
             assert.equal(ls[0].passcode, '9911');
         });
 
-        await t.test('joining: open lecture gives the link and counts the click; a far lecture does not', async () => {
+        await t.test('joining: every lecture opens (PLAN-V2); the link is given and the click counted', async () => {
             const j = await me('POST', `/api/v2/my/lectures/${lecNow}/join`);
             assert.equal(j.status, 200);
             assert.equal(j.data.url, 'https://zoom.us/j/111?pwd=abc');
             await me('POST', `/api/v2/my/lectures/${lecNow}/join`);
             const seat = await LectureAttendance.findOne({ lecture: lecNow });
             assert.equal(seat.clicks, 2);
-            assert.equal((await me('POST', `/api/v2/my/lectures/${lecLater}/join`)).data.code, 'NOT_OPEN');
+            assert.ok(seat.enteredAt, 'entering the lecture in its time counts');
+            assert.equal((await me('POST', `/api/v2/my/lectures/${lecLater}/join`)).data.code, 'NO_LINK', 'a far lecture is open too; this one has no link yet');
             assert.equal((await w('POST', `/api/v2/my/lectures/${lecNow}/join`)).status, 404, 'non-members cannot join');
         });
 

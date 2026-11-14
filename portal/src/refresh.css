@@ -190,3 +190,10 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 .prq-banner { display: flex; align-items: center; gap: 12px; padding: 12px 18px; margin-bottom: 14px; text-decoration: none; color: inherit; border-inline-start: 4px solid var(--gold, #b98a35); }
 .prq-banner:hover { box-shadow: var(--shadow, 0 6px 20px rgba(0,0,0,.08)); }
 .prq-banner__count { display: inline-grid; place-items: center; min-width: 30px; height: 30px; padding: 0 8px; border-radius: 999px; background: var(--primary); color: #fff; font-weight: 700; }
+
+/* The program page: how it shows on the website (PLAN-V2 §4) */
+.program-site__row { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+.program-site__img { width: 180px; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 12px; border: 1px solid var(--border); background: var(--primary-light); flex: none; }
+.program-site__img--empty { display: grid; place-items: center; font-size: 2rem; color: var(--muted); }
+.program-site__info { flex: 1 1 260px; display: grid; gap: 6px; min-width: 0; }
+.program-site__desc { margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
