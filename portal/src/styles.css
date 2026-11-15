@@ -112,7 +112,7 @@ h2 { font-size: 1.15rem; margin: 0 0 12px; }
 .sidebar-foot { border-top: 1px solid rgba(255,255,255,.1); padding-top: 10px; display: flex; flex-direction: column; gap: 2px; font-size: .88rem; }
 .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .topbar { display: flex; align-items: center; gap: 12px; padding: 12px 24px; background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
-.topbar-user { flex: 1; font-weight: 600; }
+.topbar-user { flex: 1; font-weight: 600; min-width: 0; display: flex; align-items: center; gap: 10px; }
 .topbar-actions { display: flex; gap: 8px; }
 .menu-btn { display: none; }
 .content { padding: 24px; max-width: 1280px; width: 100%; }
@@ -165,7 +165,8 @@ h2 { font-size: 1.15rem; margin: 0 0 12px; }
   .menu-btn { display: block; }
   .content { padding: 16px; }
   .topbar { padding: 10px 16px; }
-  .topbar-user { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .topbar-user { min-width: 0; }
+  .topbar-user__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .upcoming, .codes { columns: 1; }
 }
 
