@@ -281,7 +281,7 @@ function Setup() {
           <input required placeholder={t('name')} value={h.nameAr} onChange={(e) => setH({ ...h, nameAr: e.target.value })} />
           <button className="btn btn--primary">{t('add')}</button>
         </form>
-        <Loading state={holidays}>{(d) => <ul className="plain-list">{d.items.map((x) => <li key={x.date}><span dir="ltr">{x.date}</span><span>{x.nameAr}</span><button type="button" className="link" onClick={() => api(`/api/v2/attendance/holidays/${x.date}`, { method: 'DELETE' }).then(holidays.reload)}>×</button></li>)}</ul>}</Loading>
+        <Loading state={holidays}>{(d) => <ul className="plain-list">{d.items.map((x) => <li key={x.date}><span dir="ltr">{x.date}</span><span>{x.nameAr}</span><button type="button" className="icon-btn btn--small btn--danger" aria-label={t('delete')} onClick={() => api(`/api/v2/attendance/holidays/${x.date}`, { method: 'DELETE' }).then(holidays.reload)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></li>)}</ul>}</Loading>
       </section>
       {dialog?.kind === 'shift' && <ShiftForm item={dialog.item} onClose={() => setDialog(null)} onDone={done} />}
       {dialog?.kind === 'station' && <StationForm item={dialog.item} onClose={() => setDialog(null)} onDone={(url) => { if (url) setKiosk(url); done(); }} />}

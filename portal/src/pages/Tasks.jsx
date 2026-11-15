@@ -68,7 +68,12 @@ export function TaskTable({ items, onChanged, hideCustomer }) {
                   <td>{t(x.priority)}</td>
                   <td><Pill value={x.status}>{t(`task_${x.status}`)}</Pill></td>
                   <td className="nowrap">
-                    {x.status === 'open' && <button type="button" className="btn btn--small" onClick={() => complete(x, 'done')}>✓ {t('markDone')}</button>}{' '}
+                    {x.status === 'open' && (
+                      <button type="button" className="btn btn--small btn--accent" onClick={() => complete(x, 'done')} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span>{t('markDone')}</span>
+                      </button>
+                    )}{' '}
                     {x.status === 'open' && <button type="button" className="btn btn--small" onClick={() => setEditing(x)}>{t('edit')}</button>}
                   </td>
                 </tr>
