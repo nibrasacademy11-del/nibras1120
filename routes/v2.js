@@ -177,6 +177,11 @@ router.post('/groups/:id/members/preview', validId(), all('programs.update'), lo
 router.post('/groups/:id/members', validId(), all('programs.update'), handle(groupsApi.addMembers));
 router.post('/groups/:id/members/:memberId/remove', validId(), validId('memberId'), all('programs.update'), handle(groupsApi.removeMember));
 router.get('/groups/:id/lectures', validId(), can('programs.view'), handle(groupsApi.lectures));
+// the program's modules and their lectures, for everyone enrolled; finishing a module issues its certificates
+router.get('/programs/:id/lectures', validId(), can('programs.view'), handle(groupsApi.programLectures));
+router.post('/programs/:id/lectures', validId(), all('programs.update'), handle(groupsApi.addProgramLecture));
+router.post('/modules/:moduleId/finish', validId('moduleId'), all('programs.update'), handle(groupsApi.finishModule));
+router.post('/modules/:moduleId/reopen', validId('moduleId'), all('programs.update'), handle(groupsApi.reopenModule));
 router.post('/groups/:id/lectures', validId(), all('programs.update'), handle(groupsApi.addLecture));
 router.put('/lectures/:id', validId(), all('programs.update'), handle(groupsApi.updateLecture));
 router.post('/lectures/:id/cancel', validId(), all('programs.update'), handle(groupsApi.cancelLecture));

@@ -89,7 +89,8 @@ test('automatic certificates flow', { skip }, async (t) => {
 
         await t.test('a module completed while money is owed: no certificate, and the customer sees nothing', async () => {
             const j = await me('POST', `/api/v2/my/lectures/${l1}/join`);
-            assert.equal(j.data.completed.length, 1, 'the module completed');
+            assert.ok(j.data.counted);
+            assert.equal((await o('POST', `/api/v2/modules/${m1}/finish`)).data.completed, 1, 'the owner finishes the module: it completed');
             assert.equal(await Certificate.countDocuments({ customer: file._id }), 0);
             const mine = (await me('GET', '/api/v2/my/certificates')).data;
             assert.deepEqual(mine, { items: [] }, 'not even that one is waiting');
@@ -109,6 +110,8 @@ test('automatic certificates flow', { skip }, async (t) => {
 
         await t.test('paying the balance issues the rest at once, and the customer is emailed', async () => {
             await me('POST', `/api/v2/my/lectures/${l2}/join`);
+            const fin = (await o('POST', `/api/v2/modules/${m2}/finish`)).data;
+            assert.equal(fin.waitingPayment, 1, 'finished, but the certificate waits for the payment');
             assert.equal(await Certificate.countDocuments({ customer: file._id }), 1, 'still owed: the second waits');
             const pay = await o('POST', '/api/v2/payments', { customer: String(file._id), charge: charge._id, account: acct._id, method: 'cash', amount: 900 });
             assert.equal(pay.status, 201, JSON.stringify(pay.data));

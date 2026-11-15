@@ -5,6 +5,59 @@ import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { ErrorBox, Field, Loading, Modal, Pager, Pill, useAction, useLoad } from '../components/ui.jsx';
 import { ProgramForm } from './Website.jsx';
+import { LectureForm } from './Groups.jsx';
+
+// The lectures of one module, on the program page: everyone enrolled sees them at once. The owner
+// presses "the module is finished": whoever entered all its lectures gets the module's certificate.
+function ModuleLectures({ programId, module: m, lectures, enrolled, canEdit, zoomConnected, onChanged }) {
+  const { t, fmtDate } = useI18n();
+  const [form, setForm] = useState(null);
+  const [confirm, setConfirm] = useState(false);
+  const [msg, setMsg] = useState('');
+  const { busy, error, run } = useAction();
+  const mine = lectures.filter((l) => String(l.module) === String(m._id));
+  const finish = () => run(() => api(`/api/v2/modules/${m._id}/finish`, { method: 'POST' })).then((r) => {
+    setConfirm(false);
+    setMsg(t('pg_finishDone').replace('{n}', r.completed).replace('{c}', r.issued).replace('{w}', r.waitingPayment).replace('{m}', r.missing));
+    onChanged();
+  }).catch(() => {});
+  const reopen = () => run(() => api(`/api/v2/modules/${m._id}/reopen`, { method: 'POST' })).then(() => { setMsg(''); onChanged(); }).catch(() => {});
+  return (
+    <div className="mod-lectures">
+      <div className="mod-lectures__head">
+        <strong>{t('pg_lectures')} ({mine.length})</strong>
+        {m.finishedAt && <Pill tone="ok">{t('pg_finished')}</Pill>}
+        <span className="grow" />
+        {canEdit && <button type="button" className="btn btn--small" onClick={() => setForm({})}>+ {t('pg_addLecture')}</button>}
+        {canEdit && !m.finishedAt && mine.length > 0 && <button type="button" className="btn btn--small btn--primary" onClick={() => setConfirm(true)}>{t('pg_finish')}</button>}
+        {canEdit && m.finishedAt && <button type="button" className="btn btn--small btn--ghost" disabled={busy} onClick={reopen}>{t('pg_reopen')}</button>}
+      </div>
+      {!mine.length ? <p className="muted mod-lectures__empty">{t('pg_noLectures')}</p> : (
+        <ol className="mod-lectures__list">
+          {mine.map((l) => (
+            <li key={l._id} className={l.status === 'cancelled' ? 'is-cancelled' : ''}>
+              <span className="grow"><strong>{l.titleAr}</strong><br /><small className="muted">{fmtDate(l.startsAt)} · {l.durationMin} {t('minutesShort')}{l.recordings?.length ? ` · ${t('pg_hasRecording')}` : ''}</small></span>
+              {l.zoom?.joinUrl || l.zoom?.managed ? <Pill tone="ok">{t('pg_hasLink')}</Pill> : <Pill tone="warn">{t('pg_noLink')}</Pill>}
+              <small className="muted nowrap">{t('pg_entered')} {l.entered || 0} / {enrolled}</small>
+              {canEdit && l.status !== 'cancelled' && <button type="button" className="btn btn--small btn--ghost" onClick={() => setForm({ item: l })}>{t('edit')}</button>}
+            </li>
+          ))}
+        </ol>
+      )}
+      {msg && <div className="alert alert--ok">{msg}</div>}
+      <ErrorBox error={error} />
+      {form && <LectureForm postUrl={`/api/v2/programs/${programId}/lectures`} lecture={form.item} modules={[m]} zoomConnected={zoomConnected} onClose={() => setForm(null)} onSaved={() => { setForm(null); onChanged(); }} />}
+      {confirm && (
+        <Modal title={`${t('pg_finish')}: ${m.titleAr}`} onClose={() => setConfirm(false)}>
+          <div className="stack">
+            <p>{t('pg_finishConfirm')}</p>
+            <div className="row"><button type="button" className="btn btn--primary" disabled={busy} onClick={finish}>{t('pg_finish')}</button><button type="button" className="btn btn--ghost" onClick={() => setConfirm(false)}>{t('cancel')}</button></div>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
 
 export default function Programs() {
   const { t, en, label } = useI18n();
@@ -140,6 +193,8 @@ export function ProgramDetail() {
   const { can } = useAuth();
   const state = useLoad(`/api/v2/programs/${id}`, [id]);
   const specialties = useLoad(can('website.manage', 'all') ? '/api/v2/website/specialties' : null);
+  const lectures = useLoad(`/api/v2/programs/${id}/lectures`, [id]);
+  const zoomStatus = useLoad(can('programs.update', 'all') ? '/api/v2/zoom/status' : null);
   const [dialog, setDialog] = useState(null);
   const [rule, setRule] = useState(null);
   const canEdit = can('programs.update', 'all');
@@ -186,6 +241,7 @@ export function ProgramDetail() {
             <section className="card">
               <div className="card-head">
                 <h2>{t('modules')} ({active.length})</h2>
+                <p className="muted" style={{ margin: 0, flexBasis: '100%' }}>{t('pg_lecturesHint')}</p>
                 {can('programs.create', 'all') && <button type="button" className="btn btn--primary" onClick={() => setDialog({ kind: 'module' })}>+ {t('newModule')}</button>}
               </div>
               {!active.length ? <p className="muted">{t('noModules')}</p> : (
@@ -209,6 +265,7 @@ export function ProgramDetail() {
                           </div>
                         )}
                       </div>
+                      <ModuleLectures programId={id} module={m} lectures={lectures.data?.items || []} enrolled={lectures.data?.enrolled || 0} canEdit={canEdit} zoomConnected={!!zoomStatus.data?.configured} onChanged={() => { lectures.reload(); state.reload(); }} />
                     </li>
                   ))}
                 </ol>

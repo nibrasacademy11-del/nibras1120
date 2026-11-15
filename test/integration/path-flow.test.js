@@ -109,7 +109,7 @@ test('learning path flow', { skip }, async (t) => {
             assert.equal(list.find((l) => l._id === lec.later).entered, false);
         });
 
-        await t.test('entering counts; a missed live lecture still counts; the module completes itself', async () => {
+        await t.test('entering counts; a missed live lecture still counts; the module completes when the owner finishes it', async () => {
             const now = await me('POST', `/api/v2/my/lectures/${lec.now}/join`);
             assert.equal(now.status, 200);
             assert.equal(now.data.passcode, '2020');
@@ -118,7 +118,9 @@ test('learning path flow', { skip }, async (t) => {
             assert.equal(e.modules.find((m) => String(m.module) === m1).status, 'in_progress');
             const past = await me('POST', `/api/v2/my/lectures/${lec.past}/join`);
             assert.equal(past.status, 200, 'the link of a missed lecture stays');
-            assert.deepEqual(past.data.completed.map((c) => c.titleAr), ['المحور الأول'], 'all its lectures entered: the module completes');
+            assert.equal(past.data.completed.length, 0, 'all lectures entered, but the module is not finished yet');
+            const fin = await o('POST', `/api/v2/modules/${m1}/finish`);
+            assert.equal(fin.data.completed, 1, 'the owner finishes the module: it completes');
             e = await Enrollment.findById(enrollment._id);
             const mod = e.modules.find((m) => String(m.module) === m1);
             assert.ok(mod.history.some((h) => h.to === 'approved' && h.byName === 'system'), 'completed by the system');
@@ -131,7 +133,7 @@ test('learning path flow', { skip }, async (t) => {
         await t.test('my path: each module, the program percent and the next lecture', async () => {
             const items = (await me('GET', '/api/v2/my/enrollments')).data.items;
             const p = items.find((i) => i._id === enrollment._id).path;
-            assert.deepEqual(p.modules[m1], { total: 2, entered: 2, percent: 100, complete: true });
+            assert.deepEqual(p.modules[m1], { total: 2, entered: 2, percent: 100, complete: true, finished: true });
             assert.equal(p.modules[m2].percent, 0);
             assert.equal(p.percent, 50);
             assert.deepEqual(p.lectures, { total: 3, entered: 2 });
@@ -147,7 +149,8 @@ test('learning path flow', { skip }, async (t) => {
             assert.equal(r.status, 200, JSON.stringify(r.data));
             assert.equal(r.data.url, 'https://zoom.us/rec/share/xyz');
             assert.equal(r.data.passcode, 'r3c');
-            assert.deepEqual(r.data.completed.map((c) => c.titleAr), ['المحور الثاني']);
+            assert.equal(r.data.counted.completed.length, 0, 'counted; completes when the module is finished');
+            assert.equal((await o('POST', `/api/v2/modules/${m2}/finish`)).data.completed, 1);
             const e = await Enrollment.findById(enrollment._id);
             assert.equal(e.status, 'completed', 'both modules done: the program is complete');
             assert.equal(e.eligibleForFinalCertificate, true);
@@ -173,7 +176,8 @@ test('learning path flow', { skip }, async (t) => {
 
             const only = (await o('POST', `/api/v2/groups/${g.data.item._id}/lectures`, { mode: 'manual', titleAr: 'محاضرة الدورة', startsAt: ago(1), joinUrl: 'https://zoom.us/j/400' })).data.item._id;
             const j = await me('POST', `/api/v2/my/lectures/${only}/join`);
-            assert.equal(j.data.completed.length, 1, 'a lecture without a module counts for the course');
+            assert.ok(j.data.counted, 'a lecture without a module counts for the course');
+            assert.equal((await o('POST', `/api/v2/modules/${mods[0]._id}/finish`)).data.completed, 1, 'finished: the course completes');
             const p = (await me('GET', '/api/v2/my/enrollments')).data.items.find((i) => i._id === String(e._id)).path;
             assert.equal(p.single, true);
             assert.equal(p.percent, 100);

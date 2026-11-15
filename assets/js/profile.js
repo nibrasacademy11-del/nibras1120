@@ -29,6 +29,7 @@
         nextLecture: 'Next lecture', lecturesEntered: (a, b) => `Lectures: entered ${a} of ${b}`, noLectures: 'No lectures yet',
         countsLater: 'Counts when you enter it at its time', moduleDone: (t) => `Well done! You completed ${t}.`,
         waiting: 'You are on the list for the next group of this program. We will tell you as soon as it starts.',
+        allModules: 'All modules', moduleLectures: (n) => `${n} lectures`, awaitFinish: 'Waiting for the module to close', moduleClosed: 'Module closed',
         lecturesEmpty: 'No lectures yet. When your group starts, its lectures appear here.', join: 'Enter the lecture', recording: 'Watch the recording', cancelledL: 'Cancelled',
         state: { upcoming: 'Upcoming', open: 'Open now', ended: 'Held', cancelled: 'Cancelled' }, attended: 'You entered',
         passTitle: 'The lecture passcode', passText: 'Zoom may ask for this passcode. Copy it, then continue to Zoom.', copy: 'Copy', copied: 'Copied', goZoom: 'Continue to Zoom', minutes: 'min',
@@ -63,6 +64,7 @@
         nextLecture: 'المحاضرة القادمة', lecturesEntered: (a, b) => `المحاضرات: دخلت ${a} من ${b}`, noLectures: 'لا توجد محاضرات بعد',
         countsLater: 'تُحسب عندما تدخلها في موعدها', moduleDone: (t) => `أحسنت! أكملت ${t}.`,
         waiting: 'أنت في قائمة المجموعة القادمة لهذا البرنامج، وسنبلغك فور بدئها.',
+        allModules: 'كل المحاور', moduleLectures: (n) => `${n} محاضرة`, awaitFinish: 'بانتظار إنهاء المحور', moduleClosed: 'المحور انتهى',
         lecturesEmpty: 'لا توجد محاضرات بعد. عندما تبدأ مجموعتك تظهر محاضراتها هنا.', join: 'ادخل المحاضرة', recording: 'شاهد التسجيل', cancelledL: 'ملغاة',
         state: { upcoming: 'قادمة', open: 'متاحة الآن', ended: 'انعقدت', cancelled: 'ملغاة' }, attended: 'دخلتها',
         passTitle: 'كود دخول المحاضرة', passText: 'قد يطلب زوم هذا الكود. انسخه ثم تابع إلى زوم.', copy: 'نسخ', copied: 'تم النسخ', goZoom: 'المتابعة إلى زوم', minutes: 'دقيقة',
@@ -360,7 +362,7 @@
                     return `<li class="pf-module${done ? ' is-done' : ''}">
                         <span class="pf-module__no">${done ? '<i class="fas fa-check" aria-hidden="true"></i>' : i + 1}</span>
                         <span class="pf-module__title">${h(pick(m.titleAr, m.titleEn))}<small>${r.total ? h(T.lecturesEntered(r.entered, r.total)) : h(T.noLectures)}</small>${bar(mp)}</span>
-                        ${done ? pill(T.moduleStatus.approved, 'ok') : pill(`${mp}%`, mp ? 'info' : '')}
+                        ${done ? pill(T.moduleStatus.approved, 'ok') : r.complete && !r.finished ? pill(T.awaitFinish, 'info') : pill(`${mp}%`, mp ? 'info' : '')}
                     </li>`;
                 }).join('')}</ol>`;
             return `
@@ -380,18 +382,52 @@
         panel.querySelectorAll('[data-join]').forEach((b) => b.addEventListener('click', () => join(b)));
     }
 
-    // ---- my lectures: all open, in any order (PLAN-V2 decision 4) ----
+    // ---- my lectures: the program's modules first; a module opens its lectures (PLAN-V2, 15 Nov) ----
+    let openModule = null;   // "<enrollment>:<module>" of the module shown, kept while the tab reloads
+
     async function renderLectures(panel) {
-        const { groups } = await apiFetch('/api/v2/my/lectures');
-        const all = groups.flatMap((g) => g.lectures);
-        if (!all.length) { panel.innerHTML = empty('fa-video', T.lecturesEmpty); return; }
-        panel.innerHTML = groups.filter((g) => g.lectures.length).map((g) => `
+        const { programs = [] } = await apiFetch('/api/v2/my/lectures');
+        const withLectures = programs.filter((p) => p.modules.some((m) => m.lectures.length));
+        if (!withLectures.length) { panel.innerHTML = empty('fa-video', T.lecturesEmpty); return; }
+        const key = (p, m) => `${p.enrollment}:${m.module}`;
+        let shown = null;
+        for (const p of withLectures) for (const m of p.modules) if (key(p, m) === openModule) shown = { p, m };
+
+        if (shown) {
+            // one module: its lectures
+            const { p, m } = shown;
+            panel.innerHTML = `
+                <section class="pf-section">
+                    <button type="button" class="pf-btn pf-btn--ghost pf-back" data-back><i class="fas fa-arrow-${isEN ? 'left' : 'right'}" aria-hidden="true"></i> ${h(T.allModules)}</button>
+                    <h2 class="pf-section__title">${h(pick(m.titleAr, m.titleEn))} <small>${h(pick(p.titleAr, p.titleEn))}</small></h2>
+                    <p class="pf-small">${h(T.lecturesEntered(m.entered, m.total))}${m.finished ? ` · ${h(T.moduleClosed)}` : ''}</p>
+                    ${m.lectures.length ? `<div class="pf-lectures">${m.lectures.map((l) => lectureCard(l)).join('')}</div>` : empty('fa-video', T.noLectures)}
+                </section>`;
+            panel.querySelector('[data-back]').addEventListener('click', () => { openModule = null; show(); });
+            panel.querySelectorAll('[data-join]').forEach((b) => b.addEventListener('click', () => join(b)));
+            panel.querySelectorAll('[data-rec]').forEach((b) => b.addEventListener('click', () => join(b, `/api/v2/my/lectures/${b.dataset.lecture}/recordings/${b.dataset.rec}`)));
+            return;
+        }
+
+        // every program: its modules as cards
+        panel.innerHTML = withLectures.map((p) => `
             <section class="pf-section">
-                <h2 class="pf-section__title">${h(pick(g.program && g.program.titleAr, g.program && g.program.titleEn))} <small>${h(pick(g.nameAr, g.nameEn))}</small></h2>
-                <div class="pf-lectures">${g.lectures.map((l) => lectureCard(l)).join('')}</div>
+                <h2 class="pf-section__title">${h(pick(p.titleAr, p.titleEn))}</h2>
+                <div class="pf-mods">${p.modules.map((m, i) => {
+                    const pct = m.total ? Math.round((m.entered / m.total) * 100) : 0;
+                    const done = ['approved', 'certificate_issued'].includes(m.status);
+                    return `<button type="button" class="pf-mod${done ? ' is-done' : ''}" data-open="${h(key(p, m))}"${m.lectures.length ? '' : ' disabled'}>
+                        <span class="pf-mod__no">${done ? '<i class="fas fa-check" aria-hidden="true"></i>' : i + 1}</span>
+                        <span class="pf-mod__body">
+                            <b>${h(pick(m.titleAr, m.titleEn))}</b>
+                            <small>${m.total ? h(T.lecturesEntered(m.entered, m.total)) : h(T.noLectures)}</small>
+                            ${bar(done ? 100 : pct)}
+                        </span>
+                        ${done ? pill(T.moduleStatus.approved, 'ok') : m.finished ? pill(T.moduleClosed, '') : pill(T.moduleLectures(m.total), m.total ? 'info' : '')}
+                    </button>`;
+                }).join('')}</div>
             </section>`).join('');
-        panel.querySelectorAll('[data-join]').forEach((b) => b.addEventListener('click', () => join(b)));
-        panel.querySelectorAll('[data-rec]').forEach((b) => b.addEventListener('click', () => join(b, `/api/v2/my/lectures/${b.dataset.lecture}/recordings/${b.dataset.rec}`)));
+        panel.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', () => { openModule = b.dataset.open; show(); window.scrollTo({ top: document.getElementById('pfTabs').offsetTop - 80, behavior: 'smooth' }); }));
     }
 
     function lectureCard(l) {

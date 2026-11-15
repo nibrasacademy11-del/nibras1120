@@ -82,4 +82,17 @@ async function placeWaiting(cohort, by = null) {
     return placed;
 }
 
-module.exports = { activeCount, addMember, customerIdsOfUser, attendanceStats, nearestOpenGroup, placeWaiting };
+// Who a lecture is for, as [{ customer }]: its group's members (an older group lecture), or
+// everyone enrolled in its program. select: the customer fields to load.
+async function audienceOf(l, select, { includeRemoved = false } = {}) {
+    if (l.cohort) {
+        const q = includeRemoved ? { cohort: l.cohort, $or: [{ status: 'active' }, { removedAt: { $gt: l.startsAt } }] } : { cohort: l.cohort, status: 'active' };
+        return CohortMember.find(q).populate('customer', select).lean();
+    }
+    const Enrollment = require('../../models/Enrollment');
+    const es = await Enrollment.find({ program: l.program, status: { $in: ['active', 'on_hold', 'completed'] } }).populate('customer', select).lean();
+    const seen = new Set();
+    return es.filter((e) => e.customer && !seen.has(String(e.customer._id)) && seen.add(String(e.customer._id))).map((e) => ({ customer: e.customer }));
+}
+
+module.exports = { audienceOf, activeCount, addMember, customerIdsOfUser, attendanceStats, nearestOpenGroup, placeWaiting };

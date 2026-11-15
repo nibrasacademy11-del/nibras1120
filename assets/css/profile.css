@@ -219,3 +219,15 @@
 .pf-next .pf-btn:hover { background: #fff; color: var(--primary-dark); }
 .pf-hint { margin: 6px 0 0; font-size: .82rem; color: var(--gold-dark); }
 .pf-lecture.is-entered { border-color: #a9dcbf; }
+
+/* ---- my lectures: module cards, then the module's lectures (15 Nov) ---- */
+.pf-mods { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 14px; }
+.pf-mod { display: flex; align-items: center; gap: 14px; width: 100%; padding: 16px; text-align: start; font: inherit; color: inherit; cursor: pointer; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); transition: transform .2s, box-shadow .2s, border-color .2s; }
+.pf-mod:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--gold); }
+.pf-mod:disabled { cursor: default; opacity: .7; }
+.pf-mod.is-done { border-color: #a9dcbf; }
+.pf-mod__no { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--primary); color: #fff; font-weight: 700; }
+.pf-mod.is-done .pf-mod__no { background: var(--success); }
+.pf-mod__body { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.pf-mod__body small { color: var(--text-muted); }
+.pf-back { margin-bottom: 12px; min-height: 40px; padding: 6px 16px; }

@@ -204,7 +204,8 @@ function RowsEditor({ rows, onChange, withPasscode }) {
   );
 }
 
-function LectureForm({ group, lecture, modules, zoomConnected, onClose, onSaved }) {
+// postUrl: where a new lecture goes (the program page posts to the program; the group page to the group)
+export function LectureForm({ group, postUrl, lecture, modules, zoomConnected, onClose, onSaved }) {
   const { t, label } = useI18n();
   const editing = !!lecture;
   const [f, setF] = useState({
@@ -225,7 +226,7 @@ function LectureForm({ group, lecture, modules, zoomConnected, onClose, onSaved 
     if (!editing) Object.assign(body, { mode: f.mode, registration: f.registration });
     if (f.mode === 'manual') Object.assign(body, { joinUrl: f.joinUrl, passcode: f.passcode });
     if (editing) Object.assign(body, { __v: lecture.__v, recordings: f.recordings.filter((r) => r.url) });
-    const req = editing ? api(`/api/v2/lectures/${lecture._id}`, { method: 'PUT', body }) : api(`/api/v2/groups/${group._id}/lectures`, { method: 'POST', body });
+    const req = editing ? api(`/api/v2/lectures/${lecture._id}`, { method: 'PUT', body }) : api(postUrl || `/api/v2/groups/${group._id}/lectures`, { method: 'POST', body });
     run(() => req).then(onSaved).catch(() => {});
   };
   const zoomRecordings = (lecture?.recordings || []).filter((r) => r.source === 'zoom');

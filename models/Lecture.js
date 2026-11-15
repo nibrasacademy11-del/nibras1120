@@ -22,9 +22,11 @@ const materialSchema = new mongoose.Schema({
 }, { _id: true });
 
 const lectureSchema = new mongoose.Schema({
-    cohort: { type: ObjectId, ref: 'Cohort', required: true, index: true },
+    // null: a lecture of the program, for everyone enrolled in it (PLAN-V2). Older lectures belong to a group.
+    cohort: { type: ObjectId, ref: 'Cohort', default: null, index: true },
     program: { type: ObjectId, ref: 'Course', required: true, index: true },
-    module: { type: ObjectId, ref: 'ProgramModule', default: null },
+    module: { type: ObjectId, ref: 'ProgramModule', default: null, index: true },
+    order: { type: Number, default: 0 },
     titleAr: { type: String, required: true, trim: true, maxlength: 200 },
     titleEn: { type: String, default: '', trim: true, maxlength: 200 },
     startsAt: { type: Date, required: true, index: true },

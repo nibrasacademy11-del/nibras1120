@@ -1,6 +1,5 @@
 const Lecture = require('../../models/Lecture');
 const Cohort = require('../../models/Cohort');
-const CohortMember = require('../../models/CohortMember');
 const User = require('../../models/User');
 const L = require('../../lib/lectures');
 const zoom = require('../../lib/zoom');
@@ -25,8 +24,9 @@ function when(date, timeZone) {
 }
 
 async function remind(l, timeZone, { soon = false } = {}) {
-    const cohort = await Cohort.findById(l.cohort).select('nameAr');
-    const members = await CohortMember.find({ cohort: l.cohort, status: 'active' }).populate('customer', 'contact.email user').lean();
+    // the group's name, or the program's for a lecture of the whole program
+    const cohort = l.cohort ? await Cohort.findById(l.cohort).select('nameAr') : await require('../../models/Course').findById(l.program).select('titleAr').lean().then((p) => (p ? { nameAr: p.titleAr } : null));
+    const members = await require('./groups').audienceOf(l, 'contact.email user');
     const userIds = members.map((m) => m.customer && m.customer.user).filter(Boolean);
     const users = await User.find({ _id: { $in: userIds } }).select('email').lean();
     const userEmail = Object.fromEntries(users.map((u) => [String(u._id), u.email]));

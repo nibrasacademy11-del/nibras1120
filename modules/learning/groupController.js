@@ -31,6 +31,17 @@ async function loadCohort(id) {
     return c;
 }
 
+// The customer file allowed into a lecture: enrolled in its program (a lecture of the program),
+// or an active member of its group (older group lectures). null when none.
+async function seatHolder(l, files) {
+    if (l.cohort) {
+        const m = await CohortMember.findOne({ cohort: l.cohort, customer: { $in: files }, status: 'active' }).select('customer').lean();
+        return m ? m.customer : null;
+    }
+    const e = await Enrollment.findOne({ program: l.program, customer: { $in: files }, status: { $in: progress.ACTIVE } }).select('customer').lean();
+    return e ? e.customer : null;
+}
+
 async function loadLecture(id) {
     const l = await Lecture.findById(id);
     if (!l) throw new HttpError(404, 'Not found.');
@@ -251,10 +262,16 @@ async function topicOf(cohort, titleAr) {
 
 exports.addLecture = async (req, res) => {
     const c = await loadCohort(req.params.id);
+    const l = await createLecture(req, { program: c.program, cohort: c._id, topicOwner: c.nameAr });
+    res.status(201).json({ item: staffLecture(l.toObject()) });
+};
+
+async function createLecture(req, { program, cohort = null, topicOwner }) {
     const input = lectureInput(req.body);
-    if (input.module && !(await ProgramModule.exists({ _id: input.module, program: c.program }))) throw new HttpError(400, 'المحور لا يتبع البرنامج. / The module is not part of the program.');
+    if (input.module && !(await ProgramModule.exists({ _id: input.module, program }))) throw new HttpError(400, 'المحور لا يتبع البرنامج. / The module is not part of the program.');
     const useZoom = req.body.mode === 'zoom';
-    const l = new Lecture({ ...input, cohort: c._id, program: c.program, createdBy: req.user.id });
+    const l = new Lecture({ ...input, cohort, program, createdBy: req.user.id });
+    const c = { nameAr: topicOwner };
     if (useZoom) {
         if (!zoom.isConfigured()) throw new HttpError(400, 'زوم غير مربوط. أضف الرابط يدوياً. / Zoom is not connected. Add the link by hand.', 'ZOOM_OFF');
         const registration = req.body.registration !== false;
@@ -267,9 +284,70 @@ exports.addLecture = async (req, res) => {
     } else {
         l.zoom = { managed: false, joinUrl: L.safeUrl(req.body.joinUrl), passcode: str(req.body.passcode, 100), registration: false };
     }
+    if (Array.isArray(req.body.recordings)) {
+        l.recordings = req.body.recordings.map((r) => ({ title: str(r.title, 200), url: L.safeUrl(r.url), passcode: str(r.passcode, 100), source: 'manual' })).filter((r) => r.url).slice(0, 20);
+    }
+    l.order = Number(req.body.order) || (await Lecture.countDocuments({ program, module: l.module, cohort })) + 1;
     await l.save();
     await audit.record(req, { action: 'lecture.created', resource: 'programs', resourceId: l._id, summary: `${c.nameAr}: ${l.titleAr} @ ${l.startsAt.toISOString()}` });
+    return l;
+}
+
+// ---- the program page: modules and their lectures, for everyone enrolled (PLAN-V2, 15 Nov) ----
+
+exports.programLectures = async (req, res) => {
+    const program = await Course.findById(oid(req.params.id)).select('_id titleAr');
+    if (!program) throw new HttpError(404, 'Not found.');
+    const items = await Lecture.find({ program: program._id, cohort: null }).sort({ order: 1, startsAt: 1 }).lean();
+    const counts = await LectureAttendance.aggregate([
+        { $match: { lecture: { $in: items.map((l) => l._id) } } },
+        { $group: { _id: '$lecture', entered: { $sum: { $cond: [{ $ne: ['$enteredAt', null] }, 1, 0] } }, present: { $sum: { $cond: ['$present', 1, 0] } }, clicked: { $sum: { $cond: [{ $gt: ['$clicks', 0] }, 1, 0] } } } }
+    ]);
+    const byId = Object.fromEntries(counts.map((r) => [String(r._id), r]));
+    const enrolled = await Enrollment.countDocuments({ program: program._id, status: { $in: progress.ACTIVE } });
+    res.json({ enrolled, items: items.map((l) => ({ ...staffLecture(l, byId), entered: (byId[String(l._id)] || {}).entered || 0 })) });
+};
+
+exports.addProgramLecture = async (req, res) => {
+    const program = await Course.findById(oid(req.params.id)).select('_id titleAr');
+    if (!program) throw new HttpError(404, 'Not found.');
+    if (!oid(req.body.module)) throw new HttpError(400, 'اختر المحور. / Choose the module.', 'MODULE_REQUIRED');
+    const l = await createLecture(req, { program: program._id, topicOwner: program.titleAr });
     res.status(201).json({ item: staffLecture(l.toObject()) });
+};
+
+// "The module is finished": everyone enrolled who entered all its lectures completes it, and its
+// certificate is issued and emailed (when the program is paid; otherwise it waits for payment)
+exports.finishModule = async (req, res) => {
+    const mod = await ProgramModule.findById(oid(req.params.moduleId));
+    if (!mod) throw new HttpError(404, 'Not found.');
+    // a lecture without a module belongs to the only module of a course
+    if (!(await Lecture.exists({ program: mod.program, status: 'scheduled', $or: [{ module: mod._id }, { module: null }] }))) {
+        throw new HttpError(400, 'المحور ليس فيه محاضرات بعد. / The module has no lectures yet.', 'NO_LECTURES');
+    }
+    if (!mod.finishedAt) {
+        mod.finishedAt = new Date();
+        mod.finishedBy = req.user.id;
+        await mod.save();
+    }
+    const result = await progress.finishModule(mod._id);
+    const certs = await require('./autoCertificates').afterProgress(result.completed.map((c) => c.enrollment._id)) || [];
+    const issued = certs.reduce((a, r) => a + ((r && r.issued) || []).length, 0);
+    const waitingPayment = certs.filter((r) => r && r.held).length;
+    await audit.record(req, { action: 'module.finished', resource: 'programs', resourceId: mod._id, summary: `${mod.titleAr}: ${result.completed.length} completed, ${issued} certificates` });
+    res.json({ finishedAt: mod.finishedAt, completed: result.completed.length, missing: result.missing, issued, waitingPayment });
+};
+
+// Undo "finished" (a mistake): nobody completes it by entering lectures until it is finished again.
+// Certificates already issued stay.
+exports.reopenModule = async (req, res) => {
+    const mod = await ProgramModule.findById(oid(req.params.moduleId));
+    if (!mod) throw new HttpError(404, 'Not found.');
+    mod.finishedAt = null;
+    mod.finishedBy = null;
+    await mod.save();
+    await audit.record(req, { action: 'module.reopened', resource: 'programs', resourceId: mod._id, summary: mod.titleAr });
+    res.json({ finishedAt: null });
 };
 
 exports.updateLecture = async (req, res) => {
@@ -331,7 +409,7 @@ async function syncLecture(l) {
     if (!l.zoom.managed || !l.zoom.meetingId) return result;
     const percent = await presentPercent();
     const rows = L.mergeParticipants(await zoom.listParticipants(l.zoom.meetingId));
-    const members = await CohortMember.find({ cohort: l.cohort, status: { $ne: 'removed' } }).populate('customer', 'contact.email user').lean();
+    const members = await groups.audienceOf(l, 'contact.email user', { includeRemoved: true });
     const users = await User.find({ _id: { $in: members.map((m) => m.customer && m.customer.user).filter(Boolean) } }).select('email').lean();
     const userEmail = Object.fromEntries(users.map((u) => [String(u._id), String(u.email || '').toLowerCase()]));
     const byEmail = {};
@@ -350,7 +428,7 @@ async function syncLecture(l) {
         const keepManual = existing && existing.source === 'manual' && existing.present;
         await LectureAttendance.updateOne(
             { lecture: l._id, customer },
-            { $set: { cohort: l.cohort, minutes: p.minutes, joinedAt: p.joinedAt, leftAt: p.leftAt, ...(keepManual ? {} : { present, source: 'zoom' }) } },
+            { $set: { cohort: l.cohort || null, program: l.program, minutes: p.minutes, joinedAt: p.joinedAt, leftAt: p.leftAt, ...(keepManual ? {} : { present, source: 'zoom' }) } },
             { upsert: true }
         );
         if (present) await countEntry(l, customer, 'staff');
@@ -386,7 +464,7 @@ exports.syncLecture = async (req, res) => {
 exports.attendance = async (req, res) => {
     const l = await loadLecture(req.params.id);
     const [members, seats, namePolicy] = await Promise.all([
-        CohortMember.find({ cohort: l.cohort, $or: [{ status: 'active' }, { removedAt: { $gt: l.startsAt } }] }).populate('customer', 'customerNo nameAr owner team').lean(),
+        groups.audienceOf(l, 'customerNo nameAr owner team', { includeRemoved: true }),
         LectureAttendance.find({ lecture: l._id }).lean(),
         getSetting('customers.lookupNamePolicy')
     ]);
@@ -408,9 +486,9 @@ exports.attendance = async (req, res) => {
 exports.markAttendance = async (req, res) => {
     const l = await loadLecture(req.params.id);
     const customer = oid(req.body.customer);
-    if (!customer || !(await CohortMember.exists({ cohort: l.cohort, customer }))) throw new HttpError(400, 'العميل ليس في المجموعة. / The customer is not in the group.');
+    if (!customer || !(await seatHolder(l, [customer]))) throw new HttpError(400, 'العميل ليس مسجلاً في البرنامج. / The customer is not enrolled in the program.');
     const present = req.body.present === true;
-    await LectureAttendance.updateOne({ lecture: l._id, customer }, { $set: { cohort: l.cohort, present, source: 'manual', markedBy: req.user.id } }, { upsert: true });
+    await LectureAttendance.updateOne({ lecture: l._id, customer }, { $set: { cohort: l.cohort || null, program: l.program, present, source: 'manual', markedBy: req.user.id } }, { upsert: true });
     // Attendance recorded by staff counts as entering the lecture (the learning path)
     if (present) await countEntry(l, customer, 'staff');
     await audit.record(req, { action: 'lecture.attendance_marked', resource: 'programs', resourceId: l._id, summary: `${l.titleAr}: ${present ? 'present' : 'absent'}`, meta: { customer: String(customer) } });
@@ -456,8 +534,47 @@ exports.mine = async (req, res) => {
     ]);
     const mySeat = Object.fromEntries(seats.map((s) => [String(s.lecture), s]));
     const now = new Date();
+    const lectureView = (l, seat) => {
+        const state = L.joinState(l, now);
+        return {
+            _id: l._id, titleAr: l.titleAr, titleEn: l.titleEn, module: l.module, startsAt: l.startsAt, durationMin: l.durationMin, endsAt: L.endOf(l),
+            state, cancelReason: l.status === 'cancelled' ? l.cancelReason : undefined,
+            hasLink: !!(l.zoom.joinUrl || l.zoom.managed),
+            passcode: state === 'cancelled' ? '' : l.zoom.passcode,
+            recordings: state === 'ended' ? l.recordings.map((r) => ({ _id: r._id, title: r.title })) : [],
+            materials: l.materials,
+            entered: !!(seat && seat.enteredAt),
+            counts: L.entryCounts(l, now),
+            attended: seat ? { present: seat.present, minutes: seat.minutes } : null
+        };
+    };
+    // program → modules → lectures, for every program the customer is enrolled in
+    const enrollments = await Enrollment.find({ customer: { $in: files }, status: { $in: progress.ACTIVE } }).select('program programTitleAr programTitleEn cohort modules.module modules.titleAr modules.titleEn modules.status').lean();
+    const programIds = [...new Set(enrollments.map((e) => String(e.program)))];
+    const [programLectures, programSeats, moduleDocs] = await Promise.all([
+        Lecture.find({ program: { $in: programIds }, $or: [{ cohort: null }, { cohort: { $in: cohortIds } }] }).sort({ order: 1, startsAt: 1 }).lean(),
+        LectureAttendance.find({ customer: { $in: files }, program: { $in: programIds } }).select('lecture present minutes enteredAt').lean(),
+        ProgramModule.find({ program: { $in: programIds } }).select('order finishedAt').lean()
+    ]);
+    const seatOf = { ...Object.fromEntries(programSeats.map((x) => [String(x.lecture), x])), ...mySeat };
+    const modInfo = Object.fromEntries(moduleDocs.map((m) => [String(m._id), m]));
+    const programs = enrollments.map((e) => {
+        const mine = progress.lecturesFor(programLectures, e);
+        return {
+            enrollment: e._id, program: e.program, titleAr: e.programTitleAr, titleEn: e.programTitleEn,
+            modules: e.modules.map((m) => {
+                const ls = mine.filter((l) => String(l.module) === String(m.module) || (!l.module && e.modules.length === 1)).map((l) => lectureView(l, seatOf[String(l._id)]));
+                const live = ls.filter((l) => l.state !== 'cancelled');
+                return {
+                    module: m.module, titleAr: m.titleAr, titleEn: m.titleEn, status: m.status, order: (modInfo[String(m.module)] || {}).order || 0,
+                    finished: !!(modInfo[String(m.module)] || {}).finishedAt, total: live.length, entered: live.filter((l) => l.entered).length, lectures: ls
+                };
+            }).sort((a, b) => a.order - b.order)
+        };
+    });
     res.json({
         now,
+        programs,
         groups: cohorts.map((c) => ({
             _id: c._id, nameAr: c.nameAr, nameEn: c.nameEn, instructor: c.instructor, schedule: c.schedule, startDate: c.startDate, endDate: c.endDate,
             program: c.program, modules: c.modules,
@@ -487,21 +604,21 @@ exports.mine = async (req, res) => {
 exports.join = async (req, res) => {
     const l = await loadLecture(req.params.id);
     const files = await groups.customerIdsOfUser(req.user.id);
-    const member = await CohortMember.findOne({ cohort: l.cohort, customer: { $in: files }, status: 'active' });
-    if (!member) throw new HttpError(404, 'Not found.');
+    const customerId = await seatHolder(l, files);
+    if (!customerId) throw new HttpError(404, 'Not found.');
     // Every lecture is open to the group's members, in any order (PLAN-V2 decision 4)
     if (!L.customerCanJoin(l)) throw new HttpError(409, 'المحاضرة ملغاة. / The lecture is cancelled.', 'CANCELLED');
     const now = new Date();
     const seat = await LectureAttendance.findOneAndUpdate(
-        { lecture: l._id, customer: member.customer },
-        { $set: { cohort: l.cohort, lastClickAt: now }, $setOnInsert: { firstClickAt: now }, $inc: { clicks: 1 } },
+        { lecture: l._id, customer: customerId },
+        { $set: { cohort: l.cohort || null, program: l.program, lastClickAt: now }, $setOnInsert: { firstClickAt: now }, $inc: { clicks: 1 } },
         { upsert: true, new: true }
     );
     let url = l.zoom.joinUrl;
     if (l.zoom.managed && l.zoom.registration && zoom.isConfigured()) {
         if (seat.personalJoinUrl) url = seat.personalJoinUrl;
         else {
-            const customer = await Customer.findById(member.customer).select('nameAr nameEn contact.email');
+            const customer = await Customer.findById(customerId).select('nameAr nameEn contact.email');
             const user = await User.findById(req.user.id).select('email name');
             const email = (customer.contact && customer.contact.email) || (user && user.email);
             if (email) {
@@ -519,7 +636,7 @@ exports.join = async (req, res) => {
         }
     }
     if (!url) throw new HttpError(409, 'رابط المحاضرة لم يُضف بعد. / The lecture link has not been added yet.', 'NO_LINK');
-    const counted = await countEntry(l, member.customer, 'live', now);
+    const counted = await countEntry(l, customerId, 'live', now);
     res.json({ url, passcode: l.zoom.passcode, counted, completed: counted ? counted.completed : [] });
 };
 
@@ -529,7 +646,7 @@ async function countEntry(lecture, customerId, via, now = new Date()) {
     if (via === 'live' && !L.entryCounts(lecture, now)) return false;
     const isNew = await progress.markEntered(lecture, customerId, via, now);
     if (!isNew) return { completed: [] };
-    const changes = await progress.refresh({ customerId, cohortId: lecture.cohort });
+    const changes = await progress.refresh({ customerId, programId: lecture.program });
     // A module (or the program) just completed: its certificate follows if the program is paid
     if (changes.length) await require('./autoCertificates').afterProgress(changes.map((c) => c.enrollment._id));
     return { completed: changes.flatMap((c) => c.completed.map((m) => ({ enrollment: c.enrollment._id, module: m.module, titleAr: m.titleAr, titleEn: m.titleEn }))) };
@@ -539,17 +656,17 @@ async function countEntry(lecture, customerId, via, now = new Date()) {
 exports.joinRecording = async (req, res) => {
     const l = await loadLecture(req.params.id);
     const files = await groups.customerIdsOfUser(req.user.id);
-    const member = await CohortMember.findOne({ cohort: l.cohort, customer: { $in: files }, status: 'active' });
-    if (!member) throw new HttpError(404, 'Not found.');
+    const customerId = await seatHolder(l, files);
+    if (!customerId) throw new HttpError(404, 'Not found.');
     if (!L.customerCanJoin(l)) throw new HttpError(409, 'المحاضرة ملغاة. / The lecture is cancelled.', 'CANCELLED');
     const rec = l.recordings.id(req.params.recordingId);
     if (!rec || !rec.url) throw new HttpError(404, 'Not found.');
     const now = new Date();
     await LectureAttendance.updateOne(
-        { lecture: l._id, customer: member.customer },
-        { $set: { cohort: l.cohort, lastClickAt: now }, $setOnInsert: { firstClickAt: now }, $inc: { clicks: 1 } },
+        { lecture: l._id, customer: customerId },
+        { $set: { cohort: l.cohort || null, program: l.program, lastClickAt: now }, $setOnInsert: { firstClickAt: now }, $inc: { clicks: 1 } },
         { upsert: true }
     );
-    const counted = await countEntry(l, member.customer, 'recording', now);
+    const counted = await countEntry(l, customerId, 'recording', now);
     res.json({ url: rec.url, passcode: rec.passcode || '', counted, completed: counted ? counted.completed : [] });
 };

@@ -197,3 +197,11 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 .program-site__img--empty { display: grid; place-items: center; font-size: 2rem; color: var(--muted); }
 .program-site__info { flex: 1 1 260px; display: grid; gap: 6px; min-width: 0; }
 .program-site__desc { margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* The lectures of each module on the program page (PLAN-V2, 15 Nov) */
+.mod-lectures { margin: 10px 0 4px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2, #faf6ef); border: 1px solid var(--border); }
+.mod-lectures__head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mod-lectures__empty { margin: 6px 0 0; }
+.mod-lectures__list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+.mod-lectures__list li { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; background: var(--surface, #fff); border: 1px solid var(--border); border-radius: 8px; }
+.mod-lectures__list li.is-cancelled { opacity: .55; }

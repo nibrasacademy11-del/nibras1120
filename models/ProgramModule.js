@@ -20,6 +20,10 @@ const programModuleSchema = new mongoose.Schema({
     active: { type: Boolean, default: true },
     // The one module made for a program without modules (a course): the customer never sees the word "module"
     auto: { type: Boolean, default: false },
+    // The owner pressed "the module is finished": everyone who entered all its lectures completes it
+    // and gets its certificate (PLAN-V2, 15 Nov). Until then nobody completes it by entering lectures.
+    finishedAt: { type: Date, default: null },
+    finishedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true, optimisticConcurrency: true });
 

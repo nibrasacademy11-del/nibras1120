@@ -6,7 +6,8 @@ const { ObjectId } = mongoose.Schema.Types;
 // "join", and the minutes Zoom reports they stayed (or a manual mark by staff).
 const lectureAttendanceSchema = new mongoose.Schema({
     lecture: { type: ObjectId, ref: 'Lecture', required: true },
-    cohort: { type: ObjectId, ref: 'Cohort', required: true, index: true },
+    cohort: { type: ObjectId, ref: 'Cohort', default: null, index: true },
+    program: { type: ObjectId, ref: 'Course', default: null, index: true },
     customer: { type: ObjectId, ref: 'Customer', required: true, index: true },
     registrantId: { type: String, default: '' },
     personalJoinUrl: { type: String, default: '', maxlength: 1000 },
