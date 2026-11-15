@@ -33,6 +33,7 @@ const invitations = require('../modules/hr/invitationController');
 const reviews = require('../modules/hr/reviewController');
 const insights = require('../modules/reports/insightsController');
 const profiles = require('../modules/crm/profileController');
+const customerAccounts = require('../modules/crm/customerAccountsController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -127,6 +128,9 @@ router.post('/customers/check-duplicates', can('customers.create'), handle(custo
 router.get('/customers/duplicates', all('customers.manage'), handle(customers.duplicateGroups));
 router.post('/customers/assign', can('customers.manage', 'team'), handle(customers.assign));
 router.get('/customers', can('customers.view'), handle(customers.list));
+// customer service and the owner: every customer's sign-in account, and a temporary password
+router.get('/customer-accounts', all('customer_accounts.view'), handle(customerAccounts.list));
+router.post('/customer-accounts/:id/reset-password', validId(), sensitive, all('customer_accounts.manage'), handle(customerAccounts.resetPassword));
 router.get('/customers/board', can('customers.view'), handle(crm360.board));
 router.get('/whatsapp-templates', customerReader, handle(crm360.templates));
 router.post('/customers', can('customers.create'), handle(customers.create));

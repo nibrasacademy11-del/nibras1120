@@ -12,7 +12,8 @@ test('every role has a short menu', async () => {
     const count = (role) => pages(visibleSections({ role })).length;
     assert.ok(count('employee') <= 7, `employee: ${count('employee')}`);
     assert.ok(count('team_leader') <= 8, `team leader: ${count('team_leader')}`);
-    assert.ok(count('customer_support') <= 8, `customer service: ${count('customer_support')}`);
+    // 9 since 15 Nov 2026: customer accounts (password resets)
+    assert.ok(count('customer_support') <= 9, `customer service: ${count('customer_support')}`);
     assert.ok(count('customer') <= 6, `customer: ${count('customer')}`);
 });
 
@@ -33,7 +34,7 @@ test('a team leader adds their team, nothing administrative', async () => {
 test('customer service: customers, complaints, lectures and certificates', async () => {
     const { visibleSections } = await load();
     const p = pages(visibleSections({ role: 'customer_support' }));
-    for (const shown of ['/customers', '/complaints', '/groups', '/certificates']) assert.ok(p.includes(shown), shown);
+    for (const shown of ['/customers', '/customer-accounts', '/complaints', '/groups', '/certificates']) assert.ok(p.includes(shown), shown);
     for (const hidden of ['/finance', '/payroll', '/settings', '/website']) assert.ok(!p.includes(hidden), hidden);
 });
 

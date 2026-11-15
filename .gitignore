@@ -16,5 +16,8 @@ desktop/config.json
 # Sample printouts made locally (regenerate from /portal/print-samples)
 print-samples/
 
-# Keys prepared locally for Vercel (never committed)
+# Keys prepared locally (never committed)
 .secrets/
+
+# the Hostinger server address used by deploy.bat
+deploy/server-host.txt

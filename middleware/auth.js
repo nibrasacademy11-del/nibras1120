@@ -10,7 +10,7 @@ const zones = require('../lib/zones');
 // The session cookie for the place this request came in on (staff and customers never share one)
 const readAuthToken = (req) => (req.cookies ? req.cookies[zones.cookieName(zones.zoneOf(req))] : undefined);
 
-const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+const isProd = process.env.NODE_ENV === 'production';
 const WEAK_SECRETS = ['change-this-secret', 'replace-with-strong-secret'];
 const devSecret = crypto.randomBytes(32).toString('hex');
 

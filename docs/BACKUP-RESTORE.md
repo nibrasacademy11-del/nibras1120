@@ -1,47 +1,29 @@
 # النسخ الاحتياطي والاسترجاع
 
-## النسخ التلقائي اليومي (GitHub Actions)
+## الأساس: الباك اب الأسبوعي من Hostinger
 
-الملف: `.github/workflows/backup.yml` — بيشتغل كل يوم الساعة 2:30 بتوقيت القاهرة، ويقدر يتشغل يدوياً من تبويب **Actions**.
-
-1. في GitHub: **Settings ← Secrets and variables ← Actions ← New repository secret**:
-   - `BACKUP_MONGO_URI`: رابط القاعدة الحقيقية (يُفضل مستخدم Atlas بصلاحية قراءة فقط `readAnyDatabase`).
-   - `BACKUP_PASSPHRASE`: عبارة سر طويلة. **احفظ نسخة منها ورقياً أو في مدير كلمات مرور** — من غيرها النسخ مش هتتفتح.
-2. اختياري (لحفظ النسخ أكتر من 30 يوم): `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`.
-3. من **Actions ← Database backup ← Run workflow** شغّله مرة وتأكد إنه نجح.
-
-النسخة بتتشفّر قبل ما تتحفظ، لأن الـ repository عام وملفات الـ Actions ممكن تتحمل من أي حد عنده حساب GitHub.
+- السيرفر (KVM 1) بيتعمله نسخة كاملة كل أسبوع لوحده، ببلاش. النسخة فيها كل حاجة: السيستم، وقاعدة البيانات، والملفات.
+- تشوفها وترجّعها من **hPanel ← VPS ← Backups**.
+- الاسترجاع بيرجّع السيرفر كله لحالة النسخة، فأي حاجة اتعملت بعدها بتضيع. يعني أقصى خسارة أسبوع.
+- النسخة محفوظة عند Hostinger نفسها. **خلّي التجديد التلقائي للـ VPS شغال**، لأن لو الاشتراك وقف السيرفر ونسخه ممكن يتمسحوا.
 
 ## نسخة يدوية قبل أي تغيير كبير
 
+على السيرفر:
 ```
-set BACKUP_PASSPHRASE=...
-node tools/backup-now.js --production
+cd /var/www/nibras
+sudo -u nibras node tools/backup-now.js --production
 ```
+- بتحتاج `BACKUP_PASSPHRASE` في `.env`. **احفظ عبارة السر دي عندك**، من غيرها النسخة ما تتفتحش.
+- بتتحفظ مشفرة في `/var/www/Nibras-backups/` بامتداد `.nbk`.
+- لو عاوز تاخدها على جهازك: `scp root@<IP>:/var/www/Nibras-backups/<الملف>.nbk .`
 
-بتتحفظ في `Desktop\My Work\Nibras-backups\` بامتداد `.nbk` (مشفرة).
-
-## الاسترجاع
-
-### من نسخة GitHub (mongodump)
-
-```
-openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in nibras-<التاريخ>.archive.gz.enc -out nibras.archive -pass pass:<BACKUP_PASSPHRASE>
-mongorestore --uri="<رابط القاعدة التجريبية>" --archive=nibras.archive --gzip --drop
-```
-
-### من نسخة يدوية (.nbk)
+## الاسترجاع من نسخة يدوية (.nbk)
 
 ```
-node tools/restore-backup.js <الملف>.nbk --check      # يعرض المحتوى بدون كتابة
-node tools/restore-backup.js <الملف>.nbk --to-test    # يسترجع في القاعدة التجريبية
+node tools/restore-backup.js <الملف>.nbk --check       # يعرض المحتوى من غير ما يكتب حاجة
+node tools/restore-backup.js <الملف>.nbk --to-test     # في قاعدة تجريبية على جهاز التطوير
+node tools/restore-backup.js <الملف>.nbk --to-server   # في قاعدة السيرفر، ولو كانت فاضية بس
 ```
 
-**القاعدة:** الاسترجاع يكون الأول في قاعدة تجريبية، تتراجع البيانات، وبعد موافقة الإدارة يتغير رابط `MONGO_URI` على Vercel للقاعدة المسترجعة. محدش يسترجع فوق القاعدة الحقيقية مباشرة.
-
-## تجربة الاسترجاع (مرة كل 3 شهور)
-
-1. شغّل النسخ اليدوي أو حمّل آخر نسخة من GitHub.
-2. استرجعها في القاعدة التجريبية.
-3. افتح البوابة على القاعدة التجريبية وتأكد من: عدد العملاء، آخر دفعة، آخر شهادة.
-4. سجّل التاريخ والنتيجة.
+`--to-server` بيرفض يكتب فوق بيانات موجودة. لو محتاج ترجّع فوق القاعدة الحالية، استرجع نسخة Hostinger الأسبوعية من hPanel.

@@ -41,6 +41,7 @@
         categories: { service: 'Service', program: 'The program', trainer: 'The trainer', finance: 'Payments', certificate: 'Certificates', technical: 'A technical problem', other: 'Other' },
         cStatus: { open: 'Open', in_progress: 'Being handled', resolved: 'Resolved', closed: 'Closed' }, sentComplaint: 'Your request was sent.',
         pwTitle: 'Change the password', pwCurrent: 'Current password', pwNew: 'New password', pwConfirm: 'Confirm the new password', pwSave: 'Change the password', pwDone: 'Password changed. We emailed you about it.',
+        tempTitle: 'Choose a new password', tempText: 'You signed in with a temporary password from the academy. Choose your own password to continue.', tempCurrent: 'The temporary password',
         pwMismatch: 'The new passwords do not match.', pwShort: 'At least 8 characters.', devicesTitle: 'Other devices', devicesText: 'Signed in on a device you no longer use? Sign it out.', devicesBtn: 'Sign out other devices', devicesDone: (n) => `${n} device(s) signed out.`
     } : {
         hello: 'أهلاً بك', customerNo: 'رقم العميل', logout: 'تسجيل الخروج', loading: 'جارٍ التحميل…', error: 'حدث خطأ. أعد تحميل الصفحة.',
@@ -76,6 +77,7 @@
         categories: { service: 'الخدمة', program: 'البرنامج', trainer: 'المحاضر', finance: 'المدفوعات', certificate: 'الشهادات', technical: 'مشكلة تقنية', other: 'أخرى' },
         cStatus: { open: 'مفتوح', in_progress: 'قيد المعالجة', resolved: 'تم الحل', closed: 'مغلق' }, sentComplaint: 'تم إرسال طلبك.',
         pwTitle: 'تغيير كلمة المرور', pwCurrent: 'كلمة المرور الحالية', pwNew: 'كلمة المرور الجديدة', pwConfirm: 'تأكيد كلمة المرور الجديدة', pwSave: 'تغيير كلمة المرور', pwDone: 'تم تغيير كلمة المرور، وأرسلنا لك إيميلاً بذلك.',
+        tempTitle: 'اختر كلمة مرور جديدة', tempText: 'دخلت بكلمة مرور مؤقتة من الأكاديمية. اختر كلمة مرور خاصة بيك علشان تكمل.', tempCurrent: 'كلمة المرور المؤقتة',
         pwMismatch: 'كلمتا المرور الجديدتان غير متطابقتين.', pwShort: '8 أحرف على الأقل.', devicesTitle: 'الأجهزة الأخرى', devicesText: 'دخلت من جهاز لم تعد تستخدمه؟ سجّل خروجه.', devicesBtn: 'تسجيل الخروج من الأجهزة الأخرى', devicesDone: (n) => `تم تسجيل الخروج من ${n} جهاز.`
     };
 
@@ -121,6 +123,8 @@
         if (me.isStaff) { window.location.replace('/portal/'); return; }
         try { localStorage.setItem('nibras_user_name', me.user.name || ''); } catch {}
         hero();
+        // signed in with a temporary password from customer service: a new password first, nothing else
+        if (me.user.mustChangePassword) { forcedPassword(); return; }
         notices();
         tabs();
         window.addEventListener('hashchange', show);
@@ -136,6 +140,12 @@
         const out = $('pfLogout');
         out.querySelector('span').textContent = T.logout;
         out.addEventListener('click', () => window.logout());
+    }
+
+    function forcedPassword() {
+        $('pfTabs').innerHTML = '';
+        $('pfNotice').innerHTML = `<div class="pf-alert pf-alert--warn"><i class="fas fa-key" aria-hidden="true"></i><div><strong>${h(T.tempTitle)}</strong><p>${h(T.tempText)}</p></div></div>`;
+        renderSecurity($('pfPanel'), true);
     }
 
     function notices() {
@@ -566,23 +576,23 @@
     }
 
     // ---- security ----
-    async function renderSecurity(panel) {
+    async function renderSecurity(panel, forced = false) {
         panel.innerHTML = `
             <div class="pf-grid pf-grid--even">
                 <section class="pf-card">
                     <h2><i class="fas fa-key" aria-hidden="true"></i> ${h(T.pwTitle)}</h2>
                     <form id="pfPw" class="pf-form">
-                        <label class="pf-label">${h(T.pwCurrent)}<input type="password" id="s_cur" autocomplete="current-password" required /></label>
+                        <label class="pf-label">${h(forced ? T.tempCurrent : T.pwCurrent)}<input type="password" id="s_cur" autocomplete="current-password" required /></label>
                         <label class="pf-label">${h(T.pwNew)}<input type="password" id="s_new" autocomplete="new-password" minlength="8" required /><small class="pf-small">${h(T.pwShort)}</small></label>
                         <label class="pf-label">${h(T.pwConfirm)}<input type="password" id="s_new2" autocomplete="new-password" minlength="8" required /></label>
                         <button type="submit" class="pf-btn">${h(T.pwSave)}</button>
                     </form>
                 </section>
-                <section class="pf-card">
+                ${forced ? '' : `<section class="pf-card">
                     <h2><i class="fas fa-laptop-mobile" aria-hidden="true"></i> ${h(T.devicesTitle)}</h2>
                     <p class="pf-muted">${h(T.devicesText)}</p>
                     <button type="button" class="pf-btn pf-btn--ghost" id="pfDevices">${h(T.devicesBtn)}</button>
-                </section>
+                </section>`}
             </div>`;
         $('pfPw').addEventListener('submit', async (ev) => {
             ev.preventDefault();
@@ -594,8 +604,10 @@
                 await post('/api/v2/me/password', { currentPassword: $('s_cur').value, newPassword: $('s_new').value });
                 ev.target.reset();
                 showToast(T.pwDone);
+                if (forced) { setTimeout(() => window.location.reload(), 900); }
             } catch (e) { showToast(errText(e), true); } finally { busy(btn, false); }
         });
+        if (forced) return;
         $('pfDevices').addEventListener('click', async (ev) => {
             const btn = ev.currentTarget;
             busy(btn, true);

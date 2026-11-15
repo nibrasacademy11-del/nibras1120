@@ -22,6 +22,7 @@ export const MENUS = {
     ] },
     { key: 'sec_crm', items: [
       { to: '/customers', key: 'customers', icon: '◉', desc: 'd_customers' },
+      { to: '/customer-accounts', key: 'ca_title', icon: '⚷', desc: 'd_customerAccounts' },
       { to: '/profile-requests', key: 'prq_title', icon: '✎', desc: 'd_profileRequests' },
       { to: '/tasks', key: 'tasks', icon: '✓', desc: 'd_tasks' },
       { to: '/complaints', key: 'complaintsNav', icon: '✉', desc: 'd_complaints' }
@@ -63,6 +64,7 @@ export const MENUS = {
   customer_support: [
     { key: 'sec_mine', items: [
       { to: '/customers', key: 'customers', icon: '◉', desc: 'd_customers' },
+      { to: '/customer-accounts', key: 'ca_title', icon: '⚷', desc: 'd_customerAccounts' },
       { to: '/complaints', key: 'complaintsNav', icon: '✉', desc: 'd_complaints' },
       { to: '/groups', key: 'groupsNav', icon: '▶', desc: 'd_groups' },
       { to: '/certificates', key: 'certificatesNav', icon: '✪', desc: 'd_certificates' },

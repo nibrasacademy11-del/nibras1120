@@ -1,7 +1,7 @@
 // Local runs use .env.development (the test database) when it exists, so nothing written while
-// developing reaches the live data in .env. Vercel sets its variables itself and loads neither file.
+// developing reaches the live data in .env. The server (Hostinger VPS) has only .env.
 const devEnv = require('path').join(__dirname, '.env.development');
-if (!process.env.VERCEL && require('fs').existsSync(devEnv)) {
+if (process.env.NODE_ENV !== 'production' && require('fs').existsSync(devEnv)) {
     require('dotenv').config({ path: devEnv, quiet: true });
     console.log('Environment: .env.development');
 } else {
@@ -27,10 +27,10 @@ connectDB().catch((err) => console.error('Initial MongoDB connection error:', er
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+const isProd = process.env.NODE_ENV === 'production';
 const SITE_URL = (process.env.SITE_URL || 'https://www.nibras-ac.com').replace(/\/$/, '');
 
-// Vercel sits in front of the app, so req.ip and req.protocol come from its headers
+// nginx sits in front of the app on the server, so req.ip and req.protocol come from its headers
 app.set('trust proxy', 1);
 app.disable('x-powered-by');
 
@@ -39,8 +39,8 @@ const allowedOrigins = [
     'http://localhost:3000',
     'https://nibras-ac.com',
     'https://www.nibras-ac.com',
-    process.env.FRONTEND_URL || 'https://nibras1120.vercel.app'
-];
+    process.env.FRONTEND_URL
+].filter(Boolean);
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     if (origin && (allowedOrigins.includes(origin) || !isProd)) {
@@ -255,12 +255,14 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Internal server error.' });
 });
 
-// Export for Vercel Serverless
+// Tests import the app; the server starts it directly (npm start, pm2)
 module.exports = app;
 
-// Listen when started directly (npm start). Vercel imports the app instead.
-if (require.main === module && !process.env.VERCEL) {
-    app.listen(PORT, () => {
+if (require.main === module) {
+    // HOST=127.0.0.1 on the server: only nginx reaches the app
+    app.listen(PORT, process.env.HOST || undefined, () => {
         console.log(`Nibras server running on http://localhost:${PORT}`);
     });
+    // Reminders, Zoom attendance and due certificates, every hour (JOBS=off to stop them)
+    require('./lib/scheduler').start();
 }

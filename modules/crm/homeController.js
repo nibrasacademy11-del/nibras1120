@@ -96,10 +96,9 @@ exports.markRead = async (req, res) => {
     res.json({ updated: r.modifiedCount });
 };
 
-// Called by Vercel Cron (see vercel.json). Notifies assignees of follow-ups due today or overdue, once each.
-exports.cronReminders = async (req, res) => {
-    const secret = process.env.CRON_SECRET;
-    if (!secret || req.get('authorization') !== `Bearer ${secret}`) return res.status(401).json({ message: 'Unauthorized.' });
+// The hourly jobs (lib/scheduler.js runs them on the server). Each step sends a thing only once, so
+// running them again is safe. First: follow-ups due today or overdue, to their assignees.
+exports.runJobs = async () => {
     const due = await Task.find({ status: 'open', dueAt: { $ne: null, $lte: endOfToday() }, remindedAt: null }).populate('customer', 'customerNo nameAr').limit(2000);
     for (const t of due) {
         const late = t.dueAt < new Date();
@@ -123,7 +122,14 @@ exports.cronReminders = async (req, res) => {
     const certificates = await require('../learning/groupCertificates').runDue();
     // Installment reminders to customers (and the employee responsible) before and after due dates
     const payments = await require('../finance/reminderJobs').run();
-    res.json({ reminded: due.length, lectures, certificates, payments });
+    return { reminded: due.length, lectures, certificates, payments };
+};
+
+// The same jobs by hand (curl with CRON_SECRET), e.g. right after a move
+exports.cronReminders = async (req, res) => {
+    const secret = process.env.CRON_SECRET;
+    if (!secret || req.get('authorization') !== `Bearer ${secret}`) return res.status(401).json({ message: 'Unauthorized.' });
+    res.json(await exports.runJobs());
 };
 
 // The academy's identity, for printing (any signed-in user, customers included)

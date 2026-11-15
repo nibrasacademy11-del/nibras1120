@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-// ONLY set custom DNS servers when running locally on Windows/Node where ISP blocks SRV records.
-// DO NOT set on Vercel or production: AWS Lambda blocks outbound UDP port 53 to external DNS, causing all queries to hang and time out.
-if (!process.env.VERCEL && process.env.NODE_ENV !== 'production') {
+// Only on a development machine whose ISP blocks SRV lookups (mongodb+srv addresses). On the
+// server the database is local (127.0.0.1), so nothing is looked up.
+if (process.env.NODE_ENV !== 'production') {
     try {
         const dns = require('dns');
         dns.setServers(['8.8.8.8', '1.1.1.1']);
@@ -11,7 +11,7 @@ if (!process.env.VERCEL && process.env.NODE_ENV !== 'production') {
     }
 }
 
-// Serverless Connection Cache
+// One connection for the whole process
 let cachedPromise = null;
 
 const connectDB = async () => {

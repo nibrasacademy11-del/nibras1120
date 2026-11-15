@@ -4,7 +4,6 @@ const assert = require('node:assert/strict');
 const jwt = require('jsonwebtoken');
 
 process.env.JWT_SECRET = 'test-secret-' + Math.random();
-delete process.env.VERCEL;
 delete process.env.REQUIRE_2FA;
 
 const User = require('../models/User');
