@@ -1,4 +1,12 @@
-require('dotenv').config();
+// Local runs use .env.development (the test database) when it exists, so nothing written while
+// developing reaches the live data in .env. The server (Hostinger VPS) has only .env.
+const devEnv = require('path').join(__dirname, '.env.development');
+if (process.env.NODE_ENV !== 'production' && require('fs').existsSync(devEnv)) {
+    require('dotenv').config({ path: devEnv, quiet: true });
+    console.log('Environment: .env.development');
+} else {
+    require('dotenv').config({ quiet: true });
+}
 const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -19,10 +27,10 @@ connectDB().catch((err) => console.error('Initial MongoDB connection error:', er
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+const isProd = process.env.NODE_ENV === 'production';
 const SITE_URL = (process.env.SITE_URL || 'https://www.nibras-ac.com').replace(/\/$/, '');
 
-// Vercel sits in front of the app, so req.ip and req.protocol come from its headers
+// nginx sits in front of the app on the server, so req.ip and req.protocol come from its headers
 app.set('trust proxy', 1);
 app.disable('x-powered-by');
 
@@ -31,8 +39,8 @@ const allowedOrigins = [
     'http://localhost:3000',
     'https://nibras-ac.com',
     'https://www.nibras-ac.com',
-    process.env.FRONTEND_URL || 'https://nibras1120.vercel.app'
-];
+    process.env.FRONTEND_URL
+].filter(Boolean);
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     if (origin && (allowedOrigins.includes(origin) || !isProd)) {
@@ -79,6 +87,24 @@ app.use((req, res, next) => {
 });
 app.use(cookieParser());
 
+// ---- www / staff / cms: one deployment, three addresses (lib/zones.js) ----
+const zones = require('./lib/zones');
+app.use((req, res, next) => {
+    const zone = zones.zoneOf(req);
+    req.zone = zone;
+    if (zone !== 'staff' && zone !== 'cms') return next();
+    const p = req.path;
+    if (p === '/' || p === '/index.html') return res.redirect(302, zone === 'cms' ? '/portal/website' : '/portal/');
+    // The public site lives on www; the forgot/reset-password pages stay, so staff reset on staff.*
+    const publicPage = /^\/(pages|en)\//.test(p) && !/(forgot|reset)-password\.html$/.test(p) && p !== '/pages/404.html';
+    if (publicPage || p === '/sitemap.xml') return res.redirect(301, zones.urls(req).site + req.originalUrl);
+    next();
+});
+app.use('/api', (req, res, next) => {
+    if (zones.apiAllowed(req.zone, req.method, req.originalUrl.split('?')[0])) return next();
+    res.status(403).json({ message: 'العملية دي مش متاحة من العنوان ده. / Not available on this address.', code: 'WRONG_PORTAL' });
+});
+
 // The articles section was replaced by the corporate solutions page
 app.get(['/pages/ar/articles.html', '/pages/en/articles.html'], (req, res) => {
     res.redirect(301, req.path.replace('articles.html', 'corporate.html'));
@@ -90,6 +116,17 @@ const staticOptions = { maxAge: '1h' };
 app.use('/assets', express.static(path.join(__dirname, 'assets'), staticOptions));
 app.use('/pages', express.static(path.join(__dirname, 'pages')));
 app.use('/en', express.static(path.join(__dirname, 'en')));
+
+// Management portals (React build in portal/dist). Hashed assets are cached, index.html never is,
+// and every portal path returns index.html so the app's own router can show the page.
+const portalDist = path.join(__dirname, 'portal', 'dist');
+app.use('/portal/assets', express.static(path.join(portalDist, 'assets'), { maxAge: '365d', immutable: true }));
+app.get(['/portal', '/portal/{*rest}'], (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    res.sendFile(path.join(portalDist, 'index.html'), (err) => {
+        if (err) res.status(503).type('text').send('The portal has not been built yet. Run: npm run build:portal');
+    });
+});
 
 // Ensure Database is connected for all API requests
 app.use('/api', async (req, res, next) => {
@@ -128,6 +165,7 @@ app.use('/api', require('./routes/certificateRoutes'));
 app.use('/api', require('./routes/siteRoutes'));
 app.use('/api/courses', require('./routes/courseRoutes'));
 app.use('/api/inquiries', require('./routes/inquiryRoutes'));
+app.use('/api/v2', require('./routes/v2'));
 
 // Unknown API paths answer in JSON
 app.use('/api', (req, res) => {
@@ -213,15 +251,18 @@ app.use((err, req, res, next) => {
     if (err.type === 'entity.parse.failed' || err.type === 'entity.too.large') {
         return res.status(400).json({ message: 'Invalid request.' });
     }
+    require('./lib/errorLog').logError({ source: 'server', error: err, route: `${req.method} ${req.originalUrl.split('?')[0]}`, status: 500, userAgent: req.get('user-agent') });
     res.status(500).json({ message: 'Internal server error.' });
 });
 
-// Export for Vercel Serverless
+// Tests import the app; the server starts it directly (npm start, pm2)
 module.exports = app;
 
-// Listen when started directly (npm start). Vercel imports the app instead.
-if (require.main === module && !process.env.VERCEL) {
-    app.listen(PORT, () => {
+if (require.main === module) {
+    // HOST=127.0.0.1 on the server: only nginx reaches the app
+    app.listen(PORT, process.env.HOST || undefined, () => {
         console.log(`Nibras server running on http://localhost:${PORT}`);
     });
+    // Reminders, Zoom attendance and due certificates, every hour (JOBS=off to stop them)
+    require('./lib/scheduler').start();
 }

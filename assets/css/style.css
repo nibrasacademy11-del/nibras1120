@@ -416,6 +416,15 @@ button:disabled { opacity: .55; cursor: not-allowed; transform: none !important;
 /* Signed-in admin */
 .nav-btn--admin { background: var(--gold-dark) !important; }
 .nav-btn--admin:hover { background: var(--gold) !important; }
+/* Signed-in customer in the header: initial and first name, opening the profile */
+.nav-user { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 4px 6px 4px 14px; border-radius: var(--radius-pill); background: var(--primary-light); border: 1px solid var(--primary-border); color: var(--primary); font-weight: 600; white-space: nowrap; transition: background .2s, box-shadow .2s; }
+[dir="rtl"] .nav-user { padding: 4px 14px 4px 6px; }
+.nav-user:hover { background: #fff; box-shadow: var(--shadow-sm); }
+.nav-user__avatar { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-bright), var(--gold)); color: var(--primary-dark); font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; flex: none; }
+.nav-user__avatar--sm { width: 26px; height: 26px; font-size: .9rem; vertical-align: middle; }
+.nav-user__name { max-width: 9em; overflow: hidden; text-overflow: ellipsis; }
+.form-hint { display: block; margin-top: 6px; font-size: .82rem; color: var(--gold-dark); }
+
 
 
 /* Specialty gallery */
@@ -633,6 +642,9 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); widt
   .nav-actions { margin-inline-start: auto; }
   .hamburger { display: flex; }
   .nav-actions .nav-btn { display: none; }
+  /* signed in: only the round initial, so the menu button keeps its place */
+  .nav-actions .nav-user { padding: 3px; gap: 0; }
+  .nav-actions .nav-user__name { display: none; }
   .floating-cart { display: grid; }
   .nav-cart { display: none; }
 }

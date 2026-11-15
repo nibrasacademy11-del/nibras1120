@@ -18,7 +18,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261116" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261126" />
+  <link rel="stylesheet" href="/assets/css/profile.css?v=20261127" />
 </head>
 <body>
 
@@ -77,61 +78,24 @@
     </ul>
   </div>
 
-  <div class="profile-header">
-        <div class="profile-avatar">
-            <i class="fas fa-user-graduate"></i>
+    <main class="pf" id="pf">
+    <section class="pf-hero">
+      <div class="pf-hero__in">
+        <div class="pf-avatar" id="pfAvatar" aria-hidden="true"></div>
+        <div class="pf-hero__text">
+          <p class="pf-hello" id="pfHello"></p>
+          <h1 id="pfName">صفحتي</h1>
+          <p class="pf-meta" id="pfMeta"></p>
         </div>
-        <h1 id="profName">...</h1>
-        <p id="profEmail">...</p>
+        <button type="button" class="pf-logout" id="pfLogout"><i class="fas fa-arrow-right-from-bracket" aria-hidden="true"></i> <span></span></button>
+      </div>
+    </section>
+    <div class="pf-body">
+      <div id="pfNotice"></div>
+      <nav class="pf-tabs" id="pfTabs" role="tablist" aria-label="صفحتي"></nav>
+      <div id="pfPanel" class="pf-panel" role="tabpanel" aria-live="polite"></div>
     </div>
-
-    <div class="profile-container">
-        <div class="profile-info-grid">
-            <!-- Sidebar Info -->
-            <div class="info-card">
-                <div class="section-header">
-                    <h2><i class="fas fa-id-card"></i> البيانات</h2>
-                </div>
-                <div class="input-group">
-                    <label>الاسم الكامل</label>
-                    <p class="tagline" id="infoName">...</p>
-                </div>
-                <div class="input-group">
-                    <label>رقم الهاتف</label>
-                    <p id="infoPhone">...</p>
-                </div>
-                <div class="input-group">
-                    <label>تاريخ التسجيل</label>
-                    <p id="infoJoined">...</p>
-                </div>
-                <button class="login-btn" onclick="window.logout()" style="margin-top: 20px">تسجيل الخروج</button>
-                <a class="nav-link" href="../../index.html" style="margin-top: 10px"><i class="fas fa-home"></i> العودة للرئيسية</a>
-            </div>
-
-            <!-- Main Content -->
-            <div class="main-profile">
-                <!-- Courses -->
-                <div class="info-card" style="margin-bottom: 25px">
-                    <div class="section-header">
-                        <h2><i class="fas fa-graduation-cap"></i> الدورات والبرامج المسجلة</h2>
-                    </div>
-                    <div id="courseContainer" class="course-list">
-                        <p>لا توجد دورات مسجلة حالياً.</p>
-                    </div>
-                </div>
-
-                <!-- Certificates -->
-                <div class="info-card">
-                    <div class="section-header">
-                        <h2><i class="fas fa-award"></i> الشهادات المعتمدة</h2>
-                    </div>
-                    <div id="certsContainer" class="table-container">
-                        <p style="text-align: center">جاري تحميل الشهادات...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  </main>
 
   <!-- Footer -->
   <footer class="footer">
@@ -199,62 +163,7 @@
   <script src="/assets/js/site-content.js?v=20261116"></script>
 
   <script src="/assets/js/specialties.js?v=20261101"></script>
-  <script src="/assets/js/script.js?v=20261116"></script>
-  <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const response = await fetch('/api/auth/profile', { credentials: 'include' });
-                if (!response.ok) throw new Error('Unauthorized');
-                const data = await response.json();
-                const user = data.user;
-                const certs = data.certificates;
-
-                document.getElementById('profName').textContent = user.name;
-                document.getElementById('profEmail').textContent = user.email;
-                document.getElementById('infoName').textContent = user.name;
-                document.getElementById('infoPhone').textContent = user.phone || 'غير مسجل';
-                document.getElementById('infoJoined').textContent = new Date(user.createdAt).toLocaleDateString('ar-EG');
-
-                // Enrolled Courses
-                const courseContainer = document.getElementById('courseContainer');
-                if (user.enrolledCourses && user.enrolledCourses.length > 0) {
-                    courseContainer.innerHTML = user.enrolledCourses.map(c => `<span class="course-badge">${esc(c)}</span>`).join('');
-                }
-
-                // Certificates
-                const certsContainer = document.getElementById('certsContainer');
-                if (!certs || certs.length === 0) {
-                    certsContainer.innerHTML = '<p style="text-align:center; padding:20px; color: var(--text-muted);">لم يتم ربط أي شهادات بحسابك حتى الآن.</p>';
-                } else {
-                    const rows = certs.map(c => `
-                        <tr>
-                            <td data-label="البرنامج">${esc(c.program_name)}</td>
-                            <td data-label="رقم الشهادة">${esc(c.cert_num)}</td>
-                            <td data-label="التاريخ">${esc(c.issue_date)}</td>
-                            <td data-label="تحميل">
-                                ${c.pdf_url && c.status === 'Valid' ? `<a href="${safeUrl(c.pdf_url)}" target="_blank" class="badge admin" style="text-decoration:none;"><i class="fas fa-file-pdf"></i> PDF</a>` : '---'}
-                            </td>
-                        </tr>
-                    `).join('');
-                    certsContainer.innerHTML = `
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>البرنامج</th>
-                                    <th>رقم الشهادة</th>
-                                    <th>التاريخ</th>
-                                    <th>تحميل</th>
-                                </tr>
-                            </thead>
-                            <tbody>${rows}</tbody>
-                        </table>
-                    `;
-                }
-
-            } catch (err) {
-                window.location.href = 'login.html';
-            }
-        });
-    </script>
+  <script src="/assets/js/script.js?v=20261118"></script>
+  <script src="/assets/js/profile.js?v=20261129"></script>
 </body>
 </html>

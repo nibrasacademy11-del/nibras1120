@@ -10,7 +10,7 @@ echo Choose an option:
 echo [1] Push to GitHub (git push origin main)
 echo [2] Push to GitHub using Personal Access Token (PAT)
 echo [3] Clear old GitHub credentials from Windows
-echo [4] Deploy to Vercel (vercel --prod)
+echo [4] Update the Hostinger server (after pushing main)
 echo [5] Exit
 echo.
 
@@ -19,7 +19,7 @@ set /p choice="Enter your choice (1-5): "
 if "%choice%"=="1" goto PUSH_NORMAL
 if "%choice%"=="2" goto PUSH_TOKEN
 if "%choice%"=="3" goto CLEAR_CREDS
-if "%choice%"=="4" goto VERCEL_DEPLOY
+if "%choice%"=="4" goto SERVER_UPDATE
 if "%choice%"=="5" goto EXIT
 echo Invalid choice.
 goto END
@@ -64,16 +64,21 @@ cmdkey /delete:LegacyGeneric:target=git:https://github.com >nul 2>nul
 echo [OK] Saved credentials removed. Run option 1 to sign in with your new account.
 goto END
 
-:VERCEL_DEPLOY
+:SERVER_UPDATE
 echo.
-echo Checking Vercel login...
-call vercel whoami >nul 2>nul
-if errorlevel 1 (
-    echo Please log in to Vercel first...
-    call vercel login
+rem The server's address is kept in deploy\server-host.txt (not committed)
+set "host="
+if exist "deploy\server-host.txt" set /p host=<"deploy\server-host.txt"
+if "%host%"=="" (
+    set /p host="Server IP: "
 )
-echo Deploying to Vercel production...
-call vercel --prod
+if "%host%"=="" (
+    echo No address entered. Cancelled.
+    goto END
+)
+echo %host%>"deploy\server-host.txt"
+echo Updating the server %host% ...
+ssh root@%host% "sudo -u nibras bash /var/www/nibras/deploy/update.sh main"
 goto END
 
 :END

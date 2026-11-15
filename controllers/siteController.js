@@ -208,7 +208,8 @@ async function sweepOrphanMedia() {
     ]);
     const used = JSON.stringify([settings, courses, testimonials]);
     const orphans = old.filter((m) => !used.includes(String(m._id))).map((m) => m._id);
-    if (orphans.length) await Media.deleteMany({ _id: { $in: orphans } });
+    if (!orphans.length) return;
+    await Media.deleteMany({ _id: { $in: orphans } });
 }
 
 exports.uploadMedia = async (req, res) => {
@@ -229,12 +230,14 @@ exports.getMedia = async (req, res) => {
     try {
         const media = await Media.findById(req.params.id);
         if (!media) return res.status(404).json({ message: 'Not found.' });
+        const data = media.data;
+        if (!data) return res.status(404).json({ message: 'Not found.' });
         // An id always names the same bytes, so browsers and the CDN may keep it for a year
         res.setHeader('Content-Type', media.mimetype);
-        res.setHeader('Content-Length', media.data.length);
+        res.setHeader('Content-Length', data.length);
         res.setHeader('Cache-Control', 'public, max-age=31536000, s-maxage=31536000, immutable');
         res.setHeader('ETag', `"${media._id}"`);
-        res.send(media.data);
+        res.send(data);
     } catch (error) {
         res.status(500).json({ message: 'Could not load image.' });
     }

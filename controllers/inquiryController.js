@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Inquiry = require('../models/Inquiry');
 const Course = require('../models/Course');
 const { isMailConfigured, createTransporter } = require('../config/mailer');
+const intake = require('../modules/crm/intake');
 
 const escapeRegex = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const clean = (value, maxLength) => (typeof value === 'string' ? value.trim().slice(0, maxLength) : '');
@@ -65,6 +66,8 @@ exports.createInquiry = async (req, res) => {
             status: 'New'
         });
         await notifyAdmin(inquiry);
+        // The message joins the sender's customer file, or opens a new lead
+        await intake.safely(() => intake.ingestInquiry(inquiry), 'inquiry');
 
         res.status(201).json({ message: 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.' });
     } catch (error) {
@@ -121,6 +124,8 @@ exports.createEnrollment = async (req, res) => {
             status: 'New'
         });
         await notifyAdmin(inquiry);
+        // The message joins the sender's customer file, or opens a new lead
+        await intake.safely(() => intake.ingestInquiry(inquiry), 'inquiry');
 
         res.status(201).json({ message: isEN ? 'Request saved.' : 'تم حفظ طلبك.', whatsappText: message, total });
     } catch (error) {

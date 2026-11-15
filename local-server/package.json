@@ -1,0 +1,16 @@
+{
+  "name": "nibras-local-attendance",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Attendance inside the academy that keeps working without internet and syncs to the cloud",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}

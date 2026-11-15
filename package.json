@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "echo \"No tests configured\""
+    "dev:portal": "npm --prefix portal run dev",
+    "build:portal": "npm --prefix portal install --no-audit --no-fund && npm --prefix portal run build",
+    "test": "node --test \"test/**/*.test.js\"",
+    "test:all": "node tools/test-all.js",
+    "backup": "node tools/backup-now.js"
   },
   "keywords": [],
   "author": "",

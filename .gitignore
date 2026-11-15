@@ -1,4 +1,23 @@
-﻿node_modules
+node_modules
 .env
 .vercel
 .claude
+.env.development
+.env.test
+portal/node_modules
+portal/dist
+local-server/config.json
+local-server/data
+local-server/node_modules
+desktop/node_modules
+desktop/dist
+desktop/config.json
+
+# Sample printouts made locally (regenerate from /portal/print-samples)
+print-samples/
+
+# Keys prepared locally (never committed)
+.secrets/
+
+# the Hostinger server address used by deploy.bat
+deploy/server-host.txt

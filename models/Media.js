@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-// Images uploaded from the admin panel. Vercel has no lasting disk, so the bytes live here
-// and are served from /api/media/:id behind a long CDN cache.
+// Images uploaded from the admin panel: the bytes live here and are served from /api/media/:id
+// with a long browser cache.
 const mediaSchema = new mongoose.Schema({
-    data: { type: Buffer, required: true },
+    data: { type: Buffer, default: undefined },
     mimetype: { type: String, required: true, enum: ['image/jpeg', 'image/png', 'image/webp'] },
     size: { type: Number, required: true }
 }, { timestamps: true });

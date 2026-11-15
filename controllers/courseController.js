@@ -50,7 +50,7 @@ function saveError(res, error, fallback) {
 exports.getAllCourses = async (req, res) => {
     try {
         const { type, specialty, status, search, featured, ids, limit, page } = req.query;
-        const isAdmin = !!req.user && req.user.role === 'admin';
+        const isAdmin = !!req.user && req.user.role === 'super_admin';
         const query = {};
 
         // The cart and checkout ask for the programs they hold, to show current prices
@@ -137,7 +137,7 @@ exports.getCourseById = async (req, res) => {
             course = await Course.findOne({ slug: identifier });
         }
 
-        const isAdmin = !!req.user && req.user.role === 'admin';
+        const isAdmin = !!req.user && req.user.role === 'super_admin';
         if (!course || (course.status === 'hidden' && !isAdmin)) {
             return res.status(404).json({ message: 'Program not found.' });
         }
@@ -175,7 +175,13 @@ exports.updateCourse = async (req, res) => {
 
 exports.deleteCourse = async (req, res) => {
     try {
-        const course = await Course.findByIdAndDelete(req.params.id);
+        // A program with modules, enrollments, charges or certificates is part of people's records
+        const id = req.params.id;
+        const used = (await require('../models/Enrollment').exists({ program: id }))
+            || (await require('../models/ProgramModule').exists({ program: id }))
+            || (await require('../models/Certificate').exists({ program: id }));
+        if (used) return res.status(409).json({ message: 'البرنامج مستخدم في تسجيلات أو محاور أو شهادات، فلا يمكن حذفه. غيّر حالته إلى «مخفي» بدلاً من الحذف.' });
+        const course = await Course.findByIdAndDelete(id);
         if (!course) return res.status(404).json({ message: 'Program not found.' });
         res.json({ message: 'Program deleted successfully.' });
     } catch (error) {

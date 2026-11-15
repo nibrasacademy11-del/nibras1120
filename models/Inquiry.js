@@ -21,6 +21,8 @@ const inquirySchema = new mongoose.Schema({
         finalPrice: Number
     }],
     total: { type: Number, default: 0 },
+    // The customer file this message was filed under (set by the CRM)
+    customer: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', default: null },
     status: { 
         type: String, 
         enum: ['New', 'In Progress', 'Replied', 'Closed'], 

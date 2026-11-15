@@ -24,9 +24,6 @@ function whatsappLink(text) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const isEN = document.documentElement.lang === 'en';
-    // The admin panel loads this file for its helpers and runs its own setup (admin.js)
-    if (document.body.classList.contains('admin-body')) return;
-
     cleanupDuplicateIds(['cartSidebar', 'cartOverlay', 'cartItems', 'cartTotal', 'cartBadge']);
     initLayout();
     initSiteContent(isEN);
@@ -261,24 +258,26 @@ function formatAuthError(msg, isEN) {
     return msg;
 }
 
+// The customer's own page on the website
+const profilePage = (isEN) => (isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html');
+
 // Where to go after signing in: a same-site ?next= link if one was given, otherwise the
-// student's profile, or the home page for an admin (the nav then shows the control panel button)
+// customer's profile (staff work in the management portal)
 function afterLoginUrl(user, isEN) {
     const next = new URLSearchParams(window.location.search).get('next') || '';
     if (next.startsWith('/') && !next.startsWith('//')) return next;
-    if (user && user.role === 'admin') return isEN ? '/en/index.html' : '/index.html';
-    return isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html';
+    if (user && user.isStaff) return '/portal/';
+    return profilePage(isEN);
 }
 
 function initPublicAuth(isEN) {
     const registerForm = document.getElementById('registerForm');
     const loginForm = document.getElementById('loginForm');
-    const homeUrl = isEN ? '/en/index.html' : '/index.html';
-
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('regName')?.value.trim();
+            const name = (document.getElementById('regNameAr') || document.getElementById('regName'))?.value.trim();
+            const nameEn = document.getElementById('regNameEn')?.value.trim() || '';
             const email = document.getElementById('regEmail')?.value.trim();
             const phone = document.getElementById('regPhone')?.value.trim();
             const password = document.getElementById('regPassword')?.value;
@@ -295,15 +294,15 @@ function initPublicAuth(isEN) {
                 const data = await apiFetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, phone, password })
+                    body: JSON.stringify({ nameAr: name, nameEn, email, phone, password, lang: isEN ? 'en' : 'ar' })
                 });
-                showToast(isEN ? 'Account created successfully.' : 'تم إنشاء الحساب بنجاح.');
+                showToast(isEN ? 'Account created. Check your email to confirm it.' : 'تم إنشاء الحساب. افتح إيميلك لتأكيده.');
                 if (data.user && data.user.name) {
                     localStorage.setItem('nibras_user_name', data.user.name);
                 }
                 setTimeout(() => {
-                    window.location.href = homeUrl;
-                }, 600);
+                    window.location.href = `${profilePage(isEN)}?welcome=1`;
+                }, 900);
             } catch (error) {
                 showToast(formatAuthError(error.message, isEN), true);
             }
@@ -321,6 +320,11 @@ function initPublicAuth(isEN) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
+                // Accounts with two-factor sign-in finish in the portal, which asks for the code
+                if (data.twoFactorRequired) {
+                    window.location.href = '/portal/';
+                    return;
+                }
                 showToast(isEN ? 'Login successful.' : 'تم تسجيل الدخول بنجاح.');
                 if (data.user && data.user.name) {
                     localStorage.setItem('nibras_user_name', data.user.name);
@@ -329,6 +333,13 @@ function initPublicAuth(isEN) {
                     window.location.href = afterLoginUrl(data.user, isEN);
                 }, 500);
             } catch (error) {
+                // Staff accounts sign in on staff.nibras-ac.com: say so and take them there
+                if (error.payload && error.payload.code === 'WRONG_PORTAL' && error.payload.url) {
+                    const parts = String(error.message).split(' / ');
+                    showToast(isEN ? (parts[1] || parts[0]) : parts[0], true);
+                    setTimeout(() => { window.location.href = error.payload.url; }, 1800);
+                    return;
+                }
                 showToast(formatAuthError(error.message, isEN), true);
             }
         });
@@ -390,7 +401,7 @@ function initPublicAuth(isEN) {
                 await apiFetch('/api/auth/reset-password', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token, password })
+                    body: JSON.stringify({ token, password, lang: isEN ? 'en' : 'ar' })
                 });
                 showToast(isEN ? 'Password updated successfully.' : 'تم تغيير كلمة المرور بنجاح.');
                 setTimeout(() => window.location.href = 'login.html', 1500);
@@ -404,6 +415,12 @@ function initPublicAuth(isEN) {
 function initVerifyForm(isEN) {
     const verifyForm = document.getElementById('verifyForm');
     if (!verifyForm) return;
+    // The QR code on a certificate opens this page with ?code=NUMBER and verifies at once
+    const codeFromLink = new URLSearchParams(window.location.search).get('code');
+    if (codeFromLink && document.getElementById('certNumber')) {
+        document.getElementById('certNumber').value = codeFromLink.slice(0, 60);
+        setTimeout(() => verifyForm.requestSubmit(), 0);
+    }
 
     verifyForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -426,6 +443,7 @@ function initVerifyForm(isEN) {
                 valid: { badge: isEN ? 'Valid' : 'معتمدة وصالحة', title: isEN ? 'Verified Certificate' : 'شهادة موثّقة ومعتمدة', note: isEN ? 'This certificate is authentic and registered in the records of Nibras Academy.' : 'هذه الشهادة صحيحة ومسجلة رسمياً في سجلات أكاديمية نبراس.', icon: 'fa-circle-check', box: 'verify-success' },
                 suspended: { badge: isEN ? 'Suspended' : 'معلقة', title: isEN ? 'Certificate Suspended' : 'الشهادة معلقة حالياً', note: isEN ? 'This certificate exists in our records but is currently suspended.' : 'هذه الشهادة مسجلة لدينا لكنها معلقة حالياً.', icon: 'fa-circle-pause', box: 'verify-warning' },
                 expired: { badge: isEN ? 'Expired' : 'منتهية الصلاحية', title: isEN ? 'Certificate Expired' : 'انتهت صلاحية الشهادة', note: isEN ? 'This certificate exists in our records but is no longer valid.' : 'هذه الشهادة مسجلة لدينا لكن صلاحيتها انتهت.', icon: 'fa-clock', box: 'verify-warning' },
+                replaced: { badge: isEN ? 'Replaced' : 'مستبدلة', title: isEN ? 'Replaced by a newer version' : 'استُبدلت بإصدار أحدث', note: cert.replacedByNumber ? (isEN ? `This certificate was reissued under number ${esc(cert.replacedByNumber)}. Please verify that number.` : `أعيد إصدار هذه الشهادة برقم ${esc(cert.replacedByNumber)}. يرجى التحقق من الرقم الجديد.`) : (isEN ? 'This certificate was replaced by a newer version.' : 'استُبدلت هذه الشهادة بإصدار أحدث.'), icon: 'fa-arrows-rotate', box: 'verify-warning' },
                 cancelled: { badge: isEN ? 'Cancelled' : 'ملغاة', title: isEN ? 'Certificate Cancelled' : 'الشهادة ملغاة', note: isEN ? 'This certificate has been cancelled and is not valid.' : 'تم إلغاء هذه الشهادة وهي غير سارية.', icon: 'fa-circle-xmark', box: 'verify-error-result' }
             };
             const state = states[statusKey] || states.valid;
@@ -446,7 +464,9 @@ function initVerifyForm(isEN) {
                     ${row('fa-user', isEN ? 'Holder Name' : 'اسم حامل الشهادة', esc(cert.trainee_name), 'strong')}
                     ${row('fa-graduation-cap', isEN ? 'Program' : 'اسم البرنامج', esc(cert.program_name), 'strong')}
                     ${row('fa-layer-group', isEN ? 'Credential Type' : 'نوع الشهادة', esc(cert.program_type || (isEN ? 'Professional Certificate' : 'شهادة مهنية')))}
-                    ${row('fa-briefcase', isEN ? 'Specialty / Field' : 'التخصص', esc(cert.field || '—'))}
+                    ${row('fa-briefcase', cert.moduleName ? (isEN ? 'Module' : 'المحور') : (isEN ? 'Specialty / Field' : 'التخصص'), esc(cert.field || '—'))}
+                    ${cert.hours ? row('fa-clock', isEN ? 'Training Hours' : 'الساعات التدريبية', esc(String(cert.hours))) : ''}
+                    ${(cert.accreditations || []).length ? row('fa-award', isEN ? 'Accreditations' : 'الاعتمادات', esc(cert.accreditations.map((a) => (isEN && a.nameEn ? a.nameEn : a.nameAr) + (a.number ? ` (${a.number})` : '')).join(' · '))) : ''}
                     ${row('fa-hashtag', isEN ? 'Certificate No.' : 'رقم الشهادة', `<bdi>${esc(cert.cert_num)}</bdi>`)}
                     ${row('fa-calendar-days', isEN ? 'Issue Date' : 'تاريخ الإصدار', esc(cert.issue_date))}
                     ${row('fa-shield-halved', isEN ? 'Status' : 'حالة الشهادة', `<span class="badge-status ${esc(statusKey)}">${state.badge}</span>`)}
@@ -483,47 +503,43 @@ window.logout = async () => {
     window.location.href = document.documentElement.lang === 'en' ? '/pages/en/login.html' : '/pages/ar/login.html';
 };
 
-// Signed-in visitors see their name in the nav; an admin sees the way into the control panel
+// Signed in: the header shows the customer's initial and first name, opening their profile.
+// Staff accounts see the way into the management portal.
 async function updateNavAuth(isEN) {
     if (!localStorage.getItem('nibras_user_name')) return;
-    let user;
+    let me;
     try {
-        user = (await apiFetch('/api/auth/me')).user;
+        me = await apiFetch('/api/auth/me');
     } catch (e) {
         localStorage.removeItem('nibras_user_name');
         return;
     }
+    const user = me.user || {};
+    const isStaff = !!me.isStaff;
+    const firstName = String(user.name || '').trim().split(/\s+/)[0] || '';
+    const initial = esc(firstName.charAt(0) || '؟');
+    const href = isStaff ? '/portal/' : profilePage(isEN);
+    const title = isStaff ? (isEN ? 'Staff portal' : 'بوابة الموظفين') : (isEN ? 'My profile' : 'صفحتي');
+    const desktop = isStaff
+        ? `<a href="${href}" class="nav-btn nav-btn--admin"><i class="fas fa-gauge-high"></i> ${title}</a>`
+        : `<a href="${href}" class="nav-user" title="${title}"><span class="nav-user__avatar" aria-hidden="true">${initial}</span><span class="nav-user__name">${esc(firstName)}</span></a>`;
+    const mobile = `<a href="${href}" class="mobile-btn">${isStaff ? '<i class="fas fa-gauge-high"></i>' : `<span class="nav-user__avatar nav-user__avatar--sm" aria-hidden="true">${initial}</span>`} ${title}</a>`;
 
-    const isAdmin = user.role === 'admin';
-    const firstName = String(user.name || '').split(' ')[0];
-    const profileUrl = isAdmin ? '/pages/ar/admin.html' : (isEN ? '/pages/en/profile.html' : '/pages/ar/profile.html');
-    const label = isAdmin
-        ? `<i class="fas fa-gauge-high"></i> ${isEN ? 'Control Panel' : 'لوحة التحكم'}`
-        : `<i class="fas fa-user-circle"></i> ${esc(firstName)}`;
-
-    // 1. Desktop Nav Auth
     let navAuth = document.getElementById('navAuth');
     if (!navAuth) {
         const loginLinks = Array.from(document.querySelectorAll('.nav-links a[href*="login.html"]'));
         const desktopLogin = loginLinks.find(l => !l.classList.contains('mobile-btn') && !l.classList.contains('lang-switch-btn'));
         if (desktopLogin) navAuth = desktopLogin.parentElement;
     }
-    
-    // 2. Mobile Nav Auth
     let mobileNavAuth = document.getElementById('mobileNavAuth');
     if (!mobileNavAuth) {
         const mobileLoginLinks = Array.from(document.querySelectorAll('.mobile-menu a[href*="login.html"], .mobile-menu .mobile-btn'));
         const mobileLogin = mobileLoginLinks.find(l => !l.classList.contains('lang-switch-btn') && !l.href.includes('program-detail'));
         if (mobileLogin) mobileNavAuth = mobileLogin.parentElement;
     }
-
-    // Safeguard: NEVER overwrite a language switcher button!
-    if (navAuth && !navAuth.querySelector('.lang-switch-btn') && !navAuth.classList.contains('lang-switch-btn')) {
-        navAuth.innerHTML = `<a href="${profileUrl}" class="nav-btn${isAdmin ? ' nav-btn--admin' : ''}">${label}</a>`;
-    }
-    if (mobileNavAuth && !mobileNavAuth.querySelector('.lang-switch-btn') && !mobileNavAuth.classList.contains('lang-switch-btn')) {
-        mobileNavAuth.innerHTML = `<a href="${profileUrl}" class="mobile-btn">${label}</a>`;
-    }
+    // Never overwrite a language switcher
+    if (navAuth && !navAuth.querySelector('.lang-switch-btn') && !navAuth.classList.contains('lang-switch-btn')) navAuth.innerHTML = desktop;
+    if (mobileNavAuth && !mobileNavAuth.querySelector('.lang-switch-btn') && !mobileNavAuth.classList.contains('lang-switch-btn')) mobileNavAuth.innerHTML = mobile;
 }
 
 function showToast(message, isError = false) {
