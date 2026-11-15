@@ -11,7 +11,7 @@
 
 ## الإعداد (مرة واحدة)
 
-1. على السيرفر السحابي (Vercel) أضف متغير `ATTENDANCE_SYNC_SECRET` بقيمة عشوائية طويلة:
+1. على سيرفر Hostinger أضف في ملف `.env` متغير `ATTENDANCE_SYNC_SECRET` بقيمة عشوائية طويلة:
    ```
    node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
    ```
