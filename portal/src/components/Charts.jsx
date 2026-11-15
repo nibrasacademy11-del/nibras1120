@@ -232,15 +232,25 @@ export function Ring({ value, label, color = 'var(--s3)', size = 120 }) {
 // ---- a tiny trend line inside a tile ----
 export function Sparkline({ points, color = 'var(--s1)' }) {
   if (!points || points.length < 2) return null;
-  const W = 120; const H = 32;
-  const max = Math.max(...points.map((p) => p.v), 1);
+  const W = 160; const H = 40;
+  const vals = points.map((p) => p.v || 0);
+  const max = Math.max(...vals, 1);
+  const min = Math.min(...vals, 0);
+  const range = max - min || 1;
   const x = (i) => (i / (points.length - 1)) * W;
-  const y = (v) => H - 2 - (v / max) * (H - 4);
-  const d = points.map((p, i) => `${i ? 'L' : 'M'}${x(i)},${y(p.v)}`).join(' ');
+  const y = (v) => H - 4 - ((v - min) / range) * (H - 8);
+  const d = points.map((p, i) => `${i ? 'L' : 'M'}${x(i)},${y(p.v || 0)}`).join(' ');
+  const gradId = `spk-${Math.random().toString(36).slice(2, 7)}`;
   return (
     <svg className="viz-spark" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true" dir="ltr">
-      <path d={`${d} L${W},${H} L0,${H} Z`} fill={color} opacity=".12" />
-      <path d={d} fill="none" stroke={color} strokeWidth="1.8" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+      <defs>
+        <linearGradient id={gradId} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.28" />
+          <stop offset="100%" stopColor={color} stopOpacity="0.0" />
+        </linearGradient>
+      </defs>
+      <path d={`${d} L${W},${H} L0,${H} Z`} fill={`url(#${gradId})`} />
+      <path d={d} fill="none" stroke={color} strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }

@@ -31,21 +31,73 @@ const amountOf = (list, c) => (list || []).find((x) => x.currency === c)?.amount
 function Delta({ now, before, invert }) {
   const { t } = useI18n();
   if (before === null || before === undefined || (!before && !now)) return null;
-  if (!before) return <span className="delta delta--up">{t('in_new')}</span>;
+  if (!before) return <span className="delta delta--up"><span className="delta-arrow">↗</span> {t('in_new')}</span>;
   const pct = Math.round(((now - before) / Math.abs(before)) * 100);
-  if (!pct) return <span className="delta">0%</span>;
-  return <span className={`delta ${(invert ? pct < 0 : pct > 0) ? 'delta--up' : 'delta--down'}`}>{pct > 0 ? '▲' : '▼'} {Math.abs(pct)}% <small className="muted">{t('oh_vsBefore')}</small></span>;
+  if (!pct) return <span className="delta delta--neutral">0% <small className="delta-text">{t('oh_vsBefore')}</small></span>;
+  const isUp = invert ? pct < 0 : pct > 0;
+  return (
+    <span className={`delta ${isUp ? 'delta--up' : 'delta--down'}`}>
+      <span className="delta-arrow">{isUp ? '↗' : '↘'}</span>
+      <span className="delta-pct">{Math.abs(pct)}%</span>
+      <small className="delta-text">{t('oh_vsBefore')}</small>
+    </span>
+  );
 }
 
-// One big number; money in other currencies goes in a small line under it, never on top of it
+function getTileIcon(icon) {
+  switch (icon) {
+    case '↓': // collected / income
+      return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 15l-5 5-5-5"/><circle cx="12" cy="12" r="10"/></svg>;
+    case '↑': // expenses
+      return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22V2M7 9l5-5 5 5"/><circle cx="12" cy="12" r="10"/></svg>;
+    case '=': // net
+      return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>;
+    case '!': // overdue / owed
+      return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>;
+    case '+': // leads
+      return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>;
+    case '%': // conversion
+      return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>;
+    case '✎': // enrolled
+      return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>;
+    case '✪': // certificates
+      return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>;
+    case '★': // satisfaction
+      return <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
+    case '✓': // converted customers
+      return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>;
+    case '×': // lost
+      return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>;
+    default:
+      return <span>{icon}</span>;
+  }
+}
+
+// Executive KPI Tile: modern header, styled icon container, tabular figures, and trend badges
 function Tile({ label, color, icon, value, others, delta, hint, spark }) {
   return (
     <div className="card oh-tile" style={{ '--tile': color }}>
-      <div className="oh-tile__top"><small>{label}</small><span className="oh-tile__icon" aria-hidden="true">{icon}</span></div>
-      <strong className="oh-tile__value" dir="ltr">{value}</strong>
-      {others && <small className="oh-tile__others" dir="ltr">{others}</small>}
-      <div className="oh-tile__foot">{delta}{hint && <small className="muted">{hint}</small>}</div>
-      {spark && <Sparkline points={spark} color={color} />}
+      <div className="oh-tile__header">
+        <span className="oh-tile__label">{label}</span>
+        <div className="oh-tile__icon-box" style={{ background: `color-mix(in srgb, ${color} 12%, transparent)`, color }}>
+          {getTileIcon(icon)}
+        </div>
+      </div>
+      <div className="oh-tile__body">
+        <strong className="oh-tile__value" dir="ltr">{value}</strong>
+        {others && (
+          <div className="oh-tile__others" dir="ltr">
+            {others.split(' · ').map((o, idx) => (
+              <span key={idx} className="oh-tile__other-pill">{o}</span>
+            ))}
+          </div>
+        )}
+      </div>
+      <div className="oh-tile__foot">
+        {delta}
+        {hint && <span className="oh-tile__hint">{hint}</span>}
+      </div>
+      {spark && <div className="oh-tile__spark-wrap"><Sparkline points={spark} color={color} /></div>}
     </div>
   );
 }
