@@ -275,7 +275,9 @@ function Stats() {
                       <input aria-label={t('wsLabelAr')} placeholder={t('wsLabelAr')} value={s.labelAr || ''} onChange={(e) => set('labelAr', e.target.value)} />
                       <input dir="ltr" aria-label={t('wsLabelEn')} placeholder={t('wsLabelEn')} value={s.labelEn || ''} onChange={(e) => set('labelEn', e.target.value)} />
                       <input dir="ltr" aria-label={t('wsIcon')} placeholder="fa-star" value={s.icon || ''} onChange={(e) => set('icon', e.target.value)} />
-                      <button type="button" className="icon-btn" aria-label="Remove" onClick={() => setV(v.filter((_, j) => j !== i))}>×</button>
+                      <button type="button" className="icon-btn btn--small btn--danger" aria-label="Remove" title="حذف" onClick={() => setV(v.filter((_, j) => j !== i))}>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                      </button>
                     </div>
                   );
                 })}

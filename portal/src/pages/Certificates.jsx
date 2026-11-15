@@ -446,7 +446,10 @@ function TemplateEditor({ item, onDone }) {
             <Field label={`${t('jobTitle')} (AR)`}><input value={s.titleAr || ''} onChange={(e) => setSig(i, 'titleAr', e.target.value)} /></Field>
             <Field label={`${t('jobTitle')} (EN)`}><input dir="ltr" value={s.titleEn || ''} onChange={(e) => setSig(i, 'titleEn', e.target.value)} /></Field>
             <ImageField label={t('signatureImage')} value={s.image} onChange={(v) => setSig(i, 'image', v)} />
-            <button type="button" className="link" onClick={() => setF({ ...f, signatures: f.signatures.filter((_, j) => j !== i) })}>× {t('cancel')}</button>
+            <button type="button" className="btn btn--small btn--danger" onClick={() => setF({ ...f, signatures: f.signatures.filter((_, j) => j !== i) })}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ marginInlineEnd: 4 }}><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              {t('cancel')}
+            </button>
           </div>
         ))}
         {f.signatures.length < 4 && <div className="field--wide"><button type="button" className="btn btn--small" onClick={() => setF({ ...f, signatures: [...f.signatures, {}] })}>+ {t('add')}</button></div>}

@@ -32,7 +32,9 @@ export default function Layout({ children }) {
       <div className="backdrop" onClick={() => setOpen(false)} />
       <div className="main">
         <header className="topbar">
-          <button type="button" className="icon-btn menu-btn" aria-label="Menu" onClick={() => setOpen((o) => !o)}>☰</button>
+          <button type="button" className="icon-btn menu-btn" aria-label="Menu" onClick={() => setOpen((o) => !o)}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
           <div className="topbar-user">
             <span className="avatar" aria-hidden="true">{(me.user.name || '?').trim().charAt(0)}</span>
             <span className="topbar-user__name">{me.user.name}</span>

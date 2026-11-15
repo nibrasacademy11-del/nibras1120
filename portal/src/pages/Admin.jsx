@@ -107,7 +107,9 @@ export function Settings() {
                   <div key={i} className="row tpl-row">
                     <input aria-label={t('title')} value={x.titleAr} onChange={(e) => change('crm.whatsappTemplates', val('crm.whatsappTemplates').map((y, j) => (j === i ? { ...y, titleAr: e.target.value } : y)))} />
                     <textarea rows={2} aria-label={t('waMessage')} value={x.text} onChange={(e) => change('crm.whatsappTemplates', val('crm.whatsappTemplates').map((y, j) => (j === i ? { ...y, text: e.target.value } : y)))} />
-                    <button type="button" className="icon-btn" aria-label="Remove" onClick={() => change('crm.whatsappTemplates', val('crm.whatsappTemplates').filter((_, j) => j !== i))}>×</button>
+                    <button type="button" className="icon-btn" aria-label="Remove" title="حذف" onClick={() => change('crm.whatsappTemplates', val('crm.whatsappTemplates').filter((_, j) => j !== i))}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
                   </div>
                 ))}
                 <div><button type="button" className="btn btn--small btn--ghost" onClick={() => change('crm.whatsappTemplates', [...(val('crm.whatsappTemplates') || []), { key: `t${Date.now()}`, titleAr: '', text: '' }])}>{t('lecAddRow')}</button></div>

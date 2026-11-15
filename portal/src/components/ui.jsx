@@ -47,7 +47,9 @@ export function Modal({ title, onClose, children, wide }) {
     <dialog ref={ref} className={`modal${wide ? ' modal--wide' : ''}`} onCancel={(e) => { e.preventDefault(); onClose(); }}>
       <div className="modal-head">
         <h2>{title}</h2>
-        <button type="button" className="icon-btn" aria-label="Close" onClick={onClose}>×</button>
+        <button type="button" className="icon-btn" aria-label="Close" onClick={onClose} title="إغلاق">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
       <div className="modal-body">{children}</div>
     </dialog>
@@ -133,10 +135,16 @@ export function Pager({ page, total, limit, onPage }) {
   const pages = Math.max(Math.ceil((total || 0) / (limit || 1)), 1);
   if (pages <= 1) return null;
   return (
-    <div className="row pager">
-      <button type="button" className="btn btn--ghost" disabled={page <= 1} onClick={() => onPage(page - 1)}>{t('prev')}</button>
+    <div className="pager">
+      <button type="button" className="btn btn--small btn--ghost" disabled={page <= 1} onClick={() => onPage(page - 1)}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginInlineEnd: 4 }}><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <span>{t('prev')}</span>
+      </button>
       <span>{page} / {pages}</span>
-      <button type="button" className="btn btn--ghost" disabled={page >= pages} onClick={() => onPage(page + 1)}>{t('next')}</button>
+      <button type="button" className="btn btn--small btn--ghost" disabled={page >= pages} onClick={() => onPage(page + 1)}>
+        <span>{t('next')}</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginInlineStart: 4 }}><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
     </div>
   );
 }

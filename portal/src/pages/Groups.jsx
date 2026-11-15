@@ -196,7 +196,9 @@ function RowsEditor({ rows, onChange, withPasscode }) {
           <input placeholder={t('lecItemTitle')} value={r.title} onChange={(e) => set(i, 'title', e.target.value)} />
           <input dir="ltr" placeholder="https://" value={r.url} onChange={(e) => set(i, 'url', e.target.value)} />
           {withPasscode && <input dir="ltr" placeholder={t('lecPasscode')} value={r.passcode || ''} onChange={(e) => set(i, 'passcode', e.target.value)} />}
-          <button type="button" className="icon-btn" aria-label="Remove" onClick={() => onChange(rows.filter((_, j) => j !== i))}>×</button>
+          <button type="button" className="icon-btn btn--small btn--danger" aria-label="Remove" title="حذف" onClick={() => onChange(rows.filter((_, j) => j !== i))}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
         </div>
       ))}
       <div><button type="button" className="btn btn--small btn--ghost" onClick={() => onChange([...rows, { title: '', url: '', passcode: '' }])}>{t('lecAddRow')}</button></div>

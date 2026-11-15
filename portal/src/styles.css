@@ -1,28 +1,29 @@
 /* Nibras portal. Brand colors follow the public site (assets/css/style.css). */
 :root {
-  --primary: #5a020e;
-  --primary-hover: #7a0f20;
-  --primary-light: #f9eeee;
-  --gold: #b98a35;
-  --gold-light: #f8efdc;
-  --ink: #1d1416;
-  --text: #2a2023;
-  --muted: #62555a;
-  --bg: #fbf7f0;
-  --surface: #fffdf9;
-  --sidebar: #2f0108;
-  --on-dark: #f7efe2;
-  --on-dark-muted: #d9c9b8;
-  --border: #e6dccd;
-  --ok: #1f7a4d;
-  --ok-bg: #e6f4ec;
-  --warn: #9a5b00;
-  --warn-bg: #fdf1dc;
-  --danger: #b42318;
-  --danger-bg: #fdecea;
-  --info-bg: #eef2f8;
-  --radius: 12px;
-  --shadow: 0 1px 2px rgba(29, 20, 22, 0.06), 0 4px 16px rgba(29, 20, 22, 0.05);
+  --primary: #701a2b;
+  --primary-hover: #881337;
+  --primary-light: #fff1f2;
+  --gold: #d97706;
+  --gold-light: #fef3c7;
+  --ink: #0f172a;
+  --text: #334155;
+  --muted: #64748b;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --sidebar: #0f172a;
+  --on-dark: #f8fafc;
+  --on-dark-muted: #94a3b8;
+  --border: #e2e8f0;
+  --ok: #059669;
+  --ok-bg: #ecfdf5;
+  --warn: #d97706;
+  --warn-bg: #fffbeb;
+  --danger: #e11d48;
+  --danger-bg: #fff1f2;
+  --info: #2563eb;
+  --info-bg: #eff6ff;
+  --radius: 14px;
+  --shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.07), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
   color-scheme: light;
 }
 

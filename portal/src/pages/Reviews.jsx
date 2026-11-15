@@ -161,7 +161,9 @@ function CriteriaForm({ items, t }) {
         <div key={i} className="row tpl-row" style={{ marginBottom: 8 }}>
           <input aria-label="ar" value={c.ar} onChange={(e) => { setSaved(false); setList(list.map((x, j) => (j === i ? { ...x, ar: e.target.value } : x))); }} style={{ flex: 1 }} />
           <input aria-label="en" dir="ltr" placeholder="English" value={c.en || ''} onChange={(e) => { setSaved(false); setList(list.map((x, j) => (j === i ? { ...x, en: e.target.value } : x))); }} style={{ flex: 1 }} />
-          <button type="button" className="icon-btn" aria-label="Remove" onClick={() => setList(list.filter((_, j) => j !== i))}>×</button>
+          <button type="button" className="icon-btn btn--small btn--danger" aria-label="Remove" title="حذف" onClick={() => setList(list.filter((_, j) => j !== i))}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
         </div>
       ))}
       <div className="row">

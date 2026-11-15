@@ -271,7 +271,11 @@ export function SplitEditor({ enrollmentId }) {
                 <div className="row" key={i}>
                   {editable ? <StaffSelect value={r.user} onChange={(v) => set(i, 'user', v)} required /> : <span>{r.name}</span>}
                   <input type="number" min="1" max="100" style={{ width: 90 }} disabled={!editable} value={r.share} onChange={(e) => set(i, 'share', e.target.value)} /> %
-                  {editable && current.length > 1 && <button type="button" className="link" onClick={() => setRows(current.filter((_, j) => j !== i))}>×</button>}
+                  {editable && current.length > 1 && (
+                    <button type="button" className="icon-btn btn--small btn--danger" title="حذف" onClick={() => setRows(current.filter((_, j) => j !== i))}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                  )}
                 </div>
               ))}
               {editable && (
