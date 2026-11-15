@@ -311,7 +311,14 @@ exports.programLectures = async (req, res) => {
 exports.addProgramLecture = async (req, res) => {
     const program = await Course.findById(oid(req.params.id)).select('_id titleAr');
     if (!program) throw new HttpError(404, 'Not found.');
-    if (!oid(req.body.module)) throw new HttpError(400, 'اختر المحور. / Choose the module.', 'MODULE_REQUIRED');
+    // No module chosen: a program without modules (or with one) takes the lecture in its only module
+    if (!oid(req.body.module)) {
+        const active = await ProgramModule.find({ program: program._id, active: true }).select('_id').lean();
+        if (active.length > 1) throw new HttpError(400, 'اختر المحور. / Choose the module.', 'MODULE_REQUIRED');
+        const only = active[0] || await require('./enrollmentController')._singleModule(program);
+        if (only.active === false) await ProgramModule.updateOne({ _id: only._id }, { $set: { active: true } });
+        req.body.module = String(only._id);
+    }
     const l = await createLecture(req, { program: program._id, topicOwner: program.titleAr });
     res.status(201).json({ item: staffLecture(l.toObject()) });
 };

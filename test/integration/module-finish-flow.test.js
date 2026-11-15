@@ -145,6 +145,40 @@ test('module finish flow', { skip }, async (t) => {
             assert.equal((await o('POST', `/api/v2/modules/${mA}/reopen`)).status, 200);
             assert.equal((await ProgramModule.findById(mA)).finishedAt, null);
         });
+
+        await t.test('a module added after people enrolled reaches them, and a new name shows everywhere', async () => {
+            const r = await o('POST', `/api/v2/programs/${program._id}/modules`, { titleAr: 'محور جديد بعد التسجيل' });
+            assert.equal(r.data.enrolled, 2, 'both enrollments got it');
+            const mod = r.data.item;
+            let e = await Enrollment.findById(enrollments[0]._id);
+            assert.ok(e.modules.some((m) => String(m.module) === String(mod._id)));
+            assert.equal((await o('PUT', `/api/v2/modules/${mod._id}`, { titleAr: 'اسم تاني للمحور', __v: mod.__v })).status, 200);
+            e = await Enrollment.findById(enrollments[0]._id);
+            assert.equal(e.modules.find((m) => String(m.module) === String(mod._id)).titleAr, 'اسم تاني للمحور');
+        });
+
+        await t.test('a diploma without modules: lectures straight away, finished like a module', async () => {
+            const dip = await Course.create({ titleAr: `دبلوم بلا محاور ${tag}`, slug: `mf-d-${tag}`, type: 'diploma', specialty: 'test', price: 0 });
+            const en = (await o('POST', '/api/v2/enrollments', { customer: String(people[0].c._id), program: String(dip._id), autoGroup: false })).data.item;
+            const l = await o('POST', `/api/v2/programs/${dip._id}/lectures`, { titleAr: 'محاضرة الدبلوم', startsAt: ago(1), mode: 'manual', joinUrl: 'https://zoom.us/j/7' });
+            assert.equal(l.status, 201, 'no module needed');
+            const mine = (await one('GET', '/api/v2/my/lectures')).data.programs.find((p) => String(p.program) === String(dip._id));
+            assert.equal(mine.modules.length, 1, 'one hidden module: the customer sees the lectures directly');
+            assert.equal(mine.modules[0].total, 1);
+            await one('POST', `/api/v2/my/lectures/${l.data.item._id}/join`);
+            const auto = await ProgramModule.findOne({ program: dip._id, auto: true });
+            const fin = await o('POST', `/api/v2/modules/${auto._id}/finish`);
+            assert.equal(fin.data.completed, 1);
+            assert.ok(await Certificate.exists({ enrollment: en._id, status: 'Valid' }), 'the certificate follows');
+
+            // a program that had no modules and no lectures: the first real module replaces the hidden one
+            const empty = await Course.create({ titleAr: `برنامج فاضي ${tag}`, slug: `mf-e-${tag}`, type: 'diploma', specialty: 'test', price: 0 });
+            const e2 = (await o('POST', '/api/v2/enrollments', { customer: String(people[1].c._id), program: String(empty._id), autoGroup: false })).data.item;
+            assert.equal(e2.modules.length, 1);
+            await o('POST', `/api/v2/programs/${empty._id}/modules`, { titleAr: 'أول محور حقيقي' });
+            const after = await Enrollment.findById(e2._id);
+            assert.deepEqual(after.modules.map((m) => m.titleAr), ['أول محور حقيقي'], 'the empty hidden module is gone');
+        });
     } finally {
         await User.updateMany({ email: new RegExp(`mf-.*-${tag}@test.local`) }, { status: 'disabled' });
         server.close();

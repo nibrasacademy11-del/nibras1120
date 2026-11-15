@@ -81,14 +81,35 @@ function moduleInput(body) {
     };
 }
 
+// Modules can be added at any time: everyone already enrolled (and not finished) gets the new one.
+// A program that had no modules studied in one hidden module; it goes away when the first real module
+// arrives, as long as it holds no lectures and nobody started it.
+async function spreadNewModule(program, mod) {
+    const Lecture = require('../../models/Lecture');
+    const autos = await ProgramModule.find({ program: program._id, auto: true, active: true });
+    for (const a of autos) {
+        if (await Lecture.exists({ program: program._id, module: a._id })) continue;
+        a.active = false;
+        await a.save();
+        await Enrollment.updateMany({ program: program._id }, { $pull: { modules: { module: a._id, status: 'not_started' } } });
+    }
+    const entry = { module: mod._id, order: mod.order, titleAr: mod.titleAr, titleEn: mod.titleEn || '', required: mod.required, certificate: mod.certificate, status: 'not_started', history: [] };
+    const r = await Enrollment.updateMany(
+        { program: program._id, status: { $in: ['active', 'on_hold'] }, 'modules.module': { $ne: mod._id } },
+        { $push: { modules: { $each: [entry], $sort: { order: 1 } } } }
+    );
+    return r.modifiedCount;
+}
+
 exports.addModule = async (req, res) => {
     const program = await loadProgram(req.params.id);
     const input = moduleInput(req.body);
     if (!input.titleAr) throw new HttpError(400, 'اسم المحور مطلوب. / The module title is required.');
     const last = await ProgramModule.findOne({ program: program._id }).sort({ order: -1 }).select('order').lean();
     const mod = await ProgramModule.create({ ...input, program: program._id, order: last ? last.order + 1 : 1, createdBy: req.user.id });
-    await audit.record(req, { action: 'module.created', resource: 'programs', resourceId: mod._id, summary: `${program.titleAr}: ${mod.titleAr}` });
-    res.status(201).json({ item: mod });
+    const enrolled = await spreadNewModule(program, mod);
+    await audit.record(req, { action: 'module.created', resource: 'programs', resourceId: mod._id, summary: `${program.titleAr}: ${mod.titleAr} (added to ${enrolled} enrollments)` });
+    res.status(201).json({ item: mod, enrolled });
 };
 
 exports.updateModule = async (req, res) => {
@@ -101,6 +122,10 @@ exports.updateModule = async (req, res) => {
     mod.set(input);
     if (req.body.active !== undefined) mod.active = req.body.active === true;
     await mod.save();
+    // a renamed module is renamed everywhere it is studied
+    if (before.titleAr !== mod.titleAr || (before.titleEn || '') !== (mod.titleEn || '')) {
+        await Enrollment.updateMany({ 'modules.module': mod._id }, { $set: { 'modules.$[m].titleAr': mod.titleAr, 'modules.$[m].titleEn': mod.titleEn || '' } }, { arrayFilters: [{ 'm.module': mod._id }] });
+    }
     await audit.record(req, { action: 'module.updated', resource: 'programs', resourceId: mod._id, summary: mod.titleAr, changes: audit.diff(before, mod.toObject(), [...Object.keys(input), 'active']) });
     res.json({ item: mod });
 };

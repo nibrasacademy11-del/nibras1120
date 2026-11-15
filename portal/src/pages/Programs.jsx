@@ -15,7 +15,8 @@ function ModuleLectures({ programId, module: m, lectures, enrolled, canEdit, zoo
   const [confirm, setConfirm] = useState(false);
   const [msg, setMsg] = useState('');
   const { busy, error, run } = useAction();
-  const mine = lectures.filter((l) => String(l.module) === String(m._id));
+  // m is null for a program without modules: the server keeps its lectures in one hidden module
+  const mine = m ? lectures.filter((l) => String(l.module) === String(m._id)) : lectures;
   const finish = () => run(() => api(`/api/v2/modules/${m._id}/finish`, { method: 'POST' })).then((r) => {
     setConfirm(false);
     setMsg(t('pg_finishDone').replace('{n}', r.completed).replace('{c}', r.issued).replace('{w}', r.waitingPayment).replace('{m}', r.missing));
@@ -26,11 +27,11 @@ function ModuleLectures({ programId, module: m, lectures, enrolled, canEdit, zoo
     <div className="mod-lectures">
       <div className="mod-lectures__head">
         <strong>{t('pg_lectures')} ({mine.length})</strong>
-        {m.finishedAt && <Pill tone="ok">{t('pg_finished')}</Pill>}
+        {m?.finishedAt && <Pill tone="ok">{t('pg_finished')}</Pill>}
         <span className="grow" />
         {canEdit && <button type="button" className="btn btn--small" onClick={() => setForm({})}>+ {t('pg_addLecture')}</button>}
-        {canEdit && !m.finishedAt && mine.length > 0 && <button type="button" className="btn btn--small btn--primary" onClick={() => setConfirm(true)}>{t('pg_finish')}</button>}
-        {canEdit && m.finishedAt && <button type="button" className="btn btn--small btn--ghost" disabled={busy} onClick={reopen}>{t('pg_reopen')}</button>}
+        {canEdit && m && !m.finishedAt && mine.length > 0 && <button type="button" className="btn btn--small btn--primary" onClick={() => setConfirm(true)}>{t('pg_finish')}</button>}
+        {canEdit && m?.finishedAt && <button type="button" className="btn btn--small btn--ghost" disabled={busy} onClick={reopen}>{t('pg_reopen')}</button>}
       </div>
       {!mine.length ? <p className="muted mod-lectures__empty">{t('pg_noLectures')}</p> : (
         <ol className="mod-lectures__list">
@@ -46,9 +47,9 @@ function ModuleLectures({ programId, module: m, lectures, enrolled, canEdit, zoo
       )}
       {msg && <div className="alert alert--ok">{msg}</div>}
       <ErrorBox error={error} />
-      {form && <LectureForm postUrl={`/api/v2/programs/${programId}/lectures`} lecture={form.item} modules={[m]} zoomConnected={zoomConnected} onClose={() => setForm(null)} onSaved={() => { setForm(null); onChanged(); }} />}
+      {form && <LectureForm postUrl={`/api/v2/programs/${programId}/lectures`} lecture={form.item} modules={m ? [m] : []} zoomConnected={zoomConnected} onClose={() => setForm(null)} onSaved={() => { setForm(null); onChanged(); }} />}
       {confirm && (
-        <Modal title={`${t('pg_finish')}: ${m.titleAr}`} onClose={() => setConfirm(false)}>
+        <Modal title={`${t('pg_finish')}: ${m?.titleAr || ''}`} onClose={() => setConfirm(false)}>
           <div className="stack">
             <p>{t('pg_finishConfirm')}</p>
             <div className="row"><button type="button" className="btn btn--primary" disabled={busy} onClick={finish}>{t('pg_finish')}</button><button type="button" className="btn btn--ghost" onClick={() => setConfirm(false)}>{t('cancel')}</button></div>
@@ -244,7 +245,13 @@ export function ProgramDetail() {
                 <p className="muted" style={{ margin: 0, flexBasis: '100%' }}>{t('pg_lecturesHint')}</p>
                 {can('programs.create', 'all') && <button type="button" className="btn btn--primary" onClick={() => setDialog({ kind: 'module' })}>+ {t('newModule')}</button>}
               </div>
-              {!active.length ? <p className="muted">{t('noModules')}</p> : (
+              {/* no modules, or only the hidden one: the lectures straight away (a course or a diploma without modules) */}
+              {!active.length || (active.length === 1 && active[0].auto) ? (
+                <>
+                  <p className="muted">{t('pg_noModulesHint')}</p>
+                  <ModuleLectures programId={id} module={active[0] || null} lectures={lectures.data?.items || []} enrolled={lectures.data?.enrolled || 0} canEdit={canEdit} zoomConnected={!!zoomStatus.data?.configured} onChanged={() => { lectures.reload(); state.reload(); }} />
+                </>
+              ) : (
                 <ol className="module-list">
                   {active.map((m, i) => (
                     <li key={m._id} className="module-item">

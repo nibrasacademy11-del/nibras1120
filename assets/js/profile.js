@@ -409,8 +409,13 @@
             return;
         }
 
-        // every program: its modules as cards
-        panel.innerHTML = withLectures.map((p) => `
+        // every program: its modules as cards; a program with one module (or none) shows its lectures directly
+        panel.innerHTML = withLectures.map((p) => p.modules.length === 1 ? `
+            <section class="pf-section">
+                <h2 class="pf-section__title">${h(pick(p.titleAr, p.titleEn))}</h2>
+                <p class="pf-small">${h(T.lecturesEntered(p.modules[0].entered, p.modules[0].total))}</p>
+                <div class="pf-lectures">${p.modules[0].lectures.map((l) => lectureCard(l)).join('')}</div>
+            </section>` : `
             <section class="pf-section">
                 <h2 class="pf-section__title">${h(pick(p.titleAr, p.titleEn))}</h2>
                 <div class="pf-mods">${p.modules.map((m, i) => {
@@ -428,6 +433,8 @@
                 }).join('')}</div>
             </section>`).join('');
         panel.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', () => { openModule = b.dataset.open; show(); window.scrollTo({ top: document.getElementById('pfTabs').offsetTop - 80, behavior: 'smooth' }); }));
+        panel.querySelectorAll('[data-join]').forEach((b) => b.addEventListener('click', () => join(b)));
+        panel.querySelectorAll('[data-rec]').forEach((b) => b.addEventListener('click', () => join(b, `/api/v2/my/lectures/${b.dataset.lecture}/recordings/${b.dataset.rec}`)));
     }
 
     function lectureCard(l) {

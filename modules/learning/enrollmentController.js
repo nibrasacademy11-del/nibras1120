@@ -187,6 +187,8 @@ async function singleModule(program) {
     ).lean();
 }
 
+exports._singleModule = (program) => singleModule(program);
+
 // Creates an enrollment with the program's current modules; also used when a group adds members
 async function createEnrollment(req, { customer, program, cohort = null, owner = null, enrolledAt = new Date(), notes = '', waiting = false }) {
     const team = owner ? await teamOf(owner) : null;
