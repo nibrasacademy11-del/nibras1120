@@ -923,7 +923,7 @@ function readCachedSite() {
 
 // Pages paint at once from the last copy seen (or the built-in defaults), then refresh from the server
 function initSiteContent(isEN) {
-    const selector = '[data-hero], [data-pathways], [data-stats], [data-guide-cards], [data-service-cards], [data-testimonials]';
+    const selector = '[data-hero], [data-pathways], [data-stats], [data-guide-cards], [data-service-cards], [data-testimonials], .social-links, [data-master-compare]';
     if (typeof NIBRAS_CONTENT === 'undefined' || !document.querySelector(selector)) return;
     const cached = readCachedSite();
     renderSiteContent(cached || NIBRAS_CONTENT, isEN);
@@ -937,6 +937,8 @@ function initSiteContent(isEN) {
 
 function renderSiteContent(data, isEN) {
     const lang = isEN ? 'en' : 'ar';
+    renderSiteLinks(data);
+    renderMasterCompare(data, isEN);
     const pick = (item, field) => (isEN && item[`${field}En`]) || item[`${field}Ar`] || '';
     const trackUrl = (key) => `/pages/${lang}/${NIBRAS_CONTENT.trackPages[key]}`;
     const media = (item, cls) => item.image
@@ -1123,4 +1125,52 @@ async function initCheckout(isEN) {
             button.innerHTML = original;
         }
     });
+}
+
+// The footer links of every page, as the owner set them (Website → Links): platform icon + address
+function renderSiteLinks(data) {
+    const links = data && data.links;
+    const platforms = (data && data.platforms) || (typeof NIBRAS_CONTENT !== 'undefined' ? NIBRAS_CONTENT.platforms : []) || [];
+    if (!Array.isArray(links) || !links.length) return;
+    const iconOf = (key) => (platforms.find((p) => p.key === key) || { icon: 'fas fa-globe' }).icon;
+    const html = links.map((l) => {
+        const external = /^https?:/i.test(l.url);
+        const href = /^(https?:\/\/|mailto:|tel:)/i.test(l.url) ? esc(l.url) : '#';
+        return `<a href="${href}" class="social-link" aria-label="${esc(l.label || l.platform)}" title="${esc(l.label || l.platform)}"${external ? ' target="_blank" rel="noopener"' : ''}><i class="${esc(iconOf(l.platform))}" aria-hidden="true"></i></a>`;
+    }).join('');
+    document.querySelectorAll('.social-links').forEach((el) => { el.innerHTML = html; });
+}
+
+// Professional or academic master's (the masters page): the owner writes it in Website → Master's
+function renderMasterCompare(data, isEN) {
+    const box = document.querySelector('[data-master-compare]');
+    const c = data && data.masterCompare;
+    if (!box) return;
+    if (!c || c.visible === false || !Array.isArray(c.rows) || !c.rows.length) { box.hidden = true; return; }
+    const p = (k) => (isEN && c[`${k}En`]) || c[`${k}Ar`] || '';
+    const r = (row, k) => (isEN && row[`${k}En`]) || row[`${k}Ar`] || '';
+    const contact = isEN ? '/pages/en/contact.html' : '/pages/ar/contact.html';
+    box.hidden = false;
+    box.innerHTML = `
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">${esc(p('title'))}</h2>
+                ${p('intro') ? `<p class="section-subtitle">${esc(p('intro'))}</p>` : ''}
+            </div>
+            <div class="mc">
+                <div class="mc__head">
+                    <span></span>
+                    <span class="mc__col mc__col--pro"><i class="fas fa-briefcase" aria-hidden="true"></i> ${esc(p('professional'))}</span>
+                    <span class="mc__col mc__col--aca"><i class="fas fa-book-open" aria-hidden="true"></i> ${esc(p('academic'))}</span>
+                </div>
+                ${c.rows.map((row) => `
+                <div class="mc__row">
+                    <span class="mc__aspect">${esc(r(row, 'aspect'))}</span>
+                    <span class="mc__cell mc__cell--pro" data-label="${esc(p('professional'))}">${esc(r(row, 'professional'))}</span>
+                    <span class="mc__cell mc__cell--aca" data-label="${esc(p('academic'))}">${esc(r(row, 'academic'))}</span>
+                </div>`).join('')}
+            </div>
+            ${p('note') ? `<p class="mc__note"><i class="fas fa-circle-info" aria-hidden="true"></i> ${esc(p('note'))}</p>` : ''}
+            ${p('cta') ? `<div class="mc__cta"><a class="btn-primary" href="${contact}">${esc(p('cta'))}</a></div>` : ''}
+        </div>`;
 }

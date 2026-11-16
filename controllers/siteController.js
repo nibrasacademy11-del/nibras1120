@@ -40,12 +40,41 @@ function siteContent(settings) {
         pathways: mergeByKey(defaults.pathways, settings.pathways),
         stats: settings.stats || defaults.stats,
         guideCards: mergeByKey(defaults.guideCards, settings.guideCards),
-        serviceCards: mergeByKey(defaults.serviceCards, settings.serviceCards)
+        serviceCards: mergeByKey(defaults.serviceCards, settings.serviceCards),
+        links: settings.links || defaults.links,
+        platforms: defaults.platforms,
+        masterCompare: settings.masterCompare || { ...defaults.masterCompare, visible: true }
     };
 }
 
 // Each section accepts only its own fields, with lengths capped and images limited to our uploads
+// a link the footer may open: the web, email or phone only
+function linkUrl(v) {
+    const s = str(v, 400);
+    if (/^https?:\/\/[^\s]+$/i.test(s) || /^mailto:[^\s@]+@[^\s@]+$/i.test(s) || /^tel:\+?[\d\s-]{5,20}$/i.test(s)) return s;
+    return '';
+}
+const compareText = (item, k, max = 240) => str(item && item[k], max);
+
 const SECTIONS = {
+    links: (input) => (Array.isArray(input) ? input : []).slice(0, defaults.limits.links).map((item) => ({
+        platform: defaults.platforms.some((p) => p.key === (item && item.platform)) ? item.platform : 'website',
+        url: linkUrl(item && item.url),
+        label: str(item && item.label, 60)
+    })).filter((item) => item.url),
+    masterCompare: (input) => {
+        const i = input || {};
+        const out = {};
+        for (const k of ['titleAr', 'titleEn', 'professionalAr', 'professionalEn', 'academicAr', 'academicEn', 'ctaAr', 'ctaEn']) out[k] = compareText(i, k, 120);
+        for (const k of ['introAr', 'introEn', 'noteAr', 'noteEn']) out[k] = compareText(i, k, 600);
+        out.rows = (Array.isArray(i.rows) ? i.rows : []).slice(0, defaults.limits.compareRows).map((r) => ({
+            aspectAr: compareText(r, 'aspectAr', 80), aspectEn: compareText(r, 'aspectEn', 80),
+            professionalAr: compareText(r, 'professionalAr'), professionalEn: compareText(r, 'professionalEn'),
+            academicAr: compareText(r, 'academicAr'), academicEn: compareText(r, 'academicEn')
+        })).filter((r) => r.aspectAr);
+        out.visible = i.visible !== false;
+        return out;
+    },
     heroes(input) {
         const out = new Map();
         for (const page of defaults.heroPages) {

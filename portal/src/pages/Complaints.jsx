@@ -4,6 +4,7 @@ import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { ErrorBox, Field, Loading, Modal, Pager, Pill, StaffSelect, useAction, useLoad } from '../components/ui.jsx';
+import PhoneActions from '../components/PhoneActions.jsx';
 
 const STATUSES = ['open', 'in_progress', 'resolved', 'closed'];
 const CATEGORIES = ['service', 'program', 'trainer', 'finance', 'certificate', 'technical', 'other'];
@@ -55,6 +56,7 @@ function ComplaintDialog({ c, onClose, onSaved }) {
       <div className="stack stack--full">
         <p>{c.description}</p>
         <p className="muted">{c.customer?.customerNo} {c.customer?.nameAr} · {t(`cc_${c.category}`)} · {fmtDate(c.createdAt)}</p>
+        {c.customer?.contact && <PhoneActions phone={c.customer.contact.phone} whatsapp={c.customer.contact.whatsapp} />}
         <ul className="plain-list">{(c.updates || []).map((u, i) => <li key={i}><span>{u.note || t(`cs2_${u.status}`)}{u.internal && <Pill tone="muted">{t('internal')}</Pill>}</span><small className="muted">{u.byName} · {fmtDate(u.at)}</small></li>)}</ul>
         {canEdit && (
           <form className="form-grid" onSubmit={(e) => { e.preventDefault(); run(() => api(`/api/v2/complaints/${c._id}`, { method: 'PUT', body: { ...f, assignee: f.assignee || null, __v: c.__v } })).then(onSaved).catch(() => {}); }}>
@@ -99,7 +101,7 @@ export default function Complaints() {
                   <tbody>{d.items.map((c) => (
                     <tr key={c._id} onClick={() => setDialog({ kind: 'view', c })}>
                       <td dir="ltr">{c.complaintNo}</td><td><strong>{c.subject}</strong></td>
-                      <td>{c.customer && <Link to={`/customers/${c.customer._id}`} onClick={(e) => e.stopPropagation()}>{c.customer.customerNo}</Link>} {c.customer?.nameAr}</td>
+                      <td>{c.customer && <Link to={`/customers/${c.customer._id}`} onClick={(e) => e.stopPropagation()}>{c.customer.customerNo}</Link>} {c.customer?.nameAr}{c.customer?.contact?.phone && <><br /><PhoneActions phone={c.customer.contact.phone} whatsapp={c.customer.contact.whatsapp} /></>}</td>
                       <td>{t(`cc_${c.category}`)}</td><td>{t(c.priority)}</td><td>{c.assignee?.name || '—'}</td><td className="nowrap">{fmtDay(c.createdAt)}</td>
                       <td><Pill tone={TONE[c.status]}>{t(`cs2_${c.status}`)}</Pill></td>
                     </tr>

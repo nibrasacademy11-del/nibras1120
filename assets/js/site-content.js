@@ -131,5 +131,54 @@
         }
     ];
 
-    return { heroPages, trackPages, pathways, stats, guideCards, serviceCards, limits: { stats: 8, testimonials: 30 } };
+
+    // The platforms a link can point to, each with its icon (the owner picks one per link)
+    const platforms = [
+        { key: 'facebook', ar: 'فيسبوك', en: 'Facebook', icon: 'fab fa-facebook-f' },
+        { key: 'instagram', ar: 'إنستجرام', en: 'Instagram', icon: 'fab fa-instagram' },
+        { key: 'tiktok', ar: 'تيك توك', en: 'TikTok', icon: 'fab fa-tiktok' },
+        { key: 'x', ar: 'إكس (تويتر)', en: 'X (Twitter)', icon: 'fab fa-x-twitter' },
+        { key: 'linkedin', ar: 'لينكدإن', en: 'LinkedIn', icon: 'fab fa-linkedin-in' },
+        { key: 'youtube', ar: 'يوتيوب', en: 'YouTube', icon: 'fab fa-youtube' },
+        { key: 'whatsapp', ar: 'واتساب', en: 'WhatsApp', icon: 'fab fa-whatsapp' },
+        { key: 'telegram', ar: 'تيليجرام', en: 'Telegram', icon: 'fab fa-telegram' },
+        { key: 'snapchat', ar: 'سناب شات', en: 'Snapchat', icon: 'fab fa-snapchat' },
+        { key: 'threads', ar: 'ثريدز', en: 'Threads', icon: 'fab fa-threads' },
+        { key: 'pinterest', ar: 'بينترست', en: 'Pinterest', icon: 'fab fa-pinterest-p' },
+        { key: 'google', ar: 'جوجل (الخريطة والتقييمات)', en: 'Google (maps and reviews)', icon: 'fab fa-google' },
+        { key: 'website', ar: 'موقع أو صفحة', en: 'A website or page', icon: 'fas fa-globe' },
+        { key: 'email', ar: 'إيميل', en: 'Email', icon: 'fas fa-envelope' },
+        { key: 'phone', ar: 'تليفون', en: 'Phone', icon: 'fas fa-phone' }
+    ];
+
+    // The links in the footer of every page, in this order
+    const links = [
+        { platform: 'facebook', url: 'https://www.facebook.com/nibars8883', label: 'Facebook' },
+        { platform: 'instagram', url: 'https://www.instagram.com/nibars8883', label: 'Instagram' },
+        { platform: 'x', url: 'https://x.com/nibras8883', label: 'X' },
+        { platform: 'linkedin', url: 'https://www.linkedin.com/in/nibras-academy-5803a239b', label: 'LinkedIn' },
+        { platform: 'whatsapp', url: 'https://wa.me/201112220796', label: 'WhatsApp' }
+    ];
+
+    // Professional or academic master's: the question customers ask most (the masters page)
+    const masterCompare = {
+        titleAr: 'ماجستير مهني ولا أكاديمي؟',
+        titleEn: 'Professional or academic master\'s?',
+        introAr: 'الاتنين ماجستير، بس كل واحد معمول لهدف مختلف. شوف الفرق واختار اللي يناسبك.',
+        introEn: 'Both are master\'s degrees, made for different goals. See the difference and choose what fits you.',
+        professionalAr: 'الماجستير المهني', professionalEn: 'Professional master\'s',
+        academicAr: 'الماجستير الأكاديمي', academicEn: 'Academic master\'s',
+        rows: [
+            { aspectAr: 'الهدف', aspectEn: 'The goal', professionalAr: 'تطوير مهاراتك في الشغل والترقي الوظيفي', professionalEn: 'Grow your skills at work and advance your career', academicAr: 'البحث العلمي والتمهيد للدكتوراه', academicEn: 'Scientific research and a path to a PhD' },
+            { aspectAr: 'طريقة الدراسة', aspectEn: 'How you study', professionalAr: 'محاور تطبيقية ودراسات حالة من سوق العمل', professionalEn: 'Applied modules and case studies from the market', academicAr: 'مقررات نظرية ومناهج بحث', academicEn: 'Theory courses and research methods' },
+            { aspectAr: 'مشروع التخرج', aspectEn: 'The final work', professionalAr: 'مشروع عملي على مشكلة حقيقية', professionalEn: 'A practical project on a real problem', academicAr: 'رسالة بحثية تتناقش', academicEn: 'A research thesis with a defense' },
+            { aspectAr: 'يناسب مين', aspectEn: 'Who it suits', professionalAr: 'الموظفين وأصحاب الخبرة اللي عايزين نقلة في شغلهم', professionalEn: 'Working people who want a step up', academicAr: 'اللي عايز يكمّل في البحث أو التدريس الجامعي', academicEn: 'Those heading to research or university teaching' },
+            { aspectAr: 'بيتماشى مع الشغل؟', aspectEn: 'Fits around work?', professionalAr: 'أيوه، مصمم للي بيشتغل', professionalEn: 'Yes, made for people who work', academicAr: 'غالباً محتاج تفرغ أكتر', academicEn: 'Usually needs more time' }
+        ],
+        noteAr: 'الاعتراف بأي شهادة بيختلف حسب الجهة المانحة والدولة. اسألنا عن اعتماد كل برنامج قبل ما تسجل.',
+        noteEn: 'How a degree is recognized depends on the awarding body and the country. Ask us about each program\'s accreditation before you enrol.',
+        ctaAr: 'مش متأكد؟ كلّمنا ونساعدك تختار', ctaEn: 'Not sure? Talk to us and we will help you choose'
+    };
+
+    return { heroPages, trackPages, pathways, stats, guideCards, serviceCards, platforms, links, masterCompare, limits: { stats: 8, testimonials: 30, links: 15, compareRows: 12 } };
 });

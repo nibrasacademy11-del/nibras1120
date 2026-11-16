@@ -10,6 +10,9 @@ const siteSettingsSchema = new mongoose.Schema({
     stats: editable,
     guideCards: editable,
     serviceCards: editable,
+    // the links in the footer ({ platform, url, label }) and the professional/academic master's table
+    links: editable,
+    masterCompare: { type: mongoose.Schema.Types.Mixed, default: undefined },
 
     academyNameAr: { type: String, default: 'أكاديمية نبراس للتدريب والتأهيل المهني' },
     academyNameEn: { type: String, default: 'Nibras Academy for Training & Professional Qualification' },

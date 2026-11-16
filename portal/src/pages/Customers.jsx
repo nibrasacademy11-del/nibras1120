@@ -5,6 +5,7 @@ import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { EnumSelect, ErrorBox, Field, Loading, Modal, Pager, Pill, StaffSelect, useAction, useLoad, useStaff } from '../components/ui.jsx';
+import CountrySelect from '../components/CountrySelect.jsx';
 import { ProfileRequestsBanner } from './ProfileRequests.jsx';
 
 const STATUSES = ['lead', 'interested', 'customer', 'lost', 'inactive'];
@@ -71,14 +72,14 @@ export function CustomerForm({ onClose, onCreated }) {
         <Field label={t('phone')}><input dir="ltr" inputMode="tel" value={f.phone} onChange={set('phone')} /></Field>
         <Field label={t('email')}><input dir="ltr" type="email" value={f.email} onChange={set('email')} /></Field>
         <Field label={t('whatsapp')}><input dir="ltr" value={f.whatsapp} onChange={set('whatsapp')} /></Field>
-        <Field label={t('country')}><input value={f.country} onChange={set('country')} /></Field>
+        <Field label={t('country')}><CountrySelect value={f.country} onChange={set('country')} /></Field>
         <Field label={t('city')}><input value={f.city} onChange={set('city')} /></Field>
         <Field label={t('source')}><EnumSelect group="source" options={SOURCES} value={f.source} onChange={set('source')} /></Field>
         <Field label={t('sourceDetail')}><input value={f.sourceDetail} onChange={set('sourceDetail')} /></Field>
         <Field label={t('status')}><EnumSelect group="status" options={STATUSES.filter((s) => s !== 'lost')} value={f.status} onChange={set('status')} /></Field>
         {canIdentity && (
           <>
-            <Field label={t('nationality')}><input value={f.nationality} onChange={set('nationality')} /></Field>
+            <Field label={t('nationality')}><CountrySelect value={f.nationality} onChange={set('nationality')} /></Field>
             <Field label={t('nationalId')}><input dir="ltr" autoComplete="off" value={f.nationalId} onChange={set('nationalId')} /></Field>
             <Field label={t('passport')}><input dir="ltr" autoComplete="off" value={f.passport} onChange={set('passport')} /></Field>
           </>

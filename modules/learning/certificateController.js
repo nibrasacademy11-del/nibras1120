@@ -86,14 +86,56 @@ exports.saveAccreditation = async (req, res) => {
     res.json({ item: doc });
 };
 
-async function accreditationsFor(programId, at = new Date()) {
+// The accreditations on a certificate: the program's, or the module's own list when it has one
+async function accreditationsFor(programId, at = new Date(), moduleId = null) {
+    const mod = moduleId ? await require('../../models/ProgramModule').findById(moduleId).select('accreditationsCustom accreditations').lean() : null;
+    const which = mod && mod.accreditationsCustom ? { _id: { $in: mod.accreditations || [] } } : { $or: [{ allPrograms: true }, { programs: programId }] };
     const list = await Accreditation.find({
         active: true,
-        $or: [{ allPrograms: true }, { programs: programId }],
+        ...which,
         $and: [{ $or: [{ validFrom: null }, { validFrom: { $lte: at } }] }, { $or: [{ validUntil: null }, { validUntil: { $gte: at } }] }]
     }).lean();
     return list.map((a) => ({ nameAr: a.nameAr, nameEn: a.nameEn, body: a.body, number: a.number, logo: a.logo }));
 }
+
+// A program's accreditations, edited from the program's page: which apply to the whole program,
+// and each module that has its own list instead
+exports.programAccreditations = async (req, res) => {
+    const ProgramModule = require('../../models/ProgramModule');
+    const [items, modules] = await Promise.all([
+        Accreditation.find({ active: true }).sort({ nameAr: 1 }).lean(),
+        ProgramModule.find({ program: req.params.id, active: true }).sort({ order: 1 }).select('titleAr titleEn auto accreditationsCustom accreditations').lean()
+    ]);
+    res.json({
+        items: items.map((a) => ({ _id: a._id, nameAr: a.nameAr, nameEn: a.nameEn, body: a.body, logo: a.logo, allPrograms: a.allPrograms, inProgram: a.allPrograms || (a.programs || []).some((p) => String(p) === String(req.params.id)) })),
+        modules: modules.filter((m) => !m.auto).map((m) => ({ _id: m._id, titleAr: m.titleAr, titleEn: m.titleEn, custom: !!m.accreditationsCustom, ids: (m.accreditations || []).map(String) }))
+    });
+};
+
+exports.setProgramAccreditations = async (req, res) => {
+    const ids = new Set((Array.isArray(req.body.ids) ? req.body.ids : []).map(String));
+    const program = oid(req.params.id);
+    const all = await Accreditation.find({ allPrograms: { $ne: true } });
+    for (const a of all) {
+        const has = (a.programs || []).some((p) => String(p) === String(program));
+        if (ids.has(String(a._id)) && !has) await Accreditation.updateOne({ _id: a._id }, { $addToSet: { programs: program } });
+        if (!ids.has(String(a._id)) && has) await Accreditation.updateOne({ _id: a._id }, { $pull: { programs: program } });
+    }
+    await audit.record(req, { action: 'accreditation.program_set', resource: 'certificates', resourceId: program, summary: `${ids.size} accreditations` });
+    res.json({ ok: true });
+};
+
+// One module only: its own accreditations (custom) or back to the program's
+exports.setModuleAccreditations = async (req, res) => {
+    const ProgramModule = require('../../models/ProgramModule');
+    const mod = await ProgramModule.findById(req.params.moduleId);
+    if (!mod) throw new HttpError(404, 'Not found.');
+    mod.accreditationsCustom = req.body.custom === true;
+    mod.accreditations = mod.accreditationsCustom ? (Array.isArray(req.body.ids) ? req.body.ids : []).map(oid).filter(Boolean) : [];
+    await mod.save();
+    await audit.record(req, { action: 'accreditation.module_set', resource: 'certificates', resourceId: mod._id, summary: `${mod.titleAr}: ${mod.accreditationsCustom ? mod.accreditations.length : 'program'}` });
+    res.json({ ok: true });
+};
 
 // ---- issuing ----
 
@@ -214,7 +256,7 @@ async function issueOne(req, { enrollmentId, moduleId, templateId, names, replac
         issuedBy: req.user.id,
         template: template ? template._id : null,
         design: design.buildDesign(template, data),
-        accreditations: template && template.showAccreditations === false ? [] : await accreditationsFor(e.program, now),
+        accreditations: template && template.showAccreditations === false ? [] : await accreditationsFor(e.program, now, mod ? mod.module : null),
         version,
         replaces: replaces ? replaces._id : null,
         paymentWaiver: waive || '',
@@ -487,3 +529,4 @@ exports._issueOne = issueOne;
 exports.reissueOne = reissueOne;
 exports._paymentCheck = paymentCheck;
 exports._emailCertificate = emailCertificate;
+exports._accreditationsFor = accreditationsFor;

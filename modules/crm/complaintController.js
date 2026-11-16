@@ -17,7 +17,8 @@ const { addEvent, notify } = require('./service');
 const oid = (v) => (v && mongoose.Types.ObjectId.isValid(v) ? new mongoose.Types.ObjectId(String(v)) : null);
 const str = (v, max = 500) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 const FIELDS = { owner: 'assignee', team: 'team' };
-const POP = [{ path: 'customer', select: 'customerNo nameAr' }, { path: 'assignee', select: 'name' }, { path: 'createdBy', select: 'name' }, { path: 'enrollment', select: 'enrollmentNo programTitleAr' }];
+// the customer's mobile comes along, to copy it or open WhatsApp from the complaint
+const POP = [{ path: 'customer', select: 'customerNo nameAr contact.phone contact.whatsapp' }, { path: 'assignee', select: 'name' }, { path: 'createdBy', select: 'name' }, { path: 'enrollment', select: 'enrollmentNo programTitleAr' }];
 
 async function customerFiles(userId) {
     return (await Customer.find({ user: userId }).select('_id owner team customerNo nameAr').lean());

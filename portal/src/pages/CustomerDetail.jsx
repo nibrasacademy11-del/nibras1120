@@ -4,6 +4,8 @@ import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { EnumSelect, ErrorBox, Field, Loading, Modal, Pill, StaffSelect, fromLocalInput, useAction, useLoad } from '../components/ui.jsx';
+import CountrySelect from '../components/CountrySelect.jsx';
+import PhoneActions from '../components/PhoneActions.jsx';
 import { DuplicateList } from './Customers.jsx';
 import { TaskTable, TaskForm } from './Tasks.jsx';
 import { CustomerPrograms, ModuleStatus } from './Enrollments.jsx';
@@ -138,7 +140,7 @@ function EditCustomer({ c, onClose, onSaved }) {
             {f.status === 'lost' && <Field label={t('lostReason')}><input required value={f.lostReason} onChange={set('lostReason')} /></Field>}
             <Field label={t('source')}><EnumSelect group="source" options={SOURCES} value={f.source} onChange={set('source')} /></Field>
             <Field label={t('sourceDetail')}><input value={f.sourceDetail} onChange={set('sourceDetail')} /></Field>
-            <Field label={t('country')}><input value={f.country} onChange={set('country')} /></Field>
+            <Field label={t('country')}><CountrySelect value={f.country} onChange={set('country')} /></Field>
             <Field label={t('segment')}><input value={f.segment} onChange={set('segment')} /></Field>
             <Field label={t('tags')} wide><input value={f.tags} onChange={set('tags')} placeholder="VIP، شركات" /></Field>
           </>
@@ -157,7 +159,7 @@ function EditCustomer({ c, onClose, onSaved }) {
         {p.canEditSection.identity && (
           <>
             <h3 className="field--wide">{t('identityData')}</h3>
-            <Field label={t('nationality')}><input value={f.nationality} onChange={set('nationality')} /></Field>
+            <Field label={t('nationality')}><CountrySelect value={f.nationality} onChange={set('nationality')} /></Field>
             <Field label={t('nationalId')} hint={c.identity?.nationalId || ''}><input dir="ltr" autoComplete="off" value={f.nationalId} onChange={set('nationalId')} placeholder="••••" /></Field>
             <Field label={t('passport')} hint={c.identity?.passport || ''}><input dir="ltr" autoComplete="off" value={f.passport} onChange={set('passport')} placeholder="••••" /></Field>
             <Field label={t('birthDate')}><input type="date" value={f.birthDate} onChange={set('birthDate')} /></Field>
@@ -229,7 +231,7 @@ function Overview({ c, onReload }) {
         <section className="card">
           <h2>{t('contactData')}</h2>
           <div className="info-grid">
-            <Info label={t('phone')} ltr>{c.contact.phone && <a href={`tel:${c.contact.phone}`}>{c.contact.phone}</a>}</Info>
+            <Info label={t('phone')}>{c.contact.phone && <PhoneActions phone={c.contact.phone} whatsapp={c.contact.whatsapp} />}</Info>
             <Info label={t('phone2')} ltr>{c.contact.phone2}</Info>
             <Info label={t('whatsapp')} ltr>{c.contact.whatsapp && <a href={`https://wa.me/${c.contact.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noreferrer">{c.contact.whatsapp}</a>}</Info>
             <Info label={t('email')} ltr>{c.contact.email && <a href={`mailto:${c.contact.email}`}>{c.contact.email}</a>}</Info>

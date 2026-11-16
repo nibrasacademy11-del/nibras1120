@@ -709,3 +709,24 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); widt
 .program-icon { width: 58px; height: 58px; display: grid; place-items: center; margin-bottom: 14px; border-radius: 16px 16px 16px 4px; font-size: 1.35rem; color: var(--primary); background: var(--gold-light); }
 .page-header strong, .program-detail-header strong { color: #fff; }
 .program-price, #progPrice, #checkoutTotal, #cartTotal, .order-summary-item span, .cart-row small { direction: ltr; unicode-bidi: isolate; }
+
+/* Professional or academic master's (masters page, edited in the portal) */
+.band--compare .mc { max-width: 980px; margin: 0 auto; border-radius: 18px; overflow: hidden; background: #fff; box-shadow: 0 10px 30px rgba(73, 18, 30, 0.08); border: 1px solid rgba(112, 26, 43, 0.12); }
+.mc__head, .mc__row { display: grid; grid-template-columns: 1.1fr 2fr 2fr; }
+.mc__head { background: var(--primary, #701a2b); color: #fff; font-weight: 700; }
+.mc__head > span { padding: 16px 18px; display: flex; align-items: center; gap: 8px; }
+.mc__col--aca { background: rgba(255, 255, 255, 0.08); }
+.mc__row { border-top: 1px solid rgba(112, 26, 43, 0.08); }
+.mc__row:nth-child(even) { background: #fbf7f4; }
+.mc__aspect { padding: 16px 18px; font-weight: 700; color: var(--primary, #701a2b); }
+.mc__cell { padding: 16px 18px; line-height: 1.7; }
+.mc__cell--pro { border-inline-start: 3px solid #c9a227; }
+.mc__note { max-width: 980px; margin: 18px auto 0; color: #6b5e60; font-size: 0.95rem; display: flex; gap: 8px; align-items: flex-start; }
+.mc__cta { text-align: center; margin-top: 22px; }
+@media (max-width: 720px) {
+  .mc__head { display: none; }
+  .mc__row { grid-template-columns: 1fr; padding: 6px 0; }
+  .mc__aspect { padding-bottom: 4px; }
+  .mc__cell { padding-top: 6px; }
+  .mc__cell::before { content: attr(data-label); display: block; font-size: 0.82rem; font-weight: 700; color: #8a7b7d; margin-bottom: 2px; }
+}

@@ -4,6 +4,7 @@ import { api, pickMessage } from '../api.js';
 import { useI18n } from '../i18n.jsx';
 import { useAuth } from '../auth.jsx';
 import { ErrorBox, Field, Loading, Modal, Pill, useAction, useLoad } from '../components/ui.jsx';
+import PhoneActions from '../components/PhoneActions.jsx';
 
 // The public website, managed from the portal (it replaces the old admin page):
 // the programs catalog, page images, pathways, home cards, numbers, testimonials,
@@ -291,6 +292,117 @@ function Stats() {
   );
 }
 
+// ---- the website's links (footer of every page): any platform, its icon picked from a set ----
+
+function SiteLinks() {
+  const { t, label } = useI18n();
+  const state = useSite();
+  return (
+    <section className="card">
+      <p className="muted">{t('wsLinksHint')}</p>
+      <Loading state={state}>
+        {(d) => (
+          <SectionForm section="links" initial={d.links || []}>
+            {(v, setV) => {
+              const set = (i, k, val) => setV(v.map((x, j) => (j === i ? { ...x, [k]: val } : x)));
+              const move = (i, dir) => { const j = i + dir; if (j < 0 || j >= v.length) return; const next = [...v]; [next[i], next[j]] = [next[j], next[i]]; setV(next); };
+              const iconOf = (key) => (d.platforms.find((p) => p.key === key) || { icon: 'fas fa-globe' }).icon;
+              return (
+                <>
+                  <div className="links-preview" aria-label={t('wsLinksPreview')}>
+                    {v.filter((l) => l.url).map((l, i) => <span key={i} className="links-preview__item" title={l.label || l.platform}><i className={iconOf(l.platform)} aria-hidden="true" /></span>)}
+                  </div>
+                  <div className="link-list">
+                    {v.map((l, i) => (
+                      <div key={i} className="link-row">
+                        <div className="link-row__icons" role="radiogroup" aria-label={t('wsLinkIcon')}>
+                          {d.platforms.map((p) => (
+                            <button key={p.key} type="button" role="radio" aria-checked={l.platform === p.key} title={label({ ar: p.ar, en: p.en })} className={`icon-pick${l.platform === p.key ? ' on' : ''}`} onClick={() => set(i, 'platform', p.key)}>
+                              <i className={p.icon} aria-hidden="true" />
+                            </button>
+                          ))}
+                        </div>
+                        <div className="link-row__fields">
+                          <input dir="ltr" placeholder="https://www.tiktok.com/@..." value={l.url || ''} onChange={(e) => set(i, 'url', e.target.value)} aria-label={t('wsLinkUrl')} />
+                          <input placeholder={t('wsLinkLabel')} value={l.label || ''} onChange={(e) => set(i, 'label', e.target.value)} aria-label={t('wsLinkLabel')} />
+                          <div className="row">
+                            <button type="button" className="btn btn--small btn--ghost" disabled={i === 0} onClick={() => move(i, -1)} aria-label="up">↑</button>
+                            <button type="button" className="btn btn--small btn--ghost" disabled={i === v.length - 1} onClick={() => move(i, 1)} aria-label="down">↓</button>
+                            <button type="button" className="btn btn--small btn--ghost" onClick={() => setV(v.filter((_, j) => j !== i))}>{t('set_remove')}</button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div><button type="button" className="btn btn--small btn--ghost" onClick={() => setV([...v, { platform: 'tiktok', url: '', label: '' }])}>+ {t('wsLinkAdd')}</button></div>
+                </>
+              );
+            }}
+          </SectionForm>
+        )}
+      </Loading>
+    </section>
+  );
+}
+
+// ---- professional or academic master's: the comparison on the masters page ----
+
+function MasterCompare() {
+  const { t } = useI18n();
+  const state = useSite();
+  return (
+    <section className="card">
+      <p className="muted">{t('wsCompareHint')} <a href="/pages/ar/masters.html" target="_blank" rel="noreferrer">{t('wsCompareOpen')} ↗</a></p>
+      <Loading state={state}>
+        {(d) => (
+          <SectionForm section="masterCompare" initial={d.masterCompare}>
+            {(v, setV) => {
+              const set = (k, val) => setV({ ...v, [k]: val });
+              const setRow = (i, k, val) => setV({ ...v, rows: v.rows.map((r, j) => (j === i ? { ...r, [k]: val } : r)) });
+              const text = (k, area) => (
+                <div className="form-grid">
+                  <Field label={`${t(`wsC_${k}`)} (ع)`}>{area ? <textarea rows={2} value={v[`${k}Ar`] || ''} onChange={(e) => set(`${k}Ar`, e.target.value)} /> : <input value={v[`${k}Ar`] || ''} onChange={(e) => set(`${k}Ar`, e.target.value)} />}</Field>
+                  <Field label={`${t(`wsC_${k}`)} (EN)`}>{area ? <textarea dir="ltr" rows={2} value={v[`${k}En`] || ''} onChange={(e) => set(`${k}En`, e.target.value)} /> : <input dir="ltr" value={v[`${k}En`] || ''} onChange={(e) => set(`${k}En`, e.target.value)} />}</Field>
+                </div>
+              );
+              return (
+                <>
+                  <label className="check settings__check"><input type="checkbox" checked={v.visible !== false} onChange={(e) => set('visible', e.target.checked)} /> {t('wsCompareVisible')}</label>
+                  {text('title')}
+                  {text('intro', true)}
+                  {text('professional')}
+                  {text('academic')}
+                  <h3>{t('wsCompareRows')}</h3>
+                  <div className="compare-rows">
+                    {(v.rows || []).map((r, i) => (
+                      <div key={i} className="compare-row">
+                        <div className="compare-row__head">
+                          <input className="compare-row__aspect" placeholder={t('wsC_aspect')} value={r.aspectAr || ''} onChange={(e) => setRow(i, 'aspectAr', e.target.value)} />
+                          <input dir="ltr" placeholder="Aspect" value={r.aspectEn || ''} onChange={(e) => setRow(i, 'aspectEn', e.target.value)} />
+                          <button type="button" className="btn btn--small btn--ghost" onClick={() => set('rows', v.rows.filter((_, j) => j !== i))}>{t('set_remove')}</button>
+                        </div>
+                        <div className="form-grid">
+                          <Field label={v.professionalAr || t('wsC_professional')}><textarea rows={2} value={r.professionalAr || ''} onChange={(e) => setRow(i, 'professionalAr', e.target.value)} /></Field>
+                          <Field label={v.academicAr || t('wsC_academic')}><textarea rows={2} value={r.academicAr || ''} onChange={(e) => setRow(i, 'academicAr', e.target.value)} /></Field>
+                          <Field label="Professional (EN)"><textarea dir="ltr" rows={2} value={r.professionalEn || ''} onChange={(e) => setRow(i, 'professionalEn', e.target.value)} /></Field>
+                          <Field label="Academic (EN)"><textarea dir="ltr" rows={2} value={r.academicEn || ''} onChange={(e) => setRow(i, 'academicEn', e.target.value)} /></Field>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div><button type="button" className="btn btn--small btn--ghost" onClick={() => set('rows', [...(v.rows || []), { aspectAr: '', aspectEn: '', professionalAr: '', professionalEn: '', academicAr: '', academicEn: '' }])}>+ {t('wsCompareAddRow')}</button></div>
+                  {text('note', true)}
+                  {text('cta')}
+                </>
+              );
+            }}
+          </SectionForm>
+        )}
+      </Loading>
+    </section>
+  );
+}
+
 // ---- testimonials ----
 
 function Testimonials() {
@@ -364,7 +476,7 @@ function Inquiries() {
               <tbody>{d.inquiries.map((i) => (
                 <tr key={i._id}>
                   <td className="nowrap">{fmtDate(i.createdAt)}</td>
-                  <td>{i.customer ? <Link to={`/customers/${i.customer}`}>{i.name}</Link> : i.name}<br /><small className="muted" dir="ltr">{i.phone}{i.email ? ` · ${i.email}` : ''}</small></td>
+                  <td>{i.customer ? <Link to={`/customers/${i.customer}`}>{i.name}</Link> : i.name}<br /><PhoneActions phone={i.phone} />{i.email && <><br /><small className="muted" dir="ltr">{i.email}</small></>}</td>
                   <td>{(i.items || []).length ? <><Pill tone="gold">{t('wsInqEnrollment')}</Pill><br /><small>{i.items.map((x) => x.title).join('، ')}</small></> : i.inquiryType}</td>
                   <td><small>{i.subject ? <strong>{i.subject}: </strong> : null}{String(i.message || '').slice(0, 300)}</small></td>
                   <td><select value={i.status} onChange={(e) => setStatus(i, e.target.value)}>{INQ_STATUSES.map((s) => <option key={s} value={s}>{t(`inq_${s.replace(' ', '')}`)}</option>)}</select></td>
@@ -381,7 +493,7 @@ function Inquiries() {
 // ---- user accounts (website sign-ups and staff logins) ----
 
 // Sign-in accounts (customers and staff): a staff page of its own (/user-accounts), not website work
-const TABS = ['catalog', 'heroes', 'pathways', 'cards', 'stats', 'testimonials', 'inquiries'];
+const TABS = ['catalog', 'heroes', 'pathways', 'cards', 'stats', 'testimonials', 'links', 'compare', 'inquiries'];
 
 export default function Website() {
   const { t } = useI18n();
@@ -409,6 +521,8 @@ export default function Website() {
       )}
       {tab === 'stats' && <Stats />}
       {tab === 'testimonials' && <Testimonials />}
+      {tab === 'links' && <SiteLinks />}
+      {tab === 'compare' && <MasterCompare />}
       {tab === 'inquiries' && <Inquiries />}
     </>
   );
