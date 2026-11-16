@@ -79,62 +79,95 @@ export function Settings() {
   const [reason, setReason] = useState('');
   const [saved, setSaved] = useState(false);
   const { busy, error, run } = useAction();
+  const dirty = Object.keys(changes).length > 0;
   return (
     <>
-      <h1 className="page-title">{t('settings')}</h1>
+      <div className="page-head">
+        <div>
+          <h1 className="page-title">{t('settings')}</h1>
+          <p className="muted" style={{ margin: 0 }}>{t('set_intro')}</p>
+        </div>
+      </div>
       <Loading state={state}>
         {(d) => {
           const val = (k) => (changes[k] !== undefined ? changes[k] : d.settings[k]);
-          const change = (k, v) => setChanges({ ...changes, [k]: v });
+          const change = (k, v) => { setSaved(false); setChanges({ ...changes, [k]: v }); };
+          const profile = val('academy.profile') || {};
+          const setProfile = (k, v) => change('academy.profile', { ...profile, [k]: v });
+          const rem = val('finance.reminders') || {};
+          const setRem = (k, v) => change('finance.reminders', { ...rem, [k]: v });
+          const tpls = val('crm.whatsappTemplates') || [];
+          const setTpl = (i, k, v) => change('crm.whatsappTemplates', tpls.map((y, j) => (j === i ? { ...y, [k]: v } : y)));
           return (
-            <form className="card stack" onSubmit={(e) => { e.preventDefault(); setSaved(false); run(() => api('/api/v2/settings', { method: 'PUT', body: { reason, settings: changes } })).then(() => { setSaved(true); setReason(''); setChanges({}); refreshAcademy(); state.reload(); }).catch(() => {}); }}>
-              <Field label={t('setPaymentRule')}>
-                <select value={val('certificates.paymentRule')} onChange={(e) => change('certificates.paymentRule', e.target.value)}>
-                  {['customer', 'enrollment', 'off'].map((x) => <option key={x} value={x}>{t(`pay_${x}`)}</option>)}
-                </select>
-              </Field>
-              <Field label={t('presentPercent')}><input type="number" min={1} max={100} value={val('lectures.presentPercent')} onChange={(e) => change('lectures.presentPercent', Number(e.target.value))} /></Field>
-              <Field label={t('lookupNamePolicy')}>
-                <select value={val('customers.lookupNamePolicy')} onChange={(e) => change('customers.lookupNamePolicy', e.target.value)}>
-                  <option value="partial">{t('namePartial')}</option>
-                  <option value="full">{t('nameFull')}</option>
-                </select>
-              </Field>
-              <fieldset className="checks stack stack--full">
-                <legend>{t('waTemplates')}</legend>
-                <p className="muted"><small>{t('waPlaceholders')}</small></p>
-                {(val('crm.whatsappTemplates') || []).map((x, i) => (
-                  <div key={i} className="row tpl-row">
-                    <input aria-label={t('title')} value={x.titleAr} onChange={(e) => change('crm.whatsappTemplates', val('crm.whatsappTemplates').map((y, j) => (j === i ? { ...y, titleAr: e.target.value } : y)))} />
-                    <textarea rows={2} aria-label={t('waMessage')} value={x.text} onChange={(e) => change('crm.whatsappTemplates', val('crm.whatsappTemplates').map((y, j) => (j === i ? { ...y, text: e.target.value } : y)))} />
-                    <button type="button" className="icon-btn" aria-label="Remove" title="حذف" onClick={() => change('crm.whatsappTemplates', val('crm.whatsappTemplates').filter((_, j) => j !== i))}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                    </button>
+            <form className="settings" onSubmit={(e) => { e.preventDefault(); run(() => api('/api/v2/settings', { method: 'PUT', body: { reason, settings: changes } })).then(() => { setSaved(true); setReason(''); setChanges({}); refreshAcademy(); state.reload(); }).catch(() => {}); }}>
+              <div className="settings__grid">
+                <section className="card settings__card settings__card--wide">
+                  <div className="settings__head"><span className="settings__icon" aria-hidden="true">🏛</span><div><h2>{t('academyProfile')}</h2><p className="muted">{t('apHint')}</p></div></div>
+                  <div className="form-grid">
+                    {[['nameAr', 'apNameAr'], ['nameEn', 'apNameEn', 'ltr'], ['address', 'apAddress'], ['phone', 'apPhone', 'ltr'], ['email', 'apEmail', 'ltr'], ['website', 'apWebsite', 'ltr'], ['taxNumber', 'taxNumber', 'ltr'], ['commercialRegister', 'crNumber', 'ltr']].map(([k, lab, dir]) => (
+                      <Field key={k} label={t(lab)}><input dir={dir} value={profile[k] || ''} onChange={(e) => setProfile(k, e.target.value)} /></Field>
+                    ))}
+                    <Field label={t('apVatRate')}><input type="number" min={0} max={100} step="0.01" dir="ltr" value={profile.vatRate ?? 0} onChange={(e) => setProfile('vatRate', Number(e.target.value))} /></Field>
+                    <label className="check settings__check"><input type="checkbox" checked={profile.pricesIncludeVat !== false} onChange={(e) => setProfile('pricesIncludeVat', e.target.checked)} /> {t('apVatIncluded')}</label>
                   </div>
-                ))}
-                <div><button type="button" className="btn btn--small btn--ghost" onClick={() => change('crm.whatsappTemplates', [...(val('crm.whatsappTemplates') || []), { key: `t${Date.now()}`, titleAr: '', text: '' }])}>{t('lecAddRow')}</button></div>
-              </fieldset>
-              <fieldset className="checks form-grid">
-                <legend>{t('setReminders')}</legend>
-                <label className="check field--wide"><input type="checkbox" checked={val('finance.reminders')?.enabled !== false} onChange={(e) => change('finance.reminders', { ...val('finance.reminders'), enabled: e.target.checked })} /> {t('remEnabled')}</label>
-                <Field label={t('remDaysBefore')}><input type="number" min={0} max={30} dir="ltr" value={val('finance.reminders')?.daysBefore ?? 3} onChange={(e) => change('finance.reminders', { ...val('finance.reminders'), daysBefore: Number(e.target.value) })} /></Field>
-                <Field label={t('remOverdue')}><input dir="ltr" value={(val('finance.reminders')?.overdueDays || []).join(', ')} onChange={(e) => change('finance.reminders', { ...val('finance.reminders'), overdueDays: e.target.value.split(/[,، ]+/).map(Number).filter(Boolean) })} /></Field>
-                <label className="check"><input type="checkbox" checked={val('finance.reminders')?.email !== false} onChange={(e) => change('finance.reminders', { ...val('finance.reminders'), email: e.target.checked })} /> {t('remEmail')}</label>
-                <label className="check"><input type="checkbox" checked={val('finance.reminders')?.notifyOwner !== false} onChange={(e) => change('finance.reminders', { ...val('finance.reminders'), notifyOwner: e.target.checked })} /> {t('remOwner')}</label>
-              </fieldset>
-              <fieldset className="checks form-grid">
-                <legend>{t('academyProfile')}</legend>
-                <p className="muted field--wide"><small>{t('apHint')}</small></p>
-                {[['nameAr', 'apNameAr'], ['nameEn', 'apNameEn', 'ltr'], ['address', 'apAddress'], ['phone', 'apPhone', 'ltr'], ['email', 'apEmail', 'ltr'], ['website', 'apWebsite', 'ltr'], ['taxNumber', 'taxNumber', 'ltr'], ['commercialRegister', 'crNumber', 'ltr']].map(([k, lab, dir]) => (
-                  <Field key={k} label={t(lab)}><input dir={dir} value={val('academy.profile')?.[k] || ''} onChange={(e) => change('academy.profile', { ...val('academy.profile'), [k]: e.target.value })} /></Field>
-                ))}
-                <Field label={t('apVatRate')}><input type="number" min={0} max={100} step="0.01" dir="ltr" value={val('academy.profile')?.vatRate ?? 0} onChange={(e) => change('academy.profile', { ...val('academy.profile'), vatRate: Number(e.target.value) })} /></Field>
-                <label className="check"><input type="checkbox" checked={val('academy.profile')?.pricesIncludeVat !== false} onChange={(e) => change('academy.profile', { ...val('academy.profile'), pricesIncludeVat: e.target.checked })} /> {t('apVatIncluded')}</label>
-              </fieldset>
-              <Field label={t('reason')}><input required value={reason} onChange={(e) => setReason(e.target.value)} /></Field>
+                </section>
+
+                <section className="card settings__card">
+                  <div className="settings__head"><span className="settings__icon" aria-hidden="true">✪</span><div><h2>{t('set_learning')}</h2><p className="muted">{t('set_learningHint')}</p></div></div>
+                  <div className="stack">
+                    <Field label={t('setPaymentRule')}>
+                      <select value={val('certificates.paymentRule')} onChange={(e) => change('certificates.paymentRule', e.target.value)}>
+                        {['customer', 'enrollment', 'off'].map((x) => <option key={x} value={x}>{t(`pay_${x}`)}</option>)}
+                      </select>
+                    </Field>
+                    <Field label={t('presentPercent')}><input type="number" min={1} max={100} dir="ltr" value={val('lectures.presentPercent')} onChange={(e) => change('lectures.presentPercent', Number(e.target.value))} /></Field>
+                    <Field label={t('lookupNamePolicy')}>
+                      <select value={val('customers.lookupNamePolicy')} onChange={(e) => change('customers.lookupNamePolicy', e.target.value)}>
+                        <option value="partial">{t('namePartial')}</option>
+                        <option value="full">{t('nameFull')}</option>
+                      </select>
+                    </Field>
+                  </div>
+                </section>
+
+                <section className="card settings__card">
+                  <div className="settings__head"><span className="settings__icon" aria-hidden="true">⏰</span><div><h2>{t('setReminders')}</h2><p className="muted">{t('set_remindersHint')}</p></div></div>
+                  <div className="stack">
+                    <label className="check settings__check"><input type="checkbox" checked={rem.enabled !== false} onChange={(e) => setRem('enabled', e.target.checked)} /> {t('remEnabled')}</label>
+                    <div className="form-grid">
+                      <Field label={t('remDaysBefore')}><input type="number" min={0} max={30} dir="ltr" value={rem.daysBefore ?? 3} onChange={(e) => setRem('daysBefore', Number(e.target.value))} /></Field>
+                      <Field label={t('remOverdue')}><input dir="ltr" value={(rem.overdueDays || []).join(', ')} onChange={(e) => setRem('overdueDays', e.target.value.split(/[,، ]+/).map(Number).filter(Boolean))} /></Field>
+                    </div>
+                    <label className="check settings__check"><input type="checkbox" checked={rem.email !== false} onChange={(e) => setRem('email', e.target.checked)} /> {t('remEmail')}</label>
+                    <label className="check settings__check"><input type="checkbox" checked={rem.notifyOwner !== false} onChange={(e) => setRem('notifyOwner', e.target.checked)} /> {t('remOwner')}</label>
+                  </div>
+                </section>
+
+                <section className="card settings__card settings__card--wide">
+                  <div className="settings__head"><span className="settings__icon" aria-hidden="true">✆</span><div><h2>{t('waTemplates')}</h2><p className="muted">{t('waPlaceholders')}</p></div></div>
+                  <div className="tpl-list">
+                    {tpls.map((x, i) => (
+                      <div key={x.key || i} className="tpl-item">
+                        <div className="tpl-item__top">
+                          <input aria-label={t('title')} placeholder={t('title')} value={x.titleAr} onChange={(e) => setTpl(i, 'titleAr', e.target.value)} />
+                          <button type="button" className="btn btn--small btn--ghost" onClick={() => change('crm.whatsappTemplates', tpls.filter((_, j) => j !== i))}>{t('set_remove')}</button>
+                        </div>
+                        <textarea rows={3} aria-label={t('waMessage')} value={x.text} onChange={(e) => setTpl(i, 'text', e.target.value)} />
+                      </div>
+                    ))}
+                  </div>
+                  <div><button type="button" className="btn btn--small btn--ghost" onClick={() => change('crm.whatsappTemplates', [...tpls, { key: `t${Date.now()}`, titleAr: '', text: '' }])}>+ {t('set_addTemplate')}</button></div>
+                </section>
+              </div>
+
+              {/* saving: shown once something changed, the reason goes to the audit log */}
+              <div className={`settings__save card${dirty ? ' is-dirty' : ''}`}>
+                <Field label={t('reason')}><input required value={reason} placeholder={t('set_reasonHint')} onChange={(e) => setReason(e.target.value)} /></Field>
+                <button className="btn btn--primary" disabled={busy || !dirty}>{t('save')}</button>
+                {dirty && <button type="button" className="btn btn--ghost" onClick={() => setChanges({})}>{t('set_undo')}</button>}
+              </div>
               <ErrorBox error={error} />
               {saved && <div className="alert alert--ok">{t('saved')}</div>}
-              <div><button className="btn btn--primary" disabled={busy || !Object.keys(changes).length}>{t('save')}</button></div>
             </form>
           );
         }}

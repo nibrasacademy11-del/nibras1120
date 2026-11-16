@@ -97,11 +97,11 @@ test('automatic certificates flow', { skip }, async (t) => {
             assert.equal(certMails().length, 0);
         });
 
-        await t.test('customer service sees it waiting and may release it, only with a reason', async () => {
+        await t.test('the assistant (customer service until 16 Nov) sees it waiting and may release it, only with a reason', async () => {
             const waiting = (await cs('GET', '/api/v2/certificates/eligible')).data.items.filter((i) => i.enrollment === enrollment._id);
             assert.equal(waiting.length, 1);
             assert.deepEqual(waiting[0].unpaid, [{ currency: 'SAR', remaining: 900 }]);
-            assert.equal((await cs('POST', '/api/v2/certificates/issue', { enrollment: enrollment._id, module: m1 })).status, 403, 'issuing without a reason is the owner\'s');
+            assert.equal((await cs('POST', '/api/v2/certificates/issue', { enrollment: enrollment._id, module: m1 })).status, 409, 'unpaid: not without a reason');
             const r = await cs('POST', '/api/v2/certificates/issue', { enrollment: enrollment._id, module: m1, waivePayment: 'منحة تفوق', email: true });
             assert.equal(r.status, 201, JSON.stringify(r.data));
             assert.equal((await Certificate.findById(r.data.item._id)).paymentWaiver, 'منحة تفوق');

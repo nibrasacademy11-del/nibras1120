@@ -15,6 +15,24 @@ const oid = (v) => (v && mongoose.Types.ObjectId.isValid(v) ? new mongoose.Types
 const str = (v, max = 500) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 const MAX_HOURS = 24 * 30;
 const isAdminApprover = (req) => P.scopeFor(req.user.grants, 'access_requests.approve') === 'all';
+// A team leader decides for the files of their teams
+const isTeamApprover = (req, customer) => P.scopeFor(req.user.grants, 'access_requests.approve') === 'team'
+    && !!customer && customer.team != null && (req.user.teamIds || []).map(String).includes(String(customer.team));
+
+// Who hears of a new request: the employee responsible, the leaders of the file's team, the owner
+// and the assistant (each person once; never the one asking)
+async function deciders(customer, requesterId) {
+    const ids = new Set();
+    if (customer.owner) ids.add(String(customer.owner));
+    if (customer.team) {
+        const team = await require('../../models/Team').findById(customer.team).select('leader leaders').lean();
+        for (const l of [].concat(team?.leader || [], team?.leaders || [])) if (l) ids.add(String(l));
+    }
+    const admins = await User.find({ role: { $in: ['super_admin', 'assistant', 'customer_support'] }, status: 'active' }).select('_id').lean();
+    for (const a of admins) ids.add(String(a._id));
+    ids.delete(String(requesterId));
+    return [...ids];
+}
 
 function view(r, now = new Date()) {
     const o = r.toObject ? r.toObject() : r;
@@ -57,12 +75,7 @@ exports.create = async (req, res) => {
         bodyEn: `${req.user.name}: ${purpose}`,
         link: '/access-requests'
     };
-    if (customer.owner) await notify(customer.owner, message);
-    else {
-        // A file without a responsible employee goes to the admins
-        const admins = await User.find({ role: 'super_admin', status: 'active' }).select('_id').lean();
-        for (const a of admins) await notify(a._id, message);
-    }
+    for (const id of await deciders(customer, req.user.id)) await notify(id, message);
     res.status(201).json({ item: view(await r.populate(POP)) });
 };
 
@@ -76,7 +89,9 @@ exports.list = async (req, res) => {
         filter = {};
     } else {
         // The current owner of each file decides, so requests follow a transferred customer
-        const owned = await Customer.find({ owner: req.user.id }).select('_id').lean();
+        // a team leader also decides for the files of their teams
+        const teamScope = P.scopeFor(req.user.grants, 'access_requests.approve') === 'team' && (req.user.teamIds || []).length;
+        const owned = await Customer.find(teamScope ? { $or: [{ owner: req.user.id }, { team: { $in: req.user.teamIds } }] } : { owner: req.user.id }).select('_id').lean();
         filter = isAdminApprover(req)
             ? { $or: [{ customer: { $in: owned.map((c) => c._id) } }, { approver: null }, { status: 'pending' }] }
             : { customer: { $in: owned.map((c) => c._id) } };
@@ -90,9 +105,9 @@ exports.list = async (req, res) => {
 async function loadForDecision(req) {
     const r = await AccessRequest.findById(req.params.requestId);
     if (!r) throw new HttpError(404, 'Not found.');
-    const customer = await Customer.findById(r.customer).select('customerNo owner');
+    const customer = await Customer.findById(r.customer).select('customerNo owner team');
     const isOwner = customer && customer.owner && String(customer.owner) === req.user.id && !!P.scopeFor(req.user.grants, 'access_requests.approve');
-    return { r, customer, isOwner, isAdmin: isAdminApprover(req) };
+    return { r, customer, isOwner, isAdmin: isAdminApprover(req) || isTeamApprover(req, customer) };
 }
 
 exports.decide = async (req, res) => {

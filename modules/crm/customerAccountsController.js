@@ -70,4 +70,13 @@ exports.resetPassword = async (req, res) => {
     res.json({ password, email: user.email });
 };
 
+// The website account of one customer file, shown in the file itself (16 Nov 2026)
+exports.ofCustomer = async (req, res) => {
+    const c = await Customer.findById(req.params.id).select('user').lean();
+    if (!c) throw new HttpError(404, 'Not found.');
+    if (!c.user) return res.json({ account: null });
+    const u = await User.findById(c.user).select('name email phone role status emailVerifiedAt lastLoginAt mustChangePassword createdAt').lean();
+    res.json({ account: u && !isStaffRole(u.role) ? u : null });
+};
+
 exports._temporaryPassword = temporaryPassword;

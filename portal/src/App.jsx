@@ -24,7 +24,8 @@ import Attendance, { Attend, Kiosk, Leaves, PairDevice } from './pages/Attendanc
 import SystemHealth from './pages/SystemHealth.jsx';
 import Groups, { GroupDetail } from './pages/Groups.jsx';
 import FinanceHub from './pages/FinanceHub.jsx';
-import Website, { Accounts as UserAccounts } from './pages/Website.jsx';
+import Website from './pages/Website.jsx';
+import SignInAccounts from './pages/SignInAccounts.jsx';
 import CustomerAccounts from './pages/CustomerAccounts.jsx';
 import Payroll, { MyPayslips } from './pages/Payroll.jsx';
 import PerformanceReviews, { MyReviews as MyPerformance } from './pages/Reviews.jsx';
@@ -115,10 +116,10 @@ export default function App() {
         <Route path="/certificates" element={<Guard permission="certificates.view"><Certificates /></Guard>} />
         <Route path="/certificates/:id" element={<CertificateDetail />} />
         <Route path="/commissions" element={<Guard permission="commissions.view"><Commissions /></Guard>} />
-        <Route path="/finance" element={<Guard permission="payments.view" minScope="all"><FinanceHub /></Guard>} />
+        <Route path="/finance" element={<Guard permission="accounts.view" minScope="all"><FinanceHub /></Guard>} />
         <Route path="/payments" element={<Guard permission="payments.view"><Payments /></Guard>} />
         <Route path="/payments/:id" element={<PaymentDetail />} />
-        <Route path="/approvals" element={<Guard permission="payments.view"><Approvals /></Guard>} />
+        <Route path="/approvals" element={<Guard permission="accounts.view" minScope="all"><Approvals /></Guard>} />
         <Route path="/accounts" element={<Guard permission="accounts.view" minScope="all"><Accounts /></Guard>} />
         <Route path="/accounts/:id" element={<Guard permission="accounts.view" minScope="all"><AccountStatement /></Guard>} />
         <Route path="/expenses" element={<Guard permission="expenses.view" minScope="all"><Expenses /></Guard>} />
@@ -138,7 +139,7 @@ export default function App() {
         <Route path="/website" element={zone === 'staff' && urls.cms
           ? <ElsewhereCard text={t('cmsMoved')} href={`${urls.cms || ''}/portal/website`} label={t('openCms')} />
           : can('website.manage', 'all') ? <Website /> : <div className="card empty">{t('forbidden')}</div>} />
-        <Route path="/user-accounts" element={me.user.role === 'super_admin' ? <><h1 className="page-title">{t('userAccountsNav')}</h1><UserAccounts /></> : <div className="card empty">{t('forbidden')}</div>} />
+        <Route path="/user-accounts" element={<Guard permission="users.view" minScope="all"><SignInAccounts /></Guard>} />
         <Route path="/customers/:id" element={<Guard permission="customer_lookup.view"><CustomerDetail /></Guard>} />
         <Route path="/lookup" element={<Guard permission="customer_lookup.view"><Lookup /></Guard>} />
         <Route path="/tasks" element={<Guard permission="tasks.view"><Tasks /></Guard>} />

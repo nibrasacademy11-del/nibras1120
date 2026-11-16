@@ -6,6 +6,75 @@ import { api, pickMessage } from '../api.js';
 import { useI18n } from '../i18n.jsx';
 import { Loading, Modal, Pager, Pill, useLoad } from '../components/ui.jsx';
 
+// The customer's website account inside their file: confirmed email, last sign-in, and a
+// temporary password when they forgot theirs (16 Nov 2026)
+export function AccountCard({ customerId }) {
+  const { t, fmtDay, fmtDate, lang } = useI18n();
+  const state = useLoad(`/api/v2/customers/${customerId}/account`);
+  const [ask, setAsk] = useState(false);
+  const [done, setDone] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const reset = async (u) => {
+    setBusy(true);
+    setError('');
+    try {
+      const r = await api(`/api/v2/customer-accounts/${u._id}/reset-password`, { method: 'POST' });
+      setDone({ ...r, name: u.name });
+      setAsk(false);
+      state.reload();
+    } catch (e) {
+      setError(pickMessage(e.message, lang));
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <section className="card">
+      <h2>{t('ca_card')}</h2>
+      <Loading state={state}>
+        {(d) => {
+          const u = d.account;
+          if (!u) return <p className="muted">{t('ca_noAccount')}</p>;
+          return (
+            <>
+              <div className="info-grid">
+                <div className="info"><small>{t('wsEmail')}</small><div dir="ltr">{u.email}</div></div>
+                <div className="info"><small>{t('status')}</small><div>
+                  {u.status === 'disabled' ? <Pill tone="muted">{t('inactive')}</Pill>
+                    : u.mustChangePassword ? <Pill tone="warn">{t('ca_temporary')}</Pill>
+                      : u.emailVerifiedAt ? <Pill tone="ok">{t('ca_verified')}</Pill> : <Pill tone="muted">{t('ca_notVerified')}</Pill>}
+                </div></div>
+                <div className="info"><small>{t('registeredAt')}</small><div>{fmtDay(u.createdAt)}</div></div>
+                <div className="info"><small>{t('ca_lastLogin')}</small><div>{u.lastLoginAt ? fmtDate(u.lastLoginAt) : '—'}</div></div>
+              </div>
+              {u.status !== 'disabled' && <div className="row" style={{ marginTop: 12 }}><button type="button" className="btn btn--ghost btn--small" onClick={() => { setError(''); setAsk(true); }}>{t('ca_reset')}</button></div>}
+              {ask && (
+                <Modal title={t('ca_reset')} onClose={() => setAsk(false)}>
+                  <p>{t('ca_confirm').replace('{name}', u.name).replace('{email}', u.email)}</p>
+                  {error && <div className="alert alert--error">{error}</div>}
+                  <div className="row">
+                    <button type="button" className="btn btn--primary" disabled={busy} onClick={() => reset(u)}>{t('ca_reset')}</button>
+                    <button type="button" className="btn btn--ghost" onClick={() => setAsk(false)}>{t('cancel')}</button>
+                  </div>
+                </Modal>
+              )}
+              {done && (
+                <Modal title={t('ca_doneTitle')} onClose={() => setDone(null)}>
+                  <p>{t('ca_doneText').replace('{name}', done.name)}</p>
+                  <p className="temp-password" dir="ltr"><strong>{done.password}</strong></p>
+                  <div className="alert alert--warn">{t('ca_doneNote')}</div>
+                  <div className="row"><button type="button" className="btn btn--ghost" onClick={() => setDone(null)}>{t('close')}</button></div>
+                </Modal>
+              )}
+            </>
+          );
+        }}
+      </Loading>
+    </section>
+  );
+}
+
 export default function CustomerAccounts() {
   const { t, fmtDay, lang } = useI18n();
   const [q, setQ] = useState('');

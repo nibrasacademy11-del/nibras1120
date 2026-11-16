@@ -83,7 +83,7 @@ test('roles, invitations and data isolation', { skip }, async (t) => {
         });
 
         await t.test('2. a team leader cannot reach owner administration', async () => {
-            for (const [m, url, body] of [['GET', '/api/v2/roles'], ['PUT', '/api/v2/roles/employee', { grants: {}, reason: 'x' }], ['GET', '/api/v2/audit'], ['GET', '/api/v2/insights'], ['GET', '/api/v2/payroll/runs'], ['GET', '/api/v2/payroll/salaries'], ['GET', '/api/v2/settings'], ['POST', '/api/v2/employees', { nameAr: 'x', email: 'x@y.z' }], ['GET', `/api/v2/customers/lookup?q=${c1.customerNo}`], [`PUT`, `/api/v2/users/${emp1._id}/extra-grants`, { grants: { 'customers.view': 'all' }, reason: 'x' }]]) {
+            for (const [m, url, body] of [['GET', '/api/v2/roles'], ['PUT', '/api/v2/roles/employee', { grants: {}, reason: 'x' }], ['GET', '/api/v2/audit'], ['GET', '/api/v2/insights'], ['GET', '/api/v2/payroll/runs'], ['GET', '/api/v2/payroll/salaries'], ['GET', '/api/v2/settings'], ['POST', '/api/v2/employees', { nameAr: 'x', email: 'x@y.z' }], [`PUT`, `/api/v2/users/${emp1._id}/extra-grants`, { grants: { 'customers.view': 'all' }, reason: 'x' }]]) {
                 const r = await L(m, url, body);
                 assert.ok([403, 404].includes(r.status), `${m} ${url} -> ${r.status}`);
             }
@@ -167,11 +167,14 @@ test('roles, invitations and data isolation', { skip }, async (t) => {
 
         await t.test('10. employees cannot see customers that are not theirs', async () => {
             assert.equal((await E1('GET', `/api/v2/customers/${c1._id}`)).status, 200, 'own customer');
-            assert.equal((await E1('GET', `/api/v2/customers/${c2._id}`)).status, 404, "a colleague's customer by direct link");
+            // a colleague's customer: the name and who they are with, nothing else (16 Nov 2026)
+            const other = (await E1('GET', `/api/v2/customers/${c2._id}`)).data.item;
+            assert.equal(other.access, 'basic', "a colleague's customer by direct link");
+            for (const k of ['contact', 'identity', 'nameAr', 'status', 'team']) assert.equal(other[k], undefined, k);
             for (const sub of ['notes', 'communications', 'documents', 'timeline', 'summary']) assert.equal((await E1('GET', `/api/v2/customers/${c2._id}/${sub}`)).status, 404, sub);
             const list = await E1('GET', `/api/v2/customers?q=${encodeURIComponent('عميل')}`);
             assert.ok(list.data.items.every((x) => String(x.id || x._id) === String(c1._id)), 'search stays inside their own customers');
-            assert.equal((await E1('GET', `/api/v2/customers/lookup?q=${c1.customerNo}`)).status, 403, 'no academy-wide search');
+            assert.equal((await E1('GET', `/api/v2/customers/lookup?q=${c2.customerNo}`)).data.items[0].access, 'basic', 'a search shows the name card only');
             const own = await E1('GET', `/api/v2/customers/${c1._id}`);
             assert.equal(own.data.item.identity, undefined, 'no identity data for an employee');
             assert.equal((await E1('POST', `/api/v2/customers/${c2._id}/transfer`, { to: String(emp1._id), reason: 'x' })).status, 403, 'cannot take a customer');
@@ -215,12 +218,13 @@ test('roles, invitations and data isolation', { skip }, async (t) => {
         });
 
         await t.test('15. a permission change applies at once', async () => {
-            assert.equal((await E1('GET', `/api/v2/customers/lookup?q=${c1.customerNo}`)).status, 403);
-            const set = await O('PUT', `/api/v2/users/${emp1._id}/extra-grants`, { grants: { 'customer_lookup.view': 'all' }, reason: 'خدمة العملاء مؤقتاً' });
+            const accessTo = async () => (await E1('GET', `/api/v2/customers/${c2._id}`)).data.item.access;
+            assert.equal(await accessTo(), 'basic');
+            const set = await O('PUT', `/api/v2/users/${emp1._id}/extra-grants`, { grants: { 'customers.view': 'all' }, reason: 'تغطية مؤقتة' });
             assert.equal(set.status, 200, JSON.stringify(set.data));
-            assert.equal((await E1('GET', `/api/v2/customers/lookup?q=${c1.customerNo}`)).status, 200, 'same session, new permission');
+            assert.equal(await accessTo(), 'full', 'same session, new permission');
             await O('PUT', `/api/v2/users/${emp1._id}/extra-grants`, { grants: {}, reason: 'انتهت المدة' });
-            assert.equal((await E1('GET', `/api/v2/customers/lookup?q=${c1.customerNo}`)).status, 403, 'removed at once');
+            assert.equal(await accessTo(), 'basic', 'removed at once');
             assert.equal((await O('PUT', `/api/v2/users/${emp1._id}/extra-grants`, { grants: { 'roles.manage': 'all' }, reason: 'x' })).data.extra['roles.manage'], undefined, 'role management never goes out as an extra');
         });
 

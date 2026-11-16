@@ -2,7 +2,7 @@ const P = require('../../lib/permissions');
 const audit = require('../../lib/audit');
 const { buildXlsx } = require('../../lib/xlsx');
 const { HttpError } = require('../../lib/http');
-const { REPORTS, available } = require('./registry');
+const { REPORTS, available, allowed } = require('./registry');
 
 // Lists the reports the user may run, runs them, exports them to Excel, and logs prints
 
@@ -12,7 +12,7 @@ function load(req) {
     const report = REPORTS.find((r) => r.id === req.params.id);
     if (!report || !req.user.isStaff) throw new HttpError(404, 'Not found.');
     const scope = P.scopeFor(req.user.grants, report.permission);
-    if (!P.hasScope(scope, report.minScope || 'own')) throw new HttpError(403, 'ليس لديك صلاحية لهذا التقرير. / You do not have access to this report.', 'FORBIDDEN');
+    if (!allowed(report, req.user.grants)) throw new HttpError(403, 'ليس لديك صلاحية لهذا التقرير. / You do not have access to this report.', 'FORBIDDEN');
     return { report, scope };
 }
 

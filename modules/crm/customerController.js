@@ -360,18 +360,23 @@ exports.timeline = async (req, res) => {
 
 exports.lookup = async (req, res) => {
     const q = String(req.query.q || '').trim().slice(0, 60);
-    if (q.length < 4) throw new HttpError(400, 'أدخل رقم العميل أو رقم الهوية أو الجواز. / Enter a customer number, national ID or passport number.');
+    if (q.length < 4) throw new HttpError(400, 'أدخل رقم العميل أو الموبايل أو الإيميل أو رقم الهوية. / Enter a customer number, mobile, email or ID number.');
+    // exact matches only (number, mobile, email, ID, passport): nobody browses other people's customers
     const or = [{ customerNo: q.toUpperCase() }];
     if (/^\d+$/.test(q)) or.push({ customerNo: `NB-${q.padStart(6, '0')}` });
     or.push({ 'identity.nationalIdIdx': fieldCrypto.blindIndex(q, 'national_id') });
     or.push({ 'identity.passportIdx': fieldCrypto.blindIndex(q, 'passport') });
+    for (const k of data.duplicateKeys({ phone: q, email: q.includes('@') ? q : '' })) if (k.kind !== 'national_id' && k.kind !== 'passport') or.push({ [k.field]: k.value });
     const found = await Customer.find({ $or: or, status: { $ne: 'merged' } }).populate(POPULATE).limit(5);
     const namePolicy = await getSetting('customers.lookupNamePolicy');
     const items = [];
     for (const c of found) {
         const access = await accessFor(req, c);
+        const card = basicCard(c, access, { namePolicy, programs: access.level === 'basic' ? [] : await programsOf(c) });
+        // a file that is not theirs: the name and who the customer is with, nothing else
+        if (access.level === 'basic') { delete card.status; delete card.team; }
         items.push({
-            ...basicCard(c, access, { namePolicy, programs: await programsOf(c) }),
+            ...card,
             canRequestAccess: access.level !== 'full' && !!P.scopeFor(req.user.grants, 'access_requests.create') && String(c.owner?._id || '') !== req.user.id
         });
     }

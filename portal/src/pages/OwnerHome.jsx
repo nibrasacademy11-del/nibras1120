@@ -121,7 +121,8 @@ function ChartCard({ title, hint, children, table, wide }) {
 function Attention({ a }) {
   const { t } = useI18n();
   const items = [
-    ['/approvals', 'oh_att_payments', a.payments + a.approvals + a.refunds, 'hot'],
+    // money waiting for a decision: the owner only (the assistant's data comes without it)
+    ...(a.payments === undefined ? [] : [['/approvals', 'oh_att_payments', a.payments + a.approvals + a.refunds, 'hot']]),
     ['/tasks', 'oh_att_tasks', a.tasksOverdue, 'warm'],
     ['/complaints', 'oh_att_complaints', a.complaintsOpen, 'warm'],
     ['/leaves', 'oh_att_leaves', a.leaves, 'warm'],
@@ -138,7 +139,7 @@ export default function OwnerHome() {
   const preset = PRESET_KEYS.includes(params.get('p')) ? params.get('p') : (params.get('from') ? null : 'thisMonth');
   const from = params.get('from') || p[preset || 'thisMonth'][0];
   const to = params.get('to') || p[preset || 'thisMonth'][1];
-  const tab = TABS.includes(params.get('tab')) ? params.get('tab') : 'overview';
+  const tabParam = params.get('tab');
   const program = params.get('program') || '';
   const employee = params.get('employee') || '';
   const [custom, setCustom] = useState({ from, to });
@@ -166,7 +167,12 @@ export default function OwnerHome() {
 
       <Loading state={state}>
         {(d) => {
-          const mm = d.money; const s = d.sales; const l = d.learning; const sv = d.service; const st = d.staff;
+          // the assistant's dashboard comes without the money (d.money is null for them)
+          const seeMoney = !!d.money;
+          const EMPTY = { collected: [], collectedPrev: [], expenses: [], expensesPrev: [], net: [], netPrev: [], owedNow: [], trend: [], expenseTrend: [], byMethod: [], byCategory: [], byProgram: [], byAccount: [], topCustomers: [], lateCustomersNow: 0 };
+          const mm = d.money || EMPTY; const s = d.sales; const l = d.learning; const sv = d.service; const st = d.staff;
+          const tabs = seeMoney ? TABS : TABS.filter((k) => k !== 'money');
+          const tab = tabs.includes(tabParam) ? tabParam : 'overview';
           const currencies = [...new Set([...mm.collected, ...mm.expenses, ...mm.owedNow].map((x) => x.currency))];
           const cur = currencies.includes(params.get('cur')) ? params.get('cur') : (currencies.includes('EGP') ? 'EGP' : currencies[0] || 'EGP');
           const fm = money(cur);
@@ -227,7 +233,7 @@ export default function OwnerHome() {
               </section>
 
               <nav className="tabs oh-tabs no-print" role="tablist">
-                {TABS.map((k) => <button key={k} type="button" role="tab" aria-selected={tab === k} className={`tab${tab === k ? ' active' : ''}`} onClick={() => set({ tab: k === 'overview' ? '' : k })}>{t(`oh_tab_${k}`)}</button>)}
+                {tabs.map((k) => <button key={k} type="button" role="tab" aria-selected={tab === k} className={`tab${tab === k ? ' active' : ''}`} onClick={() => set({ tab: k === 'overview' ? '' : k })}>{t(`oh_tab_${k}`)}</button>)}
               </nav>
 
               <p className="muted period-note">
@@ -239,9 +245,9 @@ export default function OwnerHome() {
                 <>
                   <Attention a={d.attention} />
                   <div className="oh-tiles stagger">
-                    <Tile label={t('in_collected')} color="var(--s1)" icon="↓" {...moneyTile(mm.collected, cur)} spark={flow} delta={<Delta now={amountOf(mm.collected, cur)} before={amountOf(mm.collectedPrev, cur)} />} />
-                    <Tile label={t('in_net')} color="var(--s3)" icon="=" {...moneyTile(mm.net, cur)} delta={<Delta now={amountOf(mm.net, cur)} before={amountOf(mm.netPrev, cur)} />} />
-                    <Tile label={t('in_owedNow')} color="var(--s8)" icon="!" {...moneyTile(mm.owedNow, cur)} hint={`${t('in_overdue')}: ${mm.lateCustomersNow}`} />
+                    {seeMoney && <Tile label={t('in_collected')} color="var(--s1)" icon="↓" {...moneyTile(mm.collected, cur)} spark={flow} delta={<Delta now={amountOf(mm.collected, cur)} before={amountOf(mm.collectedPrev, cur)} />} />}
+                    {seeMoney && <Tile label={t('in_net')} color="var(--s3)" icon="=" {...moneyTile(mm.net, cur)} delta={<Delta now={amountOf(mm.net, cur)} before={amountOf(mm.netPrev, cur)} />} />}
+                    {seeMoney && <Tile label={t('in_owedNow')} color="var(--s8)" icon="!" {...moneyTile(mm.owedNow, cur)} hint={`${t('in_overdue')}: ${mm.lateCustomersNow}`} />}
                     <Tile label={t('in_leads')} color="var(--s7)" icon="+" value={num(s.leads)} spark={s.trend} delta={<Delta now={s.leads} before={s.leadsPrev} />} />
                     <Tile label={t('in_conversion')} color="var(--s6)" icon="%" value={`${s.conversion}%`} delta={<Delta now={s.conversion} before={s.conversionPrev} />} />
                     <Tile label={t('in_enrolled')} color="var(--s4)" icon="✎" value={num(l.enrolled)} spark={l.trend} delta={<Delta now={l.enrolled} before={l.enrolledPrev} />} />
@@ -249,13 +255,13 @@ export default function OwnerHome() {
                     <Tile label={t('in_satisfaction')} color="var(--s1)" icon="★" value={sv.satisfaction ? `${sv.satisfaction.avg} / 5` : '—'} hint={sv.satisfaction ? `${sv.satisfaction.n} ${t('in_ratings')}` : ''} />
                   </div>
                   <div className="oh-grid">
-                    <ChartCard wide title={`${t('oh_c_inOut')} (${cur})`} hint={d.unit === 'month' ? t('oh_c_perMonth') : t('oh_c_perDay')} table={inOutTable}>{inOutChart}</ChartCard>
-                    <ChartCard title={t('oh_c_progress')} hint={t('oh_c_progressHint')}><ProgressBars rows={progressRows} unit={t('oh_learners')} empty={t('in_none')} /></ChartCard>
+                    {seeMoney && <ChartCard wide title={`${t('oh_c_inOut')} (${cur})`} hint={d.unit === 'month' ? t('oh_c_perMonth') : t('oh_c_perDay')} table={inOutTable}>{inOutChart}</ChartCard>}
+                    <ChartCard wide={!seeMoney} title={t('oh_c_progress')} hint={t('oh_c_progressHint')}><ProgressBars rows={progressRows} unit={t('oh_learners')} empty={t('in_none')} /></ChartCard>
                   </div>
                 </>
               )}
 
-              {tab === 'money' && (
+              {tab === 'money' && seeMoney && (
                 <>
                   <div className="oh-tiles stagger">
                     <Tile label={t('in_collected')} color="var(--s1)" icon="↓" {...moneyTile(mm.collected, cur)} spark={flow} delta={<Delta now={amountOf(mm.collected, cur)} before={amountOf(mm.collectedPrev, cur)} />} />
@@ -303,8 +309,8 @@ export default function OwnerHome() {
                     <ChartCard wide title={t('in_byEmployee')}>
                       {!s.byEmployee.length ? <p className="muted">{t('in_none')}</p> : (
                         <div className="table-wrap"><table className="table">
-                          <thead><tr><th>{t('in_employee')}</th><th>{t('in_leads')}</th><th>{t('in_won')}</th><th>{t('in_conversion')}</th><th>{t('in_collected')}</th></tr></thead>
-                          <tbody>{s.byEmployee.map((r, i) => <tr key={i}><td><strong>{r.name || t('unassigned')}</strong></td><td>{r.n}</td><td>{r.won}</td><td>{r.n ? Math.round((r.won / r.n) * 100) : 0}%</td><td dir="ltr">{r.collected.map((x) => money(x.currency)(x.amount)).join(' · ') || '0'}</td></tr>)}</tbody>
+                          <thead><tr><th>{t('in_employee')}</th><th>{t('in_leads')}</th><th>{t('in_won')}</th><th>{t('in_conversion')}</th>{seeMoney && <th>{t('in_collected')}</th>}</tr></thead>
+                          <tbody>{s.byEmployee.map((r, i) => <tr key={i}><td><strong>{r.name || t('unassigned')}</strong></td><td>{r.n}</td><td>{r.won}</td><td>{r.n ? Math.round((r.won / r.n) * 100) : 0}%</td>{seeMoney && <td dir="ltr">{(r.collected || []).map((x) => money(x.currency)(x.amount)).join(' · ') || '0'}</td>}</tr>)}</tbody>
                         </table></div>
                       )}
                     </ChartCard>

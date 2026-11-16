@@ -413,9 +413,14 @@ async function performance(req, f, scope, by) {
 }
 
 // Reports are for staff; customers see their own data in their portal pages instead
+// The finance group (payments, balances, profit, revenue, commissions) and the audit log are the
+// owner's only: the assistant sees every other report.
+const OWNER_GROUPS = ['finance', 'admin'];
+const allowed = (r, grants) => P.hasScope(grants[r.permission], r.minScope || 'own') && (!OWNER_GROUPS.includes(r.group) || P.seesMoney(grants));
+
 function available(grants, role) {
     if (role && !P.isStaffRole(role)) return [];
-    return REPORTS.filter((r) => P.hasScope(grants[r.permission], r.minScope || 'own'));
+    return REPORTS.filter((r) => allowed(r, grants));
 }
 
-module.exports = { REPORTS, available, range };
+module.exports = { REPORTS, available, allowed, range };

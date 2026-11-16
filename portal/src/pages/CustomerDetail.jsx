@@ -11,6 +11,7 @@ import { CustomerFinance } from './Finance.jsx';
 import { CustomerGroups } from './Groups.jsx';
 import { Summary360, WhatsAppButton } from './Crm360.jsx';
 import { PrintButton, PrintHeader } from '../components/Print.jsx';
+import { AccountCard } from './CustomerAccounts.jsx';
 
 // Programs on the card: each enrollment with its status and the status of each module
 export function ProgramSummary({ programs }) {
@@ -516,6 +517,7 @@ export default function CustomerDetail() {
 
             {tab === 'overview' && c.access === 'full' && <Summary360 c={c} />}
             {tab === 'overview' && <Overview c={c} onReload={reload} />}
+            {tab === 'overview' && c.access === 'full' && can('customer_accounts.view', 'all') && <AccountCard customerId={c.id} />}
             {tab === 'programs' && <><CustomerPrograms c={c} /><CustomerGroups c={c} /></>}
             {tab === 'financial' && <CustomerFinance c={c} />}
             {tab === 'timeline' && <Timeline id={c.id} />}

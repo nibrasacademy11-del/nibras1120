@@ -128,8 +128,10 @@ test('learning flow', { skip }, async (t) => {
         });
 
         await t.test('the customer card shows programs and module statuses (to those allowed to open it)', async () => {
-            // a team leader reviews the modules but does not open team customers' files by default
-            assert.equal((await tl('GET', `/api/v2/customers/${customerId}`)).status, 404);
+            // a team leader reviews the modules; another employee's customer shows them the name card only
+            const card = (await tl('GET', `/api/v2/customers/${customerId}`)).data.item;
+            assert.equal(card.access, 'basic');
+            assert.deepEqual(card.programs, []);
             const look = await a('GET', `/api/v2/customers/${customerId}`);
             // approved, and with nothing owed their certificates issued themselves (PLAN-V2 §5)
             assert.equal(look.data.item.programs[0].modules.every((m) => ['approved', 'certificate_issued'].includes(m.status)), true);

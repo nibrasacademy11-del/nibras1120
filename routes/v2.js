@@ -34,6 +34,7 @@ const reviews = require('../modules/hr/reviewController');
 const insights = require('../modules/reports/insightsController');
 const profiles = require('../modules/crm/profileController');
 const customerAccounts = require('../modules/crm/customerAccountsController');
+const accounts = require('../modules/core/accountsController');
 
 // Management system API. Every route checks the signed-in user's permissions on the server.
 
@@ -96,6 +97,9 @@ router.post('/notifications/read', handle(home.markRead));
 router.get('/users/:id/sessions', validId(), all('users.manage'), handle(security.adminListSessions));
 router.post('/users/:id/sessions/revoke', validId(), all('users.manage'), handle(security.adminRevokeSessions));
 router.post('/users/:id/2fa/reset', validId(), all('users.manage'), handle(security.adminResetTwoFactor));
+// every sign-in account, and anyone's role (the owner and the assistant)
+router.get('/accounts', all('users.view'), handle(accounts.list));
+router.post('/users/:id/role', validId(), sensitive, all('users.manage'), handle(accounts.setRole));
 router.get('/login-attempts', all('audit.view'), handle(security.adminLoginAttempts));
 
 // ---- roles, settings, audit ----
@@ -130,6 +134,7 @@ router.post('/customers/assign', can('customers.manage', 'team'), handle(custome
 router.get('/customers', can('customers.view'), handle(customers.list));
 // customer service and the owner: every customer's sign-in account, and a temporary password
 router.get('/customer-accounts', all('customer_accounts.view'), handle(customerAccounts.list));
+router.get('/customers/:id/account', validId(), all('customer_accounts.view'), handle(customerAccounts.ofCustomer));
 router.post('/customer-accounts/:id/reset-password', validId(), sensitive, all('customer_accounts.manage'), handle(customerAccounts.resetPassword));
 router.get('/customers/board', can('customers.view'), handle(crm360.board));
 router.get('/whatsapp-templates', customerReader, handle(crm360.templates));
@@ -234,9 +239,10 @@ router.put('/finance/accounts/:id', validId(), all('accounts.update'), handle(fi
 router.get('/finance/accounts/:id/statement', validId(), all('accounts.view'), handle(finSetup.accountStatement));
 router.get('/finance/periods', all('accounts.view'), handle(finSetup.listPeriods));
 router.get('/finance/periods/:key/check', all('accounts.view'), handle(hub.closeCheck));
-router.get('/finance/today', all('payments.view'), handle(hub.today));
-router.get('/finance/receivables', can('customer_financial.view'), handle(hub.receivables));
-router.post('/finance/receivables/:customerId/remind', validId('customerId'), can('customer_financial.view'), rateLimit({ windowMs: 15 * 60 * 1000, max: 150, message: tooMany, keyBy: 'user' }), handle(hub.remind));
+// the academy's money figures (today's totals, everyone's balances): the owner only
+router.get('/finance/today', all('accounts.view'), handle(hub.today));
+router.get('/finance/receivables', all('accounts.view'), handle(hub.receivables));
+router.post('/finance/receivables/:customerId/remind', validId('customerId'), all('accounts.view'), rateLimit({ windowMs: 15 * 60 * 1000, max: 150, message: tooMany, keyBy: 'user' }), handle(hub.remind));
 router.post('/finance/periods/:key', all('accounts.approve'), handle(finSetup.setPeriod));
 
 // ---- finance: customer money ----
@@ -261,7 +267,7 @@ router.post('/expenses/:id/void', validId(), all('expenses.view'), handle(money.
 router.post('/expenses/:id/receipt', validId(), all('expenses.create'), uploadFile, handle(hub.uploadExpenseReceipt));
 router.get('/expenses/:id/receipt', validId(), all('expenses.view'), handle(hub.expenseReceipt));
 router.post('/transfers', all('accounts.update'), handle(money.createTransfer));
-router.get('/finance/summary', all('payments.view'), handle(money.summary));
+router.get('/finance/summary', all('accounts.view'), handle(money.summary));
 
 // ---- commissions ----
 router.get('/commissions/rates', can('commissions.view'), handle(commissions.listRates));
@@ -370,7 +376,7 @@ router.post('/payroll/runs/:id/approve', validId(), all('payroll.approve'), hand
 router.delete('/payroll/runs/:id', validId(), all('payroll.archive'), handle(payroll.deleteRun));
 
 // ---- the owner's analytics (owner only) ----
-router.get('/insights', (req, res, next) => (req.user.role === 'super_admin' ? next() : res.status(403).json({ message: 'ليس لديك صلاحية لهذا الإجراء. / You do not have permission for this action.', code: 'FORBIDDEN' })), handle(insights.overview));
+router.get('/insights', (req, res, next) => (req.user.role === 'super_admin' || req.user.role === 'assistant' ? next() : res.status(403).json({ message: 'ليس لديك صلاحية لهذا الإجراء. / You do not have permission for this action.', code: 'FORBIDDEN' })), handle(insights.overview));
 
 // ---- monthly performance reviews ----
 router.get('/performance/mine', can('reviews.view'), handle(reviews.mine));

@@ -122,12 +122,15 @@ test('CRM flow', { skip }, async (t) => {
             assert.equal(dupId.data.code, 'DUPLICATE');
         });
 
-        await t.test('another employee sees nothing; with search allowed by the owner, a basic card and an access request', async () => {
+        await t.test('another employee: not in their list; a search shows the name and who the customer is with, and asks for the rest', async () => {
             assert.equal((await emp2('GET', '/api/v2/customers')).data.items.some((c) => c.id === cust.id), false);
-            assert.equal((await emp2('GET', `/api/v2/customers/${cust.id}`)).status, 404, 'a direct link opens nothing');
-            assert.equal((await emp2('GET', `/api/v2/customers/lookup?q=${cust.customerNo}`)).status, 403, 'no academy-wide search by default');
+            const byNo = await emp2('GET', `/api/v2/customers/lookup?q=${cust.customerNo}`);
+            assert.equal(byNo.status, 200, 'any employee searches (16 Nov 2026)');
+            const shown = Object.keys(byNo.data.items[0]).filter((k) => byNo.data.items[0][k] !== undefined).sort();
+            assert.deepEqual(shown, ['access', 'canRequestAccess', 'customerNo', 'id', 'name', 'owner', 'programs']);
+            assert.deepEqual(byNo.data.items[0].programs, []);
             const e2 = await User.findOne({ email: emails.e2 });
-            // search and access requests are not part of the employee role; the owner can open them for one person
+            // extra permissions still add to a role (these are part of the employee role now)
             assert.equal((await admin('PUT', `/api/v2/users/${e2._id}/extra-grants`, { grants: { 'customer_lookup.view': 'all', 'access_requests.view': 'own', 'access_requests.create': 'own' }, reason: 'customer service duty' })).status, 200);
             const e1u = await User.findOne({ email: emails.e1 });
             assert.equal((await admin('PUT', `/api/v2/users/${e1u._id}/extra-grants`, { grants: { 'access_requests.view': 'own', 'access_requests.approve': 'own' }, reason: 'answers access requests' })).status, 200);

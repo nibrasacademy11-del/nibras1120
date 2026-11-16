@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { visibleSections } from './navigation.js';
+import { itemFor, menuItems } from './navigation.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import Notifications from './Notifications.jsx';
@@ -50,7 +50,7 @@ export default function Layout({ children }) {
           </div>
         </header>
         <main className="content">
-          {!locked && <PageTrail />}
+          {!locked && <SectionTabs />}
           {/* a fresh key per page plays the short entrance animation on every page change */}
           <div key={location.pathname} className="page-enter">{children}</div>
         </main>
@@ -59,71 +59,39 @@ export default function Layout({ children }) {
   );
 }
 
-// The page you are on, as "section › page" with one line on what the page is for
-function PageTrail() {
+// The pages that belong together, as tabs on top of the page (Customers: customers, sign-in
+// accounts, data change requests, data access requests)
+function SectionTabs() {
   const { me, zone } = useAuth();
   const { t } = useI18n();
   const { pathname } = useLocation();
-  const sections = useMemo(() => visibleSections({ role: me.user.role, isStaff: me.user.isStaff, grants: me.grants, zone }), [me, zone]);
-  let found = null;
-  for (const sec of sections) {
-    for (const i of sec.items) {
-      const hit = i.end ? pathname === i.to : pathname === i.to || pathname.startsWith(`${i.to}/`);
-      if (hit && (!found || i.to.length > found.item.to.length)) found = { sec, item: i };
-    }
-  }
-  if (!found || found.item.to === '/') return null;
+  const items = useMemo(() => menuItems({ role: me.user.role, zone }), [me, zone]);
+  const item = itemFor(items, pathname);
+  if (!item || !item.tabs || item.tabs.length < 2) return null;
   return (
-    <nav className="trail no-print" aria-label={t(found.sec.key)}>
-      <span className="trail__sec">{t(found.sec.key)}</span>
-      <span className="trail__sep" aria-hidden="true">›</span>
-      <span className="trail__page">{t(found.item.key)}</span>
-      {found.item.desc && <span className="trail__desc">{t(found.item.desc)}</span>}
+    <nav className="section-tabs no-print" aria-label={t(item.key)}>
+      {item.tabs.map((x) => (
+        <NavLink key={x.to} to={x.to} end={x.to === '/'} className={({ isActive }) => `section-tab${isActive ? ' active' : ''}`}>{t(x.key)}</NavLink>
+      ))}
     </nav>
   );
 }
 
-// The menu in sections, as an accordion: the section of the current page is open, opening
-// another closes it, and a search box finds any page by name.
+// The menu: one short list, always open
 function SideNav() {
   const { me, zone } = useAuth();
   const { t } = useI18n();
-  const location = useLocation();
-  const sections = useMemo(() => visibleSections({ role: me.user.role, isStaff: me.user.isStaff, grants: me.grants, zone }), [me, zone]);
-  const [q, setQ] = useState('');
-  const path = location.pathname;
-  const current = sections.find((sec) => sec.items.some((i) => (i.end ? path === i.to : path === i.to || path.startsWith(`${i.to}/`))));
-  const [openKey, setOpenKey] = useState(current ? current.key : null);
-  useEffect(() => { if (current) setOpenKey(current.key); }, [current]);
-  const term = q.trim().toLowerCase();
-  const few = sections.reduce((n, sec) => n + sec.items.length, 0) <= 8;
+  const { pathname } = useLocation();
+  const items = useMemo(() => menuItems({ role: me.user.role, zone }), [me, zone]);
+  const current = itemFor(items, pathname);
   return (
-    <nav className="side-nav">
-      {!few && <input className="nav-search" type="search" placeholder={t('navSearch')} value={q} onChange={(e) => setQ(e.target.value)} onClick={(e) => e.stopPropagation()} aria-label={t('navSearch')} />}
-      {sections.map((sec) => {
-        const items = term ? sec.items.filter((i) => t(i.key).toLowerCase().includes(term)) : sec.items;
-        if (!items.length) return null;
-        const isOpen = few || !!term || openKey === sec.key || sections.length === 1;
-        return (
-          <div key={sec.key} className={`nav-section${isOpen ? ' nav-section--open' : ''}`}>
-            {!few && (
-              <button type="button" className="nav-section__head" aria-expanded={isOpen} onClick={(e) => { e.stopPropagation(); setOpenKey(isOpen ? null : sec.key); }}>
-                <span>{t(sec.key)}</span><span className="nav-section__count">{items.length}</span><span aria-hidden="true" className="nav-section__chev">▾</span>
-              </button>
-            )}
-            <div className="nav-section__items" inert={!isOpen}>
-              <div>
-                {items.map((n) => (
-                  <NavLink key={n.to + n.key} to={n.to} end={n.end} className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
-                    <span className="nav-icon" aria-hidden="true">{n.icon}</span>
-                    {t(n.key)}
-                  </NavLink>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-      })}
+    <nav className="side-nav side-nav--flat">
+      {items.map((n) => (
+        <NavLink key={n.to + n.key} to={n.to} end={n.end} className={() => `nav-item${current === n ? ' active' : ''}`}>
+          <span className="nav-icon" aria-hidden="true">{n.icon}</span>
+          {t(n.key)}
+        </NavLink>
+      ))}
     </nav>
   );
 }

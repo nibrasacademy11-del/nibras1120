@@ -34,15 +34,16 @@ test('the responsible employee sees the file, never the identity section (RBAC-M
     assert.ok(!JSON.stringify(out).includes('v1.secret'));
 });
 
-test('another employee gets nothing: no lookup, so the server answers "not found"', () => {
+test('another employee sees the basic card only: the name and who the customer is with', () => {
     const a = customerAccess({ actor: other, grants: grants('employee'), customer });
     assert.equal(a.level, 'basic');
-    assert.equal(a.canLookup, false);
+    assert.equal(a.canLookup, true, 'a search finds the name and asks for the rest');
     assert.equal(Object.values(a.sections).some(Boolean), false);
     const out = serializeCustomer(customer, a, { namePolicy: 'partial', programs: ['PMP'] });
     assert.equal(out.name, 'محمد أ.');
     assert.equal(out.owner.name, 'Sara');
-    assert.deepEqual(out.programs, ['PMP']);
+    assert.deepEqual(out.programs, [], 'the name and who they are with, nothing more');
+    assert.equal(out.status, undefined);
     for (const k of ['contact', 'identity', 'nameAr', 'tags', 'source', 'country']) assert.equal(out[k], undefined, k);
 });
 

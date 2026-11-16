@@ -1,97 +1,94 @@
-// The menu of each role (PLAN-V2: five roles, a few pages each). One fixed list per role,
-// so nobody sees more than their work. The server still checks every request on its own.
+// The menu of each role (16 Nov 2026): a short list that is always open, a handful of items each.
+// Pages that belong together sit under one item and show as tabs at the top of the page
+// (Customers: the customers, their sign-in accounts, data change requests, data access requests).
+// The server still checks every request on its own; a tab the role cannot open is not listed.
 //
-// item fields: to, key (label), icon, end (exact match), desc (one-line description label)
+// item fields: to (where the item opens), key (label), icon, end (exact match), tabs [{ to, key }]
 
-const MINE = {
-  day: { to: '/', key: 'navMyDay', icon: '⌂', end: true, desc: 'd_dashboard' },
-  customers: { to: '/customers', key: 'navMyCustomers', icon: '◉', desc: 'd_customers' },
-  tasks: { to: '/tasks', key: 'tasks', icon: '✓', desc: 'd_tasks' },
-  attendance: { to: '/attendance', key: 'navMyAttendance', icon: '◷', desc: 'd_attendance' },
-  leaves: { to: '/leaves', key: 'navMyLeaves', icon: '☂', desc: 'd_leaves' },
-  money: { to: '/my-payslips', key: 'myPayslipsNav', icon: '₤', desc: 'd_myPayslips' },
-  profile: { to: '/my-profile', key: 'mp_title', icon: '☺', desc: 'd_myProfile' }
-};
+const T = (to, key) => ({ to, key });
+
+const HOME = { to: '/', key: 'nv_home', icon: '⌂', end: true, tabs: [T('/', 'nv_dashboard'), T('/reports', 'reportsNav')] };
+const CUSTOMERS = { to: '/customers', key: 'customers', icon: '◉', tabs: [T('/customers', 'customers'), T('/customer-accounts', 'ca_title'), T('/profile-requests', 'prq_title'), T('/access-requests', 'nv_access')] };
+const FOLLOW_UP = { to: '/tasks', key: 'nv_followUp', icon: '✓', tabs: [T('/tasks', 'tasks'), T('/complaints', 'complaintsNav')] };
+const LEARNING = { to: '/programs', key: 'nv_learning', icon: '▤', tabs: [T('/programs', 'programsNav'), T('/groups', 'groupsNav'), T('/enrollments', 'enrollmentsNav'), T('/certificates', 'certificatesNav')] };
+const MONEY = { to: '/finance', key: 'nv_money', icon: '¤', tabs: [T('/finance', 'fhTitle'), T('/commissions', 'commissionsNav')] };
+
+// a staff member's own things: their file, entitlements, review and account security
+const mine = (extra = []) => ({ to: '/my-profile', key: 'nv_mine', icon: '☺', tabs: [T('/my-profile', 'mp_title'), ...extra, T('/security', 'security')] });
 
 export const MENUS = {
-  // The owner: everything, in a few clear sections
+  // The owner: everything
   super_admin: [
-    { key: 'sec_home', items: [
-      { to: '/', key: 'dashboard', icon: '⌂', end: true, desc: 'd_dashboard' },
-      { to: '/reports', key: 'reportsNav', icon: '▤', desc: 'd_reports' }
-    ] },
-    { key: 'sec_crm', items: [
-      { to: '/customers', key: 'customers', icon: '◉', desc: 'd_customers' },
-      { to: '/customer-accounts', key: 'ca_title', icon: '⚷', desc: 'd_customerAccounts' },
-      { to: '/profile-requests', key: 'prq_title', icon: '✎', desc: 'd_profileRequests' },
-      { to: '/tasks', key: 'tasks', icon: '✓', desc: 'd_tasks' },
-      { to: '/complaints', key: 'complaintsNav', icon: '✉', desc: 'd_complaints' }
-    ] },
-    { key: 'sec_learning', items: [
-      { to: '/programs', key: 'programsNav', icon: '▤', desc: 'd_programs' },
-      { to: '/groups', key: 'groupsNav', icon: '▶', desc: 'd_groups' },
-      { to: '/enrollments', key: 'enrollmentsNav', icon: '❖', desc: 'd_enrollments' },
-      { to: '/certificates', key: 'certificatesNav', icon: '✪', desc: 'd_certificates' }
-    ] },
-    { key: 'sec_finance', items: [
-      { to: '/finance', key: 'fhTitle', icon: '¤', desc: 'd_finance' },
-      { to: '/commissions', key: 'commissionsNav', icon: '%', desc: 'd_commissions' }
-    ] },
-    { key: 'sec_hr', items: [
-      { to: '/employees', key: 'employees', icon: '☺', desc: 'd_employees' },
-      { to: '/teams', key: 'teams', icon: '▦', desc: 'd_teams' },
-      { to: '/my-team', key: 'mt_invitations', icon: '⚑', desc: 'd_myTeam' },
-      { to: '/attendance', key: 'attendanceNav', icon: '◷', desc: 'd_attendance' },
-      { to: '/leaves', key: 'leavesNav', icon: '☂', desc: 'd_leaves' },
-      { to: '/payroll', key: 'payrollNav', icon: '₤', desc: 'd_payroll' },
-      { to: '/performance', key: 'reviewsNav', icon: '★', desc: 'd_reviews' }
-    ] },
-    { key: 'sec_system', items: [
-      { to: '/website', key: 'websiteNav', icon: '◍', desc: 'd_website' },
-      { to: '/settings', key: 'settings', icon: '⚙', desc: 'd_settings' },
-      { to: '/user-accounts', key: 'userAccountsNav', icon: '⚇', desc: 'd_userAccounts' },
-      { to: '/audit', key: 'audit', icon: '☰', desc: 'd_audit' },
-      { to: '/security', key: 'security', icon: '⚿', desc: 'd_security' }
-    ] }
+    HOME,
+    CUSTOMERS,
+    FOLLOW_UP,
+    LEARNING,
+    MONEY,
+    { to: '/employees', key: 'nv_team', icon: '▦', tabs: [T('/employees', 'employees'), T('/teams', 'teams'), T('/attendance', 'attendanceNav'), T('/leaves', 'leavesNav'), T('/payroll', 'payrollNav'), T('/performance', 'reviewsNav'), T('/my-team', 'mt_invitations')] },
+    { to: '/settings', key: 'nv_settings', icon: '⚙', tabs: [T('/settings', 'settings'), T('/website', 'websiteNav'), T('/user-accounts', 'userAccountsNav'), T('/audit', 'audit'), T('/security', 'security')] }
   ],
-  // A team leader: their own work, plus their team
+  // The assistant: the owner's work without the money (no accounts, commissions, payroll, audit, settings)
+  assistant: [
+    HOME,
+    CUSTOMERS,
+    FOLLOW_UP,
+    LEARNING,
+    { to: '/employees', key: 'nv_team', icon: '▦', tabs: [T('/employees', 'employees'), T('/teams', 'teams'), T('/attendance', 'attendanceNav'), T('/leaves', 'leavesNav'), T('/performance', 'reviewsNav'), T('/my-team', 'mt_invitations')] },
+    { to: '/website', key: 'nv_site', icon: '◍', tabs: [T('/website', 'websiteNav'), T('/user-accounts', 'userAccountsNav')] },
+    mine([T('/my-payslips', 'myPayslipsNav')])
+  ],
+  // A team leader: their own work and their team
   team_leader: [
-    { key: 'sec_mine', items: [MINE.day, MINE.customers, { to: '/my-team', key: 'mt_title', icon: '⚑', desc: 'd_myTeam' }, MINE.tasks, MINE.attendance, MINE.leaves, MINE.money, MINE.profile] }
+    { to: '/', key: 'navMyDay', icon: '⌂', end: true },
+    { to: '/customers', key: 'navMyCustomers', icon: '◉', tabs: [T('/customers', 'navMyCustomers'), T('/lookup', 'nv_lookup'), T('/access-requests', 'nv_access')] },
+    { to: '/my-team', key: 'mt_title', icon: '⚑', tabs: [T('/my-team', 'mt_title'), T('/performance', 'reviewsNav')] },
+    { to: '/tasks', key: 'tasks', icon: '✓' },
+    { to: '/attendance', key: 'navMyAttendance', icon: '◷', tabs: [T('/attendance', 'navMyAttendance'), T('/leaves', 'navMyLeaves')] },
+    mine([T('/my-payslips', 'myPayslipsNav'), T('/my-performance', 'nv_myReview')])
   ],
+  // An employee: their own customers and work
   employee: [
-    { key: 'sec_mine', items: [MINE.day, MINE.customers, MINE.tasks, MINE.attendance, MINE.leaves, MINE.money, MINE.profile] }
-  ],
-  customer_support: [
-    { key: 'sec_mine', items: [
-      { to: '/customers', key: 'customers', icon: '◉', desc: 'd_customers' },
-      { to: '/customer-accounts', key: 'ca_title', icon: '⚷', desc: 'd_customerAccounts' },
-      { to: '/complaints', key: 'complaintsNav', icon: '✉', desc: 'd_complaints' },
-      { to: '/groups', key: 'groupsNav', icon: '▶', desc: 'd_groups' },
-      { to: '/certificates', key: 'certificatesNav', icon: '✪', desc: 'd_certificates' },
-      MINE.tasks, MINE.attendance, MINE.leaves, MINE.profile
-    ] }
+    { to: '/', key: 'navMyDay', icon: '⌂', end: true },
+    { to: '/customers', key: 'navMyCustomers', icon: '◉', tabs: [T('/customers', 'navMyCustomers'), T('/lookup', 'nv_lookup'), T('/access-requests', 'nv_access')] },
+    { to: '/tasks', key: 'tasks', icon: '✓' },
+    { to: '/attendance', key: 'navMyAttendance', icon: '◷', tabs: [T('/attendance', 'navMyAttendance'), T('/leaves', 'navMyLeaves')] },
+    mine([T('/my-payslips', 'myPayslipsNav'), T('/my-performance', 'nv_myReview')])
   ],
   customer: [
-    { key: 'sec_customer', items: [
-      { to: '/', key: 'myPrograms', icon: '▤', end: true, desc: 'd_myPrograms' },
-      { to: '/my-lectures', key: 'myLectures', icon: '▶', desc: 'd_myLectures' },
-      { to: '/my-payments', key: 'myPayments', icon: '¤', desc: 'd_myPayments' },
-      { to: '/my-certificates', key: 'myCertificates', icon: '✪', desc: 'd_myCertificates' },
-      { to: '/my-complaints', key: 'myComplaints', icon: '✉', desc: 'd_myComplaints' },
-      { to: '/security', key: 'security', icon: '⚿', desc: 'd_security' }
-    ] }
+    { to: '/', key: 'myPrograms', icon: '▤', end: true },
+    { to: '/my-lectures', key: 'myLectures', icon: '▶' },
+    { to: '/my-payments', key: 'myPayments', icon: '¤' },
+    { to: '/my-certificates', key: 'myCertificates', icon: '✪' },
+    { to: '/my-complaints', key: 'myComplaints', icon: '✉' },
+    { to: '/security', key: 'security', icon: '⚿' }
   ]
 };
 
-// The roles that no longer exist are read as employee (see lib/permissions.js)
-const ROLE_OF = { student: 'customer', user: 'customer', admin: 'employee', hr_manager: 'employee', finance_manager: 'employee', accountant: 'employee', cms_manager: 'employee' };
+// Roles that no longer exist are read as their replacement (see lib/permissions.js)
+const ROLE_OF = { student: 'customer', user: 'customer', admin: 'employee', hr_manager: 'employee', finance_manager: 'employee', accountant: 'employee', cms_manager: 'employee', customer_support: 'assistant' };
 export const menuRole = (role) => (MENUS[role] ? role : ROLE_OF[role] || 'customer');
 
-// cms.* shows only the website editor and the account's security
-const CMS_PAGES = ['/website', '/security'];
+const matches = (to, path, end) => (end || to === '/' ? path === to : path === to || path.startsWith(`${to}/`));
 
+export function menuItems({ role, zone = 'all' }) {
+  const items = MENUS[menuRole(role)];
+  if (zone === 'cms') return [{ to: '/website', key: 'websiteNav', icon: '◍' }, { to: '/security', key: 'security', icon: '⚿' }];
+  return items;
+}
+
+// The menu item a page belongs to (its own link, or one of its tabs); the longest match wins
+export function itemFor(items, path) {
+  let found = null;
+  let len = -1;
+  for (const i of items) {
+    for (const x of [{ to: i.to, end: i.end }, ...(i.tabs || [])]) {
+      if (matches(x.to, path, x.end) && x.to.length > len) { found = i; len = x.to.length; }
+    }
+  }
+  return found;
+}
+
+// Kept for older callers and tests: the menu as one section
 export function visibleSections({ role, zone = 'all' }) {
-  return MENUS[menuRole(role)]
-    .map((s) => ({ ...s, items: s.items.filter((i) => zone !== 'cms' || CMS_PAGES.includes(i.to)) }))
-    .filter((s) => s.items.length);
+  return [{ key: 'menu', items: menuItems({ role, zone }) }];
 }

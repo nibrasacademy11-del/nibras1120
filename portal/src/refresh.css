@@ -1338,3 +1338,70 @@ body {
 .stars button.on {
   color: var(--gold);
 }
+
+/* ====================================================================================
+   THE MENU (always open) AND THE SECTION TABS ON TOP OF A PAGE (16 Nov 2026)
+   ==================================================================================== */
+.side-nav--flat { display: flex; flex-direction: column; gap: 4px; padding-top: 6px; }
+.side-nav--flat .nav-item { font-size: 0.98rem; padding: 11px 14px; }
+
+.section-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  margin: 0 0 18px;
+  padding: 4px;
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  scrollbar-width: thin;
+}
+.section-tab {
+  flex: 0 0 auto;
+  padding: 8px 16px;
+  border-radius: 9px;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.section-tab:hover { color: var(--ink); background: rgba(255, 255, 255, 0.6); }
+.section-tab.active { background: #ffffff; color: var(--primary); box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12); }
+
+/* choosing a role (sign-in accounts) */
+.role-pick { display: grid; gap: 8px; margin-bottom: 10px; }
+.role-pick__opt { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; align-items: center; padding: 10px 14px; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; }
+.role-pick__opt input { grid-row: span 2; accent-color: var(--primary); }
+.role-pick__opt small { grid-column: 2; }
+.role-pick__opt.on { border-color: var(--primary); background: rgba(112, 26, 43, 0.05); }
+
+/* ====================================================================================
+   SETTINGS (16 Nov 2026): the whole width, cards in two columns on a wide screen
+   ==================================================================================== */
+.settings { display: flex; flex-direction: column; gap: 18px; width: 100%; }
+.settings__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
+.settings__card { margin: 0; display: flex; flex-direction: column; gap: 16px; }
+.settings__card--wide { grid-column: 1 / -1; }
+.settings__head { display: flex; gap: 12px; align-items: flex-start; }
+.settings__head h2 { margin: 0 0 2px; font-size: 1.05rem; }
+.settings__head p { margin: 0; font-size: 0.86rem; }
+.settings__icon { flex: 0 0 auto; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: rgba(112, 26, 43, 0.08); color: var(--primary); font-size: 1.1rem; }
+.settings__card .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; }
+.settings__check { display: flex; gap: 8px; align-items: center; font-weight: 500; }
+.settings__check input { accent-color: var(--primary); width: 18px; height: 18px; }
+.tpl-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tpl-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: #fafbfc; }
+.tpl-item__top { display: flex; gap: 8px; align-items: center; }
+.tpl-item__top input { flex: 1 1 auto; min-width: 0; width: auto; max-width: none; font-weight: 600; }
+.tpl-item { min-width: 0; }
+.tpl-item textarea { width: 100%; min-height: 96px; }
+.settings__save { position: sticky; bottom: 12px; z-index: 5; display: flex; gap: 12px; align-items: flex-end; margin: 0; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08); }
+.settings__save .field { flex: 1; }
+.settings__save.is-dirty { border-color: var(--primary); }
+@media (max-width: 900px) {
+  .settings__grid, .settings__card .form-grid, .tpl-list { grid-template-columns: 1fr; }
+  .settings__save { flex-direction: column; align-items: stretch; }
+}

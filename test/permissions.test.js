@@ -22,23 +22,34 @@ test('super admin holds every permission, whatever is saved for it', () => {
     }
 });
 
-test('five roles only; the removed ones are read as employee (PLAN-V2)', () => {
-    assert.deepEqual(P.ROLES, ['super_admin', 'team_leader', 'employee', 'customer_support', 'customer']);
+test('four staff accounts and the customer; old roles read as their replacement (16 Nov 2026)', () => {
+    assert.deepEqual(P.ROLES, ['super_admin', 'assistant', 'team_leader', 'employee', 'customer']);
     for (const old of ['admin', 'hr_manager', 'finance_manager', 'accountant', 'cms_manager']) {
         assert.equal(P.normalizeRole(old), 'employee', old);
         assert.equal(P.isAdminRole(old), false, old);
     }
+    assert.equal(P.normalizeRole('customer_support'), 'assistant', 'customer service became the assistant');
     assert.equal(P.effectiveGrants('admin')['payments.approve'], undefined, 'an old admin account gets no admin rights');
-    assert.equal(P.effectiveGrants('customer_support')['customers.view'], 'all', 'customer service sees every customer');
-    assert.equal(P.effectiveGrants('customer_support')['customers.update'], undefined, 'read only');
-    assert.equal(P.effectiveGrants('customer_support')['certificates.approve'], 'all', 'may release a certificate before payment');
 });
 
-test('employees and team leaders work on their own customers; no academy-wide search (RBAC-MATRIX)', () => {
+test('the assistant does everything except the money, the audit log, roles and settings', () => {
+    const g = P.effectiveGrants('assistant');
+    for (const k of ['customers.update', 'customer_identity.view', 'enrollments.approve', 'certificates.approve', 'employees.update', 'website.manage', 'users.manage', 'reports.view']) assert.equal(g[k], 'all', k);
+    assert.equal(g['payments.view'], 'all', 'the payments of a customer, to record and follow them');
+    for (const k of ['accounts.view', 'expenses.view', 'currencies.view', 'payments.approve', 'audit.view', 'roles.manage', 'settings.manage']) assert.equal(g[k], undefined, k);
+    assert.equal(g['payroll.view'], 'own');
+    assert.equal(g['commissions.view'], 'own');
+    assert.equal(P.seesMoney(g), false);
+    assert.equal(P.seesMoney(P.effectiveGrants('super_admin')), true);
+    assert.equal(P.roleLevel('assistant'), 'owner', 'the owner dashboard, without the money');
+});
+
+test('employees and team leaders work on their own customers; a search shows a name and asks for the rest', () => {
     assert.equal(P.effectiveGrants('employee')['customers.view'], 'own');
     assert.equal(P.effectiveGrants('team_leader')['customers.view'], 'own');
-    assert.equal(P.effectiveGrants('employee')['customer_lookup.view'], undefined);
-    assert.equal(P.effectiveGrants('team_leader')['customer_lookup.view'], undefined);
+    assert.equal(P.effectiveGrants('employee')['customer_lookup.view'], 'all');
+    assert.equal(P.effectiveGrants('employee')['access_requests.create'], 'own');
+    assert.equal(P.effectiveGrants('team_leader')['access_requests.approve'], 'team', 'the leader decides for the files of the team');
     assert.equal(P.effectiveGrants('employee')['customer_identity.view'], undefined);
     assert.equal(P.effectiveGrants('employee')['customers.export'], undefined);
     assert.equal(P.effectiveGrants('employee')['audit.view'], undefined);

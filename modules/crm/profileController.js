@@ -205,7 +205,7 @@ exports.request = async (req, res) => {
     const r = await ProfileRequest.create({ customer: customer._id, user: user._id, changes, reason });
     await addEvent(req, customer._id, 'profile_request', `Change requested on the website: ${changes.map((c) => c.field).join(', ')} — ${reason}`);
     // The owner and customer service see it in their notifications
-    const reviewers = await User.find({ role: { $in: ['super_admin', 'customer_support'] }, status: 'active' }).select('_id').lean();
+    const reviewers = await User.find({ role: { $in: ['super_admin', 'assistant', 'customer_support'] }, status: 'active' }).select('_id').lean();
     for (const u of reviewers) {
         await notify(u._id, { type: 'profile_request', titleAr: `طلب تعديل بيانات: ${customer.nameAr}`, titleEn: `Data change request: ${customer.nameEn || customer.nameAr}`, bodyAr: changes.map((c) => accountEmails.FIELD_LABELS[c.field]).join('، '), link: '/profile-requests' });
     }

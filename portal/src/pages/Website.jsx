@@ -381,47 +381,6 @@ function Inquiries() {
 // ---- user accounts (website sign-ups and staff logins) ----
 
 // Sign-in accounts (customers and staff): a staff page of its own (/user-accounts), not website work
-export function Accounts() {
-  const { t, en, fmtDay, lang } = useI18n();
-  const state = useLoad('/api/auth/users');
-  const [q, setQ] = useState('');
-  const [msg, setMsg] = useState('');
-  const remove = async (u) => {
-    setMsg('');
-    if (!window.confirm(`${t('wsDeleteConfirm')} ${u.email}`)) return;
-    try { await api(`/api/auth/users/${u._id}`, { method: 'DELETE' }); state.reload(); } catch (e) { setMsg(pickMessage(e.message, lang)); }
-  };
-  return (
-    <section className="card">
-      <p className="muted"><small>{t('wsAccountsHint')}</small></p>
-      <input className="grow" placeholder={t('search')} value={q} onChange={(e) => setQ(e.target.value)} />
-      {msg && <div className="alert alert--error">{msg}</div>}
-      <Loading state={state}>
-        {(d) => {
-          const s = q.trim().toLowerCase();
-          const users = d.users.filter((u) => !s || `${u.name} ${u.email} ${u.phone || ''}`.toLowerCase().includes(s)).slice(0, 300);
-          return (
-            <div className="table-wrap">
-              <table className="table">
-                <thead><tr><th>{t('name')}</th><th>{t('wsEmail')}</th><th>{t('role')}</th><th>{t('registeredAt')}</th><th /></tr></thead>
-                <tbody>{users.map((u) => (
-                  <tr key={u._id}>
-                    <td>{u.name}<br /><small className="muted" dir="ltr">{u.phone}</small></td>
-                    <td dir="ltr">{u.email}</td>
-                    <td>{en('role', ['student', 'user'].includes(u.role) ? 'customer' : u.role)}{u.status === 'disabled' && <Pill tone="muted">{t('inactive')}</Pill>}</td>
-                    <td>{fmtDay(u.createdAt)}</td>
-                    <td><button type="button" className="btn btn--small btn--ghost" onClick={() => remove(u)}>{t('wsDelete')}</button></td>
-                  </tr>
-                ))}</tbody>
-              </table>
-            </div>
-          );
-        }}
-      </Loading>
-    </section>
-  );
-}
-
 const TABS = ['catalog', 'heroes', 'pathways', 'cards', 'stats', 'testimonials', 'inquiries'];
 
 export default function Website() {

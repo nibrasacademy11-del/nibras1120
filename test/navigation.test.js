@@ -1,55 +1,55 @@
-// The menus of the five roles (PLAN-V2): a few pages each, never more than the role needs
+// The menus (16 Nov 2026): four staff accounts (owner, assistant, team leader, employee) and the
+// customer. A short list that is always open; related pages are tabs under one item.
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
 const { pathToFileURL } = require('url');
 
 const load = () => import(pathToFileURL(path.join(__dirname, '..', 'portal', 'src', 'components', 'navigation.js')).href);
-const pages = (sections) => sections.flatMap((s) => s.items.map((i) => i.to));
+// every page a menu reaches: the items and their tabs
+const pages = (items) => [...new Set(items.flatMap((i) => [i.to, ...(i.tabs || []).map((x) => x.to)]))];
 
 test('every role has a short menu', async () => {
-    const { visibleSections } = await load();
-    const count = (role) => pages(visibleSections({ role })).length;
-    assert.ok(count('employee') <= 7, `employee: ${count('employee')}`);
-    assert.ok(count('team_leader') <= 8, `team leader: ${count('team_leader')}`);
-    // 9 since 15 Nov 2026: customer accounts (password resets)
-    assert.ok(count('customer_support') <= 9, `customer service: ${count('customer_support')}`);
-    assert.ok(count('customer') <= 6, `customer: ${count('customer')}`);
-});
-
-test('an employee sees their own work, never money, settings, the website or other people', async () => {
-    const { visibleSections } = await load();
-    const p = pages(visibleSections({ role: 'employee' }));
-    for (const hidden of ['/finance', '/settings', '/website', '/employees', '/payroll', '/audit', '/my-access', '/roles', '/my-team']) assert.ok(!p.includes(hidden), hidden);
-    for (const shown of ['/', '/customers', '/tasks', '/my-payslips', '/my-profile']) assert.ok(p.includes(shown), shown);
-});
-
-test('a team leader adds their team, nothing administrative', async () => {
-    const { visibleSections } = await load();
-    const p = pages(visibleSections({ role: 'team_leader' }));
-    assert.ok(p.includes('/my-team'));
-    for (const hidden of ['/finance', '/payroll', '/settings', '/employees', '/audit']) assert.ok(!p.includes(hidden), hidden);
-});
-
-test('customer service: customers, complaints, lectures and certificates', async () => {
-    const { visibleSections } = await load();
-    const p = pages(visibleSections({ role: 'customer_support' }));
-    for (const shown of ['/customers', '/customer-accounts', '/complaints', '/groups', '/certificates']) assert.ok(p.includes(shown), shown);
-    for (const hidden of ['/finance', '/payroll', '/settings', '/website']) assert.ok(!p.includes(hidden), hidden);
-});
-
-test('the owner has every section; no permissions pages anywhere', async () => {
-    const { visibleSections, MENUS } = await load();
-    const p = pages(visibleSections({ role: 'super_admin' }));
-    for (const shown of ['/', '/customers', '/programs', '/certificates', '/finance', '/employees', '/payroll', '/website', '/settings', '/audit']) assert.ok(p.includes(shown), shown);
-    for (const role of Object.keys(MENUS)) {
-        const all = pages(MENUS[role]);
-        assert.ok(!all.includes('/my-access') && !all.includes('/roles'), role);
+    const { menuItems } = await load();
+    for (const [role, max] of [['super_admin', 7], ['assistant', 7], ['team_leader', 6], ['employee', 5], ['customer', 6]]) {
+        const n = menuItems({ role }).length;
+        assert.ok(n <= max, `${role}: ${n}`);
     }
 });
 
-test('removed roles get the employee menu; cms shows only the website', async () => {
-    const { visibleSections } = await load();
-    assert.deepEqual(pages(visibleSections({ role: 'admin' })), pages(visibleSections({ role: 'employee' })));
-    assert.deepEqual(pages(visibleSections({ role: 'super_admin', zone: 'cms' })), ['/website', '/security']);
+test('an employee sees their own work, never money, settings, the website or other people', async () => {
+    const { menuItems } = await load();
+    const p = pages(menuItems({ role: 'employee' }));
+    for (const hidden of ['/finance', '/settings', '/website', '/employees', '/payroll', '/audit', '/roles', '/my-team', '/user-accounts']) assert.ok(!p.includes(hidden), hidden);
+    for (const shown of ['/', '/customers', '/lookup', '/access-requests', '/tasks', '/my-payslips', '/my-profile']) assert.ok(p.includes(shown), shown);
+});
+
+test('a team leader adds their team, nothing administrative', async () => {
+    const { menuItems } = await load();
+    const p = pages(menuItems({ role: 'team_leader' }));
+    for (const shown of ['/my-team', '/performance', '/access-requests']) assert.ok(p.includes(shown), shown);
+    for (const hidden of ['/finance', '/payroll', '/settings', '/employees', '/audit']) assert.ok(!p.includes(hidden), hidden);
+});
+
+test('the assistant: everything except the money, the audit log and the settings', async () => {
+    const { menuItems } = await load();
+    const p = pages(menuItems({ role: 'assistant' }));
+    for (const shown of ['/', '/reports', '/customers', '/customer-accounts', '/complaints', '/programs', '/groups', '/certificates', '/employees', '/website', '/user-accounts']) assert.ok(p.includes(shown), shown);
+    for (const hidden of ['/finance', '/commissions', '/payroll', '/settings', '/audit']) assert.ok(!p.includes(hidden), hidden);
+});
+
+test('the owner has everything; customers and their accounts are one item', async () => {
+    const { menuItems, itemFor } = await load();
+    const items = menuItems({ role: 'super_admin' });
+    const p = pages(items);
+    for (const shown of ['/', '/customers', '/customer-accounts', '/programs', '/certificates', '/finance', '/employees', '/payroll', '/website', '/settings', '/audit', '/user-accounts']) assert.ok(p.includes(shown), shown);
+    assert.equal(itemFor(items, '/customer-accounts'), itemFor(items, '/customers'));
+    assert.equal(itemFor(items, '/customers/abc').key, 'customers', 'a customer file belongs to Customers');
+});
+
+test('old roles get their replacement menu; cms shows only the website', async () => {
+    const { menuItems } = await load();
+    assert.deepEqual(pages(menuItems({ role: 'admin' })), pages(menuItems({ role: 'employee' })));
+    assert.deepEqual(pages(menuItems({ role: 'customer_support' })), pages(menuItems({ role: 'assistant' })));
+    assert.deepEqual(menuItems({ role: 'super_admin', zone: 'cms' }).map((i) => i.to), ['/website', '/security']);
 });
