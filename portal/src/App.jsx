@@ -26,6 +26,7 @@ import Groups, { GroupDetail } from './pages/Groups.jsx';
 import FinanceHub from './pages/FinanceHub.jsx';
 import Website from './pages/Website.jsx';
 import SignInAccounts from './pages/SignInAccounts.jsx';
+import Requests from './pages/Requests.jsx';
 import CustomerAccounts from './pages/CustomerAccounts.jsx';
 import Payroll, { MyPayslips } from './pages/Payroll.jsx';
 import PerformanceReviews, { MyReviews as MyPerformance } from './pages/Reviews.jsx';
@@ -133,6 +134,7 @@ export default function App() {
         <Route path="/enrollments/:id" element={<Guard permission="enrollments.view"><EnrollmentDetail /></Guard>} />
         <Route path="/reviews" element={<Guard permission="enrollments.approve" minScope="team"><Reviews /></Guard>} />
         <Route path="/customers" element={<Guard permission="customers.view"><Customers /></Guard>} />
+        <Route path="/requests" element={<Guard permission="access_requests.view"><Requests /></Guard>} />
         <Route path="/customer-accounts" element={<Guard permission="customer_accounts.view" minScope="all"><CustomerAccounts /></Guard>} />
         <Route path="/print-samples" element={me.user.role === 'super_admin' ? <PrintSamples /> : <div className="card empty">{t('forbidden')}</div>} />
         <Route path="/leads" element={<Guard permission="customers.view"><Leads /></Guard>} />

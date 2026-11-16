@@ -3,14 +3,16 @@
 // (Customers: the customers, their sign-in accounts, data change requests, data access requests).
 // The server still checks every request on its own; a tab the role cannot open is not listed.
 //
-// item fields: to (where the item opens), key (label), icon, end (exact match), tabs [{ to, key }]
+// item fields: to (where the item opens), key (label), icon, end (exact match), tabs [{ to, key }],
+// also (pages that belong to the item without a tab of their own)
 
 const T = (to, key) => ({ to, key });
 
 const HOME = { to: '/', key: 'nv_home', icon: '⌂', end: true, tabs: [T('/', 'nv_dashboard'), T('/reports', 'reportsNav')] };
-const CUSTOMERS = { to: '/customers', key: 'customers', icon: '◉', tabs: [T('/customers', 'customers'), T('/customer-accounts', 'ca_title'), T('/profile-requests', 'prq_title'), T('/access-requests', 'nv_access')] };
+const CUSTOMERS = { to: '/customers', key: 'customers', icon: '◉', tabs: [T('/customers', 'customers'), T('/requests', 'nv_requests')], also: ['/customer-accounts', '/profile-requests', '/access-requests', '/lookup', '/leads', '/duplicates'] };
 const FOLLOW_UP = { to: '/tasks', key: 'nv_followUp', icon: '✓', tabs: [T('/tasks', 'tasks'), T('/complaints', 'complaintsNav')] };
-const LEARNING = { to: '/programs', key: 'nv_learning', icon: '▤', tabs: [T('/programs', 'programsNav'), T('/groups', 'groupsNav'), T('/enrollments', 'enrollmentsNav'), T('/certificates', 'certificatesNav')] };
+// everything of a program (its modules, lectures and groups) is added inside the program itself
+const LEARNING = { to: '/programs', key: 'nv_learning', icon: '▤', tabs: [T('/programs', 'nv_programsAll'), T('/enrollments', 'enrollmentsNav'), T('/certificates', 'certificatesNav')], also: ['/groups', '/group-certificates'] };
 const MONEY = { to: '/finance', key: 'nv_money', icon: '¤', tabs: [T('/finance', 'fhTitle'), T('/commissions', 'commissionsNav')] };
 
 // a staff member's own things: their file, entitlements, review and account security
@@ -81,7 +83,8 @@ export function itemFor(items, path) {
   let found = null;
   let len = -1;
   for (const i of items) {
-    for (const x of [{ to: i.to, end: i.end }, ...(i.tabs || [])]) {
+    // pages opened from inside an item (a group from its program) count as that item, without a tab
+    for (const x of [{ to: i.to, end: i.end }, ...(i.tabs || []), ...(i.also || []).map((to) => ({ to }))]) {
       if (matches(x.to, path, x.end) && x.to.length > len) { found = i; len = x.to.length; }
     }
   }

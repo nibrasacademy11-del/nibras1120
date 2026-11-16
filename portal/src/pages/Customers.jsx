@@ -193,14 +193,14 @@ export default function Customers() {
 
       <section className="card">
         <Loading state={state}>
-          {(d) => (!d.items.length ? <p className="muted">{t('noResults')}</p> : (
+          {(d) => { const showAccounts = d.items.some((c) => c.account !== undefined); return (!d.items.length ? <p className="muted">{t('noResults')}</p> : (
             <>
               <div className="table-wrap">
                 <table className="table table--hover">
                   <thead>
                     <tr>
                       {canSelect && <th />}
-                      <th>{t('customerNo')}</th><th>{t('name')}</th><th>{t('phone')}</th><th>{t('status')}</th><th>{t('owner')}</th><th>{t('source')}</th><th>{t('registeredAt')}</th><th>{t('nextFollowUp')}</th>
+                      <th>{t('customerNo')}</th><th>{t('name')}</th><th>{t('phone')}</th><th>{t('status')}</th><th>{t('owner')}</th><th>{t('source')}</th><th>{t('registeredAt')}</th><th>{t('nextFollowUp')}</th>{showAccounts && <th>{t('ca_col')}</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -215,6 +215,7 @@ export default function Customers() {
                         <td>{en('source', c.source)}</td>
                         <td className="nowrap">{fmtDay(c.registeredAt)}</td>
                         <td className="nowrap">{c.nextFollowUpAt ? fmtDay(c.nextFollowUpAt) : '—'}</td>
+                        {showAccounts && <td className="nowrap">{!c.account ? <span className="muted">{t('ca_none_short')}</span> : <Pill tone={{ verified: 'ok', temporary: 'warn', unverified: 'muted', disabled: 'muted' }[c.account.state]}>{t({ verified: 'ca_verified', temporary: 'ca_temporary', unverified: 'ca_notVerified', disabled: 'inactive' }[c.account.state])}</Pill>}</td>}
                       </tr>
                     ))}
                   </tbody>
@@ -223,7 +224,7 @@ export default function Customers() {
               <p className="muted">{t('total')}: {d.total}</p>
               <Pager page={page} total={d.total} limit={d.limit} onPage={(p) => setParam('page', String(p))} />
             </>
-          ))}
+          )); }}
         </Loading>
       </section>
 

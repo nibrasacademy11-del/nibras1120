@@ -34,16 +34,18 @@ test('a team leader adds their team, nothing administrative', async () => {
 test('the assistant: everything except the money, the audit log and the settings', async () => {
     const { menuItems } = await load();
     const p = pages(menuItems({ role: 'assistant' }));
-    for (const shown of ['/', '/reports', '/customers', '/customer-accounts', '/complaints', '/programs', '/groups', '/certificates', '/employees', '/website', '/user-accounts']) assert.ok(p.includes(shown), shown);
+    for (const shown of ['/', '/reports', '/customers', '/requests', '/complaints', '/programs', '/certificates', '/employees', '/website', '/user-accounts']) assert.ok(p.includes(shown), shown);
     for (const hidden of ['/finance', '/commissions', '/payroll', '/settings', '/audit']) assert.ok(!p.includes(hidden), hidden);
 });
 
-test('the owner has everything; customers and their accounts are one item', async () => {
+test('the owner has everything; customer requests are one page; a program holds its groups', async () => {
     const { menuItems, itemFor } = await load();
     const items = menuItems({ role: 'super_admin' });
     const p = pages(items);
-    for (const shown of ['/', '/customers', '/customer-accounts', '/programs', '/certificates', '/finance', '/employees', '/payroll', '/website', '/settings', '/audit', '/user-accounts']) assert.ok(p.includes(shown), shown);
-    assert.equal(itemFor(items, '/customer-accounts'), itemFor(items, '/customers'));
+    for (const shown of ['/', '/customers', '/requests', '/programs', '/certificates', '/finance', '/employees', '/payroll', '/website', '/settings', '/audit', '/user-accounts']) assert.ok(p.includes(shown), shown);
+    assert.equal(itemFor(items, '/requests'), itemFor(items, '/customers'));
+    for (const gone of ['/customer-accounts', '/profile-requests', '/groups']) assert.ok(!p.includes(gone), gone);
+    assert.equal(itemFor(items, '/groups/abc').key, 'nv_learning', 'a group page still belongs to Learning');
     assert.equal(itemFor(items, '/customers/abc').key, 'customers', 'a customer file belongs to Customers');
 });
 

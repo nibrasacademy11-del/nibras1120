@@ -69,10 +69,20 @@ export default function Programs() {
   if (query.q) params.set('q', query.q);
   if (query.type) params.set('type', query.type);
   const state = useLoad(`/api/v2/programs?${params}`);
+  const { can } = useAuth();
+  const [adding, setAdding] = useState(false);
+  const specialties = useLoad(adding ? '/api/v2/website/specialties' : null, [adding]);
 
   return (
     <>
-      <h1 className="page-title">{t('programsNav')}</h1>
+      <div className="page-head">
+        <div>
+          <h1 className="page-title">{t('programsNav')}</h1>
+          <p className="muted" style={{ margin: 0 }}>{t('pg_allInOne')}</p>
+        </div>
+        {can('website.manage', 'all') && <button type="button" className="btn btn--primary" onClick={() => setAdding(true)}>+ {t('wsNewProgram')}</button>}
+      </div>
+      {adding && <ProgramForm specialties={specialties.data?.items || []} onClose={() => setAdding(false)} onSaved={() => { setAdding(false); state.reload(); }} />}
       <form className="card filters" onSubmit={(e) => { e.preventDefault(); setQuery({ ...query, q, page: 1 }); }}>
         <Field label={t('search')}><input value={q} onChange={(e) => setQ(e.target.value)} /></Field>
         <Field label={t('type')}>

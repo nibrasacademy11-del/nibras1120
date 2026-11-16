@@ -1,11 +1,13 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { RoleDialog } from './SignInAccounts.jsx';
 import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { ErrorBox, Field, Loading, Modal, Pill, StaffSelect, useAction, useLoad } from '../components/ui.jsx';
 
 // The academy's staff roles (PLAN-V2): the owner is set from the server, not here
-const STAFF_ROLES = ['employee', 'team_leader', 'customer_support'];
+const STAFF_ROLES = ['employee', 'team_leader', 'assistant'];
 
 function useOrg() {
   const teams = useLoad('/api/v2/teams');
@@ -136,8 +138,9 @@ export default function Employees() {
     <>
       <div className="page-head">
         <h1 className="page-title">{t('employees')}</h1>
-        {can('employees.create', 'all') && <button type="button" className="btn btn--primary" onClick={() => setDialog({ kind: 'new' })}>+ {t('newEmployee')}</button>}
+        {can('users.manage', 'all') && <Link className="btn btn--ghost" to="/user-accounts">+ {t('emp_fromAccounts')}</Link>}
       </div>
+      <p className="muted">{t('emp_fromAccountsHint')}</p>
       <div className="tabs">
         {['active', 'left'].map((s) => <button key={s} type="button" className={`tab${status === s ? ' active' : ''}`} onClick={() => setStatus(s)}>{t(s)}</button>)}
       </div>
@@ -160,6 +163,7 @@ export default function Employees() {
                       <td className="nowrap">
                         <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'history', emp: e })}>{t('history')}</button>{' '}
                         {e.status === 'active' && can('employees.update') && <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'edit', emp: e })}>{t('edit')}</button>}{' '}
+                        {e.status === 'active' && can('users.manage', 'all') && e.user && <button type="button" className="btn btn--small btn--ghost" onClick={() => setDialog({ kind: 'role', emp: e })}>{t('sa_change')}</button>}{' '}
                         {e.status === 'active' && can('employees.manage', 'all') && <button type="button" className="btn btn--small" onClick={() => setDialog({ kind: 'offboard', emp: e })}>{t('offboard')}</button>}
                       </td>
                     </tr>
@@ -170,7 +174,7 @@ export default function Employees() {
           ))}
         </Loading>
       </section>
-      {dialog?.kind === 'new' && <EmployeeForm onClose={close} onSaved={done} />}
+      {dialog?.kind === 'role' && <RoleDialog user={{ _id: dialog.emp.user._id, name: dialog.emp.nameAr, role: dialog.emp.user.role }} onClose={close} onSaved={done} />}
       {dialog?.kind === 'edit' && <EmployeeForm emp={dialog.emp} onClose={close} onSaved={done} />}
       {dialog?.kind === 'offboard' && <Offboard emp={dialog.emp} onClose={close} onDone={done} />}
       {dialog?.kind === 'history' && <History emp={dialog.emp} onClose={close} />}

@@ -100,12 +100,19 @@ exports.list = async (req, res) => {
         Customer.find(filter).populate(POPULATE).sort(sort).skip(skip).limit(limit),
         Customer.countDocuments(filter)
     ]);
-    res.json({
-        items: items.map((c) => serializeCustomer(c, customerAccess({ actor: req.user, grants: req.user.grants, customer: c }))),
-        total,
-        page,
-        limit
-    });
+    const out = items.map((c) => serializeCustomer(c, customerAccess({ actor: req.user, grants: req.user.grants, customer: c })));
+    // the website account of each one, shown in the same list (16 Nov 2026: one place for both)
+    if (P.scopeFor(req.user.grants, 'customer_accounts.view') === 'all') {
+        const User = require('../../models/User');
+        const ids = items.map((c) => c.user).filter(Boolean);
+        const users = ids.length ? await User.find({ _id: { $in: ids } }).select('status emailVerifiedAt lastLoginAt mustChangePassword').lean() : [];
+        const byId = new Map(users.map((u) => [String(u._id), u]));
+        items.forEach((c, i) => {
+            const u = c.user && byId.get(String(c.user));
+            out[i].account = u ? { state: u.status === 'disabled' ? 'disabled' : u.mustChangePassword ? 'temporary' : u.emailVerifiedAt ? 'verified' : 'unverified', lastLoginAt: u.lastLoginAt || null } : null;
+        });
+    }
+    res.json({ items: out, total, page, limit });
 };
 
 // ---- one file ----
