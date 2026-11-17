@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261130" />
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261201" />
 </head>
 <body>
 
@@ -90,17 +90,12 @@
           </div>
         </div>
         <div class="hero-visual">
-          <div class="cert-card" aria-hidden="true">
-            <div class="cert-brand"><img src="/assets/img/logo.png" alt="" width="44" height="44" /><span>أكاديمية نبراس<small>للتدريب والتأهيل المهني</small></span></div>
-            <p class="cert-kicker">شهادة إتمام برنامج مهني</p>
-            <span class="cert-line cert-line--name"></span>
-            <span class="cert-line"></span>
-            <span class="cert-line cert-line--short"></span>
-            <div class="cert-foot">
-              <span class="cert-code"><i class="fas fa-qrcode"></i> رمز تحقق فريد</span>
-              <span class="cert-seal"><i class="fas fa-award"></i></span>
-            </div>
-          </div>
+          <figure class="hero-video">
+            <video data-hero-video muted loop playsinline preload="metadata" poster="/assets/video/nibras-intro.jpg" aria-label="فيديو تعريفي بأكاديمية نبراس">
+              <source src="/assets/video/nibras-intro.mp4" type="video/mp4" />
+            </video>
+            <button type="button" class="hero-video__sound" data-hero-sound data-on="كتم الصوت" data-off="شغّل بالصوت"><i class="fas fa-volume-xmark" aria-hidden="true"></i><span>شغّل بالصوت</span></button>
+          </figure>
           <p class="hero-note hero-note--mode"><i class="fas fa-video" aria-hidden="true"></i><span><strong>عن بُعد بالكامل</strong>محاضرات مباشرة ومسجلة</span></p>
           <a class="hero-note hero-note--verify" href="/pages/ar/verify.html"><i class="fas fa-circle-check" aria-hidden="true"></i><span><strong>شهادات قابلة للتحقق</strong>تحقق من أي شهادة برمزها</span></a>
         </div>
@@ -335,6 +330,6 @@
   <script src="/assets/js/site-content.js?v=20261130"></script>
 
   <script src="/assets/js/specialties.js?v=20261101"></script>
-  <script src="/assets/js/script.js?v=20261130"></script>
+  <script src="/assets/js/script.js?v=20261201"></script>
 </body>
 </html>

@@ -36,7 +36,49 @@ document.addEventListener('DOMContentLoaded', () => {
     initVerifyForm(isEN);
     initPublicAuth(isEN);
     updateNavAuth(isEN);
+    initHeroVideo();
 });
+
+// The promo video at the top of the home page: plays silently on a loop (browsers only allow
+// that), and one button starts it from the beginning with the voice-over.
+function initHeroVideo() {
+    const video = document.querySelector('[data-hero-video]');
+    const button = document.querySelector('[data-hero-sound]');
+    if (!video) return;
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!calm) {
+        video.preload = 'auto';
+        video.play().catch(() => {});
+    }
+    if (!button) return;
+    const label = button.querySelector('span');
+    const icon = button.querySelector('i');
+    const show = () => {
+        const on = !video.muted && !video.paused;
+        label.textContent = on ? button.dataset.on : button.dataset.off;
+        icon.className = on ? 'fas fa-volume-high' : 'fas fa-volume-xmark';
+        button.setAttribute('aria-pressed', String(on));
+    };
+    button.addEventListener('click', () => {
+        if (!video.muted && !video.paused) {
+            video.muted = true;
+        } else {
+            if (video.muted) video.currentTime = 0;
+            video.muted = false;
+            video.loop = false;
+            video.play().catch(() => {});
+        }
+        show();
+    });
+    video.addEventListener('ended', () => {
+        video.muted = true;
+        video.loop = true;
+        video.play().catch(() => {});
+        show();
+    });
+    video.addEventListener('pause', show);
+    video.addEventListener('play', show);
+}
 
 
 
