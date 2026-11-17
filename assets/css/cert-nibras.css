@@ -12,5 +12,6 @@
 .ncert__ar { right: 21mm; width: 111mm; top: 101.4mm; font-family: 'Siwa', 'Almarai', 'IBM Plex Sans Arabic', sans-serif; font-size: 4.72mm; line-height: 6.62mm; text-align: right; color: #2b2b2b; }
 .ncert__en b, .ncert__ar b { font-weight: 700; color: #6b1426; }
 .ncert__date { left: 25.7mm; right: auto; width: 57.4mm; top: 156mm; font-size: 5.85mm; font-weight: 700; color: #1d1d1d; }
+.ncert__qr { position: absolute; left: 17mm; top: 14mm; width: 27mm; height: 27mm; padding: 1.6mm; background: #fff; border: .35mm solid #b98a35; border-radius: 1.5mm; box-sizing: border-box; }
 .ncert__void { position: absolute; inset: 0; display: grid; place-items: center; font: 800 60pt 'Roboto', sans-serif; color: rgba(180, 35, 24, .18); transform: rotate(-18deg); pointer-events: none; }
 @media print { .ncert { box-shadow: none; margin: 0; } }

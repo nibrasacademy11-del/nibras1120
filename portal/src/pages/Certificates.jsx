@@ -99,20 +99,29 @@ export function CertificateSheet(props) {
 }
 
 // The academy's designed sheet (cert-nibras.js), shared with the website
-export function NibrasSheet({ cert, design }) {
+// verifyUrl: the QR code in its top corner opens it. nameFile: the page title becomes the saved
+// PDF's name (the trainee, the kind and the program) while the certificate is open.
+export function NibrasSheet({ cert, design, verifyUrl, nameFile }) {
   const [html, setHtml] = useState('');
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     let live = true;
-    loadCertKit().then((k) => { if (live) setHtml(k.sheet(cert, design)); }).catch(() => live && setFailed(true));
+    const qr = verifyUrl ? QRCode.toDataURL(verifyUrl, { margin: 0, width: 360, errorCorrectionLevel: 'M', color: { dark: '#5e1121' } }).catch(() => '') : Promise.resolve('');
+    Promise.all([loadCertKit(), qr]).then(([k, q]) => { if (live) setHtml(k.sheet(cert, design, { qr: q })); }).catch(() => live && setFailed(true));
     return () => { live = false; };
-  }, [cert, design]);
+  }, [cert, design, verifyUrl]);
+  useEffect(() => {
+    if (!nameFile) return undefined;
+    const before = document.title;
+    loadCertKit().then((k) => { document.title = k.fileName(cert, design); }).catch(() => {});
+    return () => { document.title = before; };
+  }, [cert, design, nameFile]);
   if (failed) return <p className="error">The certificate design could not be loaded.</p>;
   return <div className="ncert-host" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 function SheetBody({ cert, design: d, verifyUrl }) {
-  if (d && d.layout === 'nibras') return <NibrasSheet cert={cert} design={d} />;
+  if (d && d.layout === 'nibras') return <NibrasSheet cert={cert} design={d} verifyUrl={verifyUrl} nameFile={!!cert._id} />;
   return <ClassicSheet cert={cert} design={d} verifyUrl={verifyUrl} />;
 }
 
@@ -366,7 +375,7 @@ function ManualIssue() {
         <div className="row wide"><button type="submit" className="btn btn--primary" disabled={busy || !ready}>{t('issueCertificate')}</button></div>
       </form>
       <h2>{t('preview')}</h2>
-      <CertificateSheet cert={preview.cert} design={preview.design} />
+      <CertificateSheet cert={preview.cert} design={preview.design} verifyUrl={`https://www.nibras-ac.com/pages/ar/verify.html?code=${encodeURIComponent(preview.cert.cert_num)}`} />
     </>
   );
 }

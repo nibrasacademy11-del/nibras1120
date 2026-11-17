@@ -16,8 +16,8 @@ export function loadCertKit() {
   if (!kit) {
     kit = new Promise((resolve, reject) => {
       add('link', { rel: 'stylesheet', href: FONTS });
-      add('link', { rel: 'stylesheet', href: '/assets/css/cert-nibras.css?v=20261117' });
-      const s = add('script', { src: '/assets/js/cert-nibras.js?v=20261117', async: true });
+      add('link', { rel: 'stylesheet', href: '/assets/css/cert-nibras.css?v=20261118' });
+      const s = add('script', { src: '/assets/js/cert-nibras.js?v=20261118', async: true });
       // the fonts are waited for, but never more than 2.5 seconds
       const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
       s.onload = () => Promise.race([fonts, new Promise((r) => setTimeout(r, 2500))]).then(() => resolve(window.NibrasCertificate));

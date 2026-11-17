@@ -72,3 +72,12 @@ test('the academy sheet writes the sample text, escapes names and drops missing 
     assert.doesNotMatch(male.ar, /ساعة/);
     assert.doesNotMatch(male.en, /training hours/);
 });
+
+test('the academy sheet carries the verification QR code, and the file is named after the trainee', () => {
+    const N = require('../assets/js/cert-nibras');
+    const cert = { cert_num: 'MT-B2589', trainee_name: 'فوزيه عبدالله.', program_name: 'x', issue_date: '2026-11-02', status: 'Valid' };
+    assert.match(N.sheet(cert, {}, { qr: 'data:image/png;base64,AAA' }), /<img class="ncert__qr" src="data:image\/png;base64,AAA"/);
+    assert.doesNotMatch(N.sheet(cert, {}), /ncert__qr/);
+    assert.equal(N.verifyUrl('MT-B2589'), 'https://www.nibras-ac.com/pages/ar/verify.html?code=MT-B2589');
+    assert.equal(N.fileName(cert, { docType: 'phd', subjectAr: 'دكتوراه/القيادة' }), 'فوزيه عبدالله - دكتوراه مهنية - دكتوراه القيادة');
+});

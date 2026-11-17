@@ -49,7 +49,7 @@
     // The A4 sheet, the same layout the staff portal prints. The academy's designed sheet comes
     // from cert-nibras.js (shared with the portal); the earlier framed one is drawn here.
     function sheet(c, d, qr) {
-        if (d.layout === 'nibras' && window.NibrasCertificate) return window.NibrasCertificate.sheet(c, d);
+        if (d.layout === 'nibras' && window.NibrasCertificate) return window.NibrasCertificate.sheet(c, d, { qr });
         const ar = d.language !== 'en';
         const en = d.language !== 'ar';
         const bg = d.background ? `background-image:url('${h(d.background)}');` : '';
@@ -94,7 +94,7 @@
         box.style.height = `${794 * scale}px`;
     }
 
-    async function download(btn, num) {
+    async function download(btn, num, fileName) {
         const label = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = `<span class="pf-spinner" aria-hidden="true"></span> ${h(T.making)}`;
@@ -112,7 +112,7 @@
             const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true });
             pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 297, 210);
             pdf.setProperties({ title: `Nibras Academy certificate ${num}`, author: 'Nibras Academy' });
-            pdf.save(`Nibras-certificate-${num}.pdf`);
+            pdf.save(`${fileName || `Nibras-certificate-${num}`}.pdf`);
         } catch (e) {
             showToast(T.failed, true);
         } finally {
@@ -141,7 +141,11 @@
         const c = data.item;
         const d = c.design || {};
         const verifyUrl = isEN ? data.verifyUrlEn || data.verifyUrl : data.verifyUrl;
-        const qr = d.layout === 'nibras' ? '' : await qrImage(verifyUrl, d.primaryColor || '#5a020e');
+        const nibras = d.layout === 'nibras' && window.NibrasCertificate;
+        const qr = await qrImage(verifyUrl, nibras ? '#5e1121' : d.primaryColor || '#5a020e');
+        // saved (and printed) under the trainee's name, the kind and the program
+        const fileName = nibras ? window.NibrasCertificate.fileName(c, d) : `Nibras-certificate-${c.cert_num}`;
+        if (nibras) document.title = fileName;
         if (d.layout === 'nibras' && document.fonts && document.fonts.ready) await document.fonts.ready;
         main.innerHTML = `
             <div class="cert-toolbar">
@@ -155,7 +159,7 @@
         fit();
         window.addEventListener('resize', fit);
         $('certPrint').addEventListener('click', () => window.print());
-        $('certDownload').addEventListener('click', (ev) => download(ev.currentTarget, c.cert_num));
+        $('certDownload').addEventListener('click', (ev) => download(ev.currentTarget, c.cert_num, fileName));
     }
 
     document.addEventListener('DOMContentLoaded', () => {
