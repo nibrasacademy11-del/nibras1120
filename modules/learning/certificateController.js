@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 const Certificate = require('../../models/Certificate');
-const CertificateTemplate = require('../../models/CertificateTemplate');
-const Accreditation = require('../../models/Accreditation');
 const Enrollment = require('../../models/Enrollment');
 const Customer = require('../../models/Customer');
 const ProgramModule = require('../../models/ProgramModule');
@@ -9,14 +7,16 @@ const P = require('../../lib/permissions');
 const audit = require('../../lib/audit');
 const design = require('../../lib/certificateDesign');
 const { nextNumber } = require('../../lib/sequence');
-const { HttpError, assertVersion, paging, parseDate } = require('../../lib/http');
+const { HttpError, paging } = require('../../lib/http');
 const { addEvent, notify, getSetting } = require('../crm/service');
 const User = require('../../models/User');
 const R = require('../../lib/certificateRules');
 const { outstandingFor } = require('../finance/balances');
 const { brandedEmail } = require('../../lib/brandEmail');
 
-// Issuing, listing, revoking and reissuing certificates; templates and accreditations
+// Issuing, listing, revoking and reissuing certificates. Every certificate prints on the academy's
+// designed sheets (assets/js/cert-nibras.js); there are no templates or accreditations to choose
+// (removed 17 Nov 2026: the accreditation logos are part of the sheets).
 
 const oid = (v) => (v && mongoose.Types.ObjectId.isValid(v) ? new mongoose.Types.ObjectId(String(v)) : null);
 const str = (v, max = 500) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
@@ -24,116 +24,6 @@ const FIELDS = { owner: 'owner', team: 'team' };
 const DONE = ['approved', 'certificate_issued'];
 const siteUrl = () => (process.env.SITE_URL || 'https://www.nibras-ac.com').replace(/\/$/, '');
 const verifyUrl = (num, lang = 'ar') => `${siteUrl()}/pages/${lang}/verify.html?code=${encodeURIComponent(num)}`;
-
-// ---- templates ----
-
-const TEMPLATE_FIELDS = ['name', 'kind', 'layout', 'isDefault', 'language', 'titleAr', 'titleEn', 'introAr', 'introEn', 'bodyAr', 'bodyEn', 'footerAr', 'footerEn', 'logo', 'background', 'primaryColor', 'accentColor', 'showHours', 'showAccreditations', 'signatures', 'active'];
-
-exports.listTemplates = async (req, res) => {
-    res.json({ items: await CertificateTemplate.find().sort({ kind: 1, isDefault: -1, name: 1 }).lean(), placeholders: design.PLACEHOLDERS, defaults: design.DEFAULT_BODY });
-};
-
-// Only paths on this site or https images are accepted for logos, backgrounds and signatures
-const safeImage = (v) => (typeof v === 'string' && (/^\/(api\/media|assets)\//.test(v) || /^https:\/\//.test(v)) ? v.slice(0, 500) : '');
-
-exports.saveTemplate = async (req, res) => {
-    const data = {};
-    for (const k of TEMPLATE_FIELDS) if (req.body[k] !== undefined) data[k] = req.body[k];
-    for (const k of ['name', 'titleAr', 'titleEn', 'introAr', 'introEn', 'bodyAr', 'bodyEn', 'footerAr', 'footerEn']) if (data[k] !== undefined) data[k] = str(data[k], 600);
-    for (const k of ['logo', 'background']) if (data[k] !== undefined) data[k] = safeImage(data[k]);
-    if (Array.isArray(data.signatures)) {
-        data.signatures = data.signatures.slice(0, 4).map((s) => ({ nameAr: str(s.nameAr, 80), nameEn: str(s.nameEn, 80), titleAr: str(s.titleAr, 80), titleEn: str(s.titleEn, 80), image: safeImage(s.image) }));
-    }
-    let doc;
-    if (req.params.id) {
-        doc = await CertificateTemplate.findById(req.params.id);
-        if (!doc) throw new HttpError(404, 'Not found.');
-        assertVersion(doc, req.body.__v);
-        doc.set({ ...data, updatedBy: req.user.id });
-        await doc.save();
-    } else {
-        if (!data.name || !['module', 'program'].includes(data.kind)) throw new HttpError(400, 'الاسم والنوع مطلوبان. / Name and type are required.');
-        doc = await CertificateTemplate.create({ ...data, updatedBy: req.user.id });
-    }
-    if (doc.isDefault) await CertificateTemplate.updateMany({ kind: doc.kind, _id: { $ne: doc._id } }, { $set: { isDefault: false } });
-    await audit.record(req, { action: req.params.id ? 'certificate_template.updated' : 'certificate_template.created', resource: 'certificates', resourceId: doc._id, summary: doc.name });
-    res.json({ item: doc });
-};
-
-// ---- accreditations ----
-
-exports.listAccreditations = async (req, res) => {
-    res.json({ items: await Accreditation.find().populate('programs', 'titleAr').sort({ active: -1, nameAr: 1 }).lean() });
-};
-
-exports.saveAccreditation = async (req, res) => {
-    const data = {
-        nameAr: str(req.body.nameAr, 160), nameEn: str(req.body.nameEn, 160), body: str(req.body.body, 160), number: str(req.body.number, 80),
-        logo: safeImage(req.body.logo), validFrom: parseDate(req.body.validFrom), validUntil: parseDate(req.body.validUntil),
-        programs: (Array.isArray(req.body.programs) ? req.body.programs : []).map(oid).filter(Boolean),
-        allPrograms: req.body.allPrograms === true, active: req.body.active !== false
-    };
-    if (!data.nameAr) throw new HttpError(400, 'الاسم مطلوب. / A name is required.');
-    let doc;
-    if (req.params.id) {
-        doc = await Accreditation.findById(req.params.id);
-        if (!doc) throw new HttpError(404, 'Not found.');
-        assertVersion(doc, req.body.__v);
-        doc.set(data);
-        await doc.save();
-    } else doc = await Accreditation.create(data);
-    await audit.record(req, { action: 'accreditation.saved', resource: 'certificates', resourceId: doc._id, summary: doc.nameAr });
-    res.json({ item: doc });
-};
-
-// The accreditations on a certificate: the program's, or the module's own list when it has one
-async function accreditationsFor(programId, at = new Date(), moduleId = null) {
-    const mod = moduleId ? await require('../../models/ProgramModule').findById(moduleId).select('accreditationsCustom accreditations').lean() : null;
-    const which = mod && mod.accreditationsCustom ? { _id: { $in: mod.accreditations || [] } } : { $or: [{ allPrograms: true }, { programs: programId }] };
-    const list = await Accreditation.find({
-        active: true,
-        ...which,
-        $and: [{ $or: [{ validFrom: null }, { validFrom: { $lte: at } }] }, { $or: [{ validUntil: null }, { validUntil: { $gte: at } }] }]
-    }).lean();
-    return list.map((a) => ({ nameAr: a.nameAr, nameEn: a.nameEn, body: a.body, number: a.number, logo: a.logo }));
-}
-
-// A program's accreditations, edited from the program's page: which apply to the whole program,
-// and each module that has its own list instead
-exports.programAccreditations = async (req, res) => {
-    const ProgramModule = require('../../models/ProgramModule');
-    const [items, modules] = await Promise.all([
-        Accreditation.find({ active: true }).sort({ nameAr: 1 }).lean(),
-        ProgramModule.find({ program: req.params.id, active: true }).sort({ order: 1 }).select('titleAr titleEn auto accreditationsCustom accreditations').lean()
-    ]);
-    res.json({
-        items: items.map((a) => ({ _id: a._id, nameAr: a.nameAr, nameEn: a.nameEn, body: a.body, logo: a.logo, allPrograms: a.allPrograms, inProgram: a.allPrograms || (a.programs || []).some((p) => String(p) === String(req.params.id)) })),
-        modules: modules.filter((m) => !m.auto).map((m) => ({ _id: m._id, titleAr: m.titleAr, titleEn: m.titleEn, custom: !!m.accreditationsCustom, ids: (m.accreditations || []).map(String) }))
-    });
-};
-
-exports.setProgramAccreditations = async (req, res) => {
-    const ids = [...new Set((Array.isArray(req.body.ids) ? req.body.ids : []).map(oid).filter(Boolean).map(String))].map(oid);
-    const program = oid(req.params.id);
-    await Promise.all([
-        Accreditation.updateMany({ allPrograms: { $ne: true }, _id: { $in: ids } }, { $addToSet: { programs: program } }),
-        Accreditation.updateMany({ allPrograms: { $ne: true }, _id: { $nin: ids }, programs: program }, { $pull: { programs: program } })
-    ]);
-    await audit.record(req, { action: 'accreditation.program_set', resource: 'certificates', resourceId: program, summary: `${ids.length} accreditations` });
-    res.json({ ok: true });
-};
-
-// One module only: its own accreditations (custom) or back to the program's
-exports.setModuleAccreditations = async (req, res) => {
-    const ProgramModule = require('../../models/ProgramModule');
-    const mod = await ProgramModule.findById(req.params.moduleId);
-    if (!mod) throw new HttpError(404, 'Not found.');
-    mod.accreditationsCustom = req.body.custom === true;
-    mod.accreditations = mod.accreditationsCustom ? (Array.isArray(req.body.ids) ? req.body.ids : []).map(oid).filter(Boolean) : [];
-    await mod.save();
-    await audit.record(req, { action: 'accreditation.module_set', resource: 'certificates', resourceId: mod._id, summary: `${mod.titleAr}: ${mod.accreditationsCustom ? mod.accreditations.length : 'program'}` });
-    res.json({ ok: true });
-};
 
 // ---- issuing by hand (17 Nov 2026) ----
 // The owner and the assistant write a certificate themselves: for someone with no account or no
@@ -153,6 +43,8 @@ exports.issueManual = async (req, res) => {
     const programEn = str(b.programEn, 200);
     if (!name || !nameEn) throw new HttpError(400, 'اكتب الاسم بالعربي والإنجليزي. / Write the name in Arabic and English.', 'NAME_REQUIRED');
     if (!program || !programEn) throw new HttpError(400, 'اكتب اسم البرنامج بالعربي والإنجليزي. / Write the program in Arabic and English.', 'PROGRAM_REQUIRED');
+    // the wording follows it (المتدرب / المتدربة, his / her, He / She), so it is always chosen
+    if (!['male', 'female'].includes(b.gender)) throw new HttpError(400, 'اختر النوع (ذكر أو أنثى). / Choose male or female.', 'GENDER_REQUIRED');
     const hours = Math.min(Math.max(parseInt(b.hours, 10) || 0, 0), 5000);
     // the grades of a degree: up to 15 modules, each with its percentage and grade
     let transcript;
@@ -234,14 +126,6 @@ exports.manualTypes = async (req, res) => {
 
 // ---- issuing ----
 
-async function templateFor(kind, templateId) {
-    if (templateId) {
-        const t = await CertificateTemplate.findOne({ _id: oid(templateId), kind, active: true }).lean();
-        if (!t) throw new HttpError(400, 'القالب غير متاح لهذا النوع. / The template is not available for this type.');
-        return t;
-    }
-    return CertificateTemplate.findOne({ kind, isDefault: true, active: true }).lean();
-}
 
 const isoDay = (d) => new Date(d).toISOString().slice(0, 10);
 
@@ -263,6 +147,8 @@ async function emailCertificate(req, cert) {
     if (!to && customer && customer.user) to = (await User.findById(customer.user).select('email').lean() || {}).email;
     if (!to) throw new HttpError(400, 'لا يوجد إيميل لهذا العميل. / This customer has no email.', 'NO_EMAIL');
     const title = cert.kind === 'module' ? cert.moduleName : cert.program_name;
+    // spoken to as a woman or a man, as on the certificate itself
+    const female = (cert.design && cert.design.gender) === 'female';
     const sent = await mail.send({
         kind: 'certificate-ready',
         to,
@@ -276,7 +162,7 @@ async function emailCertificate(req, cert) {
             noteEn: `Congratulations! Your certificate ${cert.cert_num} is ready on your Nibras profile, where you can view it and download it as PDF.`,
             footer: 'يمكن لأي جهة التحقق من الشهادة برقمها أو بمسح رمز QR المطبوع عليها.'
         }),
-        text: `مبروك! صدرت شهادتك ${cert.cert_num} (${title}). اعرضها وحمّلها من صفحتك: ${siteCertUrl(cert._id)}`
+        text: `مبروك! صدرت شهادتك ${cert.cert_num} (${title}). ${female ? 'اعرضيها وحمّليها' : 'اعرضها وحمّلها'} من صفحتك: ${siteCertUrl(cert._id)}`
     });
     if (!mail.delivered(sent)) throw new HttpError(400, 'تعذر إرسال الإيميل (إعدادات البريد غير مكتملة). / The email could not be sent (email is not set up).', 'NO_MAIL');
     const now = new Date();
@@ -318,7 +204,7 @@ async function issueOne(req, { enrollmentId, moduleId, templateId, names, replac
         ? programModule?.hours || 0
         : (await ProgramModule.find({ program: e.program, active: true }).select('hours').lean()).reduce((n, m) => n + (m.hours || 0), 0);
     const course = await require('../../models/Course').findById(e.program).select('type').lean();
-    const template = await templateFor(kind, templateId);
+    const template = null; // the academy's sheets only
     const now = new Date();
     // A reissue keeps the original number and adds the version: NC-0000001 -> NC-0000001-2 -> -3.
     // Only a number that already carries a version (version 2 or more) drops its last part first.
@@ -357,7 +243,7 @@ async function issueOne(req, { enrollmentId, moduleId, templateId, names, replac
         issuedBy: req.user.id,
         template: template ? template._id : null,
         design: design.buildDesign(template, data),
-        accreditations: template && template.showAccreditations === false ? [] : await accreditationsFor(e.program, now, mod ? mod.module : null),
+        accreditations: [],
         version,
         replaces: replaces ? replaces._id : null,
         paymentWaiver: waive || '',
@@ -631,4 +517,3 @@ exports._issueOne = issueOne;
 exports.reissueOne = reissueOne;
 exports._paymentCheck = paymentCheck;
 exports._emailCertificate = emailCertificate;
-exports._accreditationsFor = accreditationsFor;

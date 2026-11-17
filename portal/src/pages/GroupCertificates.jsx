@@ -13,13 +13,13 @@ export const owed = (list) => (list || []).map((x) => `${Number(x.remaining).toL
 function RuleForm({ group, data, onSaved }) {
   const { t } = useI18n();
   const r = data.rule;
-  const [f, setF] = useState({ mode: r.mode, issue: r.issue, date: r.date ? String(r.date).slice(0, 10) : '', daysAfterEnd: r.daysAfterEnd, minAttendance: r.minAttendance, sendEmail: r.sendEmail, template: r.template || '' });
+  const [f, setF] = useState({ mode: r.mode, issue: r.issue, date: r.date ? String(r.date).slice(0, 10) : '', daysAfterEnd: r.daysAfterEnd, minAttendance: r.minAttendance, sendEmail: r.sendEmail });
   const { busy, error, run } = useAction();
   const [saved, setSaved] = useState(false);
   const set = (k) => (e) => { setSaved(false); setF({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }); };
   const submit = (e) => {
     e.preventDefault();
-    run(() => api(`/api/v2/groups/${group._id}/certificate-rule`, { method: 'PUT', body: { ...f, date: f.date || null, template: f.template || null, daysAfterEnd: Number(f.daysAfterEnd), minAttendance: Number(f.minAttendance) } }))
+    run(() => api(`/api/v2/groups/${group._id}/certificate-rule`, { method: 'PUT', body: { ...f, date: f.date || null, daysAfterEnd: Number(f.daysAfterEnd), minAttendance: Number(f.minAttendance) } }))
       .then(() => { setSaved(true); onSaved(); }).catch(() => {});
   };
   return (
@@ -33,12 +33,6 @@ function RuleForm({ group, data, onSaved }) {
       {f.mode === 'on_date' && <Field label={t('gcDate')}><input type="date" required value={f.date} onChange={set('date')} /></Field>}
       {f.mode === 'after_end' && <Field label={t('gcDays')}><input type="number" min={0} max={365} value={f.daysAfterEnd} onChange={set('daysAfterEnd')} /></Field>}
       <Field label={t('gcMinAttendance')}><input type="number" min={0} max={100} value={f.minAttendance} onChange={set('minAttendance')} disabled={!data.canIssue} /></Field>
-      <Field label={t('gcTemplate')}>
-        <select value={f.template} onChange={set('template')} disabled={!data.canIssue}>
-          <option value="">{t('gcDefaultTemplate')}</option>
-          {data.templates.map((x) => <option key={x._id} value={x._id}>{x.name} ({x.kind === 'program' ? t('gcFinal') : t('issue_modules')})</option>)}
-        </select>
-      </Field>
       <label className="check field--wide"><input type="checkbox" checked={f.sendEmail} onChange={set('sendEmail')} disabled={!data.canIssue} /> {t('gcSendEmail')}</label>
       <p className="muted field--wide"><small>{t('gcPaymentNote')}</small></p>
       <div className="field--wide"><ErrorBox error={error} />{saved && <div className="alert alert--ok">{t('saved')}</div>}</div>

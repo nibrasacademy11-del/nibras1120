@@ -198,85 +198,6 @@ function CohortForm({ programId, cohort, modules = [], onClose, onSaved }) {
   );
 }
 
-// The program's accreditations (printed on its certificates), and a module that has its own:
-// changing one module never changes the others (16 Nov 2026)
-function ProgramAccreditations({ programId, canEdit }) {
-  const { t, label } = useI18n();
-  const state = useLoad(`/api/v2/programs/${programId}/accreditations`, [programId]);
-  const [ids, setIds] = useState(null);
-  const [mod, setMod] = useState(null);
-  const [busy, setBusy] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const toggle = (list, id) => (list.includes(id) ? list.filter((x) => x !== id) : [...list, id]);
-  return (
-    <section className="card">
-      <div className="card-head">
-        <h2>{t('acc_title')}</h2>
-        <p className="muted" style={{ margin: 0, flexBasis: '100%' }}>{t('acc_hint')}</p>
-      </div>
-      <Loading state={state}>
-        {(d) => {
-          if (!d.items.length) return <p className="muted">{t('acc_none')} <Link to="/certificates">{t('acc_add')}</Link></p>;
-          const chosen = ids ?? d.items.filter((a) => a.inProgram).map((a) => String(a._id));
-          const nameOf = (id) => { const a = d.items.find((x) => String(x._id) === id); return a ? label({ ar: a.nameAr, en: a.nameEn }) : ''; };
-          const save = async () => {
-            setBusy(true);
-            try { await api(`/api/v2/programs/${programId}/accreditations`, { method: 'PUT', body: { ids: chosen } }); setSaved(true); setIds(null); state.reload(); } finally { setBusy(false); }
-          };
-          return (
-            <>
-              <div className="acc-grid">
-                {d.items.map((a) => (
-                  <label key={a._id} className={`acc-pick${chosen.includes(String(a._id)) ? ' on' : ''}`}>
-                    <input type="checkbox" disabled={!canEdit || a.allPrograms} checked={chosen.includes(String(a._id))} onChange={() => { setSaved(false); setIds(toggle(chosen, String(a._id))); }} />
-                    {a.logo && <img src={a.logo} alt="" />}
-                    <span><strong>{label({ ar: a.nameAr, en: a.nameEn })}</strong>{a.body && <small className="muted">{a.body}</small>}{a.allPrograms && <small className="muted">{t('acc_all')}</small>}</span>
-                  </label>
-                ))}
-              </div>
-              {canEdit && ids !== null && <div className="row" style={{ marginTop: 10 }}><button type="button" className="btn btn--primary btn--small" disabled={busy} onClick={save}>{t('save')}</button></div>}
-              {saved && <div className="alert alert--ok">{t('saved')}</div>}
-              {d.modules.length > 0 && (
-                <div className="acc-modules">
-                  <h3>{t('acc_modules')}</h3>
-                  <ul className="plain-list">
-                    {d.modules.map((m) => (
-                      <li key={m._id}>
-                        <span><strong>{label({ ar: m.titleAr, en: m.titleEn })}</strong><br /><small className="muted">{m.custom ? (m.ids.map(nameOf).filter(Boolean).join('، ') || t('acc_noneOnModule')) : t('acc_sameAsProgram')}</small></span>
-                        {canEdit && <button type="button" className="btn btn--small btn--ghost" onClick={() => setMod({ ...m, ids: m.custom ? m.ids : chosen })}>{t('edit')}</button>}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {mod && (
-                <Modal title={`${t('acc_moduleTitle')}: ${mod.titleAr}`} onClose={() => setMod(null)}>
-                  <label className="check settings__check"><input type="radio" checked={!mod.custom} onChange={() => setMod({ ...mod, custom: false })} /> {t('acc_sameAsProgram')}</label>
-                  <label className="check settings__check"><input type="radio" checked={mod.custom} onChange={() => setMod({ ...mod, custom: true })} /> {t('acc_custom')}</label>
-                  {mod.custom && (
-                    <div className="acc-grid" style={{ marginTop: 10 }}>
-                      {d.items.map((a) => (
-                        <label key={a._id} className={`acc-pick${mod.ids.includes(String(a._id)) ? ' on' : ''}`}>
-                          <input type="checkbox" checked={mod.ids.includes(String(a._id))} onChange={() => setMod({ ...mod, ids: toggle(mod.ids, String(a._id)) })} />
-                          <span><strong>{label({ ar: a.nameAr, en: a.nameEn })}</strong></span>
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                  <p className="muted"><small>{t('acc_moduleNote')}</small></p>
-                  <div className="row">
-                    <button type="button" className="btn btn--primary" onClick={async () => { await api(`/api/v2/modules/${mod._id}/accreditations`, { method: 'PUT', body: { custom: mod.custom, ids: mod.ids } }); setMod(null); state.reload(); }}>{t('save')}</button>
-                    <button type="button" className="btn btn--ghost" onClick={() => setMod(null)}>{t('cancel')}</button>
-                  </div>
-                </Modal>
-              )}
-            </>
-          );
-        }}
-      </Loading>
-    </section>
-  );
-}
 
 export function ProgramDetail() {
   const { id } = useParams();
@@ -374,7 +295,6 @@ export function ProgramDetail() {
               )}
             </section>
 
-            <ProgramAccreditations programId={id} canEdit={canEdit} />
 
             <section className="card">
               <h2>{t('rules')}</h2>

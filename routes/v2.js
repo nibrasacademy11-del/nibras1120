@@ -191,10 +191,6 @@ router.get('/programs/:id/lectures', validId(), can('programs.view'), handle(gro
 router.post('/programs/:id/lectures', validId(), all('programs.update'), handle(groupsApi.addProgramLecture));
 router.post('/modules/:moduleId/finish', validId('moduleId'), all('programs.update'), handle(groupsApi.finishModule));
 router.post('/modules/:moduleId/reopen', validId('moduleId'), all('programs.update'), handle(groupsApi.reopenModule));
-// accreditations of a program, and of one module only (16 Nov 2026)
-router.get('/programs/:id/accreditations', validId(), can('programs.view'), handle(certs.programAccreditations));
-router.put('/programs/:id/accreditations', validId(), all('programs.update'), handle(certs.setProgramAccreditations));
-router.put('/modules/:moduleId/accreditations', validId('moduleId'), all('programs.update'), handle(certs.setModuleAccreditations));
 router.post('/groups/:id/lectures', validId(), all('programs.update'), handle(groupsApi.addLecture));
 router.put('/lectures/:id', validId(), all('programs.update'), handle(groupsApi.updateLecture));
 router.post('/lectures/:id/cancel', validId(), all('programs.update'), handle(groupsApi.cancelLecture));
@@ -290,12 +286,6 @@ router.put('/enrollments/:id/commission-split', validId(), all('commissions.mana
 
 // ---- certificates ----
 router.get('/my/certificates', handle(certs.mine));
-router.get('/certificate-templates', all('certificates.view'), handle(certs.listTemplates));
-router.post('/certificate-templates', all('certificates.manage'), handle(certs.saveTemplate));
-router.put('/certificate-templates/:id', validId(), all('certificates.manage'), handle(certs.saveTemplate));
-router.get('/accreditations', all('certificates.view'), handle(certs.listAccreditations));
-router.post('/accreditations', all('certificates.manage'), handle(certs.saveAccreditation));
-router.put('/accreditations/:id', validId(), all('certificates.manage'), handle(certs.saveAccreditation));
 // What waits for a certificate (customer service sees it too, to release one before full payment)
 const issuesOrReleases = (req, res, next) => {
     const g = req.user.grants || {};

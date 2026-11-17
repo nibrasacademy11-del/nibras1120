@@ -3,7 +3,6 @@ const Cohort = require('../../models/Cohort');
 const CohortMember = require('../../models/CohortMember');
 const Enrollment = require('../../models/Enrollment');
 const Certificate = require('../../models/Certificate');
-const CertificateTemplate = require('../../models/CertificateTemplate');
 const P = require('../../lib/permissions');
 const R = require('../../lib/certificateRules');
 const workflow = require('../../lib/moduleWorkflow');
@@ -92,7 +91,7 @@ async function issueReady(req, cohort, { only = null } = {}) {
     const results = [];
     for (const it of ready) {
         try {
-            const c = await certs._issueOne(req, { enrollmentId: it.enrollment, moduleId: it.module, templateId: p.rule.template, email: p.rule.sendEmail });
+            const c = await certs._issueOne(req, { enrollmentId: it.enrollment, moduleId: it.module, email: p.rule.sendEmail });
             results.push({ ok: true, cert_num: c.cert_num, id: String(c._id), customerNo: it.customer.customerNo, emailError: c.$locals.emailError });
         } catch (err) {
             results.push({ ok: false, customerNo: it.customer.customerNo, title: it.titleAr, message: err.message, code: err.code });
@@ -107,13 +106,11 @@ exports.get = async (req, res) => {
     const cohort = await loadCohort(req.params.id);
     const p = await plan(cohort);
     const namePolicy = await getSetting('customers.lookupNamePolicy');
-    const templates = await CertificateTemplate.find({ active: true }).select('name kind').lean();
     res.json({
         rule: p.rule,
         due: R.ruleDue(p.rule, cohort),
         held: p.held,
         modules: p.modules,
-        templates,
         items: p.items.map((i) => {
             const access = customerAccess({ actor: req.user, grants: req.user.grants, customer: i.customer });
             return { ...i, customer: { _id: i.customer._id, customerNo: i.customer.customerNo, name: displayName(i.customer, access, namePolicy), canOpen: access.inFile } };
@@ -129,7 +126,6 @@ exports.saveRule = async (req, res) => {
     const rule = R.normalizeRule(req.body, before);
     if (rule.mode === 'on_date' && !rule.date) throw new HttpError(400, 'حدد تاريخ الإصدار. / Set the issue date.');
     if (rule.mode === 'after_end' && !cohort.endDate) throw new HttpError(400, 'حدد تاريخ نهاية المجموعة أولاً. / Set the group end date first.');
-    if (rule.template && !(await CertificateTemplate.exists({ _id: oid(rule.template), active: true }))) throw new HttpError(400, 'القالب غير متاح. / The template is not available.');
     cohort.certificateRule = rule;
     await cohort.save();
     await audit.record(req, { action: 'cohort.certificate_rule', resource: 'certificates', resourceId: cohort._id, summary: `${cohort.nameAr}: ${rule.mode}`, changes: audit.diff(before, rule, Object.keys(rule)) });

@@ -24,10 +24,6 @@ const programModuleSchema = new mongoose.Schema({
     // and gets its certificate (PLAN-V2, 15 Nov). Until then nobody completes it by entering lectures.
     finishedAt: { type: Date, default: null },
     finishedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
-    // Accreditations on this module's certificate: the program's (default), or its own list when
-    // the owner changed this module only (16 Nov 2026)
-    accreditationsCustom: { type: Boolean, default: false },
-    accreditations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Accreditation' }],
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true, optimisticConcurrency: true });
 

@@ -99,6 +99,7 @@ test('manual certificate flow', { skip }, async (t) => {
         await t.test('refused: an unknown kind, missing names, and an employee', async () => {
             assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...form, docType: 'nope' })).data.code, 'BAD_TYPE');
             assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...form, nameEn: '' })).data.code, 'NAME_REQUIRED');
+            assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...form, gender: '' })).data.code, 'GENDER_REQUIRED');
             assert.equal((await asStaff('POST', '/api/v2/certificates/manual', form)).status, 403);
         });
 

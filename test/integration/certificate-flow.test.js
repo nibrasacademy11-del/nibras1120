@@ -58,8 +58,6 @@ test('certificate flow', { skip }, async (t) => {
     try {
         assert.equal((await a('POST', '/api/auth/login', { email: admin.email, password: pw })).status, 200);
         await a('POST', `/api/v2/programs/${program._id}/modules`, { titleAr: 'محور الشهادة', titleEn: 'Cert module', hours: 10 });
-        await a('POST', '/api/v2/accreditations', { nameAr: `اعتماد ${tag}`, number: 'AC-1', programs: [String(program._id)] });
-        await a('POST', '/api/v2/certificate-templates', { name: `قالب ${tag}`, kind: 'module', layout: 'classic', isDefault: true, titleAr: 'شهادة {module}' });
         const customer = (await a('POST', '/api/v2/customers', { nameAr: 'متدربة الشهادة', nameEn: 'Cert Trainee', contact: { phone: `0106${String(Date.now()).slice(-7)}` } })).data.item;
         const e = (await a('POST', '/api/v2/enrollments', { customer: customer.id, program: String(program._id) })).data.item;
         const mod = e.modules[0].module;
@@ -80,9 +78,10 @@ test('certificate flow', { skip }, async (t) => {
             assert.equal(cert.issuedBy, null, 'issued by the system');
             assert.equal((await a('GET', '/api/v2/certificates/eligible')).data.items.filter((i) => i.enrollment === e._id).length, 0, 'nothing left waiting');
             assert.match(cert.cert_num, /^NC-\d{7}$/);
-            assert.equal(cert.design.titleAr, 'شهادة محور الشهادة');
+            assert.equal(cert.design.layout, 'nibras', 'the academy design: no templates any more');
+            assert.equal(cert.design.subjectAr, `محور الشهادة ضمن ${program.titleAr}`);
             assert.equal(cert.hours, 10);
-            assert.equal(cert.accreditations[0].number, 'AC-1');
+            assert.deepEqual(cert.accreditations, [], 'no accreditations: their logos are on the sheet');
             assert.equal((await a('POST', '/api/v2/certificates/issue', { enrollment: e._id, module: mod })).data.code, 'DUPLICATE');
             const after = (await a('GET', `/api/v2/enrollments/${e._id}`)).data.item;
             assert.equal(after.modules[0].status, 'certificate_issued');

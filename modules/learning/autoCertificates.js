@@ -41,7 +41,7 @@ async function issueDue(enrollmentId) {
     const req = systemReq();
     for (const it of items) {
         try {
-            const c = await certs._issueOne(req, { enrollmentId: e._id, moduleId: it.module, templateId: rule.template, email: true });
+            const c = await certs._issueOne(req, { enrollmentId: e._id, moduleId: it.module, email: true });
             issued.push(c.cert_num);
         } catch (err) {
             if (err.code !== 'DUPLICATE' && err.code !== 11000) console.error('Automatic certificate failed:', String(e._id), it.titleAr, err.message);

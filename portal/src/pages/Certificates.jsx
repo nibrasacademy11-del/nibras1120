@@ -264,8 +264,7 @@ function StatusDialog({ c, onClose, onDone }) {
 
 function ReissueDialog({ c, onClose, onDone }) {
   const { t } = useI18n();
-  const templates = useLoad('/api/v2/certificate-templates');
-  const [f, setF] = useState({ nameAr: c.trainee_name, nameEn: c.nameEn || '', template: '', reason: '' });
+  const [f, setF] = useState({ nameAr: c.trainee_name, nameEn: c.nameEn || '', reason: '' });
   const { busy, error, run } = useAction();
   return (
     <Modal title={t('reissue')} onClose={onClose}>
@@ -273,7 +272,6 @@ function ReissueDialog({ c, onClose, onDone }) {
         <p className="muted">{t('reissueHint')}</p>
         <Field label={t('nameAr')}><input value={f.nameAr} onChange={(e) => setF({ ...f, nameAr: e.target.value })} /></Field>
         <Field label={t('nameEn')}><input dir="ltr" value={f.nameEn} onChange={(e) => setF({ ...f, nameEn: e.target.value })} /></Field>
-        <Field label={t('template')}><select value={f.template} onChange={(e) => setF({ ...f, template: e.target.value })}><option value="">{t('defaultTemplate')}</option>{(templates.data?.items || []).filter((x) => x.kind === c.kind && x.active).map((x) => <option key={x._id} value={x._id}>{x.name}</option>)}</select></Field>
         <Field label={t('reason')}><input required value={f.reason} onChange={(e) => setF({ ...f, reason: e.target.value })} /></Field>
         <ErrorBox error={error} />
         <div className="row"><button className="btn btn--primary" disabled={busy}>{t('reissue')}</button><button type="button" className="btn btn--ghost" onClick={onClose}>{t('cancel')}</button></div>
@@ -296,7 +294,7 @@ export default function Certificates() {
   if (filter.delivery) q.set('delivery', filter.delivery);
   const state = useLoad(tab === 'issued' ? `/api/v2/certificates?${q}` : null, [tab]);
   const byHand = can('certificates.create', 'all') && ['super_admin', 'assistant'].includes(me?.user?.role);
-  const tabs = ['issued', ...(byHand ? ['manualTab'] : []), ...(can('certificates.create', 'all') || can('certificates.approve', 'all') ? ['eligibleTab'] : []), ...(can('certificates.manage', 'all') ? ['templatesTab', 'accreditationsTab'] : [])];
+  const tabs = ['issued', ...(byHand ? ['manualTab'] : []), ...(can('certificates.create', 'all') || can('certificates.approve', 'all') ? ['eligibleTab'] : [])];
   return (
     <>
       <h1 className="page-title">{t('certificatesNav')}</h1>
@@ -333,8 +331,6 @@ export default function Certificates() {
       )}
       {tab === 'manualTab' && <ManualIssue />}
       {tab === 'eligibleTab' && <Eligible />}
-      {tab === 'templatesTab' && <Templates />}
-      {tab === 'accreditationsTab' && <Accreditations />}
     </>
   );
 }
@@ -422,7 +418,7 @@ function ManualIssue() {
   const navigate = useNavigate();
   const types = useLoad('/api/v2/certificates/manual/types', []);
   const year = String(new Date().getFullYear());
-  const [f, setF] = useState({ docType: 'course', gender: 'male', name: '', nameEn: '', program: '', programEn: '', hours: '', date: today(), numberMode: 'auto', number: '', specialization: '', degree: '', admittedYear: year, conferredYear: year });
+  const [f, setF] = useState({ docType: 'course', gender: '', name: '', nameEn: '', program: '', programEn: '', hours: '', date: today(), numberMode: 'auto', number: '', specialization: '', degree: '', admittedYear: year, conferredYear: year });
   const [rows, setRows] = useState([{ module: '', percentage: '', grade: '' }, { module: '', percentage: '', grade: '' }, { module: '', percentage: '', grade: '' }]);
   const setRow = (i, k) => (e) => setRows(rows.map((r, j) => (j === i ? { ...r, [k]: e.target.value } : r)));
   const isDegree = f.docType === 'degree';
@@ -456,7 +452,7 @@ function ManualIssue() {
           <small className="muted">{t('linkExistingHint')}</small>
           {linked && <CustomerPicker value={customer} onPick={pick} />}
         </div>
-        <Field label={t('gender')}><select value={f.gender} onChange={set('gender')}><option value="male">{t('male')}</option><option value="female">{t('female')}</option></select></Field>
+        <Field label={t('gender')} hint={t('genderWordingHint')}><select required value={f.gender} onChange={set('gender')}><option value="" disabled>{t('choose')}</option><option value="male">{t('male')}</option><option value="female">{t('female')}</option></select></Field>
         <Field label={`${t('name')} (AR)`}><input required value={f.name} onChange={set('name')} /></Field>
         <Field label={`${t('name')} (EN)`}><input required dir="ltr" value={f.nameEn} onChange={set('nameEn')} /></Field>
         <Field label={`${t('program')} (AR)`} hint={t('manualProgramHint')}><input required value={f.program} onChange={set('program')} placeholder="دورة إدارة الموارد البشرية" /></Field>
@@ -509,7 +505,6 @@ function Eligible() {
   const canIssue = can('certificates.create', 'all');
   // customer service may release a certificate before full payment (PLAN-V2 decision 1); issuing is the owner's
   const canRelease = can('certificates.manage', 'all') || can('certificates.approve', 'all');
-  const templates = useLoad(canIssue ? '/api/v2/certificate-templates' : null);
   const [selected, setSelected] = useState([]);
   const [results, setResults] = useState(null);
   const { busy, error, run } = useAction();
@@ -519,7 +514,6 @@ function Eligible() {
   return (
     <section className="card">
       <p className="muted">{t('cdAutoHint')}</p>
-      {canIssue && templates.data && (templates.data.items || []).length === 0 && <div className="alert alert--info">{t('noTemplateHint')}</div>}
       <Loading state={state}>
         {(d) => (!d.items.length ? <p className="muted">{t('noData')}</p> : (
           <>
@@ -561,166 +555,6 @@ function WaiveDialog({ item, email, onClose, onDone }) {
         <Field label={`${t('cdWaiveReason')} *`}><input required value={reason} onChange={(e) => setReason(e.target.value)} /></Field>
         <ErrorBox error={error} />
         <div className="row"><button className="btn btn--danger" disabled={busy}>{t('cdWaive')}</button><button type="button" className="btn btn--ghost" onClick={onClose}>{t('cancel')}</button></div>
-      </form>
-    </Modal>
-  );
-}
-
-async function uploadImage(file) {
-  const fd = new FormData();
-  fd.append('image', file);
-  const res = await fetch('/api/admin/media', { method: 'POST', body: fd, credentials: 'same-origin' });
-  const d = await res.json();
-  if (!res.ok) throw new Error(d.message || 'Upload failed');
-  return d.url;
-}
-
-function ImageField({ label, value, onChange }) {
-  const { t } = useI18n();
-  const [busy, setBusy] = useState(false);
-  return (
-    <Field label={label}>
-      <div className="row">
-        {value && <img src={value} alt="" style={{ height: 40 }} />}
-        <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy} onChange={async (e) => { const f = e.target.files[0]; if (!f) return; setBusy(true); try { onChange(await uploadImage(f)); } finally { setBusy(false); } }} />
-        {value && <button type="button" className="link" onClick={() => onChange('')}>{t('cancel')}</button>}
-      </div>
-    </Field>
-  );
-}
-
-function Templates() {
-  const { t } = useI18n();
-  const state = useLoad('/api/v2/certificate-templates');
-  const [editing, setEditing] = useState(null);
-  if (editing) return <TemplateEditor item={editing === 'new' ? null : editing} onDone={() => { setEditing(null); state.reload(); }} />;
-  return (
-    <section className="card">
-      <div className="card-head"><span className="muted">{t('templateHint')}</span><button type="button" className="btn btn--primary" onClick={() => setEditing('new')}>+ {t('newTemplate')}</button></div>
-      <Loading state={state}>
-        {(d) => (!d.items.length ? <p className="muted">{t('noData')}</p> : (
-          <ul className="plain-list">{d.items.map((x) => <li key={x._id}><span><strong>{x.name}</strong> · {x.kind === 'program' ? t('finalCert') : t('module')} {x.isDefault && <Pill tone="ok">{t('defaultTemplate')}</Pill>} {!x.active && <Pill tone="muted">{t('inactive')}</Pill>}</span><button type="button" className="btn btn--small" onClick={() => setEditing(x)}>{t('edit')}</button></li>)}</ul>
-        ))}
-      </Loading>
-    </section>
-  );
-}
-
-function TemplateEditor({ item, onDone }) {
-  const { t } = useI18n();
-  const [f, setF] = useState(item ? { layout: 'nibras', ...item } : { name: '', kind: 'module', layout: 'nibras', isDefault: true, language: 'both', titleAr: 'شهادة إتمام', titleEn: 'Certificate of Completion', introAr: 'تشهد أكاديمية نبراس للتدريب والتأهيل المهني بأن', introEn: 'Nibras Academy for Training & Professional Qualification certifies that', bodyAr: '', bodyEn: '', footerAr: '', footerEn: '', logo: '/assets/img/logo.png', background: '', primaryColor: '#5a020e', accentColor: '#b98a35', showHours: true, showAccreditations: true, signatures: [], active: true });
-  const { busy, error, run } = useAction();
-  const set = (k) => (e) => setF({ ...f, [k]: e && e.target ? (e.target.type === 'checkbox' ? e.target.checked : e.target.value) : e });
-  const setSig = (i, k, v) => setF({ ...f, signatures: f.signatures.map((s, j) => (j === i ? { ...s, [k]: v } : s)) });
-  const save = (e) => {
-    e.preventDefault();
-    run(() => api(item ? `/api/v2/certificate-templates/${item._id}` : '/api/v2/certificate-templates', { method: item ? 'PUT' : 'POST', body: f })).then(onDone).catch(() => {});
-  };
-  return (
-    <>
-      <form className="card form-grid" onSubmit={save}>
-        <Field label={t('name')}><input required value={f.name} onChange={set('name')} /></Field>
-        <Field label={t('kind')}><select value={f.kind} onChange={set('kind')} disabled={!!item}><option value="module">{t('module')}</option><option value="program">{t('finalCert')}</option></select></Field>
-        <Field label={t('certLayout')}><select value={f.layout} onChange={set('layout')}><option value="nibras">{t('certLayoutNibras')}</option><option value="classic">{t('certLayoutClassic')}</option></select></Field>
-        <Field label={t('templateLanguage')}><select value={f.language} onChange={set('language')}><option value="both">AR + EN</option><option value="ar">العربية</option><option value="en">English</option></select></Field>
-        <Field label={t('primaryColor')}><input type="color" value={f.primaryColor} onChange={set('primaryColor')} /></Field>
-        <Field label={t('accentColor')}><input type="color" value={f.accentColor} onChange={set('accentColor')} /></Field>
-        <Field label={`${t('title')} (AR)`}><input value={f.titleAr} onChange={set('titleAr')} /></Field>
-        <Field label={`${t('title')} (EN)`}><input dir="ltr" value={f.titleEn} onChange={set('titleEn')} /></Field>
-        <Field label={`${t('intro')} (AR)`} wide><input value={f.introAr} onChange={set('introAr')} /></Field>
-        <Field label={`${t('intro')} (EN)`} wide><input dir="ltr" value={f.introEn} onChange={set('introEn')} /></Field>
-        <Field label={`${t('description')} (AR)`} hint={t('placeholdersHint')} wide><input value={f.bodyAr} onChange={set('bodyAr')} placeholder="قد أتم بنجاح متطلبات محور «{module}» ضمن برنامج «{program}»" /></Field>
-        <Field label={`${t('description')} (EN)`} wide><input dir="ltr" value={f.bodyEn} onChange={set('bodyEn')} placeholder="has successfully completed the module “{moduleEn}” of the “{programEn}” program" /></Field>
-        <Field label={`${t('footer')} (AR)`}><input value={f.footerAr} onChange={set('footerAr')} /></Field>
-        <Field label={`${t('footer')} (EN)`}><input dir="ltr" value={f.footerEn} onChange={set('footerEn')} /></Field>
-        <ImageField label={t('logo')} value={f.logo} onChange={set('logo')} />
-        <ImageField label={t('background')} value={f.background} onChange={set('background')} />
-        <label className="check"><input type="checkbox" checked={f.showHours} onChange={set('showHours')} /> {t('showHours')}</label>
-        <label className="check"><input type="checkbox" checked={f.showAccreditations} onChange={set('showAccreditations')} /> {t('showAccreditations')}</label>
-        <label className="check"><input type="checkbox" checked={f.isDefault} onChange={set('isDefault')} /> {t('defaultTemplate')}</label>
-        <label className="check"><input type="checkbox" checked={f.active} onChange={set('active')} /> {t('active')}</label>
-        <h3 className="field--wide">{t('signatures')}</h3>
-        {f.signatures.map((s, i) => (
-          <div className="field--wide form-grid" key={i}>
-            <Field label={t('nameAr')}><input value={s.nameAr || ''} onChange={(e) => setSig(i, 'nameAr', e.target.value)} /></Field>
-            <Field label={t('nameEn')}><input dir="ltr" value={s.nameEn || ''} onChange={(e) => setSig(i, 'nameEn', e.target.value)} /></Field>
-            <Field label={`${t('jobTitle')} (AR)`}><input value={s.titleAr || ''} onChange={(e) => setSig(i, 'titleAr', e.target.value)} /></Field>
-            <Field label={`${t('jobTitle')} (EN)`}><input dir="ltr" value={s.titleEn || ''} onChange={(e) => setSig(i, 'titleEn', e.target.value)} /></Field>
-            <ImageField label={t('signatureImage')} value={s.image} onChange={(v) => setSig(i, 'image', v)} />
-            <button type="button" className="btn btn--small btn--danger" onClick={() => setF({ ...f, signatures: f.signatures.filter((_, j) => j !== i) })}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ marginInlineEnd: 4 }}><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-              {t('cancel')}
-            </button>
-          </div>
-        ))}
-        {f.signatures.length < 4 && <div className="field--wide"><button type="button" className="btn btn--small" onClick={() => setF({ ...f, signatures: [...f.signatures, {}] })}>+ {t('add')}</button></div>}
-        <div className="field--wide"><ErrorBox error={error} /></div>
-        <div className="row field--wide"><button className="btn btn--primary" disabled={busy}>{t('save')}</button><button type="button" className="btn btn--ghost" onClick={onDone}>{t('cancel')}</button></div>
-      </form>
-      <h2>{t('preview')}</h2>
-      <div className="cert-preview"><CertificateSheet cert={{ trainee_name: SAMPLE.name, nameEn: SAMPLE.nameEn, cert_num: SAMPLE.number, issue_date: SAMPLE.date, hours: f.kind === 'module' ? SAMPLE.hours : 0, accreditations: [{ nameAr: 'جهة اعتماد (مثال)', nameEn: 'Accreditation body (sample)', number: 'ACC-123' }], status: 'Valid' }} design={previewDesign(f, f.kind)} verifyUrl="https://www.nibras-ac.com/pages/ar/verify.html?code=NC-0000000" /></div>
-    </>
-  );
-}
-
-function Accreditations() {
-  const { t, fmtDay, label } = useI18n();
-  const state = useLoad('/api/v2/accreditations');
-  const programs = useLoad('/api/v2/programs?limit=500');
-  const [editing, setEditing] = useState(null);
-  return (
-    <section className="card">
-      <div className="card-head"><span /><button type="button" className="btn btn--primary" onClick={() => setEditing({})}>+ {t('newAccreditation')}</button></div>
-      <Loading state={state}>
-        {(d) => (!d.items.length ? <p className="muted">{t('noData')}</p> : (
-          <div className="table-wrap">
-            <table className="table">
-              <thead><tr><th>{t('name')}</th><th>{t('accBody')}</th><th>{t('number')}</th><th>{t('programsNav')}</th><th>{t('validUntil')}</th><th /></tr></thead>
-              <tbody>{d.items.map((a) => (
-                <tr key={a._id} className={a.active ? '' : 'muted'}>
-                  <td>{a.logo && <img src={a.logo} alt="" style={{ height: 24, verticalAlign: 'middle' }} />} {label({ ar: a.nameAr, en: a.nameEn })}</td>
-                  <td>{a.body}</td><td dir="ltr">{a.number}</td>
-                  <td>{a.allPrograms ? t('all') : a.programs.map((p) => p.titleAr).join('، ') || '—'}</td>
-                  <td>{a.validUntil ? fmtDay(a.validUntil) : '—'}</td>
-                  <td><button type="button" className="btn btn--small" onClick={() => setEditing(a)}>{t('edit')}</button></td>
-                </tr>
-              ))}</tbody>
-            </table>
-          </div>
-        ))}
-      </Loading>
-      {editing && <AccreditationForm item={editing._id ? editing : null} programs={programs.data?.items || []} onClose={() => setEditing(null)} onSaved={() => { setEditing(null); state.reload(); }} />}
-    </section>
-  );
-}
-
-function AccreditationForm({ item, programs, onClose, onSaved }) {
-  const { t, label } = useI18n();
-  const d = (v) => (v ? String(v).slice(0, 10) : '');
-  const [f, setF] = useState({ nameAr: item?.nameAr || '', nameEn: item?.nameEn || '', body: item?.body || '', number: item?.number || '', logo: item?.logo || '', validFrom: d(item?.validFrom), validUntil: d(item?.validUntil), programs: (item?.programs || []).map((p) => p._id || p), allPrograms: !!item?.allPrograms, active: item ? item.active : true });
-  const { busy, error, run } = useAction();
-  const set = (k) => (e) => setF({ ...f, [k]: e && e.target ? (e.target.type === 'checkbox' ? e.target.checked : e.target.value) : e });
-  return (
-    <Modal title={item ? t('edit') : t('newAccreditation')} onClose={onClose} wide>
-      <form className="form-grid" onSubmit={(e) => { e.preventDefault(); run(() => api(item ? `/api/v2/accreditations/${item._id}` : '/api/v2/accreditations', { method: item ? 'PUT' : 'POST', body: { ...f, __v: item?.__v } })).then(onSaved).catch(() => {}); }}>
-        <Field label={t('nameAr')}><input required value={f.nameAr} onChange={set('nameAr')} /></Field>
-        <Field label={t('nameEn')}><input dir="ltr" value={f.nameEn} onChange={set('nameEn')} /></Field>
-        <Field label={t('accBody')}><input value={f.body} onChange={set('body')} /></Field>
-        <Field label={t('number')}><input dir="ltr" value={f.number} onChange={set('number')} /></Field>
-        <Field label={t('startDate')}><input type="date" value={f.validFrom} onChange={set('validFrom')} /></Field>
-        <Field label={t('validUntil')}><input type="date" value={f.validUntil} onChange={set('validUntil')} /></Field>
-        <ImageField label={t('logo')} value={f.logo} onChange={set('logo')} />
-        <label className="check"><input type="checkbox" checked={f.allPrograms} onChange={set('allPrograms')} /> {t('allProgramsLabel')}</label>
-        {!f.allPrograms && (
-          <Field label={t('programsNav')} wide>
-            <select multiple size={6} value={f.programs} onChange={(e) => setF({ ...f, programs: [...e.target.selectedOptions].map((o) => o.value) })}>
-              {programs.map((p) => <option key={p._id} value={p._id}>{label({ ar: p.titleAr, en: p.titleEn })}</option>)}
-            </select>
-          </Field>
-        )}
-        <label className="check"><input type="checkbox" checked={f.active} onChange={set('active')} /> {t('active')}</label>
-        <div className="field--wide"><ErrorBox error={error} /></div>
-        <div className="row field--wide"><button className="btn btn--primary" disabled={busy}>{t('save')}</button><button type="button" className="btn btn--ghost" onClick={onClose}>{t('cancel')}</button></div>
       </form>
     </Modal>
   );
