@@ -6,6 +6,7 @@
 const User = require('../../models/User');
 const Employee = require('../../models/Employee');
 const Customer = require('../../models/Customer');
+const Team = require('../../models/Team');
 const audit = require('../../lib/audit');
 const sessions = require('../../lib/sessions');
 const P = require('../../lib/permissions');
@@ -53,34 +54,43 @@ exports.setRole = async (req, res) => {
 
     const wasStaff = P.isStaffRole(before);
     const willBeStaff = P.isStaffRole(role);
-    let emp = await Employee.findOne({ user: user._id });
     if (wasStaff && !willBeStaff) {
         // a staff member with customers hands them over first (Employees → leaving)
         const owned = await Customer.countDocuments({ owner: user._id, status: { $ne: 'merged' } });
         if (owned) throw new HttpError(409, `عنده ${owned} عميل. انقلهم لموظف تاني الأول من «الموظفين». / They have ${owned} customers: transfer them first.`, 'HAS_CUSTOMERS');
-        if (emp && emp.status === 'active') {
+    }
+
+    // The role first (a disabled account stays disabled): the old role stops at once, every
+    // device signs in again. If the employee file below fails, the role goes back.
+    user.role = role;
+    user.tokenVersion = (user.tokenVersion || 0) + 1;
+    await user.save();
+    let emp;
+    try {
+        emp = await Employee.findOne({ user: user._id });
+        if (wasStaff && !willBeStaff && emp && emp.status === 'active') {
             emp.status = 'left';
             emp.leftAt = new Date();
             emp.leftReason = 'became a customer';
             await emp.save();
         }
-    }
-    if (willBeStaff) {
-        if (!emp) {
-            const { number } = await nextNumber('employee');
-            emp = await Employee.create({ user: user._id, employeeNo: number, nameAr: user.name, phone: user.phone || '', history: [{ from: new Date(), by: req.user.id, reason: 'role given from sign-in accounts' }] });
-        } else if (emp.status !== 'active') {
-            emp.status = 'active';
-            emp.leftAt = null;
-            emp.leftReason = '';
-            await emp.save();
+        if (willBeStaff) {
+            if (!emp) {
+                const { number } = await nextNumber('employee');
+                emp = await Employee.create({ user: user._id, employeeNo: number, nameAr: user.name, phone: user.phone || '', history: [{ from: new Date(), by: req.user.id, reason: 'role given from sign-in accounts' }] });
+            } else if (emp.status !== 'active') {
+                emp.status = 'active';
+                emp.leftAt = null;
+                emp.leftReason = '';
+                await emp.save();
+            }
         }
+        // someone who no longer leads stops being the leader of their teams
+        if (before === 'team_leader' && role !== 'team_leader') await Team.updateMany({ leader: user._id }, { $set: { leader: null } });
+    } catch (err) {
+        await User.updateOne({ _id: user._id }, { $set: { role: before } });
+        throw err;
     }
-    user.role = role;
-    user.status = 'active';
-    // the old role stops at once: every device signs in again
-    user.tokenVersion = (user.tokenVersion || 0) + 1;
-    await user.save();
     await sessions.revokeAllSessions(user._id, { reason: 'role_changed' });
     await audit.record(req, { action: 'users.role_changed', resource: 'users', resourceId: user._id, summary: `${user.email}: ${before} → ${role}`, changes: { role: { from: before, to: role } } });
     res.json({ role, employee: emp ? { _id: emp._id, employeeNo: emp.employeeNo, status: emp.status } : null });

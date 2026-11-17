@@ -379,11 +379,9 @@ exports.lookup = async (req, res) => {
     const items = [];
     for (const c of found) {
         const access = await accessFor(req, c);
-        const card = basicCard(c, access, { namePolicy, programs: access.level === 'basic' ? [] : await programsOf(c) });
-        // a file that is not theirs: the name and who the customer is with, nothing else
-        if (access.level === 'basic') { delete card.status; delete card.team; }
+        // a file that is not theirs: basicCard shows the name and who the customer is with only
         items.push({
-            ...card,
+            ...basicCard(c, access, { namePolicy, programs: access.level === 'basic' ? [] : await programsOf(c) }),
             canRequestAccess: access.level !== 'full' && !!P.scopeFor(req.user.grants, 'access_requests.create') && String(c.owner?._id || '') !== req.user.id
         });
     }

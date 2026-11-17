@@ -25,8 +25,8 @@ async function deciders(customer, requesterId) {
     const ids = new Set();
     if (customer.owner) ids.add(String(customer.owner));
     if (customer.team) {
-        const team = await require('../../models/Team').findById(customer.team).select('leader leaders').lean();
-        for (const l of [].concat(team?.leader || [], team?.leaders || [])) if (l) ids.add(String(l));
+        const team = await require('../../models/Team').findById(customer.team).select('leader').lean();
+        if (team?.leader) ids.add(String(team.leader));
     }
     const admins = await User.find({ role: { $in: ['super_admin', 'assistant', 'customer_support'] }, status: 'active' }).select('_id').lean();
     for (const a of admins) ids.add(String(a._id));
@@ -75,7 +75,7 @@ exports.create = async (req, res) => {
         bodyEn: `${req.user.name}: ${purpose}`,
         link: '/access-requests'
     };
-    for (const id of await deciders(customer, req.user.id)) await notify(id, message);
+    await Promise.all((await deciders(customer, req.user.id)).map((id) => notify(id, message)));
     res.status(201).json({ item: view(await r.populate(POP)) });
 };
 

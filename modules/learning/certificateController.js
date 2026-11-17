@@ -113,15 +113,13 @@ exports.programAccreditations = async (req, res) => {
 };
 
 exports.setProgramAccreditations = async (req, res) => {
-    const ids = new Set((Array.isArray(req.body.ids) ? req.body.ids : []).map(String));
+    const ids = [...new Set((Array.isArray(req.body.ids) ? req.body.ids : []).map(oid).filter(Boolean).map(String))].map(oid);
     const program = oid(req.params.id);
-    const all = await Accreditation.find({ allPrograms: { $ne: true } });
-    for (const a of all) {
-        const has = (a.programs || []).some((p) => String(p) === String(program));
-        if (ids.has(String(a._id)) && !has) await Accreditation.updateOne({ _id: a._id }, { $addToSet: { programs: program } });
-        if (!ids.has(String(a._id)) && has) await Accreditation.updateOne({ _id: a._id }, { $pull: { programs: program } });
-    }
-    await audit.record(req, { action: 'accreditation.program_set', resource: 'certificates', resourceId: program, summary: `${ids.size} accreditations` });
+    await Promise.all([
+        Accreditation.updateMany({ allPrograms: { $ne: true }, _id: { $in: ids } }, { $addToSet: { programs: program } }),
+        Accreditation.updateMany({ allPrograms: { $ne: true }, _id: { $nin: ids }, programs: program }, { $pull: { programs: program } })
+    ]);
+    await audit.record(req, { action: 'accreditation.program_set', resource: 'certificates', resourceId: program, summary: `${ids.length} accreditations` });
     res.json({ ok: true });
 };
 

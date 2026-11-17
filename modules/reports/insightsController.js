@@ -1,6 +1,7 @@
 // The owner's analytics: everything the system records, for a period the owner picks, next to
 // the period of the same length just before it. Money stays per currency (never converted).
 const mongoose = require('mongoose');
+const P = require('../../lib/permissions');
 const Customer = require('../../models/Customer');
 const Enrollment = require('../../models/Enrollment');
 const Complaint = require('../../models/Complaint');
@@ -311,17 +312,17 @@ async function attention() {
 exports.overview = async (req, res) => {
     const p = periodOf(req.query);
     const f = await filtersOf(req.query);
-    const [m, s, l, sv, st, att, options] = await Promise.all([money(p, p.from, p.to, f), sales(p, p.from, p.to, f), learning(p, p.from, p.to, f), service(p, p.from, p.to, f), staff(p, p.from, p.to, f), attention(), filterOptions()]);
     // the assistant sees everything here except the money: no figures, no money columns
-    if (!require('../../lib/permissions').seesMoney(req.user.grants)) {
+    const seeMoney = P.seesMoney(req.user.grants);
+    const [m, s, l, sv, st, att, options] = await Promise.all([seeMoney ? money(p, p.from, p.to, f) : null, sales(p, p.from, p.to, f), learning(p, p.from, p.to, f), service(p, p.from, p.to, f), staff(p, p.from, p.to, f), attention(), filterOptions()]);
+    if (!seeMoney) {
         for (const r of s.byEmployee || []) delete r.collected;
         delete st.payroll;
         delete att.payments;
         delete att.approvals;
         delete att.refunds;
     }
-    const seeMoney = require('../../lib/permissions').seesMoney(req.user.grants);
-    res.json({ from: ymd(new Date(p.from.getTime() + 2 * 3600e3)), to: ymd(new Date(p.to.getTime() + 2 * 3600e3)), days: p.days, prevFrom: ymd(new Date(p.prevFrom.getTime() + 2 * 3600e3)), prevTo: ymd(new Date(p.prevTo.getTime() + 2 * 3600e3)), money: seeMoney ? m : null, sales: s, learning: l, service: sv, staff: st, attention: att, unit: p.days > 62 ? 'month' : 'day', generatedAt: new Date(),
+    res.json({ from: ymd(new Date(p.from.getTime() + 2 * 3600e3)), to: ymd(new Date(p.to.getTime() + 2 * 3600e3)), days: p.days, prevFrom: ymd(new Date(p.prevFrom.getTime() + 2 * 3600e3)), prevTo: ymd(new Date(p.prevTo.getTime() + 2 * 3600e3)), money: m, sales: s, learning: l, service: sv, staff: st, attention: att, unit: p.days > 62 ? 'month' : 'day', generatedAt: new Date(),
         filters: { program: f.program, employee: f.employee, active: f.active }, options });
 };
 
