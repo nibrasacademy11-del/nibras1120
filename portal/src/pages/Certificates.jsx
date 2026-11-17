@@ -6,6 +6,7 @@ import { useAuth } from '../auth.jsx';
 import { useI18n } from '../i18n.jsx';
 import { ErrorBox, Field, Loading, Modal, Pager, Pill, useAction, useLoad } from '../components/ui.jsx';
 import { owed } from './GroupCertificates.jsx';
+import { loadCertKit } from '../certKit.js';
 
 const PAPER_TONE = { none: 'muted', printed: 'info', ready: 'gold', shipped: 'info', delivered: 'ok' };
 const NEXT_STEPS = { none: ['printed'], printed: ['ready', 'shipped'], ready: ['delivered'], shipped: ['delivered'], delivered: [] };
@@ -64,6 +65,9 @@ const SAMPLE = { kind: 'module', name: 'سارة أحمد علي', nameEn: 'Sara
 const fill = (text, d) => String(text || '').replace(/\{(\w+)\}/g, (m, k) => (d[k] !== undefined ? String(d[k]) : m));
 export function previewDesign(t, kind = 'module') {
   const d = { ...SAMPLE, kind };
+  if ((t.layout || 'nibras') === 'nibras') {
+    return { layout: 'nibras', gender: 'female', subjectAr: kind === 'module' ? `${d.module} ضمن ${d.program}` : d.program, subjectEn: kind === 'module' ? `${d.moduleEn} module of the ${d.programEn}` : d.programEn };
+  }
   const body = { module: { ar: 'قد أتم بنجاح متطلبات محور «{module}» ضمن برنامج «{program}»', en: 'has successfully completed the module “{moduleEn}” of the “{programEn}” program' }, program: { ar: 'قد أتم بنجاح جميع متطلبات برنامج «{program}»', en: 'has successfully completed all requirements of the “{programEn}” program' } }[kind];
   return {
     language: t.language || 'both', titleAr: fill(t.titleAr, d), titleEn: fill(t.titleEn, d), introAr: fill(t.introAr, d), introEn: fill(t.introEn, d),
@@ -94,7 +98,25 @@ export function CertificateSheet(props) {
   return <Scaled><SheetBody {...props} /></Scaled>;
 }
 
+// The academy's designed sheet (cert-nibras.js), shared with the website
+export function NibrasSheet({ cert, design }) {
+  const [html, setHtml] = useState('');
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    let live = true;
+    loadCertKit().then((k) => { if (live) setHtml(k.sheet(cert, design)); }).catch(() => live && setFailed(true));
+    return () => { live = false; };
+  }, [cert, design]);
+  if (failed) return <p className="error">The certificate design could not be loaded.</p>;
+  return <div className="ncert-host" dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
 function SheetBody({ cert, design: d, verifyUrl }) {
+  if (d && d.layout === 'nibras') return <NibrasSheet cert={cert} design={d} />;
+  return <ClassicSheet cert={cert} design={d} verifyUrl={verifyUrl} />;
+}
+
+function ClassicSheet({ cert, design: d, verifyUrl }) {
   const [qr, setQr] = useState('');
   useEffect(() => {
     if (verifyUrl) QRCode.toDataURL(verifyUrl, { margin: 0, width: 240, color: { dark: d.primaryColor } }).then(setQr).catch(() => setQr(''));
@@ -174,7 +196,7 @@ export function CertificateDetail() {
             <div className="row">
               {c.kind !== 'legacy' && c.status === 'Valid' && <button type="button" className="btn btn--primary" onClick={() => window.print()}>{t('printPdf')}</button>}
               {c.kind === 'legacy' && c.pdf_url && <a className="btn btn--primary" href={c.pdf_url}>{t('download')}</a>}
-              {me.user.isStaff && can('certificates.create', 'all') && c.kind !== 'legacy' && ['Valid', 'Suspended'].includes(c.status) && <button type="button" className="btn btn--ghost" onClick={() => setDialog('reissue')}>{t('reissue')}</button>}
+              {me.user.isStaff && can('certificates.create', 'all') && !['legacy', 'manual'].includes(c.kind) && ['Valid', 'Suspended'].includes(c.status) && <button type="button" className="btn btn--ghost" onClick={() => setDialog('reissue')}>{t('reissue')}</button>}
               {me.user.isStaff && can('certificates.archive', 'all') && !['Replaced', 'Cancelled'].includes(c.status) && <button type="button" className="btn btn--ghost" onClick={() => setDialog('status')}>{t('changeStatus')}</button>}
             </div>
           </div>
@@ -249,7 +271,7 @@ function ReissueDialog({ c, onClose, onDone }) {
 
 export default function Certificates() {
   const { t } = useI18n();
-  const { can } = useAuth();
+  const { can, me } = useAuth();
   const navigate = useNavigate();
   const [tab, setTab] = useState('issued');
   const [filter, setFilter] = useState({ q: '', status: '', delivery: '', page: 1 });
@@ -258,7 +280,8 @@ export default function Certificates() {
   if (filter.status) q.set('status', filter.status);
   if (filter.delivery) q.set('delivery', filter.delivery);
   const state = useLoad(tab === 'issued' ? `/api/v2/certificates?${q}` : null, [tab]);
-  const tabs = ['issued', ...(can('certificates.create', 'all') || can('certificates.approve', 'all') ? ['eligibleTab'] : []), ...(can('certificates.manage', 'all') ? ['templatesTab', 'accreditationsTab'] : [])];
+  const byHand = can('certificates.create', 'all') && ['super_admin', 'assistant'].includes(me?.user?.role);
+  const tabs = ['issued', ...(byHand ? ['manualTab'] : []), ...(can('certificates.create', 'all') || can('certificates.approve', 'all') ? ['eligibleTab'] : []), ...(can('certificates.manage', 'all') ? ['templatesTab', 'accreditationsTab'] : [])];
   return (
     <>
       <h1 className="page-title">{t('certificatesNav')}</h1>
@@ -293,9 +316,57 @@ export default function Certificates() {
           </section>
         </>
       )}
+      {tab === 'manualTab' && <ManualIssue />}
       {tab === 'eligibleTab' && <Eligible />}
       {tab === 'templatesTab' && <Templates />}
       {tab === 'accreditationsTab' && <Accreditations />}
+    </>
+  );
+}
+
+// ---- a certificate written by hand: the owner and the assistant ----
+const today = () => new Date().toISOString().slice(0, 10);
+function ManualIssue() {
+  const { t, lang } = useI18n();
+  const navigate = useNavigate();
+  const types = useLoad('/api/v2/certificates/manual/types', []);
+  const [f, setF] = useState({ docType: 'course', gender: 'male', name: '', nameEn: '', program: '', programEn: '', hours: '', date: today(), numberMode: 'auto', number: '' });
+  const { busy, error, run } = useAction();
+  const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
+  const ready = (types.data?.items || []).find((x) => x.key === f.docType)?.ready;
+  const save = (e) => {
+    e.preventDefault();
+    run(() => api('/api/v2/certificates/manual', { method: 'POST', body: { ...f, hours: Number(f.hours) || 0 } })).then((r) => navigate(`/certificates/${r.item._id}`)).catch(() => {});
+  };
+  const preview = {
+    cert: { cert_num: f.numberMode === 'manual' ? f.number || '—' : 'NC-0000000', trainee_name: f.name || 'اسم المتدرب', nameEn: f.nameEn || 'Trainee name', hours: Number(f.hours) || 0, issue_date: f.date, status: 'Valid' },
+    design: { layout: 'nibras', gender: f.gender, subjectAr: f.program || 'اسم البرنامج', subjectEn: f.programEn || 'Program name' }
+  };
+  return (
+    <>
+      <form className="card form-grid" onSubmit={save}>
+        <p className="muted wide">{t('manualHint')}</p>
+        <Field label={t('certDocType')}>
+          <select value={f.docType} onChange={set('docType')}>
+            {(types.data?.items || []).map((x) => <option key={x.key} value={x.key} disabled={!x.ready}>{lang === 'en' ? x.en : x.ar}{x.ready ? '' : ` (${t('designSoon')})`}</option>)}
+          </select>
+        </Field>
+        <Field label={t('gender')}><select value={f.gender} onChange={set('gender')}><option value="male">{t('male')}</option><option value="female">{t('female')}</option></select></Field>
+        <Field label={`${t('name')} (AR)`}><input required value={f.name} onChange={set('name')} /></Field>
+        <Field label={`${t('name')} (EN)`}><input required dir="ltr" value={f.nameEn} onChange={set('nameEn')} /></Field>
+        <Field label={`${t('program')} (AR)`} hint={t('manualProgramHint')}><input required value={f.program} onChange={set('program')} placeholder="دورة إدارة الموارد البشرية" /></Field>
+        <Field label={`${t('program')} (EN)`}><input required dir="ltr" value={f.programEn} onChange={set('programEn')} placeholder="Human Resources Management Course" /></Field>
+        <Field label={t('trainingHours')}><input type="number" min="0" max="5000" value={f.hours} onChange={set('hours')} /></Field>
+        <Field label={t('date')}><input type="date" required value={f.date} onChange={set('date')} /></Field>
+        <Field label={t('certNumber')}>
+          <select value={f.numberMode} onChange={set('numberMode')}><option value="auto">{t('numberAuto')}</option><option value="manual">{t('numberManual')}</option></select>
+        </Field>
+        {f.numberMode === 'manual' && <Field label={t('certNumber')} hint={t('numberManualHint')}><input required dir="ltr" value={f.number} onChange={set('number')} placeholder="MT-B2589" pattern="[A-Za-z0-9][A-Za-z0-9\-]{2,29}" /></Field>}
+        <ErrorBox error={error} />
+        <div className="row wide"><button type="submit" className="btn btn--primary" disabled={busy || !ready}>{t('issueCertificate')}</button></div>
+      </form>
+      <h2>{t('preview')}</h2>
+      <CertificateSheet cert={preview.cert} design={preview.design} />
     </>
   );
 }
@@ -408,7 +479,7 @@ function Templates() {
 
 function TemplateEditor({ item, onDone }) {
   const { t } = useI18n();
-  const [f, setF] = useState(item || { name: '', kind: 'module', isDefault: true, language: 'both', titleAr: 'شهادة إتمام', titleEn: 'Certificate of Completion', introAr: 'تشهد أكاديمية نبراس للتدريب والتأهيل المهني بأن', introEn: 'Nibras Academy for Training & Professional Qualification certifies that', bodyAr: '', bodyEn: '', footerAr: '', footerEn: '', logo: '/assets/img/logo.png', background: '', primaryColor: '#5a020e', accentColor: '#b98a35', showHours: true, showAccreditations: true, signatures: [], active: true });
+  const [f, setF] = useState(item ? { layout: 'nibras', ...item } : { name: '', kind: 'module', layout: 'nibras', isDefault: true, language: 'both', titleAr: 'شهادة إتمام', titleEn: 'Certificate of Completion', introAr: 'تشهد أكاديمية نبراس للتدريب والتأهيل المهني بأن', introEn: 'Nibras Academy for Training & Professional Qualification certifies that', bodyAr: '', bodyEn: '', footerAr: '', footerEn: '', logo: '/assets/img/logo.png', background: '', primaryColor: '#5a020e', accentColor: '#b98a35', showHours: true, showAccreditations: true, signatures: [], active: true });
   const { busy, error, run } = useAction();
   const set = (k) => (e) => setF({ ...f, [k]: e && e.target ? (e.target.type === 'checkbox' ? e.target.checked : e.target.value) : e });
   const setSig = (i, k, v) => setF({ ...f, signatures: f.signatures.map((s, j) => (j === i ? { ...s, [k]: v } : s)) });
@@ -421,6 +492,7 @@ function TemplateEditor({ item, onDone }) {
       <form className="card form-grid" onSubmit={save}>
         <Field label={t('name')}><input required value={f.name} onChange={set('name')} /></Field>
         <Field label={t('kind')}><select value={f.kind} onChange={set('kind')} disabled={!!item}><option value="module">{t('module')}</option><option value="program">{t('finalCert')}</option></select></Field>
+        <Field label={t('certLayout')}><select value={f.layout} onChange={set('layout')}><option value="nibras">{t('certLayoutNibras')}</option><option value="classic">{t('certLayoutClassic')}</option></select></Field>
         <Field label={t('templateLanguage')}><select value={f.language} onChange={set('language')}><option value="both">AR + EN</option><option value="ar">العربية</option><option value="en">English</option></select></Field>
         <Field label={t('primaryColor')}><input type="color" value={f.primaryColor} onChange={set('primaryColor')} /></Field>
         <Field label={t('accentColor')}><input type="color" value={f.accentColor} onChange={set('accentColor')} /></Field>

@@ -46,8 +46,10 @@
         }
     }
 
-    // The A4 sheet, the same layout the staff portal prints
+    // The A4 sheet, the same layout the staff portal prints. The academy's designed sheet comes
+    // from cert-nibras.js (shared with the portal); the earlier framed one is drawn here.
     function sheet(c, d, qr) {
+        if (d.layout === 'nibras' && window.NibrasCertificate) return window.NibrasCertificate.sheet(c, d);
         const ar = d.language !== 'en';
         const en = d.language !== 'ar';
         const bg = d.background ? `background-image:url('${h(d.background)}');` : '';
@@ -139,7 +141,8 @@
         const c = data.item;
         const d = c.design || {};
         const verifyUrl = isEN ? data.verifyUrlEn || data.verifyUrl : data.verifyUrl;
-        const qr = await qrImage(verifyUrl, d.primaryColor || '#5a020e');
+        const qr = d.layout === 'nibras' ? '' : await qrImage(verifyUrl, d.primaryColor || '#5a020e');
+        if (d.layout === 'nibras' && document.fonts && document.fonts.ready) await document.fonts.ready;
         main.innerHTML = `
             <div class="cert-toolbar">
                 <a class="pf-btn pf-btn--ghost" href="/pages/${L}/profile.html#certificates"><i class="fas fa-arrow-${isEN ? 'left' : 'right'}" aria-hidden="true"></i> ${h(T.back)}</a>

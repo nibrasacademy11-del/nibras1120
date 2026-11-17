@@ -306,6 +306,9 @@ const issuesOrReleases = (req, res, next) => {
 router.get('/certificates/eligible', issuesOrReleases, handle(certs.eligible));
 router.post('/certificates/issue', issuesOrReleases, handle(certs.issue));
 router.post('/certificates/issue-bulk', all('certificates.create'), handle(certs.issueBulk));
+// a certificate written by hand (the owner and the assistant)
+router.get('/certificates/manual/types', all('certificates.create'), handle(certs.manualTypes));
+router.post('/certificates/manual', all('certificates.create'), handle(certs.issueManual));
 router.get('/certificates', can('certificates.view'), handle(certs.list));
 router.get('/certificates/:id', validId(), handle(certs.get));
 router.post('/certificates/:id/status', validId(), all('certificates.archive'), handle(certs.setStatus));

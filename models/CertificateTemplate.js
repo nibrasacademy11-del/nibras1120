@@ -9,6 +9,8 @@ const signatureSchema = new mongoose.Schema({
 const certificateTemplateSchema = new mongoose.Schema({
     name: { type: String, required: true, trim: true, maxlength: 120 },
     kind: { type: String, enum: ['module', 'program'], required: true, index: true },
+    // nibras: the academy's designed sheet (17 Nov 2026); classic: the earlier framed layout
+    layout: { type: String, enum: ['nibras', 'classic'], default: 'nibras' },
     // The template used when none is chosen at issue time (one per kind)
     isDefault: { type: Boolean, default: false },
     language: { type: String, enum: ['ar', 'en', 'both'], default: 'both' },

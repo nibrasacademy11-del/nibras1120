@@ -1,0 +1,16 @@
+/* The academy's certificate design (cert-nibras.js): text laid on the designed blank sheet.
+   Every position is in millimetres on the A4 landscape sheet, matching the academy's sample.
+   "Siwa" and "Canva Sans" are used first if their files are ever added; free look-alikes otherwise. */
+.ncert { position: relative; width: 297mm; height: 210mm; overflow: hidden; background: #f3f0e8; color: #2a2a2a; direction: ltr; page: certificate; break-after: page; }
+.ncert__bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.ncert__title, .ncert__subtitle, .ncert__number, .ncert__date { position: absolute; left: 0; right: 0; text-align: center; font-family: 'Roboto', Arial, sans-serif; line-height: 1; white-space: nowrap; }
+.ncert__title { top: 53.6mm; font-size: 21.9mm; font-weight: 700; color: #5e1121; letter-spacing: .028em; }
+.ncert__subtitle { top: 71.5mm; font-size: 11.9mm; font-weight: 400; color: #5a1822; }
+.ncert__number { top: 86.1mm; font-size: 5mm; font-weight: 400; color: #5a2a31; }
+.ncert__en, .ncert__ar { position: absolute; margin: 0; width: 106mm; }
+.ncert__en { left: 21mm; top: 101.9mm; font-family: 'Canva Sans', 'Figtree', 'Segoe UI', sans-serif; font-size: 4.15mm; line-height: 5.57mm; text-align: left; color: #2b2b2b; }
+.ncert__ar { right: 21mm; width: 111mm; top: 101.4mm; font-family: 'Siwa', 'Almarai', 'IBM Plex Sans Arabic', sans-serif; font-size: 4.72mm; line-height: 6.62mm; text-align: right; color: #2b2b2b; }
+.ncert__en b, .ncert__ar b { font-weight: 700; color: #6b1426; }
+.ncert__date { left: 25.7mm; right: auto; width: 57.4mm; top: 156mm; font-size: 5.85mm; font-weight: 700; color: #1d1d1d; }
+.ncert__void { position: absolute; inset: 0; display: grid; place-items: center; font: 800 60pt 'Roboto', sans-serif; color: rgba(180, 35, 24, .18); transform: rotate(-18deg); pointer-events: none; }
+@media print { .ncert { box-shadow: none; margin: 0; } }

@@ -59,7 +59,7 @@ test('certificate flow', { skip }, async (t) => {
         assert.equal((await a('POST', '/api/auth/login', { email: admin.email, password: pw })).status, 200);
         await a('POST', `/api/v2/programs/${program._id}/modules`, { titleAr: 'محور الشهادة', titleEn: 'Cert module', hours: 10 });
         await a('POST', '/api/v2/accreditations', { nameAr: `اعتماد ${tag}`, number: 'AC-1', programs: [String(program._id)] });
-        await a('POST', '/api/v2/certificate-templates', { name: `قالب ${tag}`, kind: 'module', isDefault: true, titleAr: 'شهادة {module}' });
+        await a('POST', '/api/v2/certificate-templates', { name: `قالب ${tag}`, kind: 'module', layout: 'classic', isDefault: true, titleAr: 'شهادة {module}' });
         const customer = (await a('POST', '/api/v2/customers', { nameAr: 'متدربة الشهادة', nameEn: 'Cert Trainee', contact: { phone: `0106${String(Date.now()).slice(-7)}` } })).data.item;
         const e = (await a('POST', '/api/v2/enrollments', { customer: customer.id, program: String(program._id) })).data.item;
         const mod = e.modules[0].module;

@@ -9,13 +9,13 @@ test('placeholders are filled, unknown ones are left alone', () => {
     assert.equal(D.fill('', {}), '');
 });
 
-test('design falls back to defaults and English names to Arabic ones', () => {
-    const d = D.buildDesign(null, { kind: 'module', name: 'سارة علي', program: 'دبلوم', module: 'المحور 1', date: '2026-11-10', number: 'NC-0000001', hours: 12 });
+test('the classic design falls back to defaults and English names to Arabic ones', () => {
+    const d = D.buildDesign({ layout: 'classic' }, { kind: 'module', name: 'سارة علي', program: 'دبلوم', module: 'المحور 1', date: '2026-11-10', number: 'NC-0000001', hours: 12 });
     assert.match(d.bodyAr, /المحور 1/);
     assert.match(d.bodyEn, /المحور 1/, 'missing English module name falls back to Arabic');
     assert.equal(d.showHours, true);
     assert.equal(d.primaryColor, '#5a020e');
-    const p = D.buildDesign({ name: 'Gold', titleAr: 'شهادة {program}', showHours: true }, { kind: 'program', name: 'x', program: 'دبلوم', hours: 0 });
+    const p = D.buildDesign({ name: 'Gold', layout: 'classic', titleAr: 'شهادة {program}', showHours: true }, { kind: 'program', name: 'x', program: 'دبلوم', hours: 0 });
     assert.equal(p.titleAr, 'شهادة دبلوم');
     assert.equal(p.showHours, false, 'no hours line when there are no hours');
     assert.match(p.bodyAr, /جميع متطلبات/);
@@ -43,4 +43,32 @@ test('certificates cannot be deleted, and issued ones cannot be edited', async (
     const legacy = Certificate.hydrate({ _id: new mongoose.Types.ObjectId(), cert_num: 'L-1', trainee_name: 'A', program_name: 'P', issue_date: '2026-01-01', kind: 'legacy', status: 'Valid' });
     legacy.trainee_name = 'B';
     await legacy.$__schema.s.hooks.execPre('save', legacy, []);
+});
+
+test('the academy design (17 Nov 2026) is the default, with the gender and the subject', () => {
+    const d = D.buildDesign(null, { kind: 'program', name: 'فوزيه', program: 'دورة إدارة الموارد البشرية', programEn: 'Human Resources Management Course', docType: 'course', gender: 'female', hours: 60 });
+    assert.equal(d.layout, 'nibras');
+    assert.equal(d.subjectEn, 'Human Resources Management Course');
+    assert.equal(d.background, '/assets/img/certificates/nibras-professional.jpg');
+    const m = D.buildDesign(undefined, { kind: 'module', program: 'ماجستير', programEn: 'Master', module: 'محور', moduleEn: 'Unit', docType: 'nope' });
+    assert.equal(m.docType, 'course', 'an unknown kind prints as a course');
+    assert.equal(m.gender, 'male');
+    assert.equal(m.subjectAr, 'محور ضمن ماجستير');
+});
+
+test('the academy sheet writes the sample text, escapes names and drops missing hours', () => {
+    const N = require('../assets/js/cert-nibras');
+    const cert = { cert_num: 'MT-B2589', trainee_name: 'فوزيه عبدالله جده حكمي', nameEn: 'Fawziah <b>Hakami</b>', hours: 60, issue_date: '2026-11-02', status: 'Valid' };
+    const html = N.sheet(cert, { gender: 'female', subjectAr: 'دورة إدارة الموارد البشرية', subjectEn: 'Human Resources Management Course' });
+    assert.match(html, /certificate NU :&nbsp; MT-B2589/);
+    assert.match(html, /بأن المتدربة/);
+    assert.match(html, /قد أتمت بنجاح/);
+    assert.match(html, /بإجمالي 60 ساعة تدريبية/);
+    assert.ok(html.includes('with a total of <b>60 training hours</b>'));
+    assert.match(html, /2 November , 2026/);
+    assert.ok(html.includes('Fawziah &lt;b&gt;Hakami&lt;/b&gt;'), 'names are escaped');
+    const male = N.paragraphs({ ...cert, hours: 0 }, { gender: 'male', subjectAr: 'x', subjectEn: 'y' });
+    assert.match(male.ar, /بأن المتدرب<br>/);
+    assert.doesNotMatch(male.ar, /ساعة/);
+    assert.doesNotMatch(male.en, /training hours/);
 });

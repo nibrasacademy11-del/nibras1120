@@ -333,11 +333,13 @@ input[type="month"] { font: inherit; padding: 8px 10px; border: 1px solid var(--
 .cert-footer-text { width: 100%; text-align: center; font-size: 8.5pt; color: #62555a; margin: 2mm 0 0; }
 .cert-void { position: absolute; inset: 0; display: grid; place-items: center; font-size: 60pt; font-weight: 800; color: rgba(180, 35, 24, .18); transform: rotate(-18deg); pointer-events: none; }
 .cert-preview { overflow-x: auto; }
+.ncert-host .ncert { box-shadow: var(--shadow); }
 @page certificate { size: A4 landscape; margin: 0; }
 @media print {
   .cert-scaler { height: auto !important; overflow: visible; }
   .cert-scaled { transform: none !important; }
   .cert-sheet { box-shadow: none; margin: 0; width: 297mm; height: 210mm; font-size: 12pt; break-after: page; }
+  .ncert { box-shadow: none; }
   .content { max-width: none; }
 }
 

@@ -22,7 +22,9 @@ const certificateSchema = new mongoose.Schema({
     userId: { type: ObjectId, ref: 'User', default: null },
 
     // ---- management system ----
-    kind: { type: String, enum: ['legacy', 'module', 'program'], default: 'legacy', index: true },
+    kind: { type: String, enum: ['legacy', 'module', 'program', 'manual'], default: 'legacy', index: true },
+    // course, master, phd, diploma or degree: which of the academy's designed sheets it is printed on
+    docType: { type: String, default: '' },
     customer: { type: ObjectId, ref: 'Customer', default: null, index: true },
     enrollment: { type: ObjectId, ref: 'Enrollment', default: null, index: true },
     module: { type: ObjectId, ref: 'ProgramModule', default: null },

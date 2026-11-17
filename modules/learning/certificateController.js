@@ -27,7 +27,7 @@ const verifyUrl = (num, lang = 'ar') => `${siteUrl()}/pages/${lang}/verify.html?
 
 // ---- templates ----
 
-const TEMPLATE_FIELDS = ['name', 'kind', 'isDefault', 'language', 'titleAr', 'titleEn', 'introAr', 'introEn', 'bodyAr', 'bodyEn', 'footerAr', 'footerEn', 'logo', 'background', 'primaryColor', 'accentColor', 'showHours', 'showAccreditations', 'signatures', 'active'];
+const TEMPLATE_FIELDS = ['name', 'kind', 'layout', 'isDefault', 'language', 'titleAr', 'titleEn', 'introAr', 'introEn', 'bodyAr', 'bodyEn', 'footerAr', 'footerEn', 'logo', 'background', 'primaryColor', 'accentColor', 'showHours', 'showAccreditations', 'signatures', 'active'];
 
 exports.listTemplates = async (req, res) => {
     res.json({ items: await CertificateTemplate.find().sort({ kind: 1, isDefault: -1, name: 1 }).lean(), placeholders: design.PLACEHOLDERS, defaults: design.DEFAULT_BODY });
@@ -135,6 +135,61 @@ exports.setModuleAccreditations = async (req, res) => {
     res.json({ ok: true });
 };
 
+// ---- issuing by hand (17 Nov 2026) ----
+// The owner and the assistant write a certificate themselves: for someone with no account or no
+// enrollment, or anything the system did not issue. Its number is the next in the series or one
+// they type, and it is verified on the website like any other.
+const MANUAL_NUMBER = /^[A-Za-z0-9][A-Za-z0-9-]{2,29}$/;
+exports.issueManual = async (req, res) => {
+    if (P.roleLevel(req.user.role) !== 'owner') throw new HttpError(403, 'المالك والمساعد فقط. / The owner and the assistant only.', 'FORBIDDEN');
+    const b = req.body || {};
+    const docType = str(b.docType, 20);
+    const type = design.NIBRAS.DOC_TYPES[docType];
+    if (!type) throw new HttpError(400, 'اختر نوع الشهادة. / Choose the kind of certificate.', 'BAD_TYPE');
+    if (!type.sheet) throw new HttpError(400, 'تصميم هذا النوع لم يُرفع بعد. / This kind has no design yet.', 'NO_DESIGN');
+    const name = str(b.name, 160);
+    const nameEn = str(b.nameEn, 160);
+    const program = str(b.program, 200);
+    const programEn = str(b.programEn, 200);
+    if (!name || !nameEn) throw new HttpError(400, 'اكتب الاسم بالعربي والإنجليزي. / Write the name in Arabic and English.', 'NAME_REQUIRED');
+    if (!program || !programEn) throw new HttpError(400, 'اكتب اسم البرنامج بالعربي والإنجليزي. / Write the program in Arabic and English.', 'PROGRAM_REQUIRED');
+    const hours = Math.min(Math.max(parseInt(b.hours, 10) || 0, 0), 5000);
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(String(b.date || '')) ? String(b.date) : isoDay(new Date());
+    let number = str(b.number, 30).toUpperCase();
+    if (b.numberMode === 'manual') {
+        if (!MANUAL_NUMBER.test(number)) throw new HttpError(400, 'رقم الشهادة: حروف إنجليزية وأرقام وشرطة فقط (3 إلى 30). / Certificate number: letters, digits and dashes (3 to 30).', 'BAD_NUMBER');
+        if (await Certificate.exists({ cert_num: number })) throw new HttpError(409, `الرقم ${number} مستخدم في شهادة أخرى. / The number ${number} is already used.`, 'DUPLICATE');
+    } else {
+        number = (await nextNumber('certificate')).number;
+    }
+    const now = new Date();
+    const data = { kind: 'program', name, nameEn, program, programEn, date, number, hours, docType, gender: b.gender };
+    const cert = await Certificate.create({
+        cert_num: number,
+        trainee_name: name,
+        nameEn,
+        program_name: program,
+        programNameEn: programEn,
+        program_type: type.ar,
+        docType,
+        hours,
+        issue_date: date,
+        status: 'Valid',
+        kind: 'manual',
+        issuedAt: now,
+        issuedBy: req.user.id,
+        design: design.buildDesign({ layout: 'nibras', name: 'nibras' }, data),
+        statusHistory: [{ status: 'Valid', reason: 'Issued by hand', by: req.user.id, byName: req.user.name, at: now }]
+    });
+    await audit.record(req, { action: 'certificate.issued_manual', resource: 'certificates', resourceId: cert._id, summary: `${number}: ${name} · ${program}` });
+    res.status(201).json({ item: cert, verifyUrl: verifyUrl(number) });
+};
+
+// The kinds the owner can issue by hand, and which of them have their design yet
+exports.manualTypes = async (req, res) => {
+    res.json({ items: Object.entries(design.NIBRAS.DOC_TYPES).map(([key, t]) => ({ key, ar: t.ar, en: t.en, ready: !!t.sheet })) });
+};
+
 // ---- issuing ----
 
 async function templateFor(kind, templateId) {
@@ -196,7 +251,7 @@ async function emailCertificate(req, cert) {
 async function issueOne(req, { enrollmentId, moduleId, templateId, names, replaces, version = 1, waive = '', email = false }) {
     const e = await Enrollment.findById(enrollmentId);
     if (!e) throw new HttpError(404, 'Not found.');
-    const customer = await Customer.findById(e.customer).select('customerNo nameAr nameEn user');
+    const customer = await Customer.findById(e.customer).select('customerNo nameAr nameEn user identity.gender');
     const kind = moduleId ? 'module' : 'program';
     let mod = null;
     if (kind === 'module') {
@@ -216,7 +271,11 @@ async function issueOne(req, { enrollmentId, moduleId, templateId, names, replac
     }
 
     const programModule = mod ? await ProgramModule.findById(mod.module).select('hours').lean() : null;
-    const hours = kind === 'module' ? programModule?.hours || 0 : 0;
+    // a module certificate shows the module's hours; the final one the hours of the whole program
+    const hours = kind === 'module'
+        ? programModule?.hours || 0
+        : (await ProgramModule.find({ program: e.program, active: true }).select('hours').lean()).reduce((n, m) => n + (m.hours || 0), 0);
+    const course = await require('../../models/Course').findById(e.program).select('type').lean();
     const template = await templateFor(kind, templateId);
     const now = new Date();
     // A reissue keeps the original number and adds the version: NC-0000001 -> NC-0000001-2 -> -3.
@@ -227,7 +286,8 @@ async function issueOne(req, { enrollmentId, moduleId, templateId, names, replac
     const nameEn = (names && names.nameEn) || customer.nameEn || '';
     const data = {
         kind, name: nameAr, nameEn, program: e.programTitleAr, programEn: e.programTitleEn,
-        module: mod ? mod.titleAr : '', moduleEn: mod ? mod.titleEn : '', date: isoDay(now), number, hours
+        module: mod ? mod.titleAr : '', moduleEn: mod ? mod.titleEn : '', date: isoDay(now), number, hours,
+        docType: course ? course.type : 'course', gender: customer.identity && customer.identity.gender
     };
     const cert = await Certificate.create({
         cert_num: number,
@@ -236,6 +296,7 @@ async function issueOne(req, { enrollmentId, moduleId, templateId, names, replac
         program_name: e.programTitleAr,
         programNameEn: e.programTitleEn,
         program_type: kind === 'module' ? 'شهادة محور' : 'شهادة إتمام برنامج',
+        docType: data.docType,
         field: mod ? mod.titleAr : '',
         moduleName: mod ? mod.titleAr : '',
         moduleNameEn: mod ? mod.titleEn : '',
