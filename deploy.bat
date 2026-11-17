@@ -10,7 +10,7 @@ echo Choose an option:
 echo [1] Push to GitHub (git push origin main)
 echo [2] Push to GitHub using Personal Access Token (PAT)
 echo [3] Clear old GitHub credentials from Windows
-echo [4] Update the Hostinger server (after pushing main)
+echo [4] Send main to the Hostinger server and update it
 echo [5] Exit
 echo.
 
@@ -77,8 +77,17 @@ if "%host%"=="" (
     goto END
 )
 echo %host%>"deploy\server-host.txt"
+rem The code goes to the server's own git store (remote "vps"), not through GitHub
+set "GIT_SSH_COMMAND=ssh -i "%USERPROFILE%\.ssh\nibras_vps" -o IdentitiesOnly=yes"
+echo Sending the code to the server %host% ...
+git push vps main
+if errorlevel 1 (
+    echo.
+    echo [ERROR] Could not send the code. Check the key %USERPROFILE%\.ssh\nibras_vps and the remote "vps" ^(git remote -v^).
+    goto END
+)
 echo Updating the server %host% ...
-ssh root@%host% "sudo -u nibras bash /var/www/nibras/deploy/update.sh main"
+ssh -i "%USERPROFILE%\.ssh\nibras_vps" -o IdentitiesOnly=yes root@%host% "sudo -iu nibras bash /var/www/nibras/deploy/update.sh main"
 goto END
 
 :END

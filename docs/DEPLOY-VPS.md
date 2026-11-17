@@ -22,8 +22,9 @@
    - اكتب باسورد قوي لـ root واحفظه عندك. ما تبعتهوش في شات.
    - في صفحة الدفع، الباك اب الأسبوعي متضمّن ببلاش. لو لقيته إضافة بفلوس، شيل العلامة.
 2. **في hPanel ← VPS ← Backups:** اتأكد إن الباك اب الأسبوعي شغال.
-3. **خلّي الـ repo على GitHub خاص (Private).**
-   - بعدها السيرفر محتاج إذن يقرأ الكود: GitHub ← الـ repo ← **Settings ← Deploy keys ← Add deploy key** (قراءة بس). المفتاح بيتعمل على السيرفر في الخطوة ٢.
+3. **مفتاح SSH للسيرفر من جهازك:** الكود بيتبعت للسيرفر من جهازك مباشرة (مش من GitHub).
+   - على جهازك: `ssh-keygen -t ed25519 -f %USERPROFILE%\.ssh\nibras_vps`
+   - hPanel ← VPS ← **SSH keys** ← أضف محتوى `nibras_vps.pub` (الاسم عندنا: nibras-vps-from-pc).
 4. **غيّر باسورد Atlas.** الباسورد القديم موجود في تاريخ الكود، وAtlas هيفضل شغال لحد يوم النقل.
 5. **هات `DATA_ENCRYPTION_KEY` من Vercel:**
    - Vercel ← المشروع ← **Settings ← Environment Variables** ← اضغط على العين جنب `DATA_ENCRYPTION_KEY`.
@@ -39,18 +40,26 @@
 ssh root@<IP السيرفر>
 ```
 
-على السيرفر:
+**الكود على السيرفر بيتشال في «مخزن» git على السيرفر نفسه** (`/home/nibras/nibras.git`). جهازك بيبعتله الكود، والسيرفر بياخد منه. GitHub نسخة احتياطية للكود بس، والسيرفر ما بيقراش منه.
+
+على السيرفر، اعمل المخزن الفاضي:
 
 ```
-ssh-keygen -t ed25519 -N "" -f /root/.ssh/github_deploy
-cat /root/.ssh/github_deploy.pub
+useradd -m -s /bin/bash nibras 2>/dev/null; sudo -u nibras git init --bare /home/nibras/nibras.git
 ```
 
-انسخ السطر اللي ظهر وحطه في GitHub ← **Deploy keys** (من الخطوة ١-٣). بعدها:
+من جهازك (Git Bash)، في فولدر المشروع:
 
 ```
-git clone -b main -c core.sshCommand="ssh -i /root/.ssh/github_deploy -o StrictHostKeyChecking=accept-new" git@github.com:nibrasacademy11-del/nibras1120.git /root/nibras-setup
-bash /root/nibras-setup/deploy/setup-server.sh git@github.com:nibrasacademy11-del/nibras1120.git
+git remote add vps ssh://root@<IP السيرفر>/home/nibras/nibras.git
+GIT_SSH_COMMAND="ssh -i ~/.ssh/nibras_vps -o IdentitiesOnly=yes" git push vps main
+```
+
+وبعدين على السيرفر:
+
+```
+git clone -b main /home/nibras/nibras.git /root/nibras-setup
+bash /root/nibras-setup/deploy/setup-server.sh /home/nibras/nibras.git
 ```
 
 السكريبت بيعمل كل ده:
@@ -59,9 +68,7 @@ bash /root/nibras-setup/deploy/setup-server.sh git@github.com:nibrasacademy11-de
 - Node.js 22.
 - MongoDB 8 بذاكرة 1 جيجا، على `127.0.0.1` بس.
 - nginx وcertbot وpm2.
-- مستخدم `nibras`، والكود في `/var/www/nibras` (بنفس مفتاح GitHub).
-
-> الكود لازم يكون على `main` قبل الخطوة دي، يعني الفرع `erp-staff-portal` يتدمج الأول.
+- مستخدم `nibras`، والكود في `/var/www/nibras` (بياخده من المخزن `/home/nibras/nibras.git`).
 
 ## ٣) ملف الإعدادات `.env` على السيرفر
 
@@ -180,11 +187,18 @@ certbot بيجدد الشهادة لوحده.
 
 ## تحديث السيستم بعد كده
 
-كل تعديل جديد بيتعمل push على `main`، وبعدين:
+كل تعديل جديد بيتعمل commit على `main`، وبعدين خطوتين من جهازك (Git Bash، في فولدر المشروع):
+
 ```
-ssh root@<IP> "sudo -u nibras bash /var/www/nibras/deploy/update.sh main"
+GIT_SSH_COMMAND="ssh -i ~/.ssh/nibras_vps -o IdentitiesOnly=yes" git push vps main
+ssh -i ~/.ssh/nibras_vps root@<IP> "sudo -iu nibras bash /var/www/nibras/deploy/update.sh main"
 ```
-أو من جهازك: `deploy.bat` ← اختيار 4.
+
+الأول بيبعت الكود لمخزن السيرفر، والتاني بياخده ويبني بوابة الموظفين ويعيد تشغيل السيستم. لو آخر سطر `OK`، التحديث اشتغل.
+
+أو من جهازك: `deploy.bat` ← اختيار 4 (بيعمل الخطوتين). عنوان السيرفر بيتحفظ في `deploy\server-host.txt` (مش في الكود).
+
+النسخة على GitHub منفصلة: `git push origin main` (أو `deploy.bat` ← اختيار 1). ما بتأثرش على السيرفر.
 
 ## أوامر مفيدة على السيرفر
 
