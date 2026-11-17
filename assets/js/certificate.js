@@ -89,9 +89,14 @@
         const box = $('certBox');
         const inner = $('certScaled');
         if (!box || !inner) return;
-        const scale = Math.min(1, box.clientWidth / 1123);
+        // A4 landscape is 1123 x 794 px; the diploma is portrait (794 x 1123)
+        const portrait = !!inner.querySelector('.ncert--portrait');
+        const [w, h] = portrait ? [794, 1123] : [1123, 794];
+        box.style.maxWidth = portrait ? '210mm' : '';
+        inner.style.width = portrait ? '210mm' : '';
+        const scale = Math.min(1, box.clientWidth / w);
         inner.style.transform = `scale(${scale})`;
-        box.style.height = `${794 * scale}px`;
+        box.style.height = `${h * scale}px`;
     }
 
     async function download(btn, num, fileName) {
@@ -109,8 +114,9 @@
             const canvas = await window.html2canvas(holder.firstElementChild, { scale: 3, useCORS: true, backgroundColor: '#fffdf8', logging: false });
             holder.remove();
             const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true });
-            pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 297, 210);
+            const portrait = !!holder.querySelector('.ncert--portrait') || canvas.height > canvas.width;
+            const pdf = new jsPDF({ orientation: portrait ? 'portrait' : 'landscape', unit: 'mm', format: 'a4', compress: true });
+            pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, portrait ? 210 : 297, portrait ? 297 : 210);
             pdf.setProperties({ title: `Nibras Academy certificate ${num}`, author: 'Nibras Academy' });
             pdf.save(`${fileName || `Nibras-certificate-${num}`}.pdf`);
         } catch (e) {
@@ -142,7 +148,7 @@
         const d = c.design || {};
         const verifyUrl = isEN ? data.verifyUrlEn || data.verifyUrl : data.verifyUrl;
         const nibras = d.layout === 'nibras' && window.NibrasCertificate;
-        const qr = await qrImage(verifyUrl, nibras ? '#5e1121' : d.primaryColor || '#5a020e');
+        const qr = await qrImage(verifyUrl, nibras ? window.NibrasCertificate.qrColor(d, c) : d.primaryColor || '#5a020e');
         // saved (and printed) under the trainee's name, the kind and the program
         const fileName = nibras ? window.NibrasCertificate.fileName(c, d) : `Nibras-certificate-${c.cert_num}`;
         if (nibras) document.title = fileName;

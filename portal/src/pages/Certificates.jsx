@@ -79,23 +79,26 @@ export function previewDesign(t, kind = 'module') {
 
 // The A4 landscape certificate. The same component is printed to PDF from the browser.
 // Shows the A4 sheet at its real size, scaled down to fit the screen; printing uses the real size
-function Scaled({ children }) {
+// A4 landscape is 1123 x 794 px; a portrait sheet (the diploma) 794 x 1123
+function Scaled({ children, portrait = false }) {
+  const [w, h] = portrait ? [794, 1123] : [1123, 794];
   const box = useRef(null);
   const [scale, setScale] = useState(1);
   useLayoutEffect(() => {
     const el = box.current;
     if (!el) return undefined;
-    const fit = () => setScale(Math.min(1, el.clientWidth / 1123));
+    const fit = () => setScale(Math.min(1, el.clientWidth / w));
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
-  return <div ref={box} className="cert-scaler" style={{ height: 794 * scale }}><div className="cert-scaled" style={{ transform: `scale(${scale})` }}>{children}</div></div>;
+  }, [w]);
+  return <div ref={box} className="cert-scaler" style={{ height: h * scale }}><div className="cert-scaled" style={{ width: portrait ? '210mm' : undefined, transform: `scale(${scale})` }}>{children}</div></div>;
 }
 
 export function CertificateSheet(props) {
-  return <Scaled><SheetBody {...props} /></Scaled>;
+  const d = props.design || {};
+  return <Scaled portrait={d.layout === 'nibras' && d.docType === 'diploma'}><SheetBody {...props} /></Scaled>;
 }
 
 // The academy's designed sheet (cert-nibras.js), shared with the website
@@ -106,8 +109,10 @@ export function NibrasSheet({ cert, design, verifyUrl, nameFile }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     let live = true;
-    const qr = verifyUrl ? QRCode.toDataURL(verifyUrl, { margin: 0, width: 360, errorCorrectionLevel: 'M', color: { dark: '#5e1121' } }).catch(() => '') : Promise.resolve('');
-    Promise.all([loadCertKit(), qr]).then(([k, q]) => { if (live) setHtml(k.sheet(cert, design, { qr: q })); }).catch(() => live && setFailed(true));
+    loadCertKit()
+      .then((k) => Promise.all([k, verifyUrl ? QRCode.toDataURL(verifyUrl, { margin: 0, width: 360, errorCorrectionLevel: 'M', color: { dark: k.qrColor(design, cert) } }).catch(() => '') : '']))
+      .then(([k, q]) => { if (live) setHtml(k.sheet(cert, design, { qr: q })); })
+      .catch(() => live && setFailed(true));
     return () => { live = false; };
   }, [cert, design, verifyUrl]);
   useEffect(() => {

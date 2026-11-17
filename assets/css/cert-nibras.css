@@ -15,3 +15,16 @@
 .ncert__qr { position: absolute; left: 17mm; top: 14mm; width: 27mm; height: 27mm; padding: 1.6mm; background: #fff; border: .35mm solid #b98a35; border-radius: 1.5mm; box-sizing: border-box; }
 .ncert__void { position: absolute; inset: 0; display: grid; place-items: center; font: 800 60pt 'Roboto', sans-serif; color: rgba(180, 35, 24, .18); transform: rotate(-18deg); pointer-events: none; }
 @media print { .ncert { box-shadow: none; margin: 0; } }
+
+/* Diplomas: A4 portrait. The sheet already carries everything but the name, the diploma, the
+   serial number, the hours and the QR code. Name: Symphony (Pinyon Script stands in); the diploma:
+   Open Sans; the serial and the hours: Canva Sans (Figtree stands in). */
+@page certificate-portrait { size: A4 portrait; margin: 0; }
+.ncert--portrait { width: 210mm; height: 297mm; page: certificate-portrait; background: #fbf6ee; }
+.ndip__name, .ndip__subject, .ndip__serial, .ndip__hours { position: absolute; line-height: 1; white-space: nowrap; color: #1f1f1f; }
+.ndip__name { left: 30mm; right: 30mm; top: 121.4mm; text-align: center; font-family: 'Symphony', 'Pinyon Script', cursive; font-size: 13mm; font-weight: 400; color: #161616; }
+.ndip__subject { left: 15mm; right: 15mm; top: 152.7mm; text-align: center; font-family: 'Open Sans', Arial, sans-serif; font-size: 4.55mm; font-weight: 700; text-transform: uppercase; letter-spacing: .01em; }
+.ndip__serial, .ndip__hours { top: 206.4mm; font-family: 'Canva Sans', 'Figtree', 'Segoe UI', sans-serif; font-size: 5.3mm; font-weight: 400; text-transform: uppercase; }
+.ndip__serial { left: 26.6mm; }
+.ndip__hours { right: 19.8mm; }
+.ncert__qr--diploma { left: 23mm; top: 21mm; width: 23mm; height: 23mm; padding: 1.3mm; background: #fffdf7; border-color: #c9a24a; }

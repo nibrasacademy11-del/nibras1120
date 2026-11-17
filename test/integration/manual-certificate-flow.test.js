@@ -62,11 +62,11 @@ test('manual certificate flow', { skip }, async (t) => {
         assert.equal((await asOwner('POST', '/api/auth/login', { email: owner.email, password: pw })).status, 200);
         assert.equal((await asStaff('POST', '/api/auth/login', { email: staff.email, password: pw })).status, 200);
 
-        await t.test('the kinds: course, master and doctorate are ready; diploma and degree wait for their design', async () => {
+        await t.test('the kinds: course, master, doctorate and diploma are ready; the degree waits for its design', async () => {
             const r = await asOwner('GET', '/api/v2/certificates/manual/types');
             assert.equal(r.status, 200);
             const ready = Object.fromEntries(r.data.items.map((x) => [x.key, x.ready]));
-            assert.deepEqual(ready, { course: true, master: true, phd: true, diploma: false, degree: false });
+            assert.deepEqual(ready, { course: true, master: true, phd: true, diploma: true, degree: false });
         });
 
         await t.test('the owner issues one with the next number; it is verified publicly', async () => {
@@ -97,7 +97,7 @@ test('manual certificate flow', { skip }, async (t) => {
         });
 
         await t.test('refused: a kind with no design yet, missing names, and an employee', async () => {
-            assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...form, docType: 'diploma' })).data.code, 'NO_DESIGN');
+            assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...form, docType: 'degree' })).data.code, 'NO_DESIGN');
             assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...form, nameEn: '' })).data.code, 'NAME_REQUIRED');
             assert.equal((await asStaff('POST', '/api/v2/certificates/manual', form)).status, 403);
         });

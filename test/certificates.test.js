@@ -49,7 +49,7 @@ test('the academy design (17 Nov 2026) is the default, with the gender and the s
     const d = D.buildDesign(null, { kind: 'program', name: 'فوزيه', program: 'دورة إدارة الموارد البشرية', programEn: 'Human Resources Management Course', docType: 'course', gender: 'female', hours: 60 });
     assert.equal(d.layout, 'nibras');
     assert.equal(d.subjectEn, 'Human Resources Management Course');
-    assert.equal(d.background, '/assets/img/certificates/nibras-professional.jpg');
+    assert.equal(require('../assets/js/cert-nibras').sheetOf(d).key, 'professional');
     const m = D.buildDesign(undefined, { kind: 'module', program: 'ماجستير', programEn: 'Master', module: 'محور', moduleEn: 'Unit', docType: 'nope' });
     assert.equal(m.docType, 'course', 'an unknown kind prints as a course');
     assert.equal(m.gender, 'male');
@@ -80,4 +80,22 @@ test('the academy sheet carries the verification QR code, and the file is named 
     assert.doesNotMatch(N.sheet(cert, {}), /ncert__qr/);
     assert.equal(N.verifyUrl('MT-B2589'), 'https://www.nibras-ac.com/pages/ar/verify.html?code=MT-B2589');
     assert.equal(N.fileName(cert, { docType: 'phd', subjectAr: 'دكتوراه/القيادة' }), 'فوزيه عبدالله - دكتوراه مهنية - دكتوراه القيادة');
+});
+
+test('a diploma prints on the portrait sheet for his or her, with the name, the diploma, the serial and the hours', () => {
+    const N = require('../assets/js/cert-nibras');
+    const cert = { cert_num: 'MT-M2511', trainee_name: 'لما', nameEn: 'Lama Yahya Tawfiq Bilbeisi', hours: 60, status: 'Valid' };
+    const her = N.sheet(cert, { docType: 'diploma', gender: 'female', subjectEn: 'Diploma in Strategic Planning' }, { qr: 'q.png' });
+    assert.match(her, /ncert--portrait/);
+    assert.match(her, /nibras-diploma-f\.jpg/);
+    assert.match(her, /Lama Yahya Tawfiq Bilbeisi/);
+    assert.match(her, /Diploma in Strategic Planning/);
+    assert.match(her, /SERIAL NUMBER : MT-M2511/);
+    assert.match(her, /CREDIT HOURS : 60 HOUR/);
+    assert.match(her, /ncert__qr ncert__qr--diploma/);
+    const his = N.sheet({ ...cert, hours: 0 }, { docType: 'diploma', gender: 'male' });
+    assert.match(his, /nibras-diploma-m\.jpg/);
+    assert.doesNotMatch(his, /CREDIT HOURS/);
+    assert.equal(N.isPortrait({ docType: 'diploma' }), true);
+    assert.equal(N.fileName({ trainee_name: 'Sss / x' }, { docType: 'diploma', subjectAr: 'دبلوم التخطيط' }), 'Sss x - دبلوم مهني - دبلوم التخطيط');
 });
