@@ -99,3 +99,23 @@ test('a diploma prints on the portrait sheet for his or her, with the name, the 
     assert.equal(N.isPortrait({ docType: 'diploma' }), true);
     assert.equal(N.fileName({ trainee_name: 'Sss / x' }, { docType: 'diploma', subjectAr: 'دبلوم التخطيط' }), 'Sss x - دبلوم مهني - دبلوم التخطيط');
 });
+
+test('a transcript draws one row per module, grades from percentages, and his or her wording', () => {
+    const N = require('../assets/js/cert-nibras');
+    assert.deepEqual([97, 95, 89, 80, 76, 70, 61, 40, ''].map(N.gradeOf), ['A+', 'A', 'B+', 'B', 'C+', 'C', 'D', 'F', '']);
+    assert.equal(N.monthYear('2026-02-10'), 'February, 2026');
+    const t = { specialization: 'Business Administration', degree: 'Master', programEn: 'Master of Business Administration', admittedYear: '2025', conferredYear: '2026', rows: [{ module: 'Strategic Planning', percentage: 95, grade: '' }, { module: '<x>', percentage: 97, grade: 'A+' }] };
+    const her = N.sheet({ cert_num: 'MT-M2511', nameEn: 'Lama', issue_date: '2026-02-10' }, { docType: 'degree', gender: 'female', transcript: t });
+    assert.match(her, /ncert--portrait ntr/);
+    assert.equal((her.match(/<tr style=/g) || []).length, 2, 'one row per module');
+    assert.match(her, /<td>Strategic Planning<\/td><td class="ntr__num">95%<\/td><td class="ntr__num">A<\/td>/);
+    assert.match(her, /&lt;x&gt;/);
+    assert.match(her, /She was admitted as a full-time student to the <b>\(Master of Business Administration\)<\/b> in the year 2025/);
+    assert.match(her, /With enrollment no\. <b>MT-M2511<\/b>, and the degree was conferred in the year 2026\. Her certificate/);
+    assert.match(her, /<b>Date:<\/b> February, 2026/);
+    const his = N.sheet({ cert_num: 'X' }, { docType: 'degree', gender: 'male', transcript: { rows: Array.from({ length: 15 }, (_, i) => ({ module: `M${i}`, percentage: 90 })) } });
+    assert.match(his, /He was admitted/);
+    assert.match(his, /His certificate/);
+    assert.match(his, /height:6\.93mm/, 'fifteen rows share the table');
+    assert.equal(N.isPortrait({ docType: 'degree' }), true);
+});

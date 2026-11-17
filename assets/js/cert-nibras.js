@@ -5,6 +5,7 @@
 //
 //   professional: courses, professional masters and doctorates (A4 landscape, Arabic + English)
 //   diploma:      professional diplomas (A4 portrait, English), one sheet for "his", one for "her"
+//   transcript:   the grades of a degree (A4 portrait, English), drawn here, with as many rows as needed
 //
 // Fonts: the academy's sheets use Canva Sans, Siwa and Symphony, which are not free web fonts, so
 // the closest free ones stand in (Figtree, Almarai, Pinyon Script) until the font files are added
@@ -16,14 +17,15 @@
     // issued by hand until its design is added.
     const SHEETS = {
         professional: { male: `${IMG}nibras-professional.jpg`, female: `${IMG}nibras-professional.jpg`, portrait: false },
-        diploma: { male: `${IMG}nibras-diploma-m.jpg`, female: `${IMG}nibras-diploma-f.jpg`, portrait: true }
+        diploma: { male: `${IMG}nibras-diploma-m.jpg`, female: `${IMG}nibras-diploma-f.jpg`, portrait: true },
+        transcript: { male: '', female: '', portrait: true }
     };
     const DOC_TYPES = {
         course: { ar: 'دورة تدريبية', en: 'Course', sheet: 'professional' },
         master: { ar: 'ماجستير مهني', en: 'Professional Master', sheet: 'professional' },
         phd: { ar: 'دكتوراه مهنية', en: 'Professional Doctorate', sheet: 'professional' },
         diploma: { ar: 'دبلوم مهني', en: 'Professional Diploma', sheet: 'diploma' },
-        degree: { ar: 'درجة علمية', en: 'Academic Degree', sheet: null }
+        degree: { ar: 'كشف درجات', en: 'Academic Transcript', sheet: 'transcript' }
     };
     const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -78,6 +80,17 @@
         return safe || `Nibras-certificate-${cert.cert_num}`;
     }
 
+    // A grade from a percentage, when none is written: A+ 97+, A 90+, B+ 85+, B 80+, C+ 75+, C 70+, D 60+, F
+    function gradeOf(percent) {
+        const p = Number(percent);
+        if (!Number.isFinite(p) || String(percent).trim() === '') return '';
+        return p >= 97 ? 'A+' : p >= 90 ? 'A' : p >= 85 ? 'B+' : p >= 80 ? 'B' : p >= 75 ? 'C+' : p >= 70 ? 'C' : p >= 60 ? 'D' : 'F';
+    }
+    const monthYear = (iso) => {
+        const m = /^(\d{4})-(\d{2})/.exec(String(iso || ''));
+        return m ? `${MONTHS[Number(m[2]) - 1]}, ${m[1]}` : esc(iso);
+    };
+
     const qrTag = (opts, extra = '') => (opts.qr ? `<img class="ncert__qr${extra}" src="${esc(opts.qr)}" alt="QR">` : '');
     const voidTag = (cert) => (cert.status && cert.status !== 'Valid' ? `<div class="ncert__void">${esc(cert.status)}</div>` : '');
 
@@ -117,12 +130,55 @@
 </div>`;
     }
 
+    // A4 portrait: the grades of a degree (an academic transcript). Everything is drawn here: the
+    // frame, the logo, the details, one row per module (as many as there are; more rows, smaller
+    // rows), the date and the statement.
+    function transcript(cert, d, opts) {
+        const t = d.transcript || {};
+        const female = d.gender === 'female';
+        const rows = Array.isArray(t.rows) ? t.rows : [];
+        // the table has about 120 mm: up to 6 rows keep the sample's height, more rows share it
+        const rowMm = Math.max(6.8, Math.min(16.7, (rows.length > 6 ? 104 : 112) / Math.max(rows.length, 1)));
+        const textMm = rowMm < 10 ? 3.7 : 4.5;
+        const program = trimDot(t.programEn || d.subjectEn || cert.programNameEn || cert.program_name);
+        const body = rows.map((r) => {
+            const pct = r.percentage === '' || r.percentage == null ? '' : `${esc(r.percentage)}%`;
+            return `<tr style="height:${rowMm.toFixed(2)}mm"><td>${esc(r.module)}</td><td class="ntr__num">${pct}</td><td class="ntr__num">${esc(r.grade || gradeOf(r.percentage))}</td></tr>`;
+        }).join('');
+        return `<div class="ncert ncert--portrait ntr" style="--ntr-text:${textMm}mm">
+  <div class="ntr__frame"></div>
+  <img class="ntr__mark" src="/assets/img/logo.png" alt="" crossorigin="anonymous">
+  ${qrTag(opts, ' ncert__qr--transcript')}
+  <div class="ntr__page">
+    <img class="ntr__logo" src="/assets/img/logo.png" alt="" crossorigin="anonymous">
+    <dl class="ntr__facts" dir="ltr">
+      <div><dt>Name:</dt><dd>${esc(trimDot(cert.nameEn || cert.trainee_name))}</dd></div>
+      <div><dt>Specialization :</dt><dd>${esc(t.specialization || '')}</dd></div>
+      <div><dt>Degree :</dt><dd>${esc(t.degree || '')}</dd></div>
+    </dl>
+    <table class="ntr__table" dir="ltr">
+      <thead><tr><th>Module Name</th><th>Percentage</th><th>Grade</th></tr></thead>
+      <tbody>${body}</tbody>
+    </table>
+    <div class="ntr__date" dir="ltr"><b>Date:</b> ${monthYear(cert.issue_date)}</div>
+    <div class="ntr__text" dir="ltr">
+      <p>This is to certify that the student has attended the following Courses as per the below details :</p>
+      <p>${female ? 'She' : 'He'} was admitted as a full-time student to the <b>(${esc(program)})</b> in the year ${esc(t.admittedYear || '')}.<br>
+      With enrollment no. <b>${esc(cert.cert_num)}</b>, and the degree was conferred in the year ${esc(t.conferredYear || '')}. ${female ? 'Her' : 'His'} certificate has been issued upon the student's request to be presented to whomever it may concern.</p>
+    </div>
+    <div class="ntr__site" dir="ltr"><span class="ntr__globe" aria-hidden="true"></span>www.nibras-ac.com</div>
+  </div>
+  ${voidTag(cert)}
+</div>`;
+    }
+
     // The whole sheet as HTML. opts.qr: an image (data URL) of the QR code that opens the
     // website's verification with this certificate's number.
     function sheet(cert, design, opts = {}) {
         const d = design || {};
         const s = sheetOf(d, cert);
         const bg = s[d.gender === 'female' ? 'female' : 'male'];
+        if (s.key === 'transcript') return transcript(cert, d, opts);
         return s.key === 'diploma' ? diploma(cert, d, opts, bg) : professional(cert, d, opts, d.background || bg);
     }
 
@@ -130,9 +186,9 @@
     const verifyUrl = (num, lang = 'ar', site = 'https://www.nibras-ac.com') => `${site}/pages/${lang}/verify.html?code=${encodeURIComponent(num)}`;
     const isPortrait = (design, cert) => !!sheetOf(design, cert).portrait;
     // the QR code's colour: the academy's wine on the landscape sheet, a deep gold-brown on the diploma
-    const qrColor = (design, cert) => (sheetOf(design, cert).key === 'diploma' ? '#6b4e1f' : '#5e1121');
+    const qrColor = (design, cert) => (sheetOf(design, cert).key === 'diploma' ? '#6b4e1f' : '#5a0f1b');
 
-    const api = { sheet, sheetOf, isPortrait, qrColor, paragraphs, fileName, verifyUrl, longDate, SHEETS, DOC_TYPES, LAYOUT: 'nibras' };
+    const api = { sheet, sheetOf, isPortrait, qrColor, gradeOf, monthYear, paragraphs, fileName, verifyUrl, longDate, SHEETS, DOC_TYPES, LAYOUT: 'nibras' };
     if (typeof module === 'object' && module.exports) module.exports = api;
     if (root) root.NibrasCertificate = api;
 }(typeof window !== 'undefined' ? window : null));

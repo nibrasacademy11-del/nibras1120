@@ -62,11 +62,11 @@ test('manual certificate flow', { skip }, async (t) => {
         assert.equal((await asOwner('POST', '/api/auth/login', { email: owner.email, password: pw })).status, 200);
         assert.equal((await asStaff('POST', '/api/auth/login', { email: staff.email, password: pw })).status, 200);
 
-        await t.test('the kinds: course, master, doctorate and diploma are ready; the degree waits for its design', async () => {
+        await t.test('the kinds: every kind has its design: course, master, doctorate, diploma and transcript', async () => {
             const r = await asOwner('GET', '/api/v2/certificates/manual/types');
             assert.equal(r.status, 200);
             const ready = Object.fromEntries(r.data.items.map((x) => [x.key, x.ready]));
-            assert.deepEqual(ready, { course: true, master: true, phd: true, diploma: true, degree: false });
+            assert.deepEqual(ready, { course: true, master: true, phd: true, diploma: true, degree: true });
         });
 
         await t.test('the owner issues one with the next number; it is verified publicly', async () => {
@@ -96,10 +96,26 @@ test('manual certificate flow', { skip }, async (t) => {
             assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...form, numberMode: 'manual', number: 'a b' })).data.code, 'BAD_NUMBER');
         });
 
-        await t.test('refused: a kind with no design yet, missing names, and an employee', async () => {
-            assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...form, docType: 'degree' })).data.code, 'NO_DESIGN');
+        await t.test('refused: an unknown kind, missing names, and an employee', async () => {
+            assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...form, docType: 'nope' })).data.code, 'BAD_TYPE');
             assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...form, nameEn: '' })).data.code, 'NAME_REQUIRED');
             assert.equal((await asStaff('POST', '/api/v2/certificates/manual', form)).status, 403);
+        });
+
+        await t.test('a transcript: the details and its rows, grades filled from percentages', async () => {
+            const body = { ...form, docType: 'degree', specialization: 'Business Administration', degree: 'Master', admittedYear: '2025', conferredYear: '2026',
+                rows: [{ module: 'Strategic Planning', percentage: '95' }, { module: 'Project Management', percentage: 97, grade: 'a+' }, { module: '', percentage: 50 }] };
+            const r = await asOwner('POST', '/api/v2/certificates/manual', body);
+            assert.equal(r.status, 201, JSON.stringify(r.data));
+            made.push(r.data.item._id);
+            const tr = r.data.item.design.transcript;
+            assert.deepEqual(tr.rows, [{ module: 'Strategic Planning', percentage: 95, grade: 'A' }, { module: 'Project Management', percentage: 97, grade: 'A+' }], 'empty rows dropped, grades filled');
+            assert.equal(tr.specialization, 'Business Administration');
+            assert.equal(tr.admittedYear, '2025');
+            assert.equal(r.data.item.program_type, 'كشف درجات');
+            assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...body, rows: [] })).data.code, 'ROWS_REQUIRED');
+            assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...body, rows: Array.from({ length: 16 }, (_, i) => ({ module: `M${i}` })) })).data.code, 'TOO_MANY_ROWS');
+            assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...body, degree: '' })).data.code, 'DETAILS_REQUIRED');
         });
 
         await t.test('an issued manual certificate keeps its content', async () => {

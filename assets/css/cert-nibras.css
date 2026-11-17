@@ -28,3 +28,34 @@
 .ndip__serial { left: 26.6mm; }
 .ndip__hours { right: 19.8mm; }
 .ncert__qr--diploma { left: 23mm; top: 21mm; width: 23mm; height: 23mm; padding: 1.3mm; background: #fffdf7; border-color: #c9a24a; }
+
+/* The grades of a degree (academic transcript): A4 portrait, drawn entirely here (no blank sheet).
+   Labels and the date: DM Serif Display; values: Gelasio; the table: Roboto Condensed; the
+   statement: Canva Sans (Figtree stands in). Rows share the table's height (cert-nibras.js). */
+.ntr { background: #f8f0e6 url('/assets/img/certificates/paper.jpg') repeat; color: #1f1f1f; }
+/* the gold band and the wine line, drawn without border-image so the website's PDF keeps them */
+.ntr__frame { position: absolute; inset: 5.3mm; background: linear-gradient(135deg, #b8862f, #f2d98a 30%, #c49a3c 55%, #f0d58a 80%, #a8782a); }
+.ntr__frame::before { content: ''; position: absolute; inset: 2.6mm; background: #f8f0e6 url('/assets/img/certificates/paper.jpg') repeat; }
+.ntr__frame::after { content: ''; position: absolute; inset: 4.5mm; border: .9mm solid #5a0f1b; }
+.ntr__mark { position: absolute; left: 37mm; top: 82mm; width: 136mm; height: 136mm; opacity: .075; filter: grayscale(.2); }
+.ntr__page { position: absolute; inset: 0; padding: 17.3mm 16.9mm 0; display: flex; flex-direction: column; }
+.ntr__logo { display: block; width: 38mm; height: 38mm; margin: 0 auto; object-fit: contain; }
+.ntr__facts { margin: 1.4mm 0 0; }
+.ntr__facts div { display: flex; gap: 1.6mm; align-items: baseline; height: 8.35mm; }
+.ntr__facts dt { font-family: 'DM Serif Display', Georgia, serif; font-size: 5.6mm; color: #5a0f1b; white-space: nowrap; }
+.ntr__facts dd { margin: 0; font-family: 'Gelasio', Georgia, serif; font-size: 5.1mm; color: #1f1f1f; }
+.ntr__table { margin: 1mm 0 0 2.9mm; width: 161mm; border-collapse: collapse; table-layout: fixed; font-family: 'Roboto Condensed', 'Arial Narrow', sans-serif; font-size: var(--ntr-text, 4.2mm); }
+.ntr__table th, .ntr__table td { border: .45mm solid #111; text-align: center; vertical-align: middle; padding: 0 2mm; overflow: hidden; }
+.ntr__table th { height: 17.9mm; font-weight: 700; color: #5a0f1b; }
+.ntr__table th:nth-child(1) { width: 84.3mm; }
+.ntr__table th:nth-child(2) { width: 36.5mm; }
+.ntr__table td { color: #1f1f1f; line-height: 1.15; }
+.ntr__table td.ntr__num { font-weight: 700; color: #5a0f1b; }
+.ntr__date { margin-top: 9.5mm; font-family: 'Gelasio', Georgia, serif; font-size: 6.6mm; color: #1f1f1f; }
+.ntr__date b { font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: 7.4mm; color: #5a0f1b; }
+.ntr__text { margin: 3mm 5mm 0 -1.4mm; font-family: 'Canva Sans', 'Figtree', 'Segoe UI', sans-serif; font-size: 4.1mm; line-height: 5.5mm; color: #1f1f1f; }
+.ntr__text p { margin: 0 0 5.5mm; }
+.ntr__text b { color: #5a0f1b; font-weight: 700; }
+.ntr__site { position: absolute; left: 0; right: 0; bottom: 16mm; display: flex; justify-content: center; align-items: center; gap: 2.2mm; font-family: 'Canva Sans', 'Figtree', 'Segoe UI', sans-serif; font-size: 4.9mm; color: #1f1f1f; }
+.ntr__globe { width: 6.3mm; height: 6.3mm; border-radius: 50%; background: #5a0f1b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.6'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18'/%3E%3C/svg%3E") center / 82% no-repeat; }
+.ncert__qr--transcript { left: auto; right: 17mm; top: 17mm; width: 24mm; height: 24mm; padding: 1.4mm; background: #fffaf3; border-color: #5a0f1b; }

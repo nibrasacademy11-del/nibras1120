@@ -530,3 +530,10 @@ tr.row-late td:first-child { border-inline-start: 3px solid var(--danger); }
   .samples .sample-doc { break-after: page; margin: 0; }
   .samples .sample-doc:last-child { break-after: auto; }
 }
+/* the grades rows of a transcript issued by hand */
+.tr-rows input { width: 100%; min-width: 0; }
+.tr-rows td { padding: 4px 6px; }
+.tr-rows th:nth-child(2), .tr-rows th:nth-child(3) { width: 120px; }
+.tr-rows th:nth-child(4) { width: 44px; }
+.tr-rows-box { overflow-x: auto; }
+.tr-rows-box .row { margin-top: 8px; gap: 12px; align-items: center; flex-wrap: wrap; }

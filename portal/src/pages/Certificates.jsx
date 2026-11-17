@@ -98,7 +98,7 @@ function Scaled({ children, portrait = false }) {
 
 export function CertificateSheet(props) {
   const d = props.design || {};
-  return <Scaled portrait={d.layout === 'nibras' && d.docType === 'diploma'}><SheetBody {...props} /></Scaled>;
+  return <Scaled portrait={d.layout === 'nibras' && ['diploma', 'degree'].includes(d.docType)}><SheetBody {...props} /></Scaled>;
 }
 
 // The academy's designed sheet (cert-nibras.js), shared with the website
@@ -344,22 +344,27 @@ function ManualIssue() {
   const { t, lang } = useI18n();
   const navigate = useNavigate();
   const types = useLoad('/api/v2/certificates/manual/types', []);
-  const [f, setF] = useState({ docType: 'course', gender: 'male', name: '', nameEn: '', program: '', programEn: '', hours: '', date: today(), numberMode: 'auto', number: '' });
+  const year = String(new Date().getFullYear());
+  const [f, setF] = useState({ docType: 'course', gender: 'male', name: '', nameEn: '', program: '', programEn: '', hours: '', date: today(), numberMode: 'auto', number: '', specialization: '', degree: '', admittedYear: year, conferredYear: year });
+  const [rows, setRows] = useState([{ module: '', percentage: '', grade: '' }, { module: '', percentage: '', grade: '' }, { module: '', percentage: '', grade: '' }]);
+  const setRow = (i, k) => (e) => setRows(rows.map((r, j) => (j === i ? { ...r, [k]: e.target.value } : r)));
+  const isDegree = f.docType === 'degree';
   const { busy, error, run } = useAction();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const ready = (types.data?.items || []).find((x) => x.key === f.docType)?.ready;
   const save = (e) => {
     e.preventDefault();
-    run(() => api('/api/v2/certificates/manual', { method: 'POST', body: { ...f, hours: Number(f.hours) || 0 } })).then((r) => navigate(`/certificates/${r.item._id}`)).catch(() => {});
+    run(() => api('/api/v2/certificates/manual', { method: 'POST', body: { ...f, hours: Number(f.hours) || 0, ...(isDegree ? { rows } : {}) } })).then((r) => navigate(`/certificates/${r.item._id}`)).catch(() => {});
   };
   const preview = {
     cert: { cert_num: f.numberMode === 'manual' ? f.number || '—' : 'NC-0000000', trainee_name: f.name || 'اسم المتدرب', nameEn: f.nameEn || 'Trainee name', hours: Number(f.hours) || 0, issue_date: f.date, status: 'Valid' },
-    design: { layout: 'nibras', gender: f.gender, subjectAr: f.program || 'اسم البرنامج', subjectEn: f.programEn || 'Program name' }
+    design: { layout: 'nibras', docType: f.docType, gender: f.gender, subjectAr: f.program || 'اسم البرنامج', subjectEn: f.programEn || 'Program name',
+      ...(isDegree ? { transcript: { specialization: f.specialization || 'Specialization', degree: f.degree || 'Degree', programEn: f.programEn || 'Program name', admittedYear: f.admittedYear, conferredYear: f.conferredYear, rows: rows.filter((r) => r.module) } } : {}) }
   };
   return (
     <>
       <form className="card form-grid" onSubmit={save}>
-        <p className="muted wide">{t('manualHint')}</p>
+        <p className="muted field--wide">{t('manualHint')}</p>
         <Field label={t('certDocType')}>
           <select value={f.docType} onChange={set('docType')}>
             {(types.data?.items || []).map((x) => <option key={x.key} value={x.key} disabled={!x.ready}>{lang === 'en' ? x.en : x.ar}{x.ready ? '' : ` (${t('designSoon')})`}</option>)}
@@ -370,14 +375,38 @@ function ManualIssue() {
         <Field label={`${t('name')} (EN)`}><input required dir="ltr" value={f.nameEn} onChange={set('nameEn')} /></Field>
         <Field label={`${t('program')} (AR)`} hint={t('manualProgramHint')}><input required value={f.program} onChange={set('program')} placeholder="دورة إدارة الموارد البشرية" /></Field>
         <Field label={`${t('program')} (EN)`}><input required dir="ltr" value={f.programEn} onChange={set('programEn')} placeholder="Human Resources Management Course" /></Field>
-        <Field label={t('trainingHours')}><input type="number" min="0" max="5000" value={f.hours} onChange={set('hours')} /></Field>
+        {!isDegree && <Field label={t('trainingHours')}><input type="number" min="0" max="5000" value={f.hours} onChange={set('hours')} /></Field>}
+        {isDegree && (
+          <>
+            <Field label={t('trSpecialization')}><input required dir="ltr" value={f.specialization} onChange={set('specialization')} placeholder="Business Administration" /></Field>
+            <Field label={t('trDegree')}><input required dir="ltr" value={f.degree} onChange={set('degree')} placeholder="Master" list="tr-degrees" /><datalist id="tr-degrees"><option value="Diploma" /><option value="Master" /><option value="Doctorate" /></datalist></Field>
+            <Field label={t('trAdmitted')}><input dir="ltr" inputMode="numeric" pattern="[0-9]{4}" value={f.admittedYear} onChange={set('admittedYear')} /></Field>
+            <Field label={t('trConferred')}><input dir="ltr" inputMode="numeric" pattern="[0-9]{4}" value={f.conferredYear} onChange={set('conferredYear')} /></Field>
+            <div className="field--wide tr-rows-box">
+              <table className="table tr-rows" dir="ltr">
+                <thead><tr><th>Module Name</th><th>Percentage</th><th>Grade</th><th /></tr></thead>
+                <tbody>
+                  {rows.map((r, i) => (
+                    <tr key={i}>
+                      <td><input value={r.module} onChange={setRow(i, 'module')} placeholder="Strategic Planning" /></td>
+                      <td><input type="number" min="0" max="100" step="0.1" value={r.percentage} onChange={setRow(i, 'percentage')} placeholder="95" /></td>
+                      <td><input value={r.grade} onChange={setRow(i, 'grade')} maxLength={4} placeholder={window.NibrasCertificate?.gradeOf(r.percentage) || t('trGradeAuto')} /></td>
+                      <td><button type="button" className="btn btn--ghost btn--sm" onClick={() => setRows(rows.filter((x, j) => j !== i))} disabled={rows.length < 2} aria-label={t('remove')}>✕</button></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="row"><button type="button" className="btn btn--ghost" onClick={() => setRows([...rows, { module: '', percentage: '', grade: '' }])} disabled={rows.length >= 15}>+ {t('trAddRow')}</button><small className="muted">{t('trRowsHint')}</small></div>
+            </div>
+          </>
+        )}
         <Field label={t('date')}><input type="date" required value={f.date} onChange={set('date')} /></Field>
         <Field label={t('certNumber')}>
           <select value={f.numberMode} onChange={set('numberMode')}><option value="auto">{t('numberAuto')}</option><option value="manual">{t('numberManual')}</option></select>
         </Field>
         {f.numberMode === 'manual' && <Field label={t('certNumber')} hint={t('numberManualHint')}><input required dir="ltr" value={f.number} onChange={set('number')} placeholder="MT-B2589" pattern="[A-Za-z0-9][A-Za-z0-9\-]{2,29}" /></Field>}
         <ErrorBox error={error} />
-        <div className="row wide"><button type="submit" className="btn btn--primary" disabled={busy || !ready}>{t('issueCertificate')}</button></div>
+        <div className="row field--wide"><button type="submit" className="btn btn--primary" disabled={busy || !ready}>{t('issueCertificate')}</button></div>
       </form>
       <h2>{t('preview')}</h2>
       <CertificateSheet cert={preview.cert} design={preview.design} verifyUrl={`https://www.nibras-ac.com/pages/ar/verify.html?code=${encodeURIComponent(preview.cert.cert_num)}`} />

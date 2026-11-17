@@ -154,6 +154,20 @@ exports.issueManual = async (req, res) => {
     if (!name || !nameEn) throw new HttpError(400, 'اكتب الاسم بالعربي والإنجليزي. / Write the name in Arabic and English.', 'NAME_REQUIRED');
     if (!program || !programEn) throw new HttpError(400, 'اكتب اسم البرنامج بالعربي والإنجليزي. / Write the program in Arabic and English.', 'PROGRAM_REQUIRED');
     const hours = Math.min(Math.max(parseInt(b.hours, 10) || 0, 0), 5000);
+    // the grades of a degree: up to 15 modules, each with its percentage and grade
+    let transcript;
+    if (docType === 'degree') {
+        const rows = (Array.isArray(b.rows) ? b.rows : []).map((r) => {
+            const pct = r && r.percentage !== '' && r.percentage != null ? Number(r.percentage) : null;
+            return { module: str(r && r.module, 120), percentage: pct != null && Number.isFinite(pct) ? Math.min(Math.max(Math.round(pct * 10) / 10, 0), 100) : '', grade: str(r && r.grade, 4).toUpperCase() };
+        }).filter((r) => r.module);
+        if (!rows.length) throw new HttpError(400, 'أضف محور واحد على الأقل. / Add at least one module.', 'ROWS_REQUIRED');
+        if (rows.length > 15) throw new HttpError(400, 'الحد الأقصى 15 محور. / At most 15 modules.', 'TOO_MANY_ROWS');
+        for (const r of rows) if (!r.grade) r.grade = design.NIBRAS.gradeOf(r.percentage);
+        const year = (v) => (/^\d{4}$/.test(String(v || '').trim()) ? String(v).trim() : '');
+        transcript = { specialization: str(b.specialization, 120), degree: str(b.degree, 60), programEn, admittedYear: year(b.admittedYear), conferredYear: year(b.conferredYear), rows };
+        if (!transcript.specialization || !transcript.degree) throw new HttpError(400, 'اكتب التخصص والدرجة. / Write the specialization and the degree.', 'DETAILS_REQUIRED');
+    }
     const date = /^\d{4}-\d{2}-\d{2}$/.test(String(b.date || '')) ? String(b.date) : isoDay(new Date());
     let number = str(b.number, 30).toUpperCase();
     if (b.numberMode === 'manual') {
@@ -163,7 +177,7 @@ exports.issueManual = async (req, res) => {
         number = (await nextNumber('certificate')).number;
     }
     const now = new Date();
-    const data = { kind: 'program', name, nameEn, program, programEn, date, number, hours, docType, gender: b.gender };
+    const data = { kind: 'program', name, nameEn, program, programEn, date, number, hours, docType, gender: b.gender, transcript };
     const cert = await Certificate.create({
         cert_num: number,
         trainee_name: name,
