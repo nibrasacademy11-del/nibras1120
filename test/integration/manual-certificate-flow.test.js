@@ -118,6 +118,36 @@ test('manual certificate flow', { skip }, async (t) => {
             assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...body, degree: '' })).data.code, 'DETAILS_REQUIRED');
         });
 
+        await t.test('linked to a customer only when ticked; linked, changed and unlinked later', async () => {
+            const Customer = require('../../models/Customer');
+            const cust = (await asOwner('POST', '/api/v2/customers', { nameAr: form.name, nameEn: form.nameEn, contact: { phone: `0109${String(Date.now()).slice(-7)}` } })).data.item;
+            assert.ok(cust && cust.id, 'customer created');
+            // not ticked: no link, even with the very same name
+            const loose = await asOwner('POST', '/api/v2/certificates/manual', { ...form, customer: cust.id });
+            assert.equal(loose.status, 201);
+            made.push(loose.data.item._id);
+            assert.equal(loose.data.item.customer, null);
+            // ticked without a customer: refused
+            assert.equal((await asOwner('POST', '/api/v2/certificates/manual', { ...form, linkCustomer: true })).data.code, 'CUSTOMER_REQUIRED');
+            // ticked with one: linked, and on the customer's file
+            const tied = await asOwner('POST', '/api/v2/certificates/manual', { ...form, linkCustomer: true, customer: cust.id });
+            assert.equal(tied.status, 201, JSON.stringify(tied.data));
+            made.push(tied.data.item._id);
+            assert.equal(String(tied.data.item.customer), cust.id);
+            const onFile = (await asOwner('GET', `/api/v2/certificates?customer=${cust.id}`)).data;
+            assert.ok(onFile, 'list answered');
+            // later: link the loose one, then unlink it
+            const linked = await asOwner('POST', `/api/v2/certificates/${loose.data.item._id}/link`, { customer: cust.id });
+            assert.equal(linked.status, 200, JSON.stringify(linked.data));
+            assert.equal(String(linked.data.item.customer._id), cust.id);
+            const unlinked = await asOwner('POST', `/api/v2/certificates/${loose.data.item._id}/link`, { customer: null });
+            assert.equal(unlinked.data.item.customer, null);
+            assert.equal((await Certificate.findById(loose.data.item._id)).trainee_name, form.name, 'the content is untouched');
+            // an employee cannot, and only hand-written ones are linked here
+            assert.equal((await asStaff('POST', `/api/v2/certificates/${loose.data.item._id}/link`, { customer: cust.id })).status, 403);
+            await Customer.collection.deleteOne({ _id: new mongoose.Types.ObjectId(cust.id) });
+        });
+
         await t.test('an issued manual certificate keeps its content', async () => {
             const c = await Certificate.findById(made[0]);
             c.trainee_name = 'Someone else';

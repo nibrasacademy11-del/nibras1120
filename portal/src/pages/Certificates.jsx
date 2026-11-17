@@ -223,6 +223,7 @@ export function CertificateDetail() {
               </div>
             </section>
           )}
+          {c.kind === 'manual' && ['super_admin', 'assistant'].includes(me.user.role) && <LinkCard c={c} onChanged={state.reload} />}
           {me.user.isStaff && c.kind !== 'legacy' && <DeliveryCard c={c} canUpdate={can('certificates.update')} onChanged={state.reload} />}
           {!me.user.isStaff && c.delivery?.paper && c.delivery.paper.status !== 'none' && (
             <section className="card no-print"><p>{t('cdPaperYours')}: <Pill tone={PAPER_TONE[c.delivery.paper.status]}>{t(`paper_${c.delivery.paper.status}`)}</Pill>{c.delivery.paper.trackingNo && <small dir="ltr"> {c.delivery.paper.carrier} {c.delivery.paper.trackingNo}</small>}</p></section>
@@ -338,6 +339,82 @@ export default function Certificates() {
   );
 }
 
+// ---- linking a hand-written certificate to a customer ----
+// Search every customer by name, mobile, email or number, and pick one
+function CustomerPicker({ value, onPick }) {
+  const { t } = useI18n();
+  const [q, setQ] = useState('');
+  const [found, setFound] = useState({ loading: false, items: [] });
+  useEffect(() => {
+    const text = q.trim();
+    if (text.length < 2) { setFound({ loading: false, items: [] }); return undefined; }
+    let live = true;
+    setFound((s) => ({ ...s, loading: true }));
+    const timer = setTimeout(() => {
+      api(`/api/v2/customers?${new URLSearchParams({ q: text, limit: '10' })}`).then((r) => live && setFound({ loading: false, items: r.items || [] })).catch(() => live && setFound({ loading: false, items: [] }));
+    }, 300);
+    return () => { live = false; clearTimeout(timer); };
+  }, [q]);
+  const line = (c) => [c.customerNo, c.contact?.phone, c.contact?.email].filter(Boolean).join(' · ');
+  if (value) {
+    return (
+      <div className="picked-customer">
+        <span className="pill pill--ok">✓</span>
+        <strong>{value.nameAr || value.name}</strong>
+        <small className="muted" dir="ltr">{line(value)}</small>
+        <button type="button" className="btn btn--ghost btn--sm" onClick={() => onPick(null)}>{t('change')}</button>
+      </div>
+    );
+  }
+  return (
+    <div className="customer-picker">
+      <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('searchCustomerHint')} autoFocus />
+      {found.loading && <small className="muted">…</small>}
+      {!found.loading && q.trim().length >= 2 && !found.items.length && <small className="muted">{t('noCustomerFound')}</small>}
+      {found.items.length > 0 && (
+        <ul className="customer-picker__list">
+          {found.items.map((c) => (
+            <li key={c.id}>
+              <button type="button" onClick={() => onPick(c)}>
+                <strong>{c.nameAr || c.name}{c.nameEn ? <span dir="ltr"> · {c.nameEn}</span> : null}</strong>
+                <small className="muted" dir="ltr">{line(c)}</small>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+// On a hand-written certificate: who it belongs to, and changing that (link, change, unlink)
+function LinkCard({ c, onChanged }) {
+  const { t } = useI18n();
+  const [editing, setEditing] = useState(false);
+  const { busy, error, run } = useAction();
+  const save = (customer) => run(() => api(`/api/v2/certificates/${c._id}/link`, { method: 'POST', body: { customer: customer ? customer.id : null } })).then(() => { setEditing(false); onChanged(); }).catch(() => {});
+  return (
+    <section className="card no-print">
+      <h2>{t('linkedCustomer')}</h2>
+      {c.customer
+        ? <p><Link to={`/customers/${c.customer._id}`}>{c.customer.customerNo} · {c.customer.nameAr}</Link> <small className="muted">{t('linkedShowsInProfile')}</small></p>
+        : <p className="muted">{t('notLinked')}</p>}
+      {editing ? (
+        <>
+          <CustomerPicker value={null} onPick={(x) => x && save(x)} />
+          <div className="row"><button type="button" className="btn btn--ghost btn--sm" onClick={() => setEditing(false)}>{t('cancel')}</button></div>
+        </>
+      ) : (
+        <div className="row">
+          <button type="button" className="btn btn--ghost" onClick={() => setEditing(true)} disabled={busy}>{c.customer ? t('linkOther') : t('linkToCustomer')}</button>
+          {c.customer && <button type="button" className="btn btn--ghost" onClick={() => save(null)} disabled={busy}>{t('unlink')}</button>}
+        </div>
+      )}
+      <ErrorBox error={error} />
+    </section>
+  );
+}
+
 // ---- a certificate written by hand: the owner and the assistant ----
 const today = () => new Date().toISOString().slice(0, 10);
 function ManualIssue() {
@@ -349,12 +426,16 @@ function ManualIssue() {
   const [rows, setRows] = useState([{ module: '', percentage: '', grade: '' }, { module: '', percentage: '', grade: '' }, { module: '', percentage: '', grade: '' }]);
   const setRow = (i, k) => (e) => setRows(rows.map((r, j) => (j === i ? { ...r, [k]: e.target.value } : r)));
   const isDegree = f.docType === 'degree';
+  const [linked, setLinked] = useState(false);
+  const [customer, setCustomer] = useState(null);
+  // picking a customer fills the names that are still empty
+  const pick = (c) => { setCustomer(c); if (c) setF((cur) => ({ ...cur, name: cur.name || c.nameAr || '', nameEn: cur.nameEn || c.nameEn || '' })); };
   const { busy, error, run } = useAction();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const ready = (types.data?.items || []).find((x) => x.key === f.docType)?.ready;
   const save = (e) => {
     e.preventDefault();
-    run(() => api('/api/v2/certificates/manual', { method: 'POST', body: { ...f, hours: Number(f.hours) || 0, ...(isDegree ? { rows } : {}) } })).then((r) => navigate(`/certificates/${r.item._id}`)).catch(() => {});
+    run(() => api('/api/v2/certificates/manual', { method: 'POST', body: { ...f, hours: Number(f.hours) || 0, ...(isDegree ? { rows } : {}), linkCustomer: linked && !!customer, customer: linked && customer ? customer.id : null } })).then((r) => navigate(`/certificates/${r.item._id}`)).catch(() => {});
   };
   const preview = {
     cert: { cert_num: f.numberMode === 'manual' ? f.number || '—' : 'NC-0000000', trainee_name: f.name || 'اسم المتدرب', nameEn: f.nameEn || 'Trainee name', hours: Number(f.hours) || 0, issue_date: f.date, status: 'Valid' },
@@ -370,6 +451,11 @@ function ManualIssue() {
             {(types.data?.items || []).map((x) => <option key={x.key} value={x.key} disabled={!x.ready}>{lang === 'en' ? x.en : x.ar}{x.ready ? '' : ` (${t('designSoon')})`}</option>)}
           </select>
         </Field>
+        <div className="field--wide link-box">
+          <label className="check"><input type="checkbox" checked={linked} onChange={(e) => { setLinked(e.target.checked); if (!e.target.checked) setCustomer(null); }} /> {t('linkExisting')}</label>
+          <small className="muted">{t('linkExistingHint')}</small>
+          {linked && <CustomerPicker value={customer} onPick={pick} />}
+        </div>
         <Field label={t('gender')}><select value={f.gender} onChange={set('gender')}><option value="male">{t('male')}</option><option value="female">{t('female')}</option></select></Field>
         <Field label={`${t('name')} (AR)`}><input required value={f.name} onChange={set('name')} /></Field>
         <Field label={`${t('name')} (EN)`}><input required dir="ltr" value={f.nameEn} onChange={set('nameEn')} /></Field>
@@ -406,7 +492,7 @@ function ManualIssue() {
         </Field>
         {f.numberMode === 'manual' && <Field label={t('certNumber')} hint={t('numberManualHint')}><input required dir="ltr" value={f.number} onChange={set('number')} placeholder="MT-B2589" pattern="[A-Za-z0-9][A-Za-z0-9\-]{2,29}" /></Field>}
         <ErrorBox error={error} />
-        <div className="row field--wide"><button type="submit" className="btn btn--primary" disabled={busy || !ready}>{t('issueCertificate')}</button></div>
+        <div className="row field--wide"><button type="submit" className="btn btn--primary" disabled={busy || !ready || (linked && !customer)}>{t('issueCertificate')}</button>{linked && !customer && <small className="muted">{t('pickCustomerFirst')}</small>}</div>
       </form>
       <h2>{t('preview')}</h2>
       <CertificateSheet cert={preview.cert} design={preview.design} verifyUrl={`https://www.nibras-ac.com/pages/ar/verify.html?code=${encodeURIComponent(preview.cert.cert_num)}`} />

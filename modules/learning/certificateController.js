@@ -169,6 +169,9 @@ exports.issueManual = async (req, res) => {
         if (!transcript.specialization || !transcript.degree) throw new HttpError(400, 'اكتب التخصص والدرجة. / Write the specialization and the degree.', 'DETAILS_REQUIRED');
     }
     const date = /^\d{4}-\d{2}-\d{2}$/.test(String(b.date || '')) ? String(b.date) : isoDay(new Date());
+    // linked to a customer of the academy only when the owner ticks "an existing customer" and picks
+    // one; otherwise it stays with no one, even if the name matches somebody
+    const linkTo = b.linkCustomer === true ? await customerToLink(b.customer) : null;
     let number = str(b.number, 30).toUpperCase();
     if (b.numberMode === 'manual') {
         if (!MANUAL_NUMBER.test(number)) throw new HttpError(400, 'رقم الشهادة: حروف إنجليزية وأرقام وشرطة فقط (3 إلى 30). / Certificate number: letters, digits and dashes (3 to 30).', 'BAD_NUMBER');
@@ -190,13 +193,38 @@ exports.issueManual = async (req, res) => {
         issue_date: date,
         status: 'Valid',
         kind: 'manual',
+        ...linkFields(linkTo),
         issuedAt: now,
         issuedBy: req.user.id,
         design: design.buildDesign({ layout: 'nibras', name: 'nibras' }, data),
         statusHistory: [{ status: 'Valid', reason: 'Issued by hand', by: req.user.id, byName: req.user.name, at: now }]
     });
-    await audit.record(req, { action: 'certificate.issued_manual', resource: 'certificates', resourceId: cert._id, summary: `${number}: ${name} · ${program}` });
+    await audit.record(req, { action: 'certificate.issued_manual', resource: 'certificates', resourceId: cert._id, summary: `${number}: ${name} · ${program}${linkTo ? ` → ${linkTo.customerNo}` : ''}` });
+    if (linkTo) await addEvent(req, linkTo._id, 'certificate', `${number}: ${program} (issued by hand)`);
     res.status(201).json({ item: cert, verifyUrl: verifyUrl(number) });
+};
+
+// The customer a hand-written certificate is linked to (it then shows in their profile)
+async function customerToLink(id) {
+    const c = oid(id) ? await Customer.findById(id).select('customerNo nameAr user owner team status') : null;
+    if (!c || c.status === 'merged') throw new HttpError(400, 'اختر العميل من القائمة. / Pick the customer from the list.', 'CUSTOMER_REQUIRED');
+    return c;
+}
+const linkFields = (c) => ({ customer: c ? c._id : null, userId: c ? c.user || null : null, owner: c ? c.owner || null : null, team: c ? c.team || null : null });
+
+// Later: link a hand-written certificate to a customer's profile, or unlink it (the owner and the assistant)
+exports.linkManual = async (req, res) => {
+    if (P.roleLevel(req.user.role) !== 'owner') throw new HttpError(403, 'المالك والمساعد فقط. / The owner and the assistant only.', 'FORBIDDEN');
+    const cert = await Certificate.findById(req.params.id);
+    if (!cert) throw new HttpError(404, 'Not found.');
+    if (cert.kind !== 'manual') throw new HttpError(400, 'الربط متاح للشهادات اليدوية فقط. / Only hand-written certificates are linked here.', 'NOT_MANUAL');
+    const before = cert.customer ? String(cert.customer) : null;
+    const to = req.body && req.body.customer ? await customerToLink(req.body.customer) : null;
+    Object.assign(cert, linkFields(to));
+    await cert.save();
+    await audit.record(req, { action: to ? 'certificate.linked' : 'certificate.unlinked', resource: 'certificates', resourceId: cert._id, summary: `${cert.cert_num}: ${to ? to.customerNo : 'no one'}`, changes: { customer: { from: before, to: to ? String(to._id) : null } } });
+    if (to) await addEvent(req, to._id, 'certificate', `${cert.cert_num}: linked (issued by hand)`);
+    res.json({ item: await Certificate.findById(cert._id).select('-pdf_data').populate(POP) });
 };
 
 // The kinds the owner can issue by hand, and which of them have their design yet
@@ -506,7 +534,8 @@ exports.setStatus = async (req, res) => {
 // and its verification page points to the new number
 exports.reissue = async (req, res) => {
     const old = await Certificate.findById(req.params.id);
-    if (!old || old.kind === 'legacy') throw new HttpError(404, 'Not found.');
+    // a hand-written certificate has no enrollment to reissue from: cancel it and write a new one
+    if (!old || old.kind === 'legacy' || old.kind === 'manual') throw new HttpError(404, 'Not found.');
     const cert = await reissueOne(req, old, {
         reason: str(req.body.reason, 500), templateId: req.body.template,
         names: { nameAr: str(req.body.nameAr, 200), nameEn: str(req.body.nameEn, 200) }

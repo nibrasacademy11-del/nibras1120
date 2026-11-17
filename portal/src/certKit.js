@@ -1,7 +1,7 @@
 // The academy's certificate design lives in the website's files (/assets/js/cert-nibras.js and
 // /assets/css/cert-nibras.css) so the website and the portal print the very same certificate.
 // Loaded once, the first time a certificate in that design is shown.
-const FONTS = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Figtree:wght@400;700&family=Almarai:wght@400;700&family=Pinyon+Script&family=Open+Sans:wght@400;700&family=DM+Serif+Display&family=Gelasio:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap';
+const FONTS = '/assets/css/cert-fonts.css?v=20261121';
 let kit = null;
 
 function add(tag, attrs) {
@@ -16,8 +16,8 @@ export function loadCertKit() {
   if (!kit) {
     kit = new Promise((resolve, reject) => {
       add('link', { rel: 'stylesheet', href: FONTS });
-      add('link', { rel: 'stylesheet', href: '/assets/css/cert-nibras.css?v=20261120' });
-      const s = add('script', { src: '/assets/js/cert-nibras.js?v=20261120', async: true });
+      add('link', { rel: 'stylesheet', href: '/assets/css/cert-nibras.css?v=20261121' });
+      const s = add('script', { src: '/assets/js/cert-nibras.js?v=20261121', async: true });
       // the fonts are waited for, but never more than 2.5 seconds
       const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
       s.onload = () => Promise.race([fonts, new Promise((r) => setTimeout(r, 2500))]).then(() => resolve(window.NibrasCertificate));

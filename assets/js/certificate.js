@@ -12,7 +12,9 @@
     const LIBS = {
         qr: 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js',
         canvas: 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
-        pdf: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
+        pdf: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+        // the academy's sheets are pictured exactly as the browser draws them (html2canvas moves text)
+        image: 'https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js'
     };
     const $ = (id) => document.getElementById(id);
     const h = (v) => esc(v == null ? '' : String(v));
@@ -104,14 +106,17 @@
         btn.disabled = true;
         btn.innerHTML = `<span class="pf-spinner" aria-hidden="true"></span> ${h(T.making)}`;
         try {
-            await Promise.all([load(LIBS.canvas), load(LIBS.pdf)]);
+            const nibras = !!$('certScaled').querySelector('.ncert');
+            await Promise.all([load(nibras ? LIBS.image : LIBS.canvas), load(LIBS.pdf)]);
             if (document.fonts && document.fonts.ready) await document.fonts.ready;
             // the real-size sheet, off screen, so the picture is sharp whatever the screen size
             const holder = document.createElement('div');
             holder.className = 'cert-render';
             holder.innerHTML = $('certScaled').innerHTML;
             document.body.appendChild(holder);
-            const canvas = await window.html2canvas(holder.firstElementChild, { scale: 3, useCORS: true, backgroundColor: '#fffdf8', logging: false });
+            const canvas = nibras
+                ? await window.htmlToImage.toCanvas(holder.firstElementChild, { pixelRatio: 3, backgroundColor: '#ffffff' })
+                : await window.html2canvas(holder.firstElementChild, { scale: 3, useCORS: true, backgroundColor: '#fffdf8', logging: false });
             holder.remove();
             const { jsPDF } = window.jspdf;
             const portrait = !!holder.querySelector('.ncert--portrait') || canvas.height > canvas.width;
@@ -120,6 +125,7 @@
             pdf.setProperties({ title: `Nibras Academy certificate ${num}`, author: 'Nibras Academy' });
             pdf.save(`${fileName || `Nibras-certificate-${num}`}.pdf`);
         } catch (e) {
+            console.error('The certificate PDF could not be made:', String((e && (e.message || e.type)) || e));
             showToast(T.failed, true);
         } finally {
             btn.disabled = false;

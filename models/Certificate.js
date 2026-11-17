@@ -88,9 +88,11 @@ for (const op of ['deleteOne', 'deleteMany', 'findOneAndDelete', 'findOneAndRemo
     });
 }
 const ISSUED_MUTABLE = new Set(['status', 'statusReason', 'statusHistory', 'replacedBy', 'userId', 'updatedAt', 'pdf_data', 'pdf_url', 'pdf_mimetype', 'delivery']);
+// a hand-written certificate may also be linked to a customer later (or unlinked)
+const LINK_FIELDS = new Set(['customer', 'owner', 'team']);
 certificateSchema.pre('save', function () {
     if (this.isNew || this.kind === 'legacy') return;
-    const bad = this.modifiedPaths().map((p) => p.split('.')[0]).filter((p) => !ISSUED_MUTABLE.has(p));
+    const bad = this.modifiedPaths().map((p) => p.split('.')[0]).filter((p) => !ISSUED_MUTABLE.has(p) && !(this.kind === 'manual' && LINK_FIELDS.has(p)));
     if (bad.length) throw new Error(`An issued certificate cannot be edited (${[...new Set(bad)].join(', ')}); reissue it instead.`);
 });
 

@@ -530,6 +530,15 @@ tr.row-late td:first-child { border-inline-start: 3px solid var(--danger); }
   .samples .sample-doc { break-after: page; margin: 0; }
   .samples .sample-doc:last-child { break-after: auto; }
 }
+/* hand-written certificates: picking an existing customer */
+.link-box { display: grid; gap: 6px; padding: 12px 14px; border: 1px dashed var(--border); border-radius: 12px; background: var(--bg); }
+.customer-picker { display: grid; gap: 6px; }
+.customer-picker input { width: 100%; }
+.customer-picker__list { list-style: none; margin: 0; padding: 0; max-height: 280px; overflow-y: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--card, #fff); }
+.customer-picker__list button { display: grid; gap: 2px; width: 100%; padding: 9px 12px; border: 0; border-bottom: 1px solid var(--border); background: transparent; text-align: start; cursor: pointer; font: inherit; color: inherit; }
+.customer-picker__list li:last-child button { border-bottom: 0; }
+.customer-picker__list button:hover, .customer-picker__list button:focus-visible { background: var(--gold-light, #fbf3e3); outline: none; }
+.picked-customer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 /* the grades rows of a transcript issued by hand */
 .tr-rows input { width: 100%; min-width: 0; }
 .tr-rows td { padding: 4px 6px; }
