@@ -12,7 +12,6 @@ const sessions = require('../../lib/sessions');
 const P = require('../../lib/permissions');
 const { nextNumber } = require('../../lib/sequence');
 const { HttpError, paging } = require('../../lib/http');
-const { assertNotPrimaryOwner } = require('../../lib/owner');
 
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const isOwner = (req) => req.user.role === 'super_admin';
@@ -45,12 +44,18 @@ exports.setRole = async (req, res) => {
     if (!P.ROLES.includes(role)) throw new HttpError(400, 'دور غير معروف. / Unknown role.', 'BAD_ROLE');
     const user = await User.findById(req.params.id);
     if (!user) throw new HttpError(404, 'الحساب غير موجود. / Account not found.', 'NOT_FOUND');
-    assertNotPrimaryOwner(user);
     if (String(user._id) === req.user.id) throw new HttpError(400, 'لا يمكنك تغيير دورك أنت. / You cannot change your own role.', 'SELF');
     const before = P.normalizeRole(user.role);
     if (before === role) return res.json({ role, unchanged: true });
     // only the owner makes someone an owner, or touches an owner's account
     if ((role === 'super_admin' || before === 'super_admin') && !isOwner(req)) throw new HttpError(403, 'المالك فقط. / The owner only.', 'OWNER_ONLY');
+    // any owner may change another owner (18 Nov 2026), but the academy always keeps one
+    if (before === 'super_admin') {
+        const others = await User.countDocuments({ _id: { $ne: user._id }, role: 'super_admin', status: 'active' });
+        if (!others) throw new HttpError(409, 'لازم يفضل مالك واحد على الأقل. / At least one owner must remain.', 'LAST_OWNER');
+        // the old "primary owner" protection does not stop an owner's decision
+        if (user.isPrimaryOwner) user.isPrimaryOwner = false;
+    }
 
     const wasStaff = P.isStaffRole(before);
     const willBeStaff = P.isStaffRole(role);

@@ -119,6 +119,22 @@ test('roles flow', { skip }, async (t) => {
             assert.equal((await E2('POST', `/api/v2/users/${buyer._id}/role`, { role: 'employee' })).status, 403);
         });
 
+        await t.test('any owner changes another owner, even the old primary owner; the assistant cannot (18 Nov 2026)', async () => {
+            const owner2 = await User.create({ name: 'owner 2', email: `rl-o2-${tag}@test.local`, password: hash, role: 'super_admin', isPrimaryOwner: true });
+            const staff = await O('GET', `/api/v2/accounts?kind=staff&q=${tag}`);
+            assert.ok(staff.data.items.some((u) => u.email === owner2.email && u.role === 'super_admin'), 'the team tab lists the owners');
+            assert.ok(!staff.data.items.some((u) => u.email === buyer.email && u.role === 'customer'), 'and no customers');
+            assert.equal((await A('POST', `/api/v2/users/${owner2._id}/role`, { role: 'assistant' })).data.code, 'OWNER_ONLY');
+            const down = await O('POST', `/api/v2/users/${owner2._id}/role`, { role: 'assistant' });
+            assert.equal(down.status, 200, JSON.stringify(down.data));
+            const now = await User.findById(owner2._id);
+            assert.equal(now.role, 'assistant');
+            assert.equal(now.isPrimaryOwner, false, 'no longer protected');
+            assert.equal((await O('POST', `/api/v2/users/${owner2._id}/role`, { role: 'super_admin' })).status, 200, 'and back to an owner');
+            assert.equal((await User.findById(owner2._id)).role, 'super_admin');
+            await Employee.deleteMany({ user: owner2._id });
+        });
+
         await t.test('an employee finds a customer by mobile: the name and who they are with; the request reaches four people', async () => {
             const E2 = await login(emp2);
             const look = await E2('GET', '/api/v2/customers/lookup?q=01099988877');

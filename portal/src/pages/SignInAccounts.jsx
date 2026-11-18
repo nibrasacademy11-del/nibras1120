@@ -1,6 +1,7 @@
 // Sign-in accounts (16 Nov 2026): the accounts that are not in the team yet (people who signed up
-// on the website). Making one of them an employee, team leader, assistant or owner moves them to
-// the team (Team → Employees, where their role changes later). Nobody adds employees by hand.
+// on the website), and (18 Nov 2026) the team's own accounts: owners, assistants, team leaders and
+// employees, each with their role, raised or lowered from here by the owner or the assistant.
+// Nobody adds employees by hand: a website account is converted.
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, pickMessage } from '../api.js';
@@ -53,10 +54,13 @@ export function RoleDialog({ user, onClose, onSaved }) {
 
 export default function SignInAccounts() {
   const { t, fmtDay, en } = useI18n();
+  const { me } = useAuth();
+  const [kind, setKind] = useState('staff');
   const [q, setQ] = useState('');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
-  const state = useLoad(`/api/v2/accounts?page=${page}&kind=customers&q=${encodeURIComponent(search)}`);
+  const state = useLoad(`/api/v2/accounts?page=${page}&kind=${kind}&q=${encodeURIComponent(search)}`, [kind]);
+  const team = kind === 'staff';
   const [edit, setEdit] = useState(null);
   const [done, setDone] = useState(null);
 
@@ -66,7 +70,8 @@ export default function SignInAccounts() {
         <h1 className="page-title">{t('userAccountsNav')}</h1>
         <Link className="btn btn--ghost" to="/employees">{t('sa_toTeam')}</Link>
       </div>
-      <p className="muted">{t('sa_hint')}</p>
+      <div className="tabs">{['staff', 'customers'].map((k) => <button key={k} type="button" className={`tab${kind === k ? ' active' : ''}`} onClick={() => { setKind(k); setPage(1); setDone(null); }}>{t(k === 'staff' ? 'sa_tabTeam' : 'sa_tabWebsite')}</button>)}</div>
+      <p className="muted">{t(team ? 'sa_teamHint' : 'sa_hint')}</p>
       {done && <div className="alert alert--ok">{t('sa_done').replace('{name}', done.name)} {done.role !== 'customer' && <Link to="/employees">{t('sa_seeTeam')}</Link>}</div>}
       <section className="card">
         <form className="row" onSubmit={(e) => { e.preventDefault(); setPage(1); setSearch(q.trim()); }}>
@@ -87,10 +92,10 @@ export default function SignInAccounts() {
                       <tr key={u._id}>
                         <td><strong>{u.name}</strong>{u.phone && <><br /><small className="muted" dir="ltr">{u.phone}</small></>}</td>
                         <td dir="ltr">{u.email}</td>
-                        <td><Pill tone="muted">{en('role', u.role)}</Pill>{u.status === 'disabled' && <> <Pill tone="muted">{t('inactive')}</Pill></>}</td>
+                        <td><Pill tone={u.role === 'super_admin' ? 'gold' : team ? 'info' : 'muted'}>{en('role', u.role)}</Pill>{u.status === 'disabled' && <> <Pill tone="muted">{t('inactive')}</Pill></>}</td>
                         <td>{fmtDay(u.createdAt)}</td>
                         <td>{u.lastLoginAt ? fmtDay(u.lastLoginAt) : '—'}</td>
-                        <td><button type="button" className="btn btn--small btn--primary" onClick={() => { setDone(null); setEdit(u); }}>{t('sa_makeStaff')}</button></td>
+                        <td>{String(u._id) === String(me.user.id) ? <small className="muted">{t('sa_you')}</small> : (u.role === 'super_admin' && me.user.role !== 'super_admin') ? null : <button type="button" className={`btn btn--small ${team ? 'btn--ghost' : 'btn--primary'}`} onClick={() => { setDone(null); setEdit(u); }}>{t(team ? 'sa_change' : 'sa_makeStaff')}</button>}</td>
                       </tr>
                     ))}</tbody>
                   </table>
