@@ -22,16 +22,8 @@ function getJwtSecret() {
     return devSecret;
 }
 
-// Which accounts must turn on two-factor sign-in: off (default), admins, or staff
-function twoFactorPolicy() {
-    const v = String(process.env.REQUIRE_2FA || 'off').toLowerCase();
-    return ['admins', 'staff'].includes(v) ? v : 'off';
-}
-
-function twoFactorRequiredFor(role) {
-    const policy = twoFactorPolicy();
-    if (policy === 'staff') return isStaffRole(role);
-    if (policy === 'admins') return isAdminRole(role);
+// Two-factor sign-in was removed (18 Nov 2026): no account has to turn it on
+function twoFactorRequiredFor() {
     return false;
 }
 

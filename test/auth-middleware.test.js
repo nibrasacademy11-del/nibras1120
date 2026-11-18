@@ -113,16 +113,11 @@ test('requirePermission enforces the minimum scope', async () => {
     assert.deepEqual(await call('audit.view', 'all'), { ok: true, scope: 'all' });
 });
 
-test('required 2FA blocks everything but the security pages until it is on', async () => {
+test('two-factor sign-in is never required (removed 18 Nov 2026)', async () => {
     process.env.REQUIRE_2FA = 'staff';
     try {
         const token = sign({ id: USER_ID, tv: 0, sid: SID });
-        assert.equal((await run(authRequired, { token, url: '/api/v2/audit' })).res.statusCode, 403);
-        assert.equal((await run(authRequired, { token, url: '/api/inquiries' })).res.statusCode, 403);
-        assert.equal((await run(authRequired, { token, url: '/api/v2/me' })).nextCalled, true);
-        assert.equal((await run(authRequired, { token, url: '/api/v2/me/2fa/setup' })).nextCalled, true);
-        users[USER_ID].twoFactor.enabled = true;
-        assert.equal((await run(authRequired, { token, url: '/api/v2/audit' })).nextCalled, true);
+        assert.equal((await run(authRequired, { token, url: '/api/inquiries' })).nextCalled, true);
     } finally {
         delete process.env.REQUIRE_2FA;
     }

@@ -169,15 +169,7 @@ exports.login = async (req, res) => {
             return res.status(wrong.status).json(wrong.body);
         }
 
-        if (user.twoFactor && user.twoFactor.enabled) {
-            sessions.setChallenge(res, user);
-            await sessions.logAttempt(req, { email: normalizedEmail, user, success: false, reason: '2fa_pending' });
-            return res.json({
-                twoFactorRequired: true,
-                message: 'أدخل رمز التحقق من تطبيق المصادقة. / Enter the code from your authenticator app.'
-            });
-        }
-
+        // the email and the password are enough (two-factor sign-in removed 18 Nov 2026)
         await finishLogin(req, res, user, { twoFactor: false });
     } catch (error) {
         console.error('Login error:', error);

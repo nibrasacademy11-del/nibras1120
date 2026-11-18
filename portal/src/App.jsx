@@ -59,12 +59,9 @@ export default function App() {
   if (loading) return <div className="splash">{t('loading')}</div>;
   if (!me) return <Login />;
 
-  // A temporary password is changed first, then two-factor is turned on if the role requires it
+  // A temporary password is changed first
   if (me.security.mustChangePassword) {
     return <Layout><ChangePassword forced /></Layout>;
-  }
-  if (me.security.mustEnrollTwoFactor && location.pathname !== '/security') {
-    return <Navigate to="/security" replace />;
   }
 
   // cms.*: the website editor and the account's own security, nothing else

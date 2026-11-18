@@ -83,7 +83,12 @@ exports.changePassword = async (req, res) => {
 };
 
 // Step 1: a new secret, kept pending until the user proves the app shows the right codes
+// Two-factor sign-in was removed (18 Nov 2026)
+const twoFactorGone = () => new HttpError(410, 'التحقق بخطوتين اتلغى. الدخول بالإيميل وكلمة المرور. / Two-factor sign-in was removed.', 'TWO_FACTOR_REMOVED');
+
 exports.twoFactorSetup = async (req, res) => {
+    throw twoFactorGone();
+    // eslint-disable-next-line no-unreachable
     const user = await loadSelf(req);
     await confirmPassword(user, req.body.password);
     const secret = totp.generateSecret();
@@ -95,6 +100,8 @@ exports.twoFactorSetup = async (req, res) => {
 
 // Step 2: the first code from the app turns it on and hands out recovery codes, once
 exports.twoFactorEnable = async (req, res) => {
+    throw twoFactorGone();
+    // eslint-disable-next-line no-unreachable
     const user = await loadSelf(req);
     const pending = user.twoFactor && user.twoFactor.pendingSecretEnc;
     if (!pending) throw new HttpError(400, 'ابدأ إعداد التحقق بخطوتين أولاً. / Start the setup first.', 'NO_PENDING_SETUP');

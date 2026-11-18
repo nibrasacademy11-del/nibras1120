@@ -98,34 +98,22 @@ test('security flow', { skip }, async (t) => {
             assert.equal((await emp('GET', '/api/auth/users')).status, 403);
         });
 
-        let secret;
-        let recovery;
-        await t.test('employee turns on two-factor', async () => {
-            assert.equal((await emp('POST', '/api/v2/me/2fa/setup', { password: 'wrong' })).status, 401);
+        await t.test('two-factor sign-in is gone (18 Nov 2026): it cannot be turned on', async () => {
             const s = await emp('POST', '/api/v2/me/2fa/setup', { password: pw });
-            assert.equal(s.status, 200);
-            secret = s.data.secret;
-            assert.equal((await emp('POST', '/api/v2/me/2fa/enable', { code: '000000' })).status, 400);
-            const e = await emp('POST', '/api/v2/me/2fa/enable', { code: totp.totp(secret) });
-            assert.equal(e.status, 200);
-            recovery = e.data.recoveryCodes;
-            assert.equal(recovery.length, 8);
-            const stored = await User.findOne({ email: emails.emp });
-            assert.ok(!stored.twoFactor.secretEnc.includes(secret), 'secret is stored encrypted');
+            assert.equal(s.status, 410);
+            assert.equal(s.data.code, 'TWO_FACTOR_REMOVED');
+            assert.equal((await emp('POST', '/api/v2/me/2fa/enable', { code: '000000' })).status, 410);
         });
 
-        await t.test('signing in now needs the code', async () => {
+        await t.test('signing in is the email and the password; sessions per device', async () => {
+            // an account that had it on before still signs in with its password only
+            await User.updateOne({ email: emails.emp }, { 'twoFactor.enabled': true });
             const second = client();
             const r = await second('POST', '/api/auth/login', { email: emails.emp, password: pw });
-            assert.equal(r.data.twoFactorRequired, true);
-            assert.equal((await second('GET', '/api/v2/me')).status, 401);
-            assert.equal((await second('POST', '/api/auth/login/2fa', { code: '123456' })).status, 401);
-            const ok = await second('POST', '/api/auth/login/2fa', { code: recovery[0] });
-            assert.equal(ok.status, 200);
+            assert.equal(r.status, 200);
+            assert.notEqual(r.data.twoFactorRequired, true);
             assert.equal((await second('GET', '/api/v2/me')).status, 200);
-            const reused = client();
-            await reused('POST', '/api/auth/login', { email: emails.emp, password: pw });
-            assert.equal((await reused('POST', '/api/auth/login/2fa', { code: recovery[0] })).status, 401, 'recovery code works once');
+            await User.updateOne({ email: emails.emp }, { 'twoFactor.enabled': false });
 
             const list = await emp('GET', '/api/v2/me/sessions');
             assert.equal(list.data.sessions.length, 2);
@@ -155,7 +143,7 @@ test('security flow', { skip }, async (t) => {
             const log = await sup('GET', '/api/v2/audit?resource=roles');
             assert.equal(log.status, 200);
             assert.ok(log.data.items.some((e) => e.action === 'roles.updated' && e.reason === 'integration test'));
-            const entry = await AuditLog.findOne({ action: 'security.2fa_enabled' });
+            const entry = await AuditLog.findOne({ action: 'roles.updated' });
             assert.ok(entry);
             await assert.rejects(AuditLog.updateOne({ _id: entry._id }, { summary: 'changed' }));
             await assert.rejects(AuditLog.deleteOne({ _id: entry._id }));
